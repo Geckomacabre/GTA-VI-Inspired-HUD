@@ -1,0 +1,59 @@
+# VIHud collectables, from the GTA VI document: Wyman Car Parts, Collectible Hats and the "Possible In-World Finds".
+# Every spot is one of Rockstar's own scenario points (chop shops / welders for parts, lookouts and beaches for hats).
+# SET <tab> id <tab> name <tab> map blip
+# C <tab> set <tab> name <tab> x <tab> y <tab> z <tab> prop <tab> text
+SET	0	WYMAN CAR PARTS	446
+SET	1	COLLECTIBLE HATS	858
+SET	2	STRANGE FINDS	788
+C	0	CAR PART 1	540.13	-181.10	53.49	imp_prop_impexp_tyre_01a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 2	10.57	-1408.82	28.30	prop_car_battery_01	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 3	849.18	-2092.37	29.19	imp_prop_impexp_car_door_01a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 4	284.46	-2475.76	5.72	imp_prop_impexp_tyre_02a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 5	-274.02	6072.29	30.45	prop_car_battery_01	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 6	-812.22	-788.79	18.57	imp_prop_impexp_tyre_01a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 7	266.99	2598.51	43.80	prop_car_battery_01	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 8	24.84	6441.45	30.43	imp_prop_impexp_car_door_01a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 9	476.53	-1286.98	28.56	imp_prop_impexp_tyre_02a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 10	807.20	-814.77	25.18	prop_car_battery_01	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 11	63.43	-427.34	36.40	imp_prop_impexp_tyre_01a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 12	649.55	2927.82	41.26	prop_car_battery_01	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 13	450.57	-1906.33	24.83	imp_prop_impexp_car_door_01a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 14	-1996.06	557.26	114.51	imp_prop_impexp_tyre_02a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 15	1145.35	-777.66	56.60	prop_car_battery_01	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 16	-543.29	-2842.55	5.00	imp_prop_impexp_tyre_01a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 17	915.21	3565.18	32.80	prop_car_battery_01	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 18	5.03	-2687.65	5.00	imp_prop_impexp_car_door_01a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 19	912.21	-1542.39	29.65	imp_prop_impexp_tyre_02a	A Wyman car parts box, a Classique logo on the side.
+C	0	CAR PART 20	1684.04	-1461.59	111.42	prop_car_battery_01	A Wyman car parts box, a Classique logo on the side.
+C	1	HAT 1	265.95	155.32	103.58	prop_cap_01	A collectible hat.
+C	1	HAT 2	-1614.57	5260.16	3.00	prop_ld_hat_01	A collectible hat.
+C	1	HAT 3	-1637.77	4428.73	1.94	prop_busker_hat_01	A collectible hat.
+C	1	HAT 4	-80.24	2014.74	178.75	prop_cap_01b	A collectible hat.
+C	1	HAT 5	2346.24	2545.36	45.67	prop_hard_hat_01	A collectible hat.
+C	1	HAT 6	-520.51	-258.55	34.62	prop_cap_01	A collectible hat.
+C	1	HAT 7	2818.32	-619.98	1.63	prop_ld_hat_01	A collectible hat.
+C	1	HAT 8	-2283.57	172.89	166.60	prop_busker_hat_01	A collectible hat.
+C	1	HAT 9	-847.76	876.21	201.90	prop_cap_01b	A collectible hat.
+C	1	HAT 10	2920.67	319.72	1.53	prop_hard_hat_01	A collectible hat.
+C	1	HAT 11	-1121.00	-108.63	40.82	prop_cap_01	A collectible hat.
+C	1	HAT 12	1369.81	-2545.20	47.12	prop_ld_hat_01	A collectible hat.
+C	1	HAT 13	678.34	-1501.02	8.71	prop_busker_hat_01	A collectible hat.
+C	1	HAT 14	-2388.49	1930.70	180.37	prop_cap_01b	A collectible hat.
+C	1	HAT 15	-617.27	-871.19	24.15	prop_hard_hat_01	A collectible hat.
+C	1	HAT 16	-147.02	3908.38	30.33	prop_cap_01	A collectible hat.
+C	1	HAT 17	2027.29	3951.67	30.06	prop_ld_hat_01	A collectible hat.
+C	1	HAT 18	-773.99	5328.65	74.35	prop_busker_hat_01	A collectible hat.
+C	1	HAT 19	3541.02	4549.20	47.76	prop_cap_01b	A collectible hat.
+C	1	HAT 20	-1817.68	-1200.28	18.17	prop_hard_hat_01	A collectible hat.
+C	2	MESSAGE IN A BOTTLE	-1578.68	5195.18	3.01	p_cs_bottle_01	Washed up in the cove. The note inside is a map with an X off the coast.
+C	2	SHOE TREE	-528.38	5621.51	55.16	prop_ld_shoe_01	Dozens of pairs, laces knotted, hanging from one old pine.
+C	2	LIGHTHOUSE MYSTERY	3365.94	5183.13	0.68	prop_poster_tube_01	A keeper's logbook. The last entry just says: the light was never off.
+C	2	MINE SHAFT DISCOVERY	2952.28	2752.99	42.41	prop_tool_pickaxe	A rusted pick by a boarded-up shaft nobody has opened in decades.
+C	2	UNIQUE TOMBSTONE	-1752.43	-185.98	56.54	prop_gravestones_01a	No name. Just a date that has not happened yet.
+C	2	DEAD PARAGLIDER	2974.20	5650.32	244.95	p_parachute_fallen_s	A torn canopy snagged on the rocks. No sign of whoever flew it.
+C	2	FOREST PHONE	-549.01	5428.86	61.61	prop_phonebox_04	A payphone deep in the woods. It is still ringing.
+C	2	BUS STOP PINEAPPLE	-61.81	-1498.31	30.65	prop_pineapple	Someone left a pineapple at the bus stop. Every day. For years.
+C	2	BURNT WRECKAGE	1964.70	3257.75	44.66	p_truckwreck_1	A burnt-out truck in the desert, plates removed.
+C	2	GIANT CLAM	-1281.38	-1762.80	1.17	prop_cora_clam_01	A clam the size of a tyre, washed up on the sand.
+C	2	MISSING PERSON POSTER	1170.20	2702.61	37.18	prop_poster_tube_02	Outside the liquor store: MISSING TOURISTS - last seen near the swamps.
+C	2	RUM BOTTLE SHIPWRECK	-3180.22	1259.53	10.51	ng_proc_beerbottle_01a	Old rum bottles, still corked, from a wreck off Chumash.

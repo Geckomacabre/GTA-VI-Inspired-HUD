@@ -1,0 +1,17 @@
+Enabled=1
+Buildings3D=1
+OnlyInVehicle=1
+AltitudeZoom=0
+Zoom=6
+WheelEnabled=1
+WastedEnabled=1
+DayNight=1
+DayStartsAt=6
+NightStartsAt=20
+Clock=1
+Clock24h=0
+SearchCircle=1
+SearchStartRadius=180
+SearchMinRadius=60
+SearchShrinkPerSec=4
+ShowWhenWanted=1

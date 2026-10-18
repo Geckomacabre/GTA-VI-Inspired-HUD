@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.1" id="{9a4c2e61-7b3f-4d08-8e15-2c6b0f9a7d43}" target="Five">
+  <metadata>
+    <name>GTA VI-Inspired HUD + custom Lucia ped (GTA V Legacy)</name>
+    <version><major>2</major><minor>2</minor><tag>LEGACY</tag></version>
+    <author><displayName>FBICat</displayName></author>
+    <description><![CDATA[GTA VI-Inspired HUD + custom Lucia ped for GTA V LEGACY (the original PC version, GTA5.exe). By FBICat.
+Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
+Rockstar's official GTA VI media and belongs to Rockstar Games. No GTA VI game files are included.
+
+INSTALL - two packages, both to the mods folder
+  1. This package (the files).
+  2. GTA-VI-Inspired-HUD-RegisterPatch.oiv: registers the HUD's DLC packs in dlclist.xml and raises the gameconfig.xml pools.
+  If step 2 is missing, the HUD tells you in game what is not registered.
+  ViMinimap.asi must end up next to GTA5.exe; the minimap needs it to draw in fullscreen.
+
+What it installs
+  - HUD: scripts\GTA6Hud.dll + scripts\Hud\ (art, sounds, data) + scripts\GTA6Hud.ini
+  - dlcpacks:/vihudfonts/  pause menu, HUD art and fonts, vehicle maker emblems
+  - dlcpacks:/vihudanims/  body carry / loot animations
+  - dlcpacks:/luciaped/    Lucia as a 4th character (coming in a later update; not registered yet)
+  - dlcpacks:/luciaolf/    the GTA Online female wardrobe and hairstyles for her
+  - 3D minimap: scripts\ViMinimap.dll + MiniMap.* data + ViMinimap.asi (in-game drawing)
+  - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
+
+Changes in 2.2
+  - Added ViMinimap.asi, so the minimap shows in fullscreen (it was missing from 2.1).
+  - Fixed the Lucia load crash: the 1.3 register patch raises MetaDataStore, the pool her packs overflowed.
+    Lucia herself is coming in a later update; her packs are installed but not registered yet.
+  - Commercial music removed.
+
+Requirements (not included): Script Hook V, Script Hook V .NET 3, OpenIV with the mods folder (OpenIV.asi).
+
+Known conflicts
+  - Other add-on ped packs (AddonPeds, arthurmichael, big ped packs) and large map/arena packs use up the same game limits;
+    if the game crashes, disable those first.
+  - Your progress lives in scripts\Hud\Save and is never touched by the package.
+  - Problems: scripts\GTA6Hud.perf.log, scripts\GTA6Hud.error.log and scripts\MiniMap.log say what went wrong.
+
+https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
+]]></description>
+    <licence><![CDATA[Personal use. By FBICat. Contains art cut from Rockstar's official GTA VI media (property of Rockstar Games) and the Grand Figma Kit VI (CC BY 4.0). Minimap based on "GTA VI MiniMap (3D Buildings)" by moddims.]]></licence>
+  </metadata>
+  <colors>
+    <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>
+    <iconBackground>$FFE06AA8</iconBackground>
+  </colors>
+  <content>
+    <!-- FILES -->
+  </content>
+</package>

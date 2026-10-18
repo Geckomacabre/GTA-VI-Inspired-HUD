@@ -1,0 +1,2 @@
+# Store every file byte-for-byte: the HUD reads these data files as shipped.
+* -text

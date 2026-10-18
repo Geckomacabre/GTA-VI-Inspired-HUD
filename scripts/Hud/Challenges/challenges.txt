@@ -1,0 +1,104 @@
+# VIHud challenges: RDR2's structure (9 categories x 10 challenges, done in order) adapted to GTA.
+# Read by VIHud (GTA6Hud.Challenges.cs) and by pausebuild (it bakes every line below into the menu's label atlas,
+# so after editing text here rebuild + reinstall vipause.ytd, or the changed lines fall back to the glyph font).
+# CAT <tab> name <tab> card texture <tab> blurb lines split by |
+# CH  <tab> event key <tab> target <tab> badge (VI blip crop id) <tab> reward $ <tab> description lines split by | <tab> progress text ({0} done, {1} target)
+CAT	ROBBER	c_robber	Hit tills, hold up stores, crack|safes and empty bank vaults. Plan|the job, beat the alarm and get|the bag home.
+CH	till	1	628	250	Empty a store till.	{0} of {1} tills emptied
+CH	holdup	3	313	400	Hold up 3 store clerks.	{0} of {1} clerks held up
+CH	backoffice	1	434	600	Rob a store's back office without|setting off the alarm.	{0} of {1} back offices robbed
+CH	van	1	616	800	Rob a van shipment.	{0} of {1} van shipments robbed
+CH	container	3	677	900	Stash the loot from 3 cargo containers|at the port.	{0} of {1} containers looted
+CH	dealer	1	140	1000	Rob a street dealer.	{0} of {1} dealers robbed
+CH	jewelcase	10	617	1500	Smash 10 display cases at Vangelico.	{0} of {1} cases smashed
+CH	boatsafe	1	618	2000	Crack the safe on a stalled boat.	{0} of {1} safes cracked
+CH	bankescape	1	500	3000	Rob a bank and get away with the bag.	{0} of {1} banks robbed
+CH	bighaul	1	108	5000	Bank a haul of $100,000 or more from|a single robbery.	{0} of {1} big hauls banked
+CAT	EXPLORER	c_explorer	Wyman's lost car parts, the|collectible hats and the strange|finds of Leonida are scattered|all over the state.
+CH	carpart	1	446	250	Find a Wyman car part.	{0} of {1} car parts found
+CH	hat	1	858	250	Find a collectible hat.	{0} of {1} hats found
+CH	carpart	5	544	500	Find 5 Wyman car parts.	{0} of {1} car parts found
+CH	bottle	1	827	600	Find the message in a bottle.	{0} of {1} messages found
+CH	hat	5	102	700	Find 5 collectible hats.	{0} of {1} hats found
+CH	oddfind	3	918	900	Discover 3 strange finds.	{0} of {1} finds discovered
+CH	carpart	12	761	1200	Find 12 Wyman car parts.	{0} of {1} car parts found
+CH	hat	12	955	1500	Find 12 collectible hats.	{0} of {1} hats found
+CH	allodd	1	788	2500	Discover every strange find.	{0} of {1} sets completed
+CH	allsets	2	587	5000	Complete the car part and hat|collections.	{0} of {1} collections completed
+CAT	HUSTLER	c_hustler	Mug, loot, fence and race. Every|dollar you make on the street|counts.
+CH	mug	1	953	200	Mug a pedestrian.	{0} of {1} people mugged
+CH	bodyloot	5	457	300	Loot 5 bodies.	{0} of {1} bodies looted
+CH	fencegoods	1	478	400	Sell stolen goods to a fence.	{0} of {1} sales
+CH	compound	1	844	600	Take loot from a gang compound.	{0} of {1} compounds looted
+CH	fencecar	1	853	800	Sell a car to a fence.	{0} of {1} cars sold
+CH	fencecash	5000	431	1000	Earn $5,000 from fence sales.	${0} of ${1} earned
+CH	bagstash	1	374	1200	Get a loot bag back to a stash.	{0} of {1} bags stashed
+CH	racewin	1	546	1500	Win a street race.	{0} of {1} races won
+CH	buckme	1	683	2000	Have $25,000 in your BuckMe account.	{0} of {1}
+CH	crimecash	250000	272	5000	Make $250,000 from crime.	${0} of ${1} made
+CAT	DRIVER	c_driver	Steal it, push it and keep it|shiny side up. Street races, big|air and clean high-speed runs.
+CH	drivemi	10	545	200	Drive 10 miles.	{0} of {1} miles driven
+CH	stealcar	5	811	300	Steal 5 cars.	{0} of {1} cars stolen
+CH	racefinish	1	315	400	Finish a street race.	{0} of {1} races finished
+CH	airtime	1	488	600	Stay airborne for 3 seconds in a car.	{0} of {1} jumps
+CH	topspeed	10	854	800	Drive at over 120 mph for 10 seconds.	{0} of {1} seconds
+CH	cleanrun	1	778	1000	Drive half a mile at over 80 mph|without hitting anything.	{0} of {1} clean runs
+CH	racewin	3	609	1200	Win 3 street races.	{0} of {1} races won
+CH	wheelie	5	226	1500	Hold a wheelie on a motorbike for|5 seconds.	{0} of {1} seconds
+CH	carescape	3	225	2000	Lose the police in a car 3 times.	{0} of {1} escapes
+CH	drivemi	250	430	5000	Drive 250 miles.	{0} of {1} miles driven
+CAT	HUNTER	c_hunter	Leonida's wilds are full of game.|Track it down, from rabbits in|the brush to sharks off the coast.
+CH	rabbit	1	273	200	Kill a rabbit.	{0} of {1} rabbits killed
+CH	coyote	1	442	300	Kill a coyote.	{0} of {1} coyotes killed
+CH	deer	3	141	400	Kill 3 deer.	{0} of {1} deer killed
+CH	boar	1	463	600	Kill a boar.	{0} of {1} boars killed
+CH	bird	5	119	800	Kill 5 birds.	{0} of {1} birds killed
+CH	lion	1	954	1000	Kill a mountain lion.	{0} of {1} mountain lions killed
+CH	deerknife	1	497	1200	Kill a deer with a knife.	{0} of {1} deer killed
+CH	shark	1	914	1500	Kill a shark.	{0} of {1} sharks killed
+CH	snipeanimal	3	432	2000	Kill 3 animals with a sniper rifle.	{0} of {1} animals killed
+CH	animal	50	84	5000	Kill 50 animals.	{0} of {1} animals killed
+CAT	SHARPSHOOTER	c_sharpshooter	Precision under pressure.|Headshots, long shots and kills|on the move.
+CH	headshot	5	458	200	Get 5 headshots.	{0} of {1} headshots
+CH	vehiclekill	3	225	300	Kill 3 enemies from a moving vehicle.	{0} of {1} kills
+CH	longkill	1	774	400	Kill an enemy over 100 m away.	{0} of {1} kills
+CH	quickheads	1	466	600	Get 3 headshots within 10 seconds.	{0} of {1} times
+CH	coverkill	5	487	800	Kill 5 enemies while in cover.	{0} of {1} kills
+CH	flyingbird	1	432	1000	Shoot a bird out of the sky.	{0} of {1} birds shot
+CH	pistolhead	10	110	1200	Get 10 headshots with a pistol.	{0} of {1} headshots
+CH	snipekill	1	119	1500	Kill an enemy over 300 m away.	{0} of {1} kills
+CH	multikill	1	430	2000	Kill 4 enemies within 8 seconds.	{0} of {1} times
+CH	headshot	100	84	5000	Get 100 headshots.	{0} of {1} headshots
+CAT	OUTLAW	c_outlaw	The law in Leonida never forgets.|Lose the heat, fight back and|stay free.
+CH	escape1	1	304	200	Lose a wanted level.	{0} of {1} escapes
+CH	maskescape	1	362	300	Lose the police while masked.	{0} of {1} escapes
+CH	escape3	1	835	500	Lose a 3 star wanted level.	{0} of {1} escapes
+CH	copkill	10	188	700	Kill 10 police officers.	{0} of {1} officers killed
+CH	copcar	3	380	900	Destroy 3 police vehicles.	{0} of {1} vehicles destroyed
+CH	escape4	1	526	1200	Lose a 4 star wanted level.	{0} of {1} escapes
+CH	survive4	180	570	1500	Stay free for 3 minutes at 4 stars or|more.	{0} of {1} seconds
+CH	bankgetaway	1	886	2000	Lose the police after robbing a bank.	{0} of {1} getaways
+CH	escape5	1	947	3000	Lose a 5 star wanted level.	{0} of {1} escapes
+CH	survive6	120	833	5000	Stay free for 2 minutes at 6 stars.	{0} of {1} seconds
+CAT	SURVIVOR	c_survivor	Eat, heal, swim and run. Stay|alive out there, whatever Leonida|throws at you.
+CH	consume	5	889	200	Eat or drink 5 items.	{0} of {1} items
+CH	painkillers	1	403	300	Heal with painkillers.	{0} of {1} uses
+CH	joint	1	469	400	Smoke a joint.	{0} of {1} joints
+CH	neardeath	1	489	600	Recover from below 15% health without|dying.	{0} of {1} recoveries
+CH	syringe	1	153	800	Overpower your health with a syringe.	{0} of {1} uses
+CH	swim	500	729	1000	Swim 500 m.	{0} of {1} m swum
+CH	sprint	2000	126	1200	Sprint 2 km on foot.	{0} of {1} m sprinted
+CH	streak	10	437	1500	Kill 10 enemies without dying.	{0} of {1} kills
+CH	consume	30	962	2000	Eat or drink 30 items.	{0} of {1} items
+CH	days	7	836	5000	Stay alive for 7 days.	{0} of {1} days
+CAT	WEAPONS EXPERT	c_weapons	Master every tool in the arsenal,|from your fists to explosives.
+CH	k_pistol	3	110	200	Kill 3 enemies with a pistol.	{0} of {1} kills
+CH	k_melee	3	311	300	Kill 3 enemies with your fists or a|melee weapon.	{0} of {1} kills
+CH	k_shotgun	5	556	400	Kill 5 enemies with a shotgun.	{0} of {1} kills
+CH	k_knife	3	497	600	Kill 3 enemies with a knife.	{0} of {1} kills
+CH	k_smg	10	549	800	Kill 10 enemies with an SMG.	{0} of {1} kills
+CH	k_explosive	5	486	1000	Kill 5 enemies with explosives.	{0} of {1} kills
+CH	k_rifle	10	947	1200	Kill 10 enemies with a rifle.	{0} of {1} kills
+CH	k_fire	3	436	1500	Kill 3 enemies with fire.	{0} of {1} kills
+CH	k_sniper	5	119	2000	Kill 5 enemies with a sniper rifle.	{0} of {1} kills
+CH	k_allgroups	8	313	5000	Kill an enemy with every type of|weapon.	{0} of {1} weapon types

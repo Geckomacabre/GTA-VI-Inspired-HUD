@@ -1,0 +1,16 @@
+# Subtitles for the speech VIHud triggers. CONTEXT = line | line | line
+# GTA picks a random recording for each context, so these are the gist of what is said.
+GENERIC_HI = Hey. | How's it going? | What's up? | Hey there.
+GENERIC_INSULT_HIGH = Screw you! | What a loser. | Get lost, idiot. | You're a joke, man.
+GENERIC_FUCK_YOU = Fuck you! | Screw you, asshole!
+GENERIC_CURSE_MED = Damn it! | Shit! | Son of a...
+GENERIC_SHOCKED_HIGH = What the hell?! | Oh my God! | Somebody call the cops!
+GENERIC_FRIGHTENED_HIGH = No! No! No! | Don't hurt me! | Please, don't shoot! | Oh God!
+GENERIC_FRIGHTENED_MED = Whoa, whoa! | Easy! | Get down!
+GUN_BEG = Please, I got kids! | Don't kill me, man! | I'll do anything, just don't shoot!
+SHOP_HOLDUP = Open the register! Now! | This is a robbery! | Empty the till!
+SHOP_HURRYING = Okay, okay! I'm going! | Just take it!
+ARREST_PLAYER = Get on the ground! | Hands where I can see them! | You're under arrest!
+CHALLENGE_THREATEN = Drop your weapon! | Stop right there! | Don't move!
+GENERIC_WAR_CRY = Take them down! | Let's go! | Open fire!
+TARGET_LOST = We lost them. | Where'd they go? | Suspect's gone, keep looking.
