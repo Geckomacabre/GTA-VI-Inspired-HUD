@@ -1,97 +1,112 @@
 # GTA VI-Inspired HUD
 
-**A GTA VI-inspired HUD with a custom Lucia ped**, for **GTA V single player**. It includes a 3D
-minimap and a fan-made, playable Lucia, and works on both the Legacy and the Enhanced PC versions.
-Made by **FBICat**.
+A GTA VI-style HUD, minimap and a playable **Lucia** for **GTA V story mode** on PC. Made by **FBICat**.
 
-To play as Lucia, hold the character-switch button (**Left Alt**, or **D-pad down** on a controller),
-press **E** until the fourth portrait is highlighted, then let go.
+> **Disclaimer:** fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some
+> HUD art is taken from Rockstar's official GTA VI media
+> ([rockstargames.com/vi/media](https://www.rockstargames.com/VI/media)) and belongs to Rockstar Games.
+> No GTA VI game files are included. The Lucia model is fan-made.
 
-> **Disclaimer.** This is a fan-made mod inspired by GTA VI. It is not affiliated with or endorsed by
-> Rockstar Games or Take-Two Interactive. Some of the HUD artwork is taken from Rockstar's official
-> GTA VI media ([rockstargames.com/vi/media](https://www.rockstargames.com/VI/media)) and belongs to
-> Rockstar Games. No GTA VI game files are included. The Lucia model is fan-made. Grand Theft Auto and
-> related names and marks belong to Take-Two Interactive.
+Want it for FiveM instead? → [GTA-VI-UI-and-HUD-for-FiveM](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM)
 
-Looking for FiveM? See the FiveM version:
-[Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+---
 
-## Download
+## Which GTA V do I have?
 
-Get the packages from the [Releases](../../releases) page.
+Open your GTA V folder and look for the game file:
 
-| File | For |
+| You see... | You have... | Works? |
+| --- | --- | --- |
+| `GTA5.exe` | **Legacy** | ✅ Yes, tested |
+| `GTA5_Enhanced.exe` | **Enhanced** | ❌ Not yet. The game closes about 20 seconds after loading. Use Legacy for now. |
+
+---
+
+## Install guide (for dummies)
+
+### Step 1: Get the 3 tools the mod needs
+
+Skip any you already have.
+
+1. **Script Hook V**: [download here](http://www.dev-c.com/gtav/scripthookv/). Open the zip's `bin` folder
+   and copy everything except `NativeTrainer.asi` into your GTA V folder (the one with `GTA5.exe`).
+2. **Script Hook V .NET, version 3.7 or newer**: [download the newest nightly here](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases).
+   Copy `ScriptHookVDotNet.asi`, `ScriptHookVDotNet2.dll` and `ScriptHookVDotNet3.dll` into your GTA V
+   folder. ⚠️ Version 3.6 is too old: the HUD won't show up.
+3. **OpenIV**: [download here](https://openiv.com/). Open it, pick GTA V (Windows), then go to
+   **Tools → ASI Manager** and install **ASI Loader** and **OpenIV.asi**.
+
+### Step 2: Download the mod
+
+Go to [**Releases**](../../releases) and download these 2 files:
+
+- `GTA-VI-Inspired-HUD-Legacy.oiv`
+- `GTA-VI-Inspired-HUD-RegisterPatch.oiv`
+
+### Step 3: Install the mod
+
+1. In OpenIV, go to **Tools → Package Installer**.
+2. Pick `GTA-VI-Inspired-HUD-Legacy.oiv` and click **Install**.
+3. When it asks where, choose **mods folder**.
+4. Do the same with `GTA-VI-Inspired-HUD-RegisterPatch.oiv`. Install it **only once**.
+
+### Step 4: Check one file
+
+Make sure `ViMinimap.asi` is in your GTA V folder, next to `GTA5.exe`. If it isn't, find it in your
+`mods` folder and move it there. Without it, the minimap won't show in fullscreen.
+
+### Step 5: Play
+
+Start GTA V and load **Story Mode**. The new HUD shows up on its own. 🎉
+
+---
+
+## How to use it
+
+| I want to... | Do this |
 | --- | --- |
-| `GTA-VI-Inspired-HUD-Legacy.oiv` | GTA V **Legacy**, the original PC version (`GTA5.exe`) |
-| `GTA-VI-Inspired-HUD-Enhanced.oiv` | GTA V **Enhanced**, the 2025 PC version (`GTA5_Enhanced.exe`). Not tested in game yet. |
-| `GTA-VI-Inspired-HUD-RegisterPatch.oiv` | Registers the HUD's DLC packs in `dlclist.xml` and raises the `gameconfig.xml` pool sizes. Works for both versions. |
+| **Play as Lucia** | Hold **Left Alt** (controller: hold **D-pad down**), press **E** until Lucia's picture is highlighted, then let go. |
+| **See the minimap** | Get in a car. The map only shows in vehicles, or when you're wanted. |
+| **Open the HUD settings** | Hold **V**. |
+| **Add music** | Put your own `.mp3` files in `scripts\Hud\Music` (wanted music) or `scripts\Hud\Radio\CustomMusic` (radio). No music comes with the mod. |
 
-## Requirements
+---
 
-Not included:
+## Something's wrong?
 
-- **Legacy:** [Script Hook V](http://www.dev-c.com/gtav/scripthookv/),
-  [Script Hook V .NET 3](https://github.com/scripthookvdotnet/scripthookvdotnet), and
-  [OpenIV](https://openiv.com/) with the mods folder set up (OpenIV.asi).
-- **Enhanced:** Script Hook V for Enhanced, a Script Hook V .NET 3 build that supports Enhanced, and a
-  mods-folder loader for Enhanced (OpenIV.asi only works with Legacy).
+**The HUD doesn't show up.**
+Your Script Hook V .NET is too old. Install **3.7 or newer** (Step 1).
 
-## Install
+**The minimap doesn't show in a car.**
+`ViMinimap.asi` isn't next to `GTA5.exe` (Step 4).
 
-1. In OpenIV, open **Tools → Package Installer** and install `GTA-VI-Inspired-HUD-Legacy.oiv` or
-   `GTA-VI-Inspired-HUD-Enhanced.oiv` to the **mods folder**.
-2. Install `GTA-VI-Inspired-HUD-RegisterPatch.oiv` to the **mods folder** the same way.
-3. Check that `ViMinimap.asi` ended up next to `GTA5.exe` (or `GTA5_Enhanced.exe`). The minimap
-   needs it to draw in fullscreen.
+**The game crashes while loading.**
+You skipped the RegisterPatch, or another big mod is using up the game's limits. Install the
+RegisterPatch, then try turning off other big mods: ped packs, map packs, arena mods like MzbArena.
 
-If the packs aren't registered, the HUD tells you in game. The in-game tip calls the patch by its
-original name, `VIHud-RegisterPatch.oiv`; that's `GTA-VI-Inspired-HUD-RegisterPatch.oiv` here.
+**The game freezes when I load in as Lucia, or when I walk out of Franklin's house.**
+Known problem in 2.2. Before you quit the game, switch back to Franklin, Michael or Trevor. A fix is on
+the way.
 
-## What it installs
+**Something else?**
+Open an issue and attach these files from your GTA V folder:
+`ScriptHookVDotNet.log`, `ViMinimap.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`.
 
-- **HUD:** `scripts\GTA6Hud.dll`, `scripts\GTA6Hud.ini` and `scripts\Hud\` (art, sounds, data).
-  Your progress is kept in `scripts\Hud\Save`, which the packages never touch.
-- **3D minimap:** `scripts\ViMinimap.dll`, the `scripts\MiniMap.*` map data, and `ViMinimap.asi`,
-  which draws the map inside the game frame.
-- **DLC packs:** `vihudfonts` (pause menu, HUD art, fonts, vehicle maker emblems), `vihudanims`
-  (carry and loot animations), `luciaped` (Lucia as a fourth character) and `luciaolf` (her wardrobe
-  and hairstyles).
-- **No music.** Put your own `.mp3` or `.wav` files in `scripts\Hud\Music` (wanted-level music) and
-  `scripts\Hud\Radio\CustomMusic` (the custom radio station).
+---
 
-## Changes from FBICat's 2.1 packages
+## What's new compared to FBICat's 2.1
 
-- **The minimap now shows in fullscreen.** The 2.1 packages left out the plugin that draws the
-  minimap inside the game (`ViMinimap.asi`). Without it, the map fell back to a desktop overlay window
-  that can't appear over a fullscreen game. Because the minimap only shows in a vehicle, players saw it
-  as "the minimap doesn't show when I'm in a car".
-- **Lucia no longer crashes the game.** While loading her ped files, the game ran out of room in its
-  `MetaDataStore` pool (3,200 slots by default). The register patch (1.3) raises it to 4,000, along
-  with the texture and model pools her wardrobe needs, and registers Lucia again. Her pack was
-  cleaned up too:
-  - The unused expression dictionary and the oversized second copy of the model (`lucia_nophys`) are gone.
-  - She now uses the freemode expression set.
-  - On Enhanced, her body parts are back. The gen9 conversion had dropped them.
-- **Commercial music removed.** The radio and wanted-level songs aren't included.
+- **Minimap works in fullscreen.** The part that draws it inside the game (`ViMinimap.asi`) was missing.
+- **Lucia no longer crashes the game while loading.** The RegisterPatch gives the game more room for her
+  files.
+- **No commercial music** is included.
 
-## Troubleshooting
+---
 
-Send these files with any bug report:
+## For modders: rebuilding the packages
 
-- `ViMinimap.log` in the game folder for the minimap. It should say `first frame drawn inside the game`
-  once you're in a car. Also send `scripts\MiniMap.log` if it exists.
-- `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log` for the HUD.
-- `ScriptHookVDotNet.log` in the game folder.
-
-Big add-on mods (ped packs, large map or arena packs) use up the same game limits the HUD's packs need.
-If the game crashes, especially when switching to Lucia, try disabling those first. Known conflict:
-MzbArena. With it installed, switching to Lucia crashes, and it also crashes on its own while driving.
-
-## Building the packages
-
-The `scripts\` folder and `ViMinimap.asi` in this repo are exactly what the packages install. The DLC
-packs are too big for git, so they're only in the releases. To rebuild a package (Python 3.8+, no
-extra modules):
+`scripts\` and `ViMinimap.asi` in this repo are exactly what the packages install. The DLC packs are
+too big for git, so they're only in the releases. Python 3.8+, no extra modules:
 
 ```bash
 python tools/build_oiv.py legacy --dlcpacks path/to/legacy/dlcpacks
@@ -99,22 +114,22 @@ python tools/build_oiv.py enhanced --dlcpacks path/to/gen9/dlcpacks
 python tools/build_oiv.py patch
 ```
 
-The packages are written to `build\`. The install script comes from `oiv\<edition>.xml`, and the
-file list is generated from what's in the repo.
+The packages go into `build\`. The install script comes from `oiv\<edition>.xml`.
+
+---
 
 ## Credits
 
-- **FBICat:** the HUD (first released as "VI HUD"), the custom Lucia ped and wardrobe packs, the minimap additions (day/night
-  palette, wanted tint, search circle, clock, map survey data), and everything else in this mod.
-- **moddims** (Discord `@moddims`): the original "GTA VI MiniMap (3D Buildings)" mod that `ViMinimap`
-  is built on, including the in-game drawing plugin shipped here as `ViMinimap.asi`.
-- **Grand Figma Kit VI:** UI design kit used for the HUD art, licensed
+- **FBICat**: the HUD (first released as "VI HUD"), the custom Lucia ped and wardrobe, the minimap
+  additions, and everything else in this mod.
+- **moddims** (Discord `@moddims`): the original "GTA VI MiniMap (3D Buildings)" mod the minimap is built
+  on, including `ViMinimap.asi`.
+- **Grand Figma Kit VI**: the UI design kit behind the HUD art,
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-- **[LemonUI](https://github.com/LemonUIbyLemon/LemonUI)** by Lemon (MIT), included as
-  `scripts\LemonUI.SHVDN3.dll`.
-- Built on Script Hook V by Alexander Blade and Script Hook V .NET by crosire and contributors.
+- **[LemonUI](https://github.com/LemonUIbyLemon/LemonUI)** by Lemon (MIT), included as `scripts\LemonUI.SHVDN3.dll`.
+- Runs on Script Hook V by Alexander Blade and Script Hook V .NET by crosire and contributors.
 
 ## License
 
-This mod is FBICat's work, shared here with their permission, for personal use. Rockstar's artwork
-remains the property of Rockstar Games. Grand Figma Kit VI is under CC BY 4.0.
+FBICat's work, shared here with their permission, for personal use. Rockstar's artwork belongs to
+Rockstar Games. Grand Figma Kit VI is under CC BY 4.0.
