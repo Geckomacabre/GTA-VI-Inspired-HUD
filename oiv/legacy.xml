@@ -18,22 +18,22 @@ What it installs
   - HUD: scripts\GTA6Hud.dll + scripts\Hud\ (art, sounds, data) + scripts\GTA6Hud.ini
   - dlcpacks:/vihudfonts/  pause menu, HUD art and fonts, vehicle maker emblems
   - dlcpacks:/vihudanims/  body carry / loot animations
-  - dlcpacks:/luciaped/    Lucia as a 4th character (coming in a later update; not registered yet)
+  - dlcpacks:/luciaped/    Lucia as a 4th character
   - dlcpacks:/luciaolf/    the GTA Online female wardrobe and hairstyles for her
   - 3D minimap: scripts\ViMinimap.dll + MiniMap.* data + ViMinimap.asi (in-game drawing)
   - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
 
 Changes in 2.2
   - Added ViMinimap.asi, so the minimap shows in fullscreen (it was missing from 2.1).
-  - Fixed the Lucia load crash: the 1.3 register patch raises MetaDataStore, the pool her packs overflowed.
-    Lucia herself is coming in a later update; her packs are installed but not registered yet.
+  - Lucia no longer crashes the game: the 1.3 register patch raises MetaDataStore (the pool her packs overflowed)
+    plus TxdStore and DwdStore, and registers her packs. Switch: hold Left Alt / D-pad down, press E to her portrait.
   - Commercial music removed.
 
 Requirements (not included): Script Hook V, Script Hook V .NET 3, OpenIV with the mods folder (OpenIV.asi).
 
 Known conflicts
   - Other add-on ped packs (AddonPeds, arthurmichael, big ped packs) and large map/arena packs use up the same game limits;
-    if the game crashes, disable those first.
+    if the game crashes (especially when switching to Lucia), disable those first. Known conflict: MzbArena.
   - Your progress lives in scripts\Hud\Save and is never touched by the package.
   - Problems: scripts\GTA6Hud.perf.log, scripts\GTA6Hud.error.log and scripts\MiniMap.log say what went wrong.
 

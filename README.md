@@ -1,10 +1,11 @@
 # GTA VI-Inspired HUD
 
 **A GTA VI-inspired HUD with a custom Lucia ped**, for **GTA V single player**. It includes a 3D
-minimap and works on both the Legacy and the Enhanced PC versions. Made by **FBICat**.
+minimap and a fan-made, playable Lucia, and works on both the Legacy and the Enhanced PC versions.
+Made by **FBICat**.
 
-> **Lucia is coming in a later update.** Her packs are already installed, but the register patch
-> leaves them switched off until switching to her is reliable.
+To play as Lucia, hold the character-switch button (**Left Alt**, or **D-pad down** on a controller),
+press **E** until the fourth portrait is highlighted, then let go.
 
 > **Disclaimer.** This is a fan-made mod inspired by GTA VI. It is not affiliated with or endorsed by
 > Rockstar Games or Take-Two Interactive. Some of the HUD artwork is taken from Rockstar's official
@@ -54,7 +55,7 @@ original name, `VIHud-RegisterPatch.oiv`; that's `GTA-VI-Inspired-HUD-RegisterPa
   which draws the map inside the game frame.
 - **DLC packs:** `vihudfonts` (pause menu, HUD art, fonts, vehicle maker emblems), `vihudanims`
   (carry and loot animations), `luciaped` (Lucia as a fourth character) and `luciaolf` (her wardrobe
-  and hairstyles). The two Lucia packs are installed but not registered yet; see the note at the top.
+  and hairstyles).
 - **No music.** Put your own `.mp3` or `.wav` files in `scripts\Hud\Music` (wanted-level music) and
   `scripts\Hud\Radio\CustomMusic` (the custom radio station).
 
@@ -64,10 +65,10 @@ original name, `VIHud-RegisterPatch.oiv`; that's `GTA-VI-Inspired-HUD-RegisterPa
   minimap inside the game (`ViMinimap.asi`). Without it, the map fell back to a desktop overlay window
   that can't appear over a fullscreen game. Because the minimap only shows in a vehicle, players saw it
   as "the minimap doesn't show when I'm in a car".
-- **The Lucia load crash is fixed, and she's coming in a later update.** With her packs registered,
-  the game crashed while loading because it ran out of room in its `MetaDataStore` pool (3,200 slots
-  by default). The register patch (1.3) raises it to 4,000. Lucia herself stays switched off until
-  switching to her is reliable. Her pack was cleaned up for that update:
+- **Lucia no longer crashes the game.** While loading her ped files, the game ran out of room in its
+  `MetaDataStore` pool (3,200 slots by default). The register patch (1.3) raises it to 4,000, along
+  with the texture and model pools her wardrobe needs, and registers Lucia again. Her pack was
+  cleaned up too:
   - The unused expression dictionary and the oversized second copy of the model (`lucia_nophys`) are gone.
   - She now uses the freemode expression set.
   - On Enhanced, her body parts are back. The gen9 conversion had dropped them.
@@ -83,7 +84,8 @@ Send these files with any bug report:
 - `ScriptHookVDotNet.log` in the game folder.
 
 Big add-on mods (ped packs, large map or arena packs) use up the same game limits the HUD's packs need.
-If the game crashes, try disabling those first.
+If the game crashes, especially when switching to Lucia, try disabling those first. Known conflict:
+MzbArena. With it installed, switching to Lucia crashes, and it also crashes on its own while driving.
 
 ## Building the packages
 
