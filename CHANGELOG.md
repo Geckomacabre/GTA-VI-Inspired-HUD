@@ -14,6 +14,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 - **Binoculars tell other scripts when D-pad down is theirs** (`Binoculars.HoldsCharacterKey`, like nitrous's), so a character wheel of another script stays shut while you zoom out.
 - **Nitrous logs which input started each boost**, to track down reports of the wrong button boosting.
+- **`GTA6Hud.ini` `[MapIcons] Sprites` is FBICat's list again.** 2.5.1 added LS Customs (72) to it, but that didn't make LS Customs show on the map from further away, so the change is undone.
 
 ## 2.5.1 (19 October 2026)
 
@@ -43,7 +44,6 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Chase music takes over from the car radio:** while you're wanted and chase music plays (the game's wanted music, or GTA6Hud's `[Music]` tracks), the car radio goes quiet, and comes back when it ends. `[Radio] ChaseMusicTakesOver = False` lets them play together.
 - **Minimap routes in the FiveM HUD's colours:** your own waypoint's route is teal (#47aba7) and a mission's or a race's is pink (#fc74a4), each with the FiveM HUD's lighter rim. They were the minimap's own light blue and a different pink. `[Minimap] RouteColours = False` in `ViExtras.ini` brings those back; it replaces `WaypointRoutePink`.
 - **The turn-by-turn box matches the route:** the square behind the arrow is teal like your waypoint's route, not FBICat's pink. The box follows your own waypoint, so it's always teal. The square is recoloured in FBICat's own texture (`hud_gps_bg`, in the HUD pack's `vipause`; the rest of it is his, pixel for pixel), so it fades in and out cleanly.
-- **LS Customs shows on the map from any distance**, like the stores, barbers and Ammu-Nation: blip 72 is added to `GTA6Hud.ini` `[MapIcons] Sprites`. It used to appear only once you were close.
 - **Crash cam: the black bars top and bottom hold still.** They used to swell and shrink with the vignette's slow breathing, which looked like the frame pulsing. The vignette still breathes (`[CrashCam] OverlayPulse`).
 - **GTA's own on-foot camera.** FBICat's camera pulled in whenever you aimed or fired (LT / RT, right mouse) and held the walking camera at one distance, so V couldn't zoom out. It's off in `GTA6Hud.ini`; `[Camera] Enabled = True` brings it back.
 - **Nitrous is on Left Shift** (X / Square on a pad). FiveM's Left Alt is also GTA's character wheel. `[Nitrous] KeyboardControl = 19` puts it back on Left Alt, and the wheel then stays shut while you drive a car with a bottle.
