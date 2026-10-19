@@ -24,17 +24,14 @@ Pictures (CSS px at 1080p in manifest_radio.txt):
   radio_name_<key>      #station's text for that station (box: the text's
                         advance width x the element's line box)
   radio_genre_<g>       #artist's text for a genre
-  radio_icon_left       #icon-left as the page draws it with On Demand off,
-  radio_icon_left_muted   at opacity 1 (the script applies .side-icon's .9);
-                        _muted has the muted filter (grayscale(1) brightness(.62)).
-                        With On Demand off only the static On_Demand.png shows,
-                        as app.js's applyHud intends ("without it, it is the
-                        static artwork the original mod drew there"). The page
-                        itself shows the redrawn switch over it as well: app.js
-                        declares `var odSwitch` twice, so applyHud hides the
-                        panel's #od-switch instead of #od-switch-graphic, and
-                        style.css's display: flex would beat [hidden] anyway.
-                        The render hides #od-switch-graphic, as intended.
+  radio_icon_left       #icon-left with On Demand available (single player's is
+  radio_icon_left_od      your own music, ViExtras CustomMusic): the redrawn
+  radio_icon_left_muted   radio / On Demand switch, knob at RADIO, and _od with
+                        it thrown to ON DEMAND (#radio.od-on), at opacity 1 (the
+                        script applies .side-icon's .9); _muted has the muted
+                        filter (grayscale(1) brightness(.62)). The static
+                        On_Demand.png is hidden, as applyHud hides it when
+                        hud.odSwitch is on.
   radio_icon_mute       #icon-right's mask (Mute.png / Unmute.png) filled white
   radio_icon_unmute       at opacity 1; the script tints it (--mute-color /
                         --muted-color) and applies the opacity
@@ -208,15 +205,20 @@ def render(browser, ctx):
 
         rows.append("\t".join([st["name"], st["label"], st["genre"] or "", key, genre_key]))
 
-    # Side icons, at opacity 1.
-    state(ctx, page, hud=hud, list=[], index=0, muted=False)
+    # Side icons, at opacity 1. On Demand is on in single player (your own
+    # music): the left icon is the switch, knob at RADIO, then at ON DEMAND.
+    state(ctx, page, hud=dict(hud, odSwitch=True), list=[], index=0, muted=False, odOn=False)
     page.add_style_tag(content="#icon-left { opacity: 1 !important; } "
-                               "#od-switch-graphic { display: none !important; } "
+                               "#icon-left-img { display: none !important; } "
                                "#icon-right { opacity: 1 !important; background-color: #fff !important; }")
     settle(page)
     ctx.element(page, "#icon-left", "radio_icon_left", pad=12)
     ctx.element(page, "#icon-right", "radio_icon_mute", pad=4)
-    state(ctx, page, index=0, muted=True)
+    state(ctx, page, index=0, muted=False, odOn=True)
+    page.wait_for_timeout(250)   # the knob's 160 ms background transition
+    ctx.element(page, "#icon-left", "radio_icon_left_od", pad=12)
+    state(ctx, page, index=0, muted=True, odOn=False)
+    page.wait_for_timeout(250)
     page.wait_for_timeout(200)   # the mask picture's aspect ratio is read off the file
     ctx.element(page, "#icon-left", "radio_icon_left_muted", pad=12)
     ctx.element(page, "#icon-right", "radio_icon_unmute", pad=4)

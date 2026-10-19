@@ -24,7 +24,8 @@ radio_genre_punk_muted 66.00 46.00 12.84 12.00 40.30 21.61
 radio_genre_reggae_muted 82.00 46.00 12.00 12.00 58.00 21.61
 radio_genre_talk_muted 62.00 46.00 12.69 12.00 36.62 21.61
 radio_genre_your_music_muted 120.00 46.00 12.62 12.00 94.75 21.61
-radio_icon_left_muted 140.00 84.00 12.25 12.00 115.75 59.00
+radio_icon_left_muted 154.00 88.00 12.20 12.70 129.80 61.61
+radio_icon_left_od_muted 154.00 88.00 12.20 12.70 129.80 61.61
 radio_icon_mute_muted 94.00 34.00 4.00 4.50 84.61 24.00
 radio_icon_unmute_muted 122.00 34.00 4.00 4.50 112.84 24.00
 radio_name_01_class_rock_muted 256.00 52.00 12.58 12.00 230.83 26.55

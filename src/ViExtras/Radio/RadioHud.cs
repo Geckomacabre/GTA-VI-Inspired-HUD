@@ -41,6 +41,7 @@ namespace ViExtras
             public string Key, GenreKey;        // art keys from stations.txt, or null
             public bool Off;
             public string Custom;               // your own music's station: its folder ("" the loose tracks), else null
+            public bool Empty;                  // On Demand with no music yet: the tile says so, the Genre line how
 
             internal Art.Entry Tile, NameArt, GenreArt;   // rendered art; null: the label / genre set in TextKit's Anton
             internal bool Resolved;
@@ -73,7 +74,7 @@ namespace ViExtras
         private List<Item> _list = new List<Item>();
         private readonly List<TileAnim> _tiles = new List<TileAnim>();
         private int _index;
-        private bool _muted, _isOpen, _visible;
+        private bool _muted, _isOpen, _visible, _onDemand;
         private long _flashUntil = -1;
         private string _title, _artist;   // upper case, as #title / #artist set them
 
@@ -141,6 +142,9 @@ namespace ViExtras
             _flashUntil = -1;
             SetVisible(open, now);
         }
+
+        /// <summary>#radio.od-on: the left icon's switch thrown to ON DEMAND.</summary>
+        public void SetOnDemand(bool on) => _onDemand = on;
 
         /// <summary>action 'flash': the HUD up for 1400ms to show the mute state.</summary>
         public void Flash(bool muted)
@@ -220,10 +224,10 @@ namespace ViExtras
             float left = cx - CarouselW * 0.5f, right = cx + CarouselW * 0.5f;
             float mid = Top + Icon * 0.5f;
 
-            // #icon-left: the static artwork, as the page shows it with On Demand off.
+            // #icon-left: the radio / On Demand switch, knob where it is thrown.
             if (_sideIcons)
             {
-                Art.Entry icon = Art.Get(dim ? "radio_icon_left_muted" : "radio_icon_left");
+                Art.Entry icon = Art.Get("radio_icon_left" + (_onDemand ? "_od" : "") + (dim ? "_muted" : ""));
                 if (icon != null) Art.Draw(icon, left - SideGap - icon.BoxW, mid - icon.BoxH * 0.5f, Canvas.Alpha(Color.White, SideOpacity * alpha));
             }
 
@@ -268,6 +272,7 @@ namespace ViExtras
             if (station.NameArt != null) Centred(station.NameArt, cx, InfoTop + StationY, text);
             else Line(station.Label, StationPx, cx, InfoTop + StationY, text);
             if (station.Off) return;   // a highlighted RADIO OFF tile blanks the rest
+            if (station.Empty) { Line(station.Genre, ArtistPx, cx, InfoTop + TitleY, text); return; }
             if (_title != null)
             {
                 Line(_title, TitlePx, cx, InfoTop + TitleY, text);

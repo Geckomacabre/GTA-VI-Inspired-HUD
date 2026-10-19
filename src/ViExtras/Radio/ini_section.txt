@@ -52,12 +52,15 @@ LoudRadio = True
 ; While you are wanted and chase music plays (the game's wanted music, or
 ; GTA6Hud's [Music] tracks), the car radio goes quiet until it ends.
 ChaseMusicTakesOver = True
-; Your own music on the wheel, before RADIO OFF: put .mp3 / .wav / .wma / .m4a
-; files in scripts\Hud\Radio\CustomMusic (MY MUSIC), or a subfolder of it for a
-; station of its own. GTA's next / previous track keys skip. CustomMusicVolume
-; scales it against the game's radio volume.
+; On Demand: your own music. In the wheel, Down (arrow key) or the right stick
+; pushed down throws the switch to it, Up back to the radio. Put .mp3 / .wav /
+; .wma / .m4a files in scripts\Hud\Radio\CustomMusic (MY MUSIC), or a subfolder
+; of it for a station of its own. GTA's next / previous track keys skip.
+; CustomMusicVolume scales it against the game's radio volume; InvertSwitchAxis
+; for a pad whose stick reads the other way round.
 CustomMusic = True
-CustomMusicVolume = 0.12
+CustomMusicVolume = 0.20
+InvertSwitchAxis = False
 ; Audio scenes that silence the car radio, stopped while a station plays and
 ; started again after (comma separated; empty leaves audio scenes alone).
 RadioMutingScenes = CHARACTER_CHANGE_IN_SKY_SCENE

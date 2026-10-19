@@ -41,11 +41,13 @@ namespace ViExtras
     /// genre when there is no song, as on a talk station). While you are wanted
     /// and chase music plays (the game's wanted music, or GTA6Hud's own chase
     /// tracks), the car radio goes quiet and comes back when it ends
-    /// ([Radio] ChaseMusicTakesOver). Your own music is on the wheel too, before
-    /// RADIO OFF: the tracks in scripts\Hud\Radio\CustomMusic as MY MUSIC, and
-    /// each subfolder with tracks as a station of its own (CustomMusic: GTA6Hud's
-    /// own player). The game's next / previous track keys skip through it, and
-    /// it stops when you leave the car. Nothing opens or mutes
+    /// ([Radio] ChaseMusicTakesOver). On Demand is your own music, thrown to
+    /// the way vi_radio throws its switch: Down (the arrow key) or the right stick
+    /// pushed down in the wheel, Up back to the radio. Its list is the tracks in
+    /// scripts\Hud\Radio\CustomMusic as MY MUSIC and each subfolder with tracks
+    /// as a station of its own (CustomMusic: GTA6Hud's own player). The game's
+    /// next / previous track keys skip through it, and it stops when you leave the
+    /// car. Nothing opens or mutes
     /// while something else has the keys (HudBridge.UiInTheWay): a GTA6Hud
     /// menu or wheel, the phone, the on-screen keyboard, a 2.5 panel.
     ///
@@ -128,6 +130,11 @@ namespace ViExtras
         private readonly float _customGain;
         private RadioHud.Item _customOn;
         private int _customVeh;
+        // On Demand: the switch, its list, the radio's list, and what the radio played before it
+        private bool _onDemand, _stickYLatched;
+        private readonly bool _invertSwitch;
+        private List<RadioHud.Item> _radioStations = new List<RadioHud.Item>(), _odStations = new List<RadioHud.Item>();
+        private string _radioBefore;
 
         /// <summary>exports IsOpen / IsMuted.</summary>
         public static bool IsOpen { get; private set; }
@@ -167,7 +174,8 @@ namespace ViExtras
             _chaseTakesOver = Config.Get(S, "ChaseMusicTakesOver", true);
             if (Config.Get(S, "CustomMusic", true))
                 _custom = new CustomMusic(Path.Combine(Paths.Scripts, "Hud", "Radio", "CustomMusic"));
-            _customGain = Config.Get(S, "CustomMusicVolume", 0.12f);   // GTA6Hud's own CustomGain
+            _customGain = Config.Get(S, "CustomMusicVolume", 0.20f);   // GTA6Hud's own CustomGain is 0.12
+            _invertSwitch = Config.Get(S, "InvertSwitchAxis", false);
             foreach (string name in Split(Config.Get(S, "HiddenStations", ""))) _hidden.Add(name);
             _mutingScenes = Split(Config.Get(S, "RadioMutingScenes", "CHARACTER_CHANGE_IN_SKY_SCENE")).ToArray();
             _hud = new RadioHud(Config.Get(S, "SlideTime", 110), Config.Get(S, "MuteDim", true), Config.Get(S, "SideIcons", true),
@@ -317,23 +325,33 @@ namespace ViExtras
                 else if (!name.StartsWith("HIDDEN_", StringComparison.Ordinal) && !_hidden.Contains(name))
                     list.Add(StationInfo(name));
             }
-            // your own music's stations, before RADIO OFF
-            if (_custom != null)
-                foreach (CustomMusic.Station st in _custom.Stations(RealTime.Ms))
-                    list.Add(new RadioHud.Item { Name = "CUSTOM:" + st.Folder, Label = st.Label, Custom = st.Folder });
             if (_includeOff || seenOff)
             {
                 // the RADIO OFF tile; its art was rendered for vi_radio's OffLabel
                 bool baked = _tableOffLabel != null && _tableOffLabel == _offLabel;
                 list.Add(new RadioHud.Item { Name = OffName, Label = _offLabel, Off = true, Key = baked ? "off" : null });
             }
-            _stations = list;
-            // the list is new: your own music's station playing is its new entry of the same name
-            if (_customOn != null) _customOn = list.Find(x => x.Name == _customOn.Name) ?? _customOn;
+            _radioStations = list;
+
+            // On Demand: your own music's stations, or a tile saying how to add some
+            var od = new List<RadioHud.Item>();
+            if (_custom != null)
+                foreach (CustomMusic.Station st in _custom.Stations(RealTime.Ms))
+                    od.Add(new RadioHud.Item { Name = "CUSTOM:" + st.Folder, Label = st.Label, Custom = st.Folder });
+            if (od.Count == 0)
+                od.Add(new RadioHud.Item { Name = "CUSTOM:", Label = "NO MUSIC YET", Empty = true,
+                    Genre = _custom != null ? "ADD TRACKS TO SCRIPTS\\HUD\\RADIO\\CUSTOMMUSIC" : "NEEDS GTA6HUD" });
+            _odStations = od;
+            // the lists are new: your own music's station playing is its new entry of the same name
+            if (_customOn != null) _customOn = od.Find(x => x.Name == _customOn.Name) ?? _customOn;
+            if (_customOn != null) _onDemand = true;
+            _stations = _onDemand ? _odStations : _radioStations;
+            _hud.SetOnDemand(_onDemand);
 
             // keep the highlight on whatever is actually playing
             string playing = _customOn != null ? _customOn.Name : PlayerStation();
             if (string.IsNullOrEmpty(playing)) playing = OffName;
+            if (_onDemand && _customOn == null) _index = 0;
             for (int i = 0; i < _stations.Count; i++)
                 if (string.Equals(_stations[i].Name, playing, StringComparison.OrdinalIgnoreCase)) { _index = i; break; }
             if (_index >= _stations.Count) _index = 0;
@@ -341,6 +359,7 @@ namespace ViExtras
 
         private void ApplyStation(RadioHud.Item entry)
         {
+            if (entry.Empty) return;   // On Demand with no music: the radio carries on
             int veh = CurrentVehicle();
             if (entry.Custom != null)
             {
@@ -480,10 +499,12 @@ namespace ViExtras
         {
             if (_custom == null) return;
             int veh = CurrentVehicle();
-            if (_customOn != null && veh != _customVeh)
+            if ((_customOn != null || _onDemand) && veh != _customVeh)
             {
+                // a new car plays its own radio
                 _customOn = null;
-                PushState(false);
+                if (_onDemand) SetOnDemand(false, false);
+                else PushState(false);
             }
             bool on = _customOn != null && veh != 0 && !_muted && !_chaseQuiet;
             float volume = Math.Max(0, Math.Min(10, Function.Call<int>(Hash.GET_PROFILE_SETTING, 301))) / 10f * _customGain;
@@ -493,6 +514,34 @@ namespace ViExtras
             Disable(VehPrevTrack);
             if (JustPressed(VehNextTrack)) _custom.Next();
             if (JustPressed(VehPrevTrack)) _custom.Previous();
+        }
+
+        // The radio / On Demand switch. Thrown to On Demand, the wheel lists your own
+        // music and plays the station highlighted there (the one playing, or the
+        // first); thrown back, it lists the radio again and puts back the station
+        // the radio played before. apply: false only changes the lists.
+        private void SetOnDemand(bool on, bool apply = true)
+        {
+            if (on == _onDemand) return;
+            _onDemand = on;
+            _customVeh = CurrentVehicle();
+            if (on)
+            {
+                _radioBefore = PlayerStation();
+                _stations = _odStations;
+                _index = Math.Max(0, _customOn != null ? _stations.FindIndex(x => x.Name == _customOn.Name) : 0);
+            }
+            else
+            {
+                _customOn = null;
+                _stations = _radioStations;
+                string back = string.IsNullOrEmpty(_radioBefore) ? OffName : _radioBefore;
+                _index = Math.Max(0, _stations.FindIndex(x => string.Equals(x.Name, back, StringComparison.OrdinalIgnoreCase)));
+            }
+            if (apply && _index < _stations.Count) ApplyStation(_stations[_index]);
+            _hud.SetOnDemand(on);
+            PushState(true);
+            Log.Write("Radio", on ? "On Demand: your own music" : "On Demand off: back to the radio");
         }
 
         private static string TrackLabel(string key)
@@ -682,7 +731,35 @@ namespace ViExtras
                 Disable(RightY);
             }
 
-            // (The radio / On Demand switch on up / down only works with On Demand on.)
+            // The radio / On Demand switch, as vi_radio throws it: RADIO is the top
+            // position and ON DEMAND the bottom one, so down engages On Demand and up
+            // hands the radio back. The arrow keys on a keyboard; the right stick's
+            // up / down on a pad (its left / right steps), latched to one throw a push.
+            {
+                bool up = false, down = false;
+                if (pad)
+                {
+                    float y = Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, RightY);
+                    if (_invertSwitch) y = -y;
+                    if (Math.Abs(y) >= _deadzone)
+                    {
+                        if (!_stickYLatched)
+                        {
+                            _stickYLatched = true;
+                            if (y < 0f) up = true; else down = true;
+                        }
+                    }
+                    else _stickYLatched = false;
+                }
+                else
+                {
+                    _stickYLatched = false;
+                    up = JustPressed(CellUp);
+                    down = JustPressed(CellDown);
+                }
+                if (down) SetOnDemand(true);
+                else if (up) SetOnDemand(false);
+            }
 
             // Mute: Spacebar on a keyboard, D-pad Down on a pad.
             if (_muteInWheel)
@@ -820,14 +897,16 @@ namespace ViExtras
             ChaseMusic();
 
             string playing = PlayerStation();
-            if (_customOn != null)
+            if (_onDemand)
             {
-                // your own music has the car while its radio stays off; a station put on
-                // another way (GTA's next / previous station keys) takes over from it
+                // On Demand has the car while its radio stays off; a station put on another
+                // way (GTA's next / previous station keys) throws the switch back to the radio
                 // (the game names no station, an empty name, while the radio is off)
-                if (string.IsNullOrEmpty(playing) || playing == OffName) return;
-                _customOn = null;
-                Log.Write("Radio", "custom music: the car's radio was switched on (" + playing + ")");
+                // (with nothing of yours playing yet, the radio simply carries on underneath)
+                if (_customOn == null || string.IsNullOrEmpty(playing) || playing == OffName) return;
+                Log.Write("Radio", "On Demand: the car's radio was switched on (" + playing + ")");
+                _radioBefore = playing;
+                SetOnDemand(false, false);
             }
             if (playing != _lastStation)
             {
