@@ -139,9 +139,6 @@ Load **Story Mode**. The new HUD appears on its own.
 | **Open the HUD settings** | Hold **V**. |
 | **Add your own music** | Put `.mp3` files in `scripts\Hud\Music` or `scripts\Hud\Radio\CustomMusic` in your game folder. |
 
-> ⚠️ **Don't switch to Lucia on Enhanced yet.** It crashes the game right now. We're working on a fix.
-> Play as Franklin, Michael or Trevor for now.
-
 ---
 
 ## Something went wrong?

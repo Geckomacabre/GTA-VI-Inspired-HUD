@@ -132,7 +132,6 @@ These live in new script files next to FBICat's `GTA6Hud.dll`, which is left as 
 - **Greet / Antagonize** are keyboard only for now (Y / U).
 - **Enhanced:** the random crashes have a fix (above), still being confirmed in play. If Enhanced crashes, send the logs listed in the install guide.
 - **Lucia:** switching to her on Legacy can freeze the game. A fix is being tested.
-- **Lucia on Enhanced:** switching to her can still crash. Don't switch to Lucia on Enhanced yet.
 - **Enhanced with NaturalVision Enhanced:** NVE's own `dlclist.xml` and `gameconfig.xml` take over from the RegisterPatch, so the HUD's packs don't load. Raising NVE's pools as well makes the game run out of memory while loading Story Mode. `INSTALL-ENHANCED.md` says what to add to NVE's `dlclist.xml` and to leave its `gameconfig.xml` alone.
 
 ## 2.2.0 (2026-10-18)

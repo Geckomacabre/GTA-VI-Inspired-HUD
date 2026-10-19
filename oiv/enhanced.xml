@@ -40,7 +40,6 @@ Requirements (not included)
 
 Known issues on Enhanced
   - 2.2's random crashes (a wrong memory read in Script Hook V .NET Enhanced) are fixed; if it still crashes, send the logs below.
-  - Don't switch to Lucia on Enhanced yet.
   - With NaturalVision Enhanced: add the 4 packs to NVE's onigiri\common\data\dlclist.xml and keep NVE's gameconfig.xml
     (see INSTALL-ENHANCED.md).
   - Problems: send scripts\GTA6Hud.perf.log, scripts\GTA6Hud.error.log, scripts\ViExtras.log and ScriptHookVDotNet.log.

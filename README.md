@@ -39,7 +39,7 @@ Made by **FBICat**. Version 2.5 adds features from the [FiveM version](https://g
 | To do this | Press |
 | :--- | :--- |
 | HUD settings | Hold **V** |
-| Play as Lucia | Hold **Left Alt**, then **E** to her picture *(Legacy only for now)* |
+| Play as Lucia | Hold **Left Alt**, then **E** to her picture |
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**). **O** mutes it |
 | Nitrous | Hold **Left Alt** in a car with a bottle |
@@ -72,7 +72,6 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 ## ⚠️ Known bugs (being fixed)
 
 - Switching to **Michael or Trevor** from the HUD's character wheel may not work (Legacy and Enhanced).
-- **Enhanced:** don't switch to Lucia yet. It can crash.
 - The minimap's waypoint route can look shaky.
 - Greet / antagonize only work on the keyboard for now.
 - **NaturalVision Enhanced** users: see "Something went wrong?" in the [Enhanced guide](INSTALL-ENHANCED.md).
