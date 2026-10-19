@@ -12,6 +12,8 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Police only shoot to kill when you're armed and wanted at 3+ stars.** The rest of the time every cop carries a stun gun, and you're arrested (BUSTED) instead: when a stun gun drops you, or when you stand still, unarmed, near a cop at 1-2 stars.
   - "Armed" is a gun in your hand, or one fired in the last 5 seconds.
   - The arrest is the game's own. You drop to 1 star (it only arrests at 1), FBICat's police AI pauses, and the nearest cop on foot is told to arrest you. Draw a gun, or go 15 seconds without an arrest, and your stars come back.
+  - **Surrender:** with stars, near a cop who can see you, look at him and hold **E** (X / Square on a pad) on the SURRENDER prompt. Your hands go up, you go down on your knees with your hands on your head, and you're arrested. Sprint to bolt (the stars come back). The pose uses the same Rockstar clips as the FiveM server's fenix-police.
+  - FBICat's own SURRENDER prompt never came up: his code returns before it can offer one. It's shown from here, through his prompt.
   - The weapons work with FBICat's police AI: the weapon it re-arms each cop with is pointed at the stun gun, and back at the cop's own gun at 3+ stars when you're armed.
   - Settings: `[PoliceForce]` in `ViExtras.ini` (`LethalFromStars`, `ArmedGraceSeconds`, `ArrestWindowSeconds`, `Enabled`).
 - **Binoculars are on the weapon wheel:** hold Tab (LB on a pad) and let go on the binoculars tile.
@@ -37,6 +39,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ### Fixed
 
+- **BUSTED never happened with FBICat's HUD.** It clears the wanted level the moment an arrest begins, and the game then drops the arrest (the cop walks back to his car). While one of our arrests is under way that's held off until the BUSTED screen shows, so the arrest completes.
 - **Lucia: loading a save you quit as her could freeze the game**, while the HUD switched you back to her. FBICat's automatic Lucia swap is switched off in `GTA6Hud.dll`: a 2-byte change in `UpdateLuciaMode`, the only change to his DLL. Lucia now only changes from the character wheel, and you load in as your story character.
 - **Install guides:** a "Lucia is not registered" row (her two `dlclist.xml` lines are missing; the message's `VIHudSetup.exe` isn't part of this mod), and NVE's `dlclist.xml` lines listed one per line, so all four get copied.
 - **WASTED / BUSTED only showed once per session.** Releasing the screen's text movie threw an error, which left the screen marked as still playing, so later deaths and arrests got the game's own screen.

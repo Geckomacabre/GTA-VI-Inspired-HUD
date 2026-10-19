@@ -55,6 +55,7 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 | Crouch | **Left Ctrl** twice |
 | Lie down / crawl | **Right Ctrl**, then **W / S** |
 | Binoculars | Hold **Tab** (weapon wheel), let go on the binoculars |
+| Surrender (with stars) | Look at a cop and hold **E** |
 | Skills | **K** |
 | Push-ups / sit-ups | **N** / **Shift + N** |
 | Greet / antagonize someone | **Y** / **U** |
@@ -69,7 +70,7 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 - **Lucia** as a 4th character (a separate, optional download)
 - **Wanted stars and a wanted box** that tell you what the police know, plus **police lights** at the screen edge
 - **Police with stun guns:** they only shoot to kill when you're armed at 3+ stars. Otherwise they tase and arrest you,
-  or arrest you when you stand still, unarmed
+  or arrest you when you stand still, unarmed. Hold **E** near a cop to surrender
 - **WASTED / BUSTED** screens, a **crash cam** and **binoculars**
 - **Leonida Customs**: a full mod shop with nitrous
 - **Honor**, **skills**, a **gym**, and people who **remember you**

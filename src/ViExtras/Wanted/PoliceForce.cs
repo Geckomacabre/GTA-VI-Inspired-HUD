@@ -24,6 +24,18 @@ namespace ViExtras
     /// 1 star), the brain is held off (Ref.PoliceBrainEnabled) so it doesn't re-task the cops,
     /// and the nearest cop on foot is told to arrest you (TASK_ARREST_PED). Draw a gun, or let
     /// ArrestWindowSeconds pass without an arrest, and the stars come back.
+    ///
+    /// GTA6Hud clears the wanted level the moment an arrest begins (ForgetOnDeathOrArrest, at
+    /// IS_PLAYER_BEING_ARRESTED's early stage), which makes the game drop the arrest; while one
+    /// of ours is under way its "already handled" flag is held up, and let go once the BUSTED
+    /// screen shows, so its clean-up still runs then.
+    ///
+    /// Surrender: GTA6Hud's own SURRENDER prompt can never come up (its UpdateSurrender returns
+    /// unless a surrender is already accepted). Near a cop who can see you, with stars, the
+    /// prompt is shown here through its HoldWorldItem (hold E, or X / Square). Holding it puts
+    /// your hands up and takes you down on your knees, hands on your head (the clips and order
+    /// the FiveM server's fenix-police uses: Rockstar's re_arrests), and starts the arrest. You
+    /// can't walk off while kneeling; sprint bolts, and the stars come back.
     /// </summary>
     public sealed class PoliceForce : Script
     {
@@ -34,6 +46,13 @@ namespace ViExtras
         private const float ComplyRange = 15f;    // a cop this close sees you give up
         private const int ComplyMs = 2000;        // standing still this long, unarmed
         private const float ArrestRange = 60f;    // the cop told to arrest you is within this
+        private const float SurrenderRange = 15f; // a cop this close, who can see you, takes a surrender
+
+        // The surrender pose (fenix-police's clips): hands up, then down on the knees, hands on the head.
+        private const string HandsDict = "missheist_agency2ahands_up", KneelDict = "random@arrests", HeadDict = "random@arrests@busted";
+        private const int SprintControl = 21;
+        private static readonly int[] PoseBlocked = { 21, 22, 23, 24, 25, 30, 31, 32, 33, 34, 35, 37, 44, 140, 141, 142, 143 };
+        private int _pose, _poseNext;   // 0 none; 1-6 the steps in; 7 kneeling, hands on the head
 
         private readonly bool _enabled;
         private readonly int _lethalFrom;
@@ -46,7 +65,7 @@ namespace ViExtras
         private int _stillSince;
 
         // the arrest: until when it waits, the wanted level it dropped from, the cop on it
-        private bool _arresting, _arrestStarted;
+        private bool _arresting, _arrestStarted, _bustedShown;
         private int _arrestUntil, _heldWanted, _nextArrestOrder, _notArrestedSince;
         private Ped _arrestCop;
 
@@ -54,6 +73,9 @@ namespace ViExtras
         private static bool _looked;
         private static FieldInfo _brainField, _copsField, _copPed, _copOriginal, _copDisarmed;
         private static FieldInfo _brainEnabled;   // GTA6Hud.Ref.PoliceBrainEnabled
+        private static FieldInfo _deadOrArrested; // GTA6Hud's "death / arrest already handled"
+        private static MethodInfo _holdWorldItem; // GTA6Hud's hold-E prompt on a ped or prop
+        private static bool _hudLooked, _surrenderBroken;
         private bool _brainHeld, _brainWas;
 
         public PoliceForce()
@@ -80,7 +102,11 @@ namespace ViExtras
             {
                 if (!_wasDead) LogDeath(player, wanted);
                 _wasDead = true;
-                if (_arresting) EndArrest("died", false);
+                if (_arresting)
+                {
+                    EndArrest("died", false);
+                    SetHandled(false);   // GTA6Hud's death clean-up runs on its next frame
+                }
                 if (_own.Count > 0) RestoreAll();
                 _modeKnown = _stunned = false;
                 _armedUntil = _stillSince = 0;
@@ -88,6 +114,7 @@ namespace ViExtras
             }
             _wasDead = false;
             if (_arresting) DriveArrest(player, wanted, now);
+            if (_pose != 0) DrivePose(player, now);
             if (wanted == 0)
             {
                 if (_own.Count > 0) RestoreAll();
@@ -131,6 +158,8 @@ namespace ViExtras
                 StartArrest("gave up", wanted, now);
             }
 
+            if (!_arresting) OfferSurrender(player, wanted, now);
+
             if (now < _nextScan) return;
             _nextScan = now + ScanMs;
             if (lethal) RestoreAll();
@@ -167,9 +196,18 @@ namespace ViExtras
         private void DriveArrest(Ped player, int wanted, int now)
         {
             HoldBrain(true);   // its settings reload would switch it back on
-            bool arrested = Function.Call<bool>(Hash.IS_PLAYER_BEING_ARRESTED, Game.Player, false);
-            if (arrested)
+            bool started = Function.Call<bool>(Hash.IS_PLAYER_BEING_ARRESTED, Game.Player, true);   // hands going up
+            bool busted = Function.Call<bool>(Hash.IS_PLAYER_BEING_ARRESTED, Game.Player, false);   // the BUSTED screen
+            if (busted && !_bustedShown)
             {
+                _bustedShown = true;
+                SetHandled(false);   // past the point of no return: GTA6Hud's arrest clean-up may run now
+                Log.Write("PoliceForce", "BUSTED");
+            }
+            else if (!_bustedShown) SetHandled(true);   // keep GTA6Hud from clearing the stars mid-arrest
+            if (started || busted)
+            {
+                _pose = 0;   // the game's arrest has the player now
                 if (!_arrestStarted) Log.Write("PoliceForce", "arrest started");
                 _arrestStarted = true;
                 _notArrestedSince = 0;
@@ -177,9 +215,9 @@ namespace ViExtras
             }
             if (_arrestStarted)
             {
-                // the arrest has played out (BUSTED): let the brain back once it's over
+                // over: after BUSTED once it has played out, or broken off before it
                 if (_notArrestedSince == 0) _notArrestedSince = now;
-                if (wanted == 0 || now - _notArrestedSince > 1500) EndArrest("arrest over", false);
+                if (now - _notArrestedSince > 1500) EndArrest(_bustedShown ? "arrest over" : "arrest broke off", !_bustedShown);
                 return;
             }
             if (wanted == 0) { EndArrest("wanted level cleared", false); return; }
@@ -206,15 +244,148 @@ namespace ViExtras
         private void EndArrest(string why, bool restoreWanted)
         {
             Ped player = Game.Player.Character;
+            if (_pose != 0 && player != null && player.Exists() && !player.IsDead) LeavePose(player, bolt: why == "ran off");
+            _pose = 0;
             if (restoreWanted && player != null && !player.IsDead && Game.Player.Wanted.WantedLevel < _heldWanted)
             {
                 Game.Player.Wanted.SetWantedLevel(_heldWanted, false);
                 Game.Player.Wanted.ApplyWantedLevelChangeNow(false);
             }
             Log.Write("PoliceForce", why + (restoreWanted && _heldWanted > 1 ? ": back to " + _heldWanted + " stars" : ""));
-            _arresting = _arrestStarted = false;
+            _arresting = _arrestStarted = _bustedShown = false;
             _arrestCop = null;
             HoldBrain(false);
+        }
+
+        // ------------------------------------------------------------------ surrender
+        private void OfferSurrender(Ped player, int wanted, int now)
+        {
+            if (_surrenderBroken || wanted == 0 || player.IsInVehicle() || player.IsRagdoll || HudBridge.UiInTheWay) return;
+            Ped cop = null;
+            float best = SurrenderRange;
+            foreach (Ped ped in World.GetNearbyPeds(player, SurrenderRange))
+            {
+                if (ped == null || !ped.Exists() || ped.IsDead || ped.IsInVehicle() || !IsCop(ped)) continue;
+                if (!Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY, ped, player, 17)) continue;
+                float d = ped.Position.DistanceTo(player.Position);
+                if (d < best) { best = d; cop = ped; }
+            }
+            if (cop == null) return;
+            object hud = HudBridge.Gta6Hud();
+            if (hud == null || !LookHud(hud) || _holdWorldItem == null) return;
+            bool held;
+            try { held = (bool)_holdWorldItem.Invoke(hud, new object[] { cop.Handle, "SURRENDER" }); }
+            catch (Exception ex)
+            {
+                _surrenderBroken = true;
+                Log.Write("PoliceForce", "surrender prompt: " + (ex.InnerException ?? ex).Message);
+                return;
+            }
+            if (!held) return;
+            Function.Call(Hash.SET_CURRENT_PED_WEAPON, player, Unarmed, true);
+            foreach (string dict in new[] { HandsDict, KneelDict, HeadDict }) Function.Call(Hash.REQUEST_ANIM_DICT, dict);
+            player.Heading = (cop.Position - player.Position).ToHeading();
+            _pose = 1;
+            _poseNext = 0;
+            _armedUntil = 0;
+            _arrestCop = cop;
+            StartArrest("surrendered", wanted, now);
+            _arrestCop = cop;
+            _nextArrestOrder = 0;
+        }
+
+        // One step of the surrender pose at a time, each started when the last one ends.
+        private void DrivePose(Ped player, int now)
+        {
+            foreach (int c in PoseBlocked) Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, c, true);
+            if (Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, SprintControl))
+            {
+                EndArrest("ran off", true);
+                return;
+            }
+            if (now < _poseNext) return;
+            switch (_pose)
+            {
+                case 1:   // hands up
+                    if (!Loaded(HandsDict)) return;
+                    _poseNext = now + Play(player, HandsDict, "handsup_enter", 2, 8f);
+                    _pose = 2;
+                    break;
+                case 2:
+                    Play(player, HandsDict, "handsup_loop", 1, 4f);
+                    _poseNext = now + 1200;
+                    _pose = 3;
+                    break;
+                case 3:   // down on the knees
+                    if (!Loaded(KneelDict) || !Loaded(HeadDict)) return;
+                    _poseNext = now + Play(player, KneelDict, "idle_2_hands_up", 2, 4f);
+                    _pose = 4;
+                    break;
+                case 4:
+                    Play(player, KneelDict, "kneeling_arrest_idle", 2, 4f);
+                    _poseNext = now + 400;
+                    _pose = 5;
+                    break;
+                case 5:   // hands on the head
+                    _poseNext = now + Play(player, HeadDict, "enter", 2, 4f);
+                    _pose = 6;
+                    break;
+                case 6:
+                    Play(player, HeadDict, "idle_a", 1, 4f);
+                    _poseNext = now + 500;
+                    _pose = 7;
+                    break;
+                default:  // kneeling: keep the loop playing (a bump can knock it off)
+                    if (!Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, player, HeadDict, "idle_a", 3)) Play(player, HeadDict, "idle_a", 1, 4f);
+                    _poseNext = now + 500;
+                    break;
+            }
+        }
+
+        // Out of the pose: bolting from the knees, or getting back up (the hands just come down).
+        private void LeavePose(Ped player, bool bolt)
+        {
+            if (_pose >= 4) Play(player, KneelDict, bolt ? "kneeling_arrest_escape" : "kneeling_arrest_get_up", 0, 4f);
+            else if (Loaded(HandsDict)) Play(player, HandsDict, "handsup_exit", 0, 4f);
+            else player.Task.ClearAll();
+        }
+
+        private static bool Loaded(string dict)
+        {
+            if (Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, dict)) return true;
+            Function.Call(Hash.REQUEST_ANIM_DICT, dict);
+            return false;
+        }
+
+        // Plays a clip on the player; returns how long it runs, in ms (a little under, so the next starts as it ends).
+        private static int Play(Ped player, string dict, string clip, int flags, float blendIn)
+        {
+            Function.Call(Hash.TASK_PLAY_ANIM, player, dict, clip, blendIn, -4f, -1, flags, 0f, false, false, false);
+            float secs = Function.Call<float>(Hash.GET_ANIM_DURATION, dict, clip);
+            return secs > 0f ? Math.Max(200, (int)(secs * 950f)) : 1000;
+        }
+
+        private static bool LookHud(object hud)
+        {
+            if (_hudLooked) return true;
+            _hudLooked = true;
+            const BindingFlags Own = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            Type t = hud.GetType();
+            _deadOrArrested = t.GetField("_deadOrArrested", Own);
+            _holdWorldItem = t.GetMethod("HoldWorldItem", Own, null, new[] { typeof(int), typeof(string) }, null);
+            if (_deadOrArrested == null) Log.Write("PoliceForce", "GTA6Hud's arrest flag wasn't found: it may cancel arrests");
+            if (_holdWorldItem == null) Log.Write("PoliceForce", "GTA6Hud's hold prompt wasn't found: no surrender on E");
+            return true;
+        }
+
+        // GTA6Hud's "death / arrest already handled" flag (it clears the wanted level when that
+        // goes from not handled to handled).
+        private static void SetHandled(bool handled)
+        {
+            object hud = HudBridge.Gta6Hud();
+            if (hud == null || !LookHud(hud) || _deadOrArrested == null) return;
+            try { _deadOrArrested.SetValue(hud, handled); }
+            catch { }
         }
 
         // GTA6Hud's police brain off while held (it releases its cops when it sees it off), and
