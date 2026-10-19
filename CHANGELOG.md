@@ -15,6 +15,11 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Binoculars tell other scripts when D-pad down is theirs** (`Binoculars.HoldsCharacterKey`, like nitrous's), so a character wheel of another script stays shut while you zoom out.
 - **Nitrous logs which input started each boost**, to track down reports of the wrong button boosting.
 - **`GTA6Hud.ini` `[MapIcons] Sprites` is FBICat's list again.** 2.5.1 added LS Customs (72) to it, but that didn't make LS Customs show on the map from further away, so the change is undone.
+- **On Demand goes quiet over the pause menu, cutscenes, black screens and death**, as FBICat's own radio player does. Your music used to keep playing over the pause menu.
+- **Leaving the car while your music plays gives the car its station back.** Its radio was left switched off, so getting back in was silent.
+- **Throwing the switch to On Demand while the radio is muted unmutes it first**, as browsing stations does, so going back to the radio brings back the station you had (it came back as RADIO OFF).
+- **A loading screen or a character switch pauses your music at once** and ends the radio wheel's slow motion there and then. If GTA6Hud's own radio takes over (`[Radio] Enabled = True`), it gets the car unmuted.
+- `ViExtras.log` no longer says On Demand is disabled at every start; it says where your own music goes.
 
 ## 2.5.1 (19 October 2026)
 

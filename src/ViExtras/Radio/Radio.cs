@@ -51,10 +51,9 @@ namespace ViExtras
     /// while something else has the keys (HudBridge.UiInTheWay): a GTA6Hud
     /// menu or wheel, the phone, the on-screen keyboard, a 2.5 panel.
     ///
-    /// On Demand (YouTube through the car radio) needs xsound and a server, so it
-    /// is off here exactly as vi_radio switches it off when xsound is missing:
-    /// the switch keys do nothing and the left icon is what the page shows with
-    /// On Demand off.
+    /// vi_radio's own On Demand (YouTube through the car radio) needs xsound and a
+    /// server, which single player does not have; the switch plays your own music
+    /// instead, with vi_radio's ON DEMAND icon.
     ///
     /// GTA6Hud has a radio wheel of its own on the same control. This one stands
     /// down while GTA6Hud.ini [Radio] Enabled is True; set it False to use it.
@@ -88,10 +87,8 @@ namespace ViExtras
         private readonly string _offLabel;
         private readonly HashSet<string> _hidden = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         private readonly string[] _mutingScenes;
-        // Config.OnDemand.enabled is false: client.lua's startup check switches it
-        // off when xsound is not started, and single player has no xsound. Every
-        // branch it gates (the switch keys, the panel, the commit on release, the
-        // ON DEMAND label) is therefore left out.
+        // vi_radio's YouTube On Demand (xsound, its search panel, the commit on release)
+        // is left out: single player has no xsound. Its switch plays your own music.
 
         // ---- state, as client.lua's ------------------------------------------------------
         private readonly Dictionary<string, RadioHud.Item> _table = new Dictionary<string, RadioHud.Item>(StringComparer.OrdinalIgnoreCase);
@@ -100,7 +97,7 @@ namespace ViExtras
         private List<RadioHud.Item> _stations = new List<RadioHud.Item>();
         private int _index;
         private bool _wheelOpen, _muted, _openedByControl;
-        // (client.lua's stationPicked / panelOnClose only steer On Demand, which is off.)
+        // (client.lua's stationPicked / panelOnClose only steer its YouTube panel, left out.)
         private int _mutedVehicle;
         private long _navHeldSince, _navLastStep;
         private int _navDir;
@@ -183,7 +180,9 @@ namespace ViExtras
 
             LoadTable();
             if (_enabled)
-                Log.Write("Radio", "On Demand is disabled: it plays through xsound on a FiveM server, which single player does not have.");
+                Log.Write("Radio", _custom != null
+                    ? "On Demand plays your own music from scripts\\Hud\\Radio\\CustomMusic (Down in the wheel)"
+                    : "On Demand is off ([Radio] CustomMusic = False)");
 
             Tick += OnTick;
             Aborted += (s, e) => Cleanup();
@@ -224,6 +223,13 @@ namespace ViExtras
             if (!GameReady.Now)
             {
                 if (_wheelOpen) CloseWheel();   // its slow motion and blur must not outlast a switch or loading screen
+                if (_timeOwned)
+                {
+                    Function.Call(Hash.SET_TIME_SCALE, 1f);
+                    _timeScaleNow = 1f;
+                    _timeOwned = false;
+                }
+                _custom?.Update(false, 0f);
                 return;
             }
             if (!_enabled) return;
@@ -239,9 +245,16 @@ namespace ViExtras
                     {
                         _standingDown = true;
                         Log.Write("Radio", "GTA6Hud.ini [Radio] Enabled is True, so GTA6Hud's radio is in charge; set it False to use this one.");
+                        // GTA6Hud's radio gets the car as it is: not muted by this one
+                        if (_muted || _chaseQuiet)
+                        {
+                            _muted = _chaseQuiet = false;
+                            ApplyMute();
+                        }
                     }
                     if (_wheelOpen) CloseWheel();
                     EaseTime(now);
+                    _custom?.Update(false, 0f);
                     return;
                 }
                 _standingDown = false;
@@ -492,7 +505,8 @@ namespace ViExtras
         }
 
         // Your own music, every frame: it plays while its station is on in the car
-        // it was put on in (not muted, not under chase music), at the game's radio
+        // it was put on in (not muted, not under chase music; quiet over the pause
+        // menu, a cutscene, a black screen or death, as GTA6Hud's own player), at the game's radio
         // volume times [Radio] CustomMusicVolume; the game's next / previous track
         // keys skip through it. Leaving or changing car ends it.
         private void CustomTick(long now)
@@ -501,12 +515,16 @@ namespace ViExtras
             int veh = CurrentVehicle();
             if ((_customOn != null || _onDemand) && veh != _customVeh)
             {
-                // a new car plays its own radio
+                // a new car plays its own radio, and the car left gets back the station it
+                // had before your music (its radio was switched off for it)
+                if (_onDemand && _customVeh != 0 && Function.Call<bool>(Hash.DOES_ENTITY_EXIST, _customVeh))
+                    Function.Call(Hash.SET_VEH_RADIO_STATION, _customVeh, string.IsNullOrEmpty(_radioBefore) ? OffName : _radioBefore);
                 _customOn = null;
                 if (_onDemand) SetOnDemand(false, false);
                 else PushState(false);
             }
-            bool on = _customOn != null && veh != 0 && !_muted && !_chaseQuiet;
+            bool on = _customOn != null && veh != 0 && !_muted && !_chaseQuiet
+                && !HudBridge.Paused && !HudBridge.Busy && !Game.Player.Character.IsDead;
             float volume = Math.Max(0, Math.Min(10, Function.Call<int>(Hash.GET_PROFILE_SETTING, 301))) / 10f * _customGain;
             _custom.Update(on, volume);
             if (!on || _wheelOpen) return;
@@ -527,6 +545,13 @@ namespace ViExtras
             _customVeh = CurrentVehicle();
             if (on)
             {
+                // unmuted first, as browsing does: a muted car's radio names no station,
+                // and switching it off for your music wouldn't take
+                if (apply && _muted)
+                {
+                    _muted = false;
+                    ApplyMute();
+                }
                 _radioBefore = PlayerStation();
                 _stations = _odStations;
                 _index = Math.Max(0, _customOn != null ? _stations.FindIndex(x => x.Name == _customOn.Name) : 0);
@@ -574,7 +599,7 @@ namespace ViExtras
                 _muted = false;
                 ApplyMute();
             }
-            // No On Demand session can exist, so every station is applied as it is reached.
+            // Every station, and each of your own music's, is applied as it is reached.
             ApplyStation(_stations[_index]);
             PushState(false);
         }
@@ -628,8 +653,8 @@ namespace ViExtras
                 _wheelButtonHeld = false;
                 HudBridge.HoldVehicleWheelButton(false);
             }
-            // Releasing the key commits an On Demand choice in client.lua; with On
-            // Demand off there is nothing to commit.
+            // Releasing the key commits a YouTube On Demand choice in client.lua; your
+            // own music was put on as it was reached, so there is nothing to commit.
             PushState(false);
         }
 
