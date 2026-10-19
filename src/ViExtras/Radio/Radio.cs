@@ -41,7 +41,11 @@ namespace ViExtras
     /// genre when there is no song, as on a talk station). While you are wanted
     /// and chase music plays (the game's wanted music, or GTA6Hud's own chase
     /// tracks), the car radio goes quiet and comes back when it ends
-    /// ([Radio] ChaseMusicTakesOver). Nothing opens or mutes
+    /// ([Radio] ChaseMusicTakesOver). Your own music is on the wheel too, before
+    /// RADIO OFF: the tracks in scripts\Hud\Radio\CustomMusic as MY MUSIC, and
+    /// each subfolder with tracks as a station of its own (CustomMusic: GTA6Hud's
+    /// own player). The game's next / previous track keys skip through it, and
+    /// it stops when you leave the car. Nothing opens or mutes
     /// while something else has the keys (HudBridge.UiInTheWay): a GTA6Hud
     /// menu or wheel, the phone, the on-screen keyboard, a 2.5 panel.
     ///
@@ -119,6 +123,11 @@ namespace ViExtras
         private static readonly Hash AudioIsMusicPlaying = (Hash)0x845FFC3A4FEEFA3EUL;   // AUDIO_IS_MUSIC_PLAYING: the game's score
         private FieldInfo _hudMusic, _musicLevel;
         private bool _musicLooked;
+        // your own music (CustomMusic): the station playing and the car it plays in
+        private readonly CustomMusic _custom;
+        private readonly float _customGain;
+        private RadioHud.Item _customOn;
+        private int _customVeh;
 
         /// <summary>exports IsOpen / IsMuted.</summary>
         public static bool IsOpen { get; private set; }
@@ -156,6 +165,9 @@ namespace ViExtras
             _offLabel = Config.Get(S, "OffLabel", "RADIO OFF") ?? "RADIO OFF";
             _loud = Config.Get(S, "LoudRadio", true);
             _chaseTakesOver = Config.Get(S, "ChaseMusicTakesOver", true);
+            if (Config.Get(S, "CustomMusic", true))
+                _custom = new CustomMusic(Path.Combine(Paths.Scripts, "Hud", "Radio", "CustomMusic"));
+            _customGain = Config.Get(S, "CustomMusicVolume", 0.12f);   // GTA6Hud's own CustomGain
             foreach (string name in Split(Config.Get(S, "HiddenStations", ""))) _hidden.Add(name);
             _mutingScenes = Split(Config.Get(S, "RadioMutingScenes", "CHARACTER_CHANGE_IN_SKY_SCENE")).ToArray();
             _hud = new RadioHud(Config.Get(S, "SlideTime", 110), Config.Get(S, "MuteDim", true), Config.Get(S, "SideIcons", true),
@@ -241,6 +253,7 @@ namespace ViExtras
                     Housekeeping();
                 }
                 MainLoop(now);
+                CustomTick(now);
                 EaseTime(now);
                 if (now >= _nextScenes)
                 {
@@ -304,6 +317,10 @@ namespace ViExtras
                 else if (!name.StartsWith("HIDDEN_", StringComparison.Ordinal) && !_hidden.Contains(name))
                     list.Add(StationInfo(name));
             }
+            // your own music's stations, before RADIO OFF
+            if (_custom != null)
+                foreach (CustomMusic.Station st in _custom.Stations(RealTime.Ms))
+                    list.Add(new RadioHud.Item { Name = "CUSTOM:" + st.Folder, Label = st.Label, Custom = st.Folder });
             if (_includeOff || seenOff)
             {
                 // the RADIO OFF tile; its art was rendered for vi_radio's OffLabel
@@ -311,9 +328,11 @@ namespace ViExtras
                 list.Add(new RadioHud.Item { Name = OffName, Label = _offLabel, Off = true, Key = baked ? "off" : null });
             }
             _stations = list;
+            // the list is new: your own music's station playing is its new entry of the same name
+            if (_customOn != null) _customOn = list.Find(x => x.Name == _customOn.Name) ?? _customOn;
 
             // keep the highlight on whatever is actually playing
-            string playing = PlayerStation() ?? OffName;
+            string playing = _customOn != null ? _customOn.Name : PlayerStation() ?? OffName;
             for (int i = 0; i < _stations.Count; i++)
                 if (string.Equals(_stations[i].Name, playing, StringComparison.OrdinalIgnoreCase)) { _index = i; break; }
             if (_index >= _stations.Count) _index = 0;
@@ -322,6 +341,18 @@ namespace ViExtras
         private void ApplyStation(RadioHud.Item entry)
         {
             int veh = CurrentVehicle();
+            if (entry.Custom != null)
+            {
+                // your own music: the car's radio off, GTA6Hud's player on this folder
+                if (veh != 0) Function.Call(Hash.SET_VEH_RADIO_STATION, veh, OffName);
+                Function.Call(Hash.SET_RADIO_TO_STATION_NAME, OffName);
+                _customOn = entry;
+                _customVeh = veh;
+                _lastStation = OffName;
+                _custom.Select(entry.Custom);
+                return;
+            }
+            _customOn = null;
             if (veh != 0)
             {
                 Function.Call(Hash.SET_VEH_RADIO_STATION, veh, entry.Name);
@@ -420,6 +451,14 @@ namespace ViExtras
             }
             _audible = id;
             RadioHud.Item at = _index >= 0 && _index < _stations.Count ? _stations[_index] : null;
+            if (at != null && at.Custom != null)
+            {
+                // your own music: the song and artist from the files' tags
+                string title = null, artist = null;
+                bool mine = _customOn != null && at.Name == _customOn.Name && _custom.NowPlaying(at.Custom, out title, out artist);
+                _hud.NowPlaying(mine ? title : null, mine ? artist : null);
+                return;
+            }
             bool show = at != null && !at.Off && id > 0
                         && string.Equals(playing, at.Name, StringComparison.OrdinalIgnoreCase)
                         && !(id == _audibleAtSwitch && now - _stationSince < 3000);
@@ -430,6 +469,29 @@ namespace ViExtras
                 _trackArtist = TrackLabel(id + "A");
             }
             _hud.NowPlaying(show ? _trackTitle : null, show ? _trackArtist : null);
+        }
+
+        // Your own music, every frame: it plays while its station is on in the car
+        // it was put on in (not muted, not under chase music), at the game's radio
+        // volume times [Radio] CustomMusicVolume; the game's next / previous track
+        // keys skip through it. Leaving or changing car ends it.
+        private void CustomTick(long now)
+        {
+            if (_custom == null) return;
+            int veh = CurrentVehicle();
+            if (_customOn != null && veh != _customVeh)
+            {
+                _customOn = null;
+                PushState(false);
+            }
+            bool on = _customOn != null && veh != 0 && !_muted && !_chaseQuiet;
+            float volume = Math.Max(0, Math.Min(10, Function.Call<int>(Hash.GET_PROFILE_SETTING, 301))) / 10f * _customGain;
+            _custom.Update(on, volume);
+            if (!on || _wheelOpen) return;
+            Disable(VehNextTrack);
+            Disable(VehPrevTrack);
+            if (JustPressed(VehNextTrack)) _custom.Next();
+            if (JustPressed(VehPrevTrack)) _custom.Previous();
         }
 
         private static string TrackLabel(string key)
@@ -757,6 +819,14 @@ namespace ViExtras
             ChaseMusic();
 
             string playing = PlayerStation();
+            if (_customOn != null)
+            {
+                // your own music has the car while its radio stays off; a station put on
+                // another way (GTA's next / previous station keys) takes over from it
+                if (playing == null || playing == OffName) return;
+                _customOn = null;
+                Log.Write("Radio", "custom music: the car's radio was switched on (" + playing + ")");
+            }
             if (playing != _lastStation)
             {
                 _lastStation = playing;
@@ -834,6 +904,8 @@ namespace ViExtras
                     _muted = _chaseQuiet = false;
                     ApplyMute();
                 }
+                _customOn = null;
+                _custom?.Release();
                 IsOpen = false;
             }
             catch { }

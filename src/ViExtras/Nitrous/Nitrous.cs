@@ -55,6 +55,7 @@ namespace ViExtras
         private static readonly PlateStore Bottles = new PlateStore("nitrous.txt");
         private readonly int _kbControl, _padControl, _hintMs;
         private readonly Keys _kbKey;   // the key behind KeyboardControl, read itself (see Pressed)
+        private readonly bool _routeGauge;   // [VehicleCard] RouteGauge: GTA6Hud's own card for cars without a bottle
         private readonly float _nearMissRefill, _driftRefill, _oncomingRefill;
 
         private Vehicle _veh;
@@ -84,6 +85,7 @@ namespace ViExtras
             _kbControl = Config.Get("Nitrous", "KeyboardControl", 21);   // INPUT_SPRINT: Left Shift (FiveM: 19, Left Alt)
             _padControl = Config.Get("Nitrous", "PadControl", 179);      // INPUT_CELLPHONE_EXTRA_OPTION: X / Square
             _kbKey = _kbControl == 21 ? Keys.ShiftKey : _kbControl == 19 ? Keys.Menu : Keys.None;
+            _routeGauge = Config.Get("VehicleCard", "RouteGauge", false);
             _screenFx = Config.Get("Nitrous", "ScreenEffect", true);
             _flames = Config.Get("Nitrous", "Flames", true);
             _hintMs = Config.Get("Nitrous", "HintMs", 7000);
@@ -130,12 +132,12 @@ namespace ViExtras
             if (handle != _vehHandle)
             {
                 SetBoosting(false);
-                if (_active)
+                if (_cardTaken)
                 {
                     Gta6HudCard.End();
                     _cardTaken = false;
-                    _active = false;
                 }
+                _active = false;
                 _hintPending = false;
                 _hintUntil = -1;
                 _veh = handle != 0 ? veh : null;
@@ -154,9 +156,7 @@ namespace ViExtras
                 _active = true;
                 _tier = tier;
                 _fuel = _shown = _tier.Capacity;
-                // GTA6Hud's card, drawn from here so the row stays centred with the pip in it.
-                _cardTaken = Gta6HudCard.Begin(_veh);
-                Log.Write("Nitrous", "bottle fitted: " + _tier.Capacity.ToString("0.#") + " s, gauge " + (_cardTaken ? "on GTA6Hud's card" : "after its gauge row"));
+                Log.Write("Nitrous", "bottle fitted: " + _tier.Capacity.ToString("0.#") + " s");
                 // client.lua: the reading going from "no kit" to "kit" while the
                 // player already sits in the car is a kit being fitted. Never the
                 // first reading, never the moment they get in, once a car a session.
@@ -165,19 +165,32 @@ namespace ViExtras
             else if (!fitted && _active)
             {
                 SetBoosting(false);
-                Gta6HudCard.End();
-                _cardTaken = false;
                 _active = false;
                 _hintPending = false;
                 _hintUntil = -1;
             }
             _seen = true;
 
+            // GTA6Hud's vehicle card, drawn from here (Gta6HudCard) for every vehicle
+            // you're in: engine and fuel, and the nitrous gauge in the row, centred,
+            // only when the car has a bottle, as the FiveM HUD's card is. GTA6Hud's
+            // own route gauge (a double chevron like the nitrous one, up while a
+            // waypoint is set) is left out; [VehicleCard] RouteGauge = True gives
+            // cars without a bottle GTA6Hud's own card back.
+            bool wantCard = _veh != null && (_active || !_routeGauge);
+            if (wantCard && !_cardTaken) _cardTaken = Gta6HudCard.Begin(_veh);
+            else if (!wantCard && _cardTaken)
+            {
+                Gta6HudCard.End();
+                _cardTaken = false;
+            }
+
             // With FiveM's Left Alt (KeyboardControl = 19), GTA6Hud's swap wheel on the
             // same key stays shut meanwhile. A pad boosts on X / Square instead.
             HoldsCharacterKey = _active && !Glyphs.UsingPad && _kbControl == 19;
             HudBridge.HoldSwapWheelOff("nitrous", HoldsCharacterKey);
             if (_active) Drive(ped, now);
+            if (_cardTaken && Gta6HudCard.Draw(_veh, _active ? 1 : 0, out float sx, out float sy) && _active) DrawPip(sx, sy, true);
             DrawHint(now);
         }
 
@@ -213,12 +226,8 @@ namespace ViExtras
 
             // The ring follows the tank over 140 ms (style.css #pip-nitrous .pip-fill).
             _shown += (_fuel - _shown) * Math.Min(1f, dt / 0.14f);
-            if (_cardTaken)
-            {
-                // The card goes up and down with GTA6Hud's own, whatever is in the way.
-                if (Gta6HudCard.Draw(_veh, 1, out float sx, out float sy)) DrawPip(sx, sy, true);
-            }
-            else if (!blocked && HudBridge.VehicleGaugeRow(out float cx, out float cy, out _))
+            // On the card drawn from here (Run), the card going up and down with GTA6Hud's own.
+            if (!_cardTaken && !blocked && HudBridge.VehicleGaugeRow(out float cx, out float cy, out _))
             {
                 // GTA6Hud's card could not be drawn from here: after its row, off centre.
                 bool route = World.WaypointBlip != null && World.WaypointBlip.Exists();

@@ -40,6 +40,7 @@ namespace ViExtras
             public string Name, Label, Genre;   // game name, Config.Stations label / genre
             public string Key, GenreKey;        // art keys from stations.txt, or null
             public bool Off;
+            public string Custom;               // your own music's station: its folder ("" the loose tracks), else null
 
             internal Art.Entry Tile, NameArt, GenreArt;   // rendered art; null: the label / genre set in TextKit's Anton
             internal bool Resolved;
@@ -239,6 +240,7 @@ namespace ViExtras
                 Value(_tiles[i], now, out float scale, out float mix);
                 Art.Entry tile = Pic(item.Tile, dim);
                 if (tile != null) DrawScaled(tile, center, mid, scale, a);
+                else TextTile(item.Label, center, mid, Icon * scale, a, dim);
                 if (mix > 0.001f) Outline(center, mid, Icon * scale, Canvas.Alpha(ink, a * mix));
             }
 
@@ -303,6 +305,33 @@ namespace ViExtras
             Art.Draw(e, centerX - e.BoxW * scale * 0.5f, centerY - e.BoxH * scale * 0.5f, Canvas.Alpha(Color.White, alpha), scale);
         }
 
+        // A tile with the station's name on it, for one with no logo (your own
+        // music's, or one vi_radio's table lacks), as app.js's fallbackNode sets
+        // it: the box colour, Anton 15px upper case, line-height 1.1,
+        // letter-spacing .02em, centred, 8% padding either side, words wrapped.
+        // Drawn live (TextKit's Anton), so on Enhanced too.
+        private static void TextTile(string label, float cx, float cy, float size, float alpha, bool dim)
+        {
+            if (alpha <= 0.001f) return;
+            Canvas.Rect(cx - size * 0.5f, cy - size * 0.5f, size, size, Color.FromArgb((int)(170f * alpha), 0, 0, 0));
+            if (string.IsNullOrEmpty(label)) return;
+            float k = size / Icon, px = 15f * k, width = size * 0.84f, lh = px * 1.1f;
+            var lines = new List<string>();
+            string line = "";
+            foreach (string word in label.ToUpperInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string attempt = line.Length == 0 ? word : line + " " + word;
+                if (line.Length == 0 || TextKit.Measure(attempt, TextFace.Radio, px, 0.02f) <= width) line = attempt;
+                else { lines.Add(line); line = word; }
+            }
+            if (line.Length > 0) lines.Add(line);
+            if (lines.Count > 4) lines.RemoveRange(4, lines.Count - 4);
+            Color c = Color.FromArgb((int)(255f * alpha), dim ? Color.FromArgb(158, 158, 158) : Color.White);
+            float top = cy - lines.Count * lh * 0.5f;
+            for (int i = 0; i < lines.Count; i++)
+                TextKit.Draw(lines[i], TextFace.Radio, px, cx, top + i * lh + (lh - px) * 0.5f, c, TextAlign.Center, false, 0.02f, width);
+        }
+
         // The highlighted tile's outline, just outside it.
         private static void Outline(float centerX, float centerY, float size, Color color)
         {
@@ -324,8 +353,7 @@ namespace ViExtras
                 it.Tile = Art.Get("radio_tile_" + it.Key);
                 it.NameArt = Art.Get("radio_name_" + it.Key);
             }
-            // app.js fallbackNode: the label as text on the tile.
-            if (it.Tile == null) it.Tile = RadioImages.FallbackTile(it.Label ?? "");
+            // no logo: Draw sets the label on a tile (TextTile), as app.js's fallbackNode
             // no rendered name or genre: Draw sets the label in TextKit's Anton
             if (!string.IsNullOrEmpty(it.Genre) && it.GenreKey != null) it.GenreArt = Art.Get("radio_genre_" + it.GenreKey);
             return it;

@@ -1,31 +1,22 @@
-// Pictures the radio wheel makes at run time. The station tiles, names and
-// genres vi_radio ships are rendered from its own page (tools/render/radio.py);
-// this covers what cannot be known in advance (the tile of a station the game
-// has that vi_radio's table does not, a changed OffLabel) and the muted look;
-// text known only in game (the song, such a station's name) is set with
-// TextKit's Anton. In the single-player look: no frame on the tiles.
+// Pictures the radio wheel makes at run time: the muted look of a picture
+// that has no muted copy packed beside it. Everything else is drawn from the
+// texture dictionaries (tools/render/radio.py) or live: a station vi_radio
+// has no logo for, and your own music's stations, get a text tile drawn by
+// RadioHud with TextKit's Anton, so on Enhanced too.
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Drawing.Text;
 using System.IO;
 
 namespace ViExtras
 {
     internal static class RadioImages
     {
-        private const float Px = 2f;        // raster pixels per CSS px, as the rendered art
-        private const string Version = "r3";
-
-        // style.css, at vi_radio's Config.Hud defaults
-        private const float Icon = 103f, Pad = 4f;
-        private static readonly Color Box = Color.FromArgb(170, 0, 0, 0);              // boxColor 0,0,0,170
+        private const string Version = "r4";
 
         private static readonly Dictionary<string, Art.Entry> Made = new Dictionary<string, Art.Entry>();
-        private static PrivateFontCollection _fonts;
-        private static FontFamily _anton;
 
         // ---- the muted look ------------------------------------------------------
 
@@ -74,160 +65,7 @@ namespace ViExtras
             return result;
         }
 
-        // ---- tiles for stations vi_radio has no art for --------------------------
-
-        /// <summary>
-        /// A .tile holding .fallback text (the station's name), as app.js builds
-        /// it for a station with no logo: Anton 15px, line-height 1.1,
-        /// letter-spacing .02em, upper case, centred, padding 0 8%. The box
-        /// colour as style.css; no border in the single-player look. Drawn with
-        /// GDI+, so close to the page rather than identical: kerning and hinting
-        /// differ slightly.
-        /// </summary>
-        public static Art.Entry FallbackTile(string label)
-        {
-            string key = "t|" + label;
-            if (Made.TryGetValue(key, out Art.Entry done)) return done;
-            Art.Entry result = null;
-            try
-            {
-                string path = CachePath("t", key);
-                if (!File.Exists(path))
-                {
-                    int size = (int)Math.Round((Icon + Pad * 2) * Px);
-                    using (var bmp = new Bitmap(size, size, PixelFormat.Format32bppArgb))
-                    {
-                        using (Graphics g = Graphics.FromImage(bmp))
-                        {
-                            g.Clear(Color.Transparent);
-                            g.SmoothingMode = SmoothingMode.AntiAlias;
-                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                            float o = Pad * Px, w = Icon * Px;
-                            using (var fill = new SolidBrush(Box))
-                                g.FillRectangle(fill, o, o, w, w);
-                            float padX = w * 0.08f;
-                            DrawWrapped(g, label.ToUpperInvariant(), o + padX, o, w - padX * 2, w, 15f * Px, 1.1f, 0.02f);
-                        }
-                        Save(bmp, path);
-                    }
-                }
-                result = new Art.Entry { Path = path, W = Icon + Pad * 2, H = Icon + Pad * 2, BoxX = Pad, BoxY = Pad, BoxW = Icon, BoxH = Icon };
-            }
-            catch (Exception ex)
-            {
-                Log.Write("Radio", "fallback tile: " + ex.Message);
-            }
-            Made[key] = result;
-            return result;
-        }
-
         // ---- helpers ------------------------------------------------------------
-
-        private static FontFamily Anton()
-        {
-            if (_fonts == null)
-            {
-                _fonts = new PrivateFontCollection();
-                string path = Path.Combine(Paths.Root, "Radio", "Anton.ttf");
-                if (File.Exists(path)) _fonts.AddFontFile(path);
-                _anton = _fonts.Families.Length > 0 ? _fonts.Families[0] : new FontFamily("Impact");
-            }
-            return _anton;
-        }
-
-        private static FontStyle StyleOf(FontFamily fam) => fam.IsStyleAvailable(FontStyle.Regular) ? FontStyle.Regular : FontStyle.Bold;
-
-        // Where the baseline sits in a CSS line box of height lineH: half-leading,
-        // then the ascent. Chrome works this in whole CSS pixels: ascent and
-        // descent rounded, the half-leading floored (measured off the page for
-        // Anton at 15, 28.2, 35.72 and 100px).
-        private static float Baseline(FontFamily fam, float em, float lineH)
-        {
-            FontStyle st = StyleOf(fam);
-            float emH = fam.GetEmHeight(st);
-            float emCss = em / Px, lineCss = lineH / Px;
-            float asc = (float)Math.Round(fam.GetCellAscent(st) * emCss / emH);
-            float desc = (float)Math.Round(fam.GetCellDescent(st) * emCss / emH);
-            return ((float)Math.Floor((lineCss - (asc + desc)) / 2f) + asc) * Px;
-        }
-
-        private static float[] Advances(string s, FontFamily fam, float em, float spacingEm, out float total)
-        {
-            var pens = new float[s.Length];
-            float pen = 0f;
-            var fmt = (StringFormat)StringFormat.GenericTypographic.Clone();
-            fmt.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces | StringFormatFlags.NoClip;
-            using (var probe = new Bitmap(1, 1))
-            using (Graphics g = Graphics.FromImage(probe))
-            using (var font = new Font(fam, em, StyleOf(fam), GraphicsUnit.Pixel))
-            {
-                g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                for (int i = 0; i < s.Length; i++)
-                {
-                    pens[i] = pen;
-                    // CSS letter-spacing goes after every letter, the last one too.
-                    pen += g.MeasureString(s[i].ToString(), font, PointF.Empty, fmt).Width + spacingEm * em;
-                }
-            }
-            total = pen;
-            return pens;
-        }
-
-        private static void AddText(GraphicsPath path, string s, float[] pens, FontFamily fam, float em, float x, float baseline)
-        {
-            FontStyle st = StyleOf(fam);
-            float asc = fam.GetCellAscent(st) * em / fam.GetEmHeight(st);
-            var fmt = (StringFormat)StringFormat.GenericTypographic.Clone();
-            for (int i = 0; i < s.Length; i++)
-                if (s[i] != ' ') path.AddString(s[i].ToString(), fam, (int)st, em, new PointF(x + pens[i], baseline - asc), fmt);
-        }
-
-        // Lines of the fallback tile, greedy word wrap (word-break: break-word
-        // splits a word that cannot fit on a line of its own).
-        private static void DrawWrapped(Graphics g, string text, float left, float top, float width, float height, float em, float lineHeight, float spacingEm)
-        {
-            FontFamily fam = Anton();
-            var lines = new List<string>();
-            string line = "";
-            foreach (string word in text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                string attempt = line.Length == 0 ? word : line + " " + word;
-                Advances(attempt, fam, em, spacingEm, out float aw);
-                if (aw <= width || line.Length == 0)
-                {
-                    line = attempt;
-                    Advances(line, fam, em, spacingEm, out float lw);
-                    while (lw > width && line.Length > 1)
-                    {
-                        // break inside the word
-                        int cut = line.Length - 1;
-                        while (cut > 1) { Advances(line.Substring(0, cut), fam, em, spacingEm, out float cw); if (cw <= width) break; cut--; }
-                        lines.Add(line.Substring(0, cut));
-                        line = line.Substring(cut);
-                        Advances(line, fam, em, spacingEm, out lw);
-                    }
-                }
-                else
-                {
-                    lines.Add(line);
-                    line = word;
-                }
-            }
-            if (line.Length > 0) lines.Add(line);
-
-            float lineH = em * lineHeight;
-            float y = top + (height - lineH * lines.Count) / 2f;
-            using (var path = new GraphicsPath())
-            {
-                foreach (string l in lines)
-                {
-                    float[] pens = Advances(l, fam, em, spacingEm, out float lw);
-                    AddText(path, l, pens, fam, em, left + (width - lw) / 2f, y + Baseline(fam, em, lineH));
-                    y += lineH;
-                }
-                g.FillPath(Brushes.White, path);
-            }
-        }
 
         private delegate void PixelFn(int x, int y, ref byte b, ref byte g, ref byte r, ref byte a);
 
