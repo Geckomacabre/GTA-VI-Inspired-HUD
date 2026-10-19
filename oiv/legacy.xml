@@ -20,7 +20,7 @@ What it installs
   - dlcpacks:/vihudfonts/  pause menu, HUD art and fonts, vehicle maker emblems
   - dlcpacks:/vihudanims/  body carry / loot animations, the crawl
   - 3D minimap: scripts\ViMinimap.dll + MiniMap.* data + ViMinimap.asi (in-game drawing)
-  - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's, unchanged):
+  - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's, with one 2-byte fix: no automatic Lucia swap):
       scripts\ViExtras.dll + scripts\ViExtras\ + ViExtras.ini   honor, crosshair, focus, skills, NPC memory, crash cam,
                                                                  binoculars, radio, nitrous, wanted stars and box, police lights
       scripts\ViWasted.dll + ViWasted.ini                        WASTED / BUSTED
@@ -32,6 +32,7 @@ Changes in 2.5.1
   - Lucia is a separate download now: GTA-VI-Inspired-HUD-Lucia-Legacy.oiv (install it after this one and the
     RegisterPatch). This package is the HUD alone, and much smaller.
   - WASTED / BUSTED show every time, not just once a session, and frame the vehicle when you die in one.
+  - Lucia: no more freeze when you load a save you quit as her. She only changes from the character wheel now.
   - Nitrous is on Left Shift (X / Square on a pad); Left Alt is GTA's character wheel.
   - Police only shoot to kill when you're armed at 3+ stars; otherwise they tase and arrest you.
   - Binoculars are on the weapon wheel (hold Tab, or LB on a pad), not on B.

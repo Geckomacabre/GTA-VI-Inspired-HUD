@@ -37,6 +37,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ### Fixed
 
+- **Lucia: loading a save you quit as her could freeze the game**, while the HUD switched you back to her. FBICat's automatic Lucia swap is switched off in `GTA6Hud.dll`: a 2-byte change in `UpdateLuciaMode`, the only change to his DLL. Lucia now only changes from the character wheel, and you load in as your story character.
 - **Install guides:** a "Lucia is not registered" row (her two `dlclist.xml` lines are missing; the message's `VIHudSetup.exe` isn't part of this mod), and NVE's `dlclist.xml` lines listed one per line, so all four get copied.
 - **WASTED / BUSTED only showed once per session.** Releasing the screen's text movie threw an error, which left the screen marked as still playing, so later deaths and arrests got the game's own screen.
 - **WASTED in a vehicle:** the camera frames the vehicle from outside its body, follows it if it's still rolling, and comes back if the crash cam hands the view back at the same moment.
@@ -44,7 +45,6 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 ### Known issues
 
 - **Switching to Michael, Franklin or Trevor doesn't work while the HUD's character wheel is on**, from the wheel or with F5-F7. The wheel holds GTA's character-switch input off every frame, and that also blocks the F keys. To switch, set `[Swap] Enabled = False` in `scripts\GTA6Hud.ini` and use GTA's own wheel (Lucia is then off the wheel). A fix is being tested.
-- **Lucia: loading a save you quit as her can freeze the game**, while the HUD switches you back to her. Switch to Franklin, Michael or Trevor before you quit. A fix is being tested.
 
 ## 2.5.0 (2026-10-19)
 
