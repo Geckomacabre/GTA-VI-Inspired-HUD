@@ -5,7 +5,7 @@
     <version><major>1</major><minor>5</minor><tag>PATCH</tag></version>
     <author><displayName>FBICat</displayName></author>
     <description><![CDATA[Edits mods\update\update.rpf. Install to the mods folder. Works for GTA V Legacy and Enhanced.
-Part of the GTA VI-Inspired HUD, a fork of FBICat's VI HUD. Help: discord.gg/C7gE5SHEzH (not FBICat's Discord).
+Part of the GTA VI-Inspired HUD, a fork of FBICat's VI HUD. Help with this version: discord.gg/C7gE5SHEzH.
 
 dlclist.xml     adds dlcpacks:/vihudfonts/ and dlcpacks:/vihudanims/ (Lucia's package adds hers)
 gameconfig.xml  MetaDataStore 4000, ExprDictStore 400, TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600
