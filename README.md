@@ -1,92 +1,91 @@
-# GTA VI-Inspired HUD
+<div align="center">
 
-A GTA VI-style HUD, minimap and a playable **Lucia** for **GTA V story mode** on PC. Made by **FBICat**.
-Version 2.5 adds features ported from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+# 🌴 GTA VI-Inspired HUD
 
-> **Disclaimer:** fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some
-> HUD art is taken from Rockstar's official GTA VI media
+**A GTA VI-style HUD, minimap and playable Lucia for GTA V story mode on PC.**
+Made by **FBICat**. Version 2.5 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+
+### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
+
+</div>
+
+> **Disclaimer:** fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two.
+> Some HUD art is taken from Rockstar's official GTA VI media
 > ([rockstargames.com/vi/media](https://www.rockstargames.com/VI/media)) and belongs to Rockstar Games.
 > No GTA VI game files are included. The Lucia model is fan-made.
 
-Want it for FiveM instead? → [GTA-VI-UI-and-HUD-for-FiveM](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM)
+---
+
+## 🚀 Install in 3 steps
+
+**1. Which GTA V do you have?** Open your GTA V folder and look:
+
+| You see this file | You have | Your guide |
+| :--- | :--- | :--- |
+| `GTA5.exe` | **Legacy** | 👉 **[Legacy guide](INSTALL-LEGACY.md)** |
+| `GTA5_Enhanced.exe` | **Enhanced** | 👉 **[Enhanced guide](INSTALL-ENHANCED.md)** |
+
+**2. Download 2 files** from the [latest release](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest):
+- the `.oiv` with your version's name (Legacy **or** Enhanced);
+- `GTA-VI-Inspired-HUD-RegisterPatch.oiv`.
+
+**3. Follow your guide.** It's written for people who've never modded GTA. Only follow the guide for
+**your** version: mixing them up crashes the game.
 
 ---
 
-## How to install
+## 🎮 Controls
 
-There are two versions of GTA V on PC, and each has its own install guide. Open your GTA V game folder
-and look at the game file:
+| To do this | Press |
+| :--- | :--- |
+| HUD settings | Hold **V** |
+| Play as Lucia | Hold **Left Alt**, then **E** to her picture *(Legacy only for now)* |
+| Minimap | Get in a car (it also shows when you're wanted) |
+| Radio | Hold GTA's radio button in a car (**Q**). **O** mutes it |
+| Nitrous | Hold **Left Alt** in a car with a bottle |
+| Mod your car | Drive into a **Los Santos Customs** garage and stop |
+| Crouch | **Left Ctrl** twice |
+| Lie down / crawl | **Right Ctrl**, then **W / S** |
+| Binoculars | **B** |
+| Skills | **K** |
+| Push-ups / sit-ups | **N** / **Shift + N** |
+| Greet / antagonize someone | **Y** / **U** |
 
-| Your game folder has... | You have... | Your guide |
-| --- | --- | --- |
-| `GTA5.exe` | **Legacy** (the original PC version) | 👉 **[Legacy install guide](INSTALL-LEGACY.md)** |
-| `GTA5_Enhanced.exe` | **Enhanced** (the 2025 PC version, tested on 1.0.1158.13 and 1.0.1158.16) | 👉 **[Enhanced install guide](INSTALL-ENHANCED.md)** |
-
-Both guides are written for people who've never modded GTA before. Follow only the guide for your
-version: the two use different tools, and mixing them up crashes the game.
-
----
-
-## How to use it
-
-| I want to... | Do this |
-| --- | --- |
-| **Play as Lucia** (Legacy) | Hold **Left Alt** (controller: hold **D-pad down**), press **E** until Lucia's picture is highlighted, then let go. Not on Enhanced yet: it crashes there for now. |
-| **See the minimap** | Get in a car. The map only shows in vehicles, or when you're wanted. |
-| **Open the HUD settings** | Hold **V**. |
-| **Use nitrous** | Hold **Left Alt** in a car that has a bottle (X / Square on a controller). Buy bottles at Los Santos Customs. |
-| **Mod your car** | Drive into a Los Santos Customs garage and stop: Leonida Customs opens by itself. |
-| **Crouch / lie down** | **Left Ctrl** twice to crouch, **Right Ctrl** to lie down (W / S crawl). |
-| **Binoculars** | **B**. |
-| **Radio** | Hold GTA's radio button in a car (**Q**, or D-pad left). **O** mutes it. |
-| **Skills / gym** | **K** for skills, **N** for push-ups, **Shift+N** for sit-ups. |
-| **Greet / antagonize people** | **Y** / **U** while looking at someone close. |
-| **Add music** | Put your own `.mp3` files in `scripts\Hud\Music` (wanted music) or `scripts\Hud\Radio\CustomMusic` (radio). No music comes with the mod. |
-
-Something not working? Each install guide ends with a **"Something went wrong?"** section.
+🎵 **Music:** none is included. Put your own `.mp3` files in `scripts\Hud\Music` or `scripts\Hud\Radio\CustomMusic`.
 
 ---
 
-## What's new
+## ✨ What's in it
 
-**2.5** brings over features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM):
-- WASTED / BUSTED screens, honor, the crosshair with kill marks, Focus, skills and gym, and NPC memory.
-- The FiveM crash cam, binoculars and radio.
-- Nitrous, Leonida Customs, and crouch and crawl.
-- The four-state wanted stars and wanted box, and directional police lights.
+- A **GTA VI-style HUD** and a **3D minimap**
+- **Lucia** as a 4th character
+- **Wanted stars and a wanted box** that tell you what the police know, plus **police lights** at the screen edge
+- **WASTED / BUSTED** screens, a **crash cam** and **binoculars**
+- **Leonida Customs**: a full mod shop with nitrous
+- **Honor**, **skills**, a **gym**, and people who **remember you**
+- **Crouch and crawl**, a **crosshair with kill marks**, and **Focus**
 
-It also fixes the Legacy black screen after dying and has a lighter Lucia on Legacy. FBICat's `GTA6Hud.dll` is
-left as it is; the new features are separate script files. Everything is listed in the
-[changelog](CHANGELOG.md), including the known issues.
-
-**2.2** (compared to FBICat's 2.1):
-- **Minimap works in fullscreen.** The part that draws it inside the game (`ViMinimap.asi`) was missing.
-- **Lucia no longer crashes the game while loading.** The RegisterPatch gives the game more room for her
-  files.
-- **No commercial music** is included.
+Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 
 ---
 
-## For modders: rebuilding the packages
+## ⚠️ Known bugs (being fixed)
 
-`scripts\` and `ViMinimap.asi` in this repo are exactly what the packages install. The DLC packs are
-too big for git, so they're only in the releases. Python 3.8+, no extra modules:
+- **Enhanced:** switching to Michael or Trevor from the HUD's wheel may not work.
+- **Enhanced:** don't switch to Lucia yet. It can crash.
+- The minimap's waypoint route can look shaky.
+- Greet / antagonize only work on the keyboard for now.
+- **NaturalVision Enhanced** users: see "Something went wrong?" in the [Enhanced guide](INSTALL-ENHANCED.md).
 
-```bash
-python tools/build_oiv.py legacy --dlcpacks path/to/legacy/dlcpacks
-python tools/build_oiv.py enhanced --dlcpacks path/to/gen9/dlcpacks
-python tools/build_oiv.py patch
-```
+## 🆘 Something wrong?
 
-The packages go into `build\`. The install script comes from `oiv\<edition>.xml`.
-
-The 2.5 script files are built from `src\` (.NET Framework 4.8, `dotnet build -c Release`). Their art is
-rendered from the FiveM version's pages (`tools\render_fivem_art.py`) and packed into the `vihudfonts`
-pack's texture dictionaries (`tools\build_txd.py`).
+Each install guide ends with a **"Something went wrong?"** section. Still stuck?
+[Open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your
+game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and `scripts\ViExtras.log`.
 
 ---
 
-## Credits
+## 🙏 Credits
 
 - **FBICat**: the HUD (first released as "VI HUD"), the custom Lucia ped and wardrobe, the minimap
   additions, and everything else in this mod.
@@ -116,3 +115,23 @@ The 2.5 script files have their own licences:
 - `ViCustoms.dll`, `ViCrouch.dll` and `ViWasted.dll` are GPL-3. Their source is in `src\`, and the licence
   ships next to them.
 - The radio code is under the PolyForm Noncommercial License 1.0.0 (`scripts\ViExtras\Radio\LICENSE.md`).
+
+<details>
+<summary><b>🛠️ For modders: rebuilding the packages</b></summary>
+
+`scripts\` and `ViMinimap.asi` in this repo are exactly what the packages install. The DLC packs are
+too big for git, so they're only in the releases. Python 3.8+, no extra modules:
+
+```bash
+python tools/build_oiv.py legacy --dlcpacks path/to/legacy/dlcpacks
+python tools/build_oiv.py enhanced --dlcpacks path/to/gen9/dlcpacks
+python tools/build_oiv.py patch
+```
+
+The packages go into `build\`. The install script comes from `oiv\<edition>.xml`.
+
+The 2.5 script files are built from `src\` (.NET Framework 4.8, `dotnet build -c Release`). Their art is
+rendered from the FiveM version's pages (`tools\render_fivem_art.py`) and packed into the `vihudfonts`
+pack's texture dictionaries (`tools\build_txd.py`).
+
+</details>
