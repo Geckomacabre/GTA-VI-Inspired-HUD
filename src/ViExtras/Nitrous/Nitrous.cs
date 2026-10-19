@@ -162,6 +162,13 @@ namespace ViExtras
                 // first reading, never the moment they get in, once a car a session.
                 if (_seen && _hintMs > 0 && now - _enteredAt > FitGraceMs && _hinted.Add(_vehHandle)) _hintPending = true;
             }
+            else if (fitted && _active && (tier.Capacity != _tier.Capacity || tier.Torque != _tier.Torque))
+            {
+                // another kit fitted on the spot (an upgrade at the shop): a full new bottle
+                _tier = tier;
+                _fuel = _shown = _tier.Capacity;
+                Log.Write("Nitrous", "bottle changed: " + _tier.Capacity.ToString("0.#") + " s");
+            }
             else if (!fitted && _active)
             {
                 SetBoosting(false);

@@ -20,6 +20,13 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Throwing the switch to On Demand while the radio is muted unmutes it first**, as browsing stations does, so going back to the radio brings back the station you had (it came back as RADIO OFF).
 - **A loading screen or a character switch pauses your music at once** and ends the radio wheel's slow motion there and then. If GTA6Hud's own radio takes over (`[Radio] Enabled = True`), it gets the car unmuted.
 - `ViExtras.log` no longer says On Demand is disabled at every start; it says where your own music goes.
+- **Leonida Customs always lets you go when it closes.** If putting the car back as paid for went wrong while closing, the car stayed frozen with the shop's camera on. Now the car, the camera and the HUD are let go whatever happens.
+- **Leaving Leonida Customs with Esc or B held doesn't carry on into the game** (Esc's pause menu, B's cinematic camera): the key stays off until you let go of it.
+- **D-pad Down in the radio wheel (mute, on a pad) no longer opens the character wheel**, the same fix the binoculars got: the character wheel stays shut while the radio wheel is open, and until you let go of D-pad Down.
+- **A nitrous kit changed in the shop works at once:** an upgrade gives the new bottle there and then. It used to need getting out of the car and back in.
+- **Standing still with the weapon wheel, a menu or the phone open near a cop no longer counts as giving up** at 1-2 stars, and an arrest that didn't happen isn't tried again for 10 s.
+- **The vehicle card can't go missing after Leonida Customs** with `[VehicleCard] RouteGauge = True`: the shop put GTA6Hud's card setting back to an old value when it closed.
+- **Steadier scripts:** a one-off error no longer stops the police script for the session (with the stars held at 1), or leaves crouch ignoring its keys.
 
 ## 2.5.1 (19 October 2026)
 

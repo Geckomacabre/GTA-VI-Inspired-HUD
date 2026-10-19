@@ -136,7 +136,10 @@ namespace ViExtras
             }
             else if (_switchHolds[i] > 0 && --_switchHolds[i] == 0)
             {
-                f.SetValue(null, _panelWas[i]);
+                // Only if it still reads the false written here: each DLL has its own copy of
+                // this bridge, and another one's release (or GTA6Hud's options) may have set it
+                // since. Writing back the value seen at the start would switch it off for good.
+                if (!(bool)f.GetValue(null)) f.SetValue(null, _panelWas[i]);
             }
         }
 

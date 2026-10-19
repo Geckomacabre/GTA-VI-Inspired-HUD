@@ -45,6 +45,7 @@ namespace ViExtras
         private const int AnyWeapon = 7;          // melee, explosives and guns
         private const float ComplyRange = 15f;    // a cop this close sees you give up
         private const int ComplyMs = 2000;        // standing still this long, unarmed
+        private const int ComplyRetryMs = 10000;  // after an arrest that didn't happen, before giving up counts again
         private const float ArrestRange = 60f;    // the cop told to arrest you is within this
         private const float SurrenderRange = 15f; // a cop this close, who can see you, takes a surrender
 
@@ -63,6 +64,8 @@ namespace ViExtras
         private int _nextScan, _armedUntil;
         private bool _lethal, _modeKnown, _stunned, _wasDead;
         private int _stillSince;
+        private int _complyAfter;
+        private string _lastError;
 
         // the arrest: until when it waits, the wanted level it dropped from, the cop on it
         private bool _arresting, _arrestStarted, _bustedShown;
@@ -91,6 +94,20 @@ namespace ViExtras
         }
 
         private void OnTick(object sender, EventArgs e)
+        {
+            try { Frame(); }
+            catch (Exception ex)
+            {
+                // logged once a kind, and an arrest under way let go, so a bad frame can't stop
+                // the script with the stars held at 1 and GTA6Hud's police brain held off
+                string what = ex.GetType().Name + ": " + ex.Message;
+                if (what != _lastError) Log.Write("PoliceForce", ex.ToString());
+                _lastError = what;
+                if (_arresting) { try { EndArrest("error", true); } catch { } }
+            }
+        }
+
+        private void Frame()
         {
             if (!_enabled || !GameReady.Now) return;
             Ped player = Game.Player.Character;
@@ -148,7 +165,10 @@ namespace ViExtras
             _stunned = stunned;
 
             // giving up: unarmed, on foot and still, a cop close by, at 1-2 stars
+            // (not while a wheel, a menu or the phone is up: standing still there is choosing,
+            // and not again straight after an arrest that didn't happen)
             bool complying = !_arresting && !lethal && !armedNow && wanted <= 2 && !player.IsInVehicle()
+                && now >= _complyAfter && !HudBridge.UiInTheWay
                 && player.Velocity.Length() < 1.2f && NearestCop(player, ComplyRange) != null;
             if (!complying) _stillSince = 0;
             else if (_stillSince == 0) _stillSince = now;
@@ -252,6 +272,7 @@ namespace ViExtras
                 Game.Player.Wanted.ApplyWantedLevelChangeNow(false);
             }
             Log.Write("PoliceForce", why + (restoreWanted && _heldWanted > 1 ? ": back to " + _heldWanted + " stars" : ""));
+            if (restoreWanted) _complyAfter = Game.GameTime + ComplyRetryMs;
             _arresting = _arrestStarted = _bustedShown = false;
             _arrestCop = null;
             HoldBrain(false);

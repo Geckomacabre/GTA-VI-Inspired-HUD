@@ -230,6 +230,7 @@ namespace ViExtras
                     _timeOwned = false;
                 }
                 _custom?.Update(false, 0f);
+                ReleaseSwapWheel();
                 return;
             }
             if (!_enabled) return;
@@ -255,6 +256,7 @@ namespace ViExtras
                     if (_wheelOpen) CloseWheel();
                     EaseTime(now);
                     _custom?.Update(false, 0f);
+                    ReleaseSwapWheel();
                     return;
                 }
                 _standingDown = false;
@@ -287,12 +289,34 @@ namespace ViExtras
                     UpdateTrack(now);
                 }
                 if (_hudEnabled && !HudBridge.Paused && !HudBridge.Busy) _hud.Draw();
+                HoldSwapWheel();
             }
             catch (Exception ex)
             {
                 if (ex.Message != _lastError) Log.Write("Radio", ex.ToString());
                 _lastError = ex.Message;
             }
+        }
+
+        // D-pad Down mutes in the wheel on a pad, and is GTA6Hud's character swap wheel too, which
+        // reads it even disabled: the swap wheel is held shut while the wheel is open, and after it
+        // closes until D-pad Down is let go (as the binoculars do).
+        private bool _swapHeld;
+
+        private void HoldSwapWheel()
+        {
+            bool hold = _wheelOpen || (_swapHeld && Pressed(CharacterWheel));
+            if (hold && !_wheelOpen) Disable(CharacterWheel);
+            if (!hold && !_swapHeld) return;
+            _swapHeld = hold;
+            HudBridge.HoldSwapWheelOff("radio", hold);   // every frame while held: its settings reload turns it back on
+        }
+
+        private void ReleaseSwapWheel()
+        {
+            if (!_swapHeld) return;
+            _swapHeld = false;
+            HudBridge.HoldSwapWheelOff("radio", false);
         }
 
         // ---- helpers (client.lua) ------------------------------------------------------------
@@ -1012,6 +1036,7 @@ namespace ViExtras
                 }
                 _customOn = null;
                 _custom?.Release();
+                ReleaseSwapWheel();
                 IsOpen = false;
             }
             catch { }
