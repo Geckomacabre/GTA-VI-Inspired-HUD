@@ -275,6 +275,7 @@ namespace ViExtras
         {
             if (_boosting == on) return;
             _boosting = on;
+            if (on) Log.Write("Nitrous", "boost on: " + (Glyphs.UsingPad ? "pad control " + _padControl : _kbKey != Keys.None ? "keyboard " + _kbKey : "keyboard control " + _kbControl));
             if (!on && _active) Log.Write("Nitrous", "boost over: tank " + _fuel.ToString("0.0") + " of " + _tier.Capacity.ToString("0.#") + " s");
             if (_veh != null && _veh.Exists())
             {

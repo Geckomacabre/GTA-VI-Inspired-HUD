@@ -10,6 +10,11 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+- **Binoculars tell other scripts when D-pad down is theirs** (`Binoculars.HoldsCharacterKey`, like nitrous's), so a character wheel of another script stays shut while you zoom out.
+- **Nitrous logs which input started each boost**, to track down reports of the wrong button boosting.
+
 ## 2.5.1 (19 October 2026)
 
 ### Changed
