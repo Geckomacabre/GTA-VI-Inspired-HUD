@@ -18,8 +18,13 @@ namespace ViExtras
     /// ped can walk with them up, forward being wherever they point. The lens
     /// mask and the EXIT / ZOOM / VISION prompts are vice_hud's.
     ///
-    /// GTA6Hud's own binoculars (an item on its wheel) are separate and stay as
-    /// they are; these come up on their own key ([Binoculars] Key).
+    /// They come up from their tile on GTA6Hud's weapon wheel (BinocularsWheel),
+    /// or on a key if [Binoculars] Key names one. GTA6Hud's own binoculars, the
+    /// equipment item on its Items tab, are separate and stay as they are.
+    ///
+    /// D-pad down zooms out, and it's also GTA6Hud's character swap key, which it
+    /// reads even with the control disabled: its swap wheel is held shut while
+    /// they're up, and until d-pad down is let go after.
     /// </summary>
     public sealed class Binoculars : Script
     {
@@ -29,9 +34,13 @@ namespace ViExtras
         private static readonly int[] MoveControls = { 30, 31, 32, 33, 34, 35 };
         private const int ExitControl = 194;                     // Backspace / B
         private const int VisionPrev = 174, VisionNext = 175;    // Left / Right
+        private const int CharacterWheel = 19;                   // d-pad down / Left Alt
+        private const string SwapHold = "binoculars";
 
         private readonly bool _enabled;
         private readonly Keys _key;
+        private readonly bool _wheel;
+        private readonly int _wheelRing;
         private readonly float _fovWide, _fovNarrow, _zoomSpeed, _wheelStep, _smoothing;
         private readonly float _lookPad, _lookMouse, _pitchMin, _pitchMax, _sway, _moveSpeed;
         private readonly bool _move, _allowInVehicle;
@@ -46,6 +55,7 @@ namespace ViExtras
         private Prop _prop;
         private string _vision = "normal";
         private bool _minimapHeld;
+        private bool _swapHeld;   // GTA6Hud's swap wheel held shut
 
         public static bool IsActive { get; private set; }
 
@@ -53,7 +63,9 @@ namespace ViExtras
         {
             Paths.Init(BaseDirectory);
             _enabled = Config.Get("Binoculars", "Enabled", true);
-            _key = Config.Get("Binoculars", "Key", Keys.B);
+            _key = Config.Get("Binoculars", "Key", Keys.None);
+            _wheel = Config.Get("Binoculars", "WheelSlot", true);
+            _wheelRing = Config.Get("Binoculars", "WheelRing", 3);
             _fovWide = Config.Get("Binoculars", "FovWide", 42f);
             _fovNarrow = Config.Get("Binoculars", "FovNarrow", 4f);
             _zoomSpeed = Config.Get("Binoculars", "ZoomSpeed", 38f);
@@ -78,11 +90,23 @@ namespace ViExtras
             if (Config.Get("Binoculars", "ThermalVision", true)) _modes.Add("thermal");
 
             Tick += OnTick;
-            Aborted += (s, e) => { if (_active) Unwind(); };
+            Aborted += (s, e) => { if (_active) Unwind(); ReleaseSwap(); };
         }
 
         private void OnTick(object sender, EventArgs e)
         {
+            // Every frame, ready or not, so the wheel shutting is seen when it happens.
+            bool picked = _enabled && _wheel && BinocularsWheel.Picked(_wheelRing);
+            if (_swapHeld && !_active)
+            {
+                // Lowered with d-pad down still held: the swap wheel would open on it.
+                if (Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, CharacterWheel))
+                {
+                    Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, CharacterWheel, true);
+                    HudBridge.HoldSwapWheelOff(SwapHold, true);
+                }
+                else ReleaseSwap();
+            }
             if (!GameReady.Now) return;
             // Polled, not heard through KeyDown: SHVDN queues key events until a
             // tick ends, and the loop in Run() is one long tick, so a press made
@@ -90,7 +114,7 @@ namespace ViExtras
             bool keyDown = _enabled && _key != Keys.None && Game.IsKeyPressed(_key);
             bool pressed = keyDown && !_keyWasDown;
             _keyWasDown = keyDown;
-            if (!pressed || _active) return;
+            if (!(pressed || picked) || _active) return;
             if (BlockedReason(Game.Player.Character) != null) return;
             try { Run(); }
             catch (Exception ex)
@@ -211,6 +235,8 @@ namespace ViExtras
             _minimapHeld = true;
             HudBridge.HoldMinimapHidden(true);
             HudBridge.HoldGta6HudPanelsHidden(true);   // #stage.bino: the rest of the HUD waits
+            _swapHeld = true;
+            HudBridge.HoldSwapWheelOff(SwapHold, true);
 
             // Per z-unit, the field of view changes by Wide * ln(Wide / Narrow)
             // degrees at the wide end; ZoomSpeed is degrees per second there.
@@ -231,6 +257,7 @@ namespace ViExtras
 
                 Function.Call(Hash.DISABLE_ALL_CONTROL_ACTIONS, 0);
                 Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, 249, true);
+                HudBridge.HoldSwapWheelOff(SwapHold, true);   // again: its settings reload turns it back on
                 if (walking)
                 {
                     foreach (int c in MoveControls) Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, c, true);
@@ -336,6 +363,13 @@ namespace ViExtras
                 HudBridge.HoldGta6HudPanelsHidden(false);
             }
             Lower(Game.Player.Character);
+        }
+
+        private void ReleaseSwap()
+        {
+            if (!_swapHeld) return;
+            _swapHeld = false;
+            HudBridge.HoldSwapWheelOff(SwapHold, false);
         }
     }
 }

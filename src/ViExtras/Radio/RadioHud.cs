@@ -9,23 +9,29 @@ namespace ViExtras
 {
     /// <summary>
     /// What vi_radio's page shows, and how it moves. It is told the same things
-    /// client.lua tells the page ('state': list, index, muted, open; 'flash')
-    /// and animates the way style.css transitions do, on real time.
+    /// client.lua tells the page ('state': list, index, muted, open; 'flash';
+    /// the song playing) and animates the way style.css transitions do, on real
+    /// time.
     ///
-    /// Layout, at vi_radio's Config.Hud values (CSS px at 1080p, which are
-    /// canvas units here; --s is 1):
-    ///   #radio      top 32, centred; #carousel 5 x spacing 112 = 560 wide, 103 tall
-    ///   .tile       103 square, 112 apart, centred on the track; the highlighted one
-    ///               on the screen's centre line. Inactive: opacity .55, scale(.9).
-    ///   #viewport   mask: transparent at each edge, solid from 18% in (100.8px)
+    /// The look is the single-player one (tools/render/radio.py, SP_STYLE),
+    /// measured off the user's reference shots: logo-filled tiles, all at full
+    /// opacity and size, the highlighted one a little larger with a thin light
+    /// outline; the line and the text in a light grey, without a shadow; under
+    /// the line the station, the song and the artist.
+    ///
+    /// Layout (CSS px at 1080p, which are canvas units here; --s is 1):
+    ///   #radio      top 32, centred; #carousel 5 x spacing 118 = 590 wide, 103 tall
+    ///   .tile       103 square, 118 apart, centred on the track; the highlighted one
+    ///               on the screen's centre line, scale 1.03, a 2.5px outline round it.
+    ///               Two slots out the tiles are whole; they fade out on the way to three.
     ///   #icon-left  right edge 37px left of the carousel, centred on it, opacity .9
     ///   #icon-right left edge 37px right of the carousel, 24 tall, opacity .9
-    ///   #info       from y 135: line 189 x 6.5 at +24, #station at +34,
-    ///               #title at +68 (never used here), #artist at +95
+    ///   #info       from y 135: line 189 x 4.8 at +20, #station (25.3px) at +34.7,
+    ///               #title (the song, 20.6px) at +70.6, #artist (20.6px) at +97.2;
+    ///               642.6 wide (line x 3.4), longer text ends in an ellipsis
     /// Timings: track and tile slide --slide 110ms, track/tile transform
-    /// cubic-bezier(0.22, 0.61, 0.36, 1), tile colours and opacity `ease`;
-    /// #radio opacity 160ms ease; mute indicator colour 140ms ease; a flash
-    /// stays up 1400ms.
+    /// cubic-bezier(0.22, 0.61, 0.36, 1), the outline `ease`; #radio opacity
+    /// 160ms ease; mute indicator colour 140ms ease; a flash stays up 1400ms.
     /// </summary>
     internal sealed class RadioHud
     {
@@ -34,28 +40,33 @@ namespace ViExtras
             public string Name, Label, Genre;   // game name, Config.Stations label / genre
             public string Key, GenreKey;        // art keys from stations.txt, or null
             public bool Off;
+            public string Custom;               // your own music's station: its folder ("" the loose tracks), else null
+            public bool Empty;                  // On Demand with no music yet: the tile says so, the Genre line how
 
-            internal Art.Entry Tile, TileOn, EdgeL, EdgeR, NameArt, GenreArt;
+            internal Art.Entry Tile, NameArt, GenreArt;   // rendered art; null: the label / genre set in TextKit's Anton
             internal bool Resolved;
         }
 
         private sealed class TileAnim
         {
             public bool Active;
-            public float FromOp, FromScale, FromMix;
+            public float FromScale, FromMix;
             public long Start = long.MinValue;
         }
 
-        // style.css at Config.Hud's values
-        private const float Top = 32f, Icon = 103f, Spacing = 112f, CarouselW = Spacing * 5f, SideGap = 37f;
-        private const float InfoTop = Top + Icon;
-        private const float LineY = 24f, LineW = 189f, LineH = 6.5f, StationY = 34f, ArtistY = 95f;
-        private const float StationPx = 94f * 0.38f, ArtistPx = 94f * 0.30f;   // fontPx x stationScale / artistScale
-        private const float InactiveOpacity = 0.55f, InactiveScale = 0.9f, SideOpacity = 0.9f;
+        // style.css at Config.Hud's values, with the single-player look's sizes
+        private const float Top = 32f, Icon = 103f, Spacing = 118f, CarouselW = Spacing * 5f, SideGap = 37f;
+        private const float InfoTop = Top + Icon, InfoW = LineW * 3.4f;
+        private const float LineY = 20f, LineW = 189f, LineH = 4.8f;
+        private const float StationY = 34.7f, TitleY = 70.6f, ArtistY = 97.2f;
+        private const float StationPx = 25.3f, TitlePx = 20.6f, ArtistPx = 20.6f;
+        private const float LineHeight = 1.05f, LetterSpacing = 0.01f;
+        private const float ActiveScale = 1.03f, OutlineW = 2.5f, SideOpacity = 0.9f;
         private const int FadeMs = 160, FlashMs = 1400, IndicatorMs = 140;
+        private static readonly Color Ink = Color.FromArgb(255, 192, 194, 200);         // the reference's text, line and outline
         private static readonly Color MuteColor = Color.FromArgb(255, 255, 255, 255);   // muteColor 255,255,255
         private static readonly Color MutedColor = Color.FromArgb(255, 255, 59, 48);    // mutedColor 255,59,48
-        private static readonly Color Dimmed = Color.FromArgb(255, 158, 158, 158);      // brightness(.62) of white
+        private static readonly Color Dimmed = Color.FromArgb(255, 120, 120, 120);      // grayscale(1) brightness(.62) of Ink
 
         private readonly int _slideMs;
         private readonly bool _muteDim, _sideIcons, _genreLine;
@@ -63,8 +74,9 @@ namespace ViExtras
         private List<Item> _list = new List<Item>();
         private readonly List<TileAnim> _tiles = new List<TileAnim>();
         private int _index;
-        private bool _muted, _isOpen, _visible;
+        private bool _muted, _isOpen, _visible, _onDemand;
         private long _flashUntil = -1;
+        private string _title, _artist;   // upper case, as #title / #artist set them
 
         private float _opFrom, _opTo;
         private long _opStart = long.MinValue;
@@ -96,7 +108,7 @@ namespace ViExtras
                 for (int i = 0; i < list.Count; i++)
                 {
                     bool active = i == index;
-                    _tiles.Add(new TileAnim { Active = active, FromOp = OpOf(active), FromScale = ScaleOf(active), FromMix = active ? 1f : 0f });
+                    _tiles.Add(new TileAnim { Active = active, FromScale = ScaleOf(active), FromMix = active ? 1f : 0f });
                 }
             }
 
@@ -119,8 +131,8 @@ namespace ViExtras
                 bool active = i == index;
                 TileAnim t = _tiles[i];
                 if (t.Active == active) continue;
-                Value(t, now, out float op, out float sc, out float mix);
-                t.FromOp = op; t.FromScale = sc; t.FromMix = mix;
+                Value(t, now, out float sc, out float mix);
+                t.FromScale = sc; t.FromMix = mix;
                 t.Active = active;
                 t.Start = now;
             }
@@ -131,6 +143,9 @@ namespace ViExtras
             SetVisible(open, now);
         }
 
+        /// <summary>#radio.od-on: the left icon's switch thrown to ON DEMAND.</summary>
+        public void SetOnDemand(bool on) => _onDemand = on;
+
         /// <summary>action 'flash': the HUD up for 1400ms to show the mute state.</summary>
         public void Flash(bool muted)
         {
@@ -138,6 +153,16 @@ namespace ViExtras
             SetMuted(muted, now);
             SetVisible(true, now);
             _flashUntil = now + FlashMs;
+        }
+
+        /// <summary>
+        /// The song on the highlighted station (#title / #artist), or nulls when
+        /// none is known: then the genre stands in on the artist line.
+        /// </summary>
+        public void NowPlaying(string title, string artist)
+        {
+            _title = string.IsNullOrEmpty(title) ? null : title.ToUpperInvariant();
+            _artist = _title == null || string.IsNullOrEmpty(artist) ? null : artist.ToUpperInvariant();
         }
 
         private void SetMuted(bool muted, long now)
@@ -160,8 +185,7 @@ namespace ViExtras
 
         // ---- the transitions -------------------------------------------------------
 
-        private static float OpOf(bool active) => active ? 1f : InactiveOpacity;
-        private static float ScaleOf(bool active) => active ? 1f : InactiveScale;
+        private static float ScaleOf(bool active) => active ? ActiveScale : 1f;
 
         private static float Progress(long now, long start, int ms) =>
             start == long.MinValue ? 1f : Num.Clamp01((now - start) / (float)ms);
@@ -174,12 +198,10 @@ namespace ViExtras
 
         private float Red(long now) => Num.Lerp(_redFrom, _redTo, Num.Ease(Progress(now, _redStart, IndicatorMs)));
 
-        private void Value(TileAnim t, long now, out float op, out float scale, out float mix)
+        private void Value(TileAnim t, long now, out float scale, out float mix)
         {
             float p = Progress(now, t.Start, _slideMs);
-            float e = Num.Ease(p);
-            op = Num.Lerp(t.FromOp, OpOf(t.Active), e);
-            mix = Num.Lerp(t.FromMix, t.Active ? 1f : 0f, e);
+            mix = Num.Lerp(t.FromMix, t.Active ? 1f : 0f, Num.Ease(p));
             scale = Num.Lerp(t.FromScale, ScaleOf(t.Active), Slide(p));
         }
 
@@ -197,14 +219,15 @@ namespace ViExtras
             if (alpha <= 0.001f) return;
 
             bool dim = _muted && _muteDim;
+            Color ink = dim ? Dimmed : Ink;
             float cx = Canvas.W * 0.5f;
             float left = cx - CarouselW * 0.5f, right = cx + CarouselW * 0.5f;
             float mid = Top + Icon * 0.5f;
 
-            // #icon-left: the static artwork, as the page shows it with On Demand off.
+            // #icon-left: the radio / On Demand switch, knob where it is thrown.
             if (_sideIcons)
             {
-                Art.Entry icon = Art.Get(dim ? "radio_icon_left_muted" : "radio_icon_left");
+                Art.Entry icon = Art.Get("radio_icon_left" + (_onDemand ? "_od" : "") + (dim ? "_muted" : ""));
                 if (icon != null) Art.Draw(icon, left - SideGap - icon.BoxW, mid - icon.BoxH * 0.5f, Canvas.Alpha(Color.White, SideOpacity * alpha));
             }
 
@@ -214,28 +237,15 @@ namespace ViExtras
             {
                 float rel = i - disp;
                 float far = Math.Abs(rel);
-                if (far >= 3f) continue;   // beyond #viewport's overflow
+                if (far >= 3f) continue;
+                float a = (far <= 2f ? 1f : 3f - far) * alpha;
                 Item item = Resolve(_list[i]);
                 float center = cx + rel * Spacing;
-
-                // Up to one slot out the tile is clear of the edge mask; at two it
-                // is the rendered edge picture; in between, the two blended.
-                float clear = far <= 1f ? 1f : far < 2f ? 2f - far : 0f;
-                float edge = far <= 1f ? 0f : far <= 2f ? far - 1f : 3f - far;
-
-                if (clear > 0f)
-                {
-                    Value(_tiles[i], now, out float op, out float scale, out float mix);
-                    float a = op * clear * alpha;
-                    Art.Entry off = Pic(item.Tile, dim), on = Pic(item.TileOn, dim);
-                    if (off != null && mix < 1f) DrawScaled(off, center, mid, scale, a * (1f - mix));
-                    if (on != null && mix > 0f) DrawScaled(on, center, mid, scale, a * mix);
-                }
-                if (edge > 0f)
-                {
-                    Art.Entry e = Pic(rel < 0f ? item.EdgeL : item.EdgeR, dim);
-                    if (e != null) Art.Draw(e, center - Icon * 0.5f, Top, Canvas.Alpha(Color.White, edge * alpha));
-                }
+                Value(_tiles[i], now, out float scale, out float mix);
+                Art.Entry tile = Pic(item.Tile, dim);
+                if (tile != null) DrawScaled(tile, center, mid, scale, a);
+                else TextTile(item.Label, center, mid, Icon * scale, a, dim);
+                if (mix > 0.001f) Outline(center, mid, Icon * scale, Canvas.Alpha(ink, a * mix));
             }
 
             // #icon-right: the mute indicator, a white glyph used as a mask and filled.
@@ -253,27 +263,88 @@ namespace ViExtras
                 }
             }
 
-            // #info
-            Color text = Canvas.Alpha(dim ? Dimmed : Color.White, alpha);
+            // #info: the line, then the station, the song and the artist. The
+            // pictures are white; drawn in the ink colour they come out grey.
+            Color text = Canvas.Alpha(ink, alpha);
             Canvas.Rect(cx - LineW * 0.5f, InfoTop + LineY, LineW, LineH, text);
             Item station = _index >= 0 && _index < _list.Count ? Resolve(_list[_index]) : null;
-            if (station != null)
+            if (station == null) return;
+            if (station.NameArt != null) Centred(station.NameArt, cx, InfoTop + StationY, text);
+            else Line(station.Label, StationPx, cx, InfoTop + StationY, text);
+            if (station.Off) return;   // a highlighted RADIO OFF tile blanks the rest
+            if (station.Empty) { Line(station.Genre, ArtistPx, cx, InfoTop + TitleY, text); return; }
+            if (_title != null)
             {
-                if (station.NameArt != null) Art.Draw(station.NameArt, cx - station.NameArt.BoxW * 0.5f, InfoTop + StationY, text);
-                // renderNowPlaying: nothing feeds a title in single player, so the
-                // second line is the genre; a highlighted RADIO OFF tile blanks both.
-                if (!station.Off && _genreLine && station.GenreArt != null)
-                    Art.Draw(station.GenreArt, cx - station.GenreArt.BoxW * 0.5f, InfoTop + ArtistY, text);
+                Line(_title, TitlePx, cx, InfoTop + TitleY, text);
+                Line(_artist, ArtistPx, cx, InfoTop + ArtistY, text);
+            }
+            else if (_genreLine)
+            {
+                if (station.GenreArt != null) Centred(station.GenreArt, cx, InfoTop + ArtistY, text);
+                else Line(station.Genre, ArtistPx, cx, InfoTop + ArtistY, text);
             }
         }
 
+        // One #station / #title / #artist line in TextKit's Anton (drawn from a
+        // texture dictionary, so on Enhanced too), centred, cut with an ellipsis at
+        // #info's width. top is the CSS line box's (line-height 1.05); TextKit
+        // takes the top of a line-height 1 box, centred in it.
+        private static void Line(string s, float px, float cx, float top, Color color)
+        {
+            if (string.IsNullOrEmpty(s)) return;
+            TextKit.Draw(s.ToUpperInvariant(), TextFace.Radio, px, cx, top + (LineHeight - 1f) * px * 0.5f, color,
+                TextAlign.Center, false, LetterSpacing, InfoW);
+        }
+
         private static Art.Entry Pic(Art.Entry e, bool dim) => dim ? RadioImages.Muted(e) : e;
+
+        private static void Centred(Art.Entry e, float cx, float top, Color color)
+        {
+            if (e != null) Art.Draw(e, cx - e.BoxW * 0.5f, top, color);
+        }
 
         // Scaled about the tile's centre, as transform: scale() does.
         private static void DrawScaled(Art.Entry e, float centerX, float centerY, float scale, float alpha)
         {
             if (alpha <= 0.001f) return;
             Art.Draw(e, centerX - e.BoxW * scale * 0.5f, centerY - e.BoxH * scale * 0.5f, Canvas.Alpha(Color.White, alpha), scale);
+        }
+
+        // A tile with the station's name on it, for one with no logo (your own
+        // music's, or one vi_radio's table lacks), as app.js's fallbackNode sets
+        // it: the box colour, Anton 15px upper case, line-height 1.1,
+        // letter-spacing .02em, centred, 8% padding either side, words wrapped.
+        // Drawn live (TextKit's Anton), so on Enhanced too.
+        private static void TextTile(string label, float cx, float cy, float size, float alpha, bool dim)
+        {
+            if (alpha <= 0.001f) return;
+            Canvas.Rect(cx - size * 0.5f, cy - size * 0.5f, size, size, Color.FromArgb((int)(170f * alpha), 0, 0, 0));
+            if (string.IsNullOrEmpty(label)) return;
+            float k = size / Icon, px = 15f * k, width = size * 0.84f, lh = px * 1.1f;
+            var lines = new List<string>();
+            string line = "";
+            foreach (string word in label.ToUpperInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string attempt = line.Length == 0 ? word : line + " " + word;
+                if (line.Length == 0 || TextKit.Measure(attempt, TextFace.Radio, px, 0.02f) <= width) line = attempt;
+                else { lines.Add(line); line = word; }
+            }
+            if (line.Length > 0) lines.Add(line);
+            if (lines.Count > 4) lines.RemoveRange(4, lines.Count - 4);
+            Color c = Color.FromArgb((int)(255f * alpha), dim ? Color.FromArgb(158, 158, 158) : Color.White);
+            float top = cy - lines.Count * lh * 0.5f;
+            for (int i = 0; i < lines.Count; i++)
+                TextKit.Draw(lines[i], TextFace.Radio, px, cx, top + i * lh + (lh - px) * 0.5f, c, TextAlign.Center, false, 0.02f, width);
+        }
+
+        // The highlighted tile's outline, just outside it.
+        private static void Outline(float centerX, float centerY, float size, Color color)
+        {
+            float x = centerX - size * 0.5f, y = centerY - size * 0.5f, t = OutlineW;
+            Canvas.Rect(x - t, y - t, size + t * 2f, t, color);
+            Canvas.Rect(x - t, y + size, size + t * 2f, t, color);
+            Canvas.Rect(x - t, y, t, size, color);
+            Canvas.Rect(x + size, y, t, size, color);
         }
 
         // The pictures for an entry: the rendered ones, or made here for a
@@ -285,26 +356,11 @@ namespace ViExtras
             if (it.Key != null)
             {
                 it.Tile = Art.Get("radio_tile_" + it.Key);
-                it.TileOn = Art.Get("radio_tile_" + it.Key + "_on");
-                it.EdgeL = Art.Get("radio_tile_" + it.Key + "_l");
-                it.EdgeR = Art.Get("radio_tile_" + it.Key + "_r");
                 it.NameArt = Art.Get("radio_name_" + it.Key);
             }
-            if (it.Tile == null || it.TileOn == null)
-            {
-                // app.js fallbackNode: the label as text on the tile.
-                it.Tile = RadioImages.FallbackTile(it.Label ?? "", false);
-                it.TileOn = RadioImages.FallbackTile(it.Label ?? "", true);
-                it.EdgeL = it.EdgeR = null;
-            }
-            if (it.EdgeL == null) it.EdgeL = RadioImages.EdgeTile(it.Tile, true);
-            if (it.EdgeR == null) it.EdgeR = RadioImages.EdgeTile(it.Tile, false);
-            if (it.NameArt == null) it.NameArt = RadioImages.TextLine(it.Label, StationPx, 1.05f, 0.01f, 1f);
-            if (!string.IsNullOrEmpty(it.Genre))
-            {
-                if (it.GenreKey != null) it.GenreArt = Art.Get("radio_genre_" + it.GenreKey);
-                if (it.GenreArt == null) it.GenreArt = RadioImages.TextLine(it.Genre, ArtistPx, 1.05f, 0.01f, 0.62f);   // #artist opacity .62
-            }
+            // no logo: Draw sets the label on a tile (TextTile), as app.js's fallbackNode
+            // no rendered name or genre: Draw sets the label in TextKit's Anton
+            if (!string.IsNullOrEmpty(it.Genre) && it.GenreKey != null) it.GenreArt = Art.Get("radio_genre_" + it.GenreKey);
             return it;
         }
     }

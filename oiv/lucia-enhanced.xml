@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.1" id="{b4e81a07-5c2f-4d96-8e3a-6d0f9c27a518}" target="Five">
+  <metadata>
+    <name>GTA VI-Inspired HUD - Lucia (GTA V Enhanced)</name>
+    <version><major>2</major><minor>5</minor><tag>LUCIA ENHANCED 2.5.1</tag></version>
+    <author><displayName>FBICat</displayName></author>
+    <description><![CDATA[Lucia, a playable 4th character, for the GTA VI-Inspired HUD on GTA V ENHANCED (GTA5_Enhanced.exe). By FBICat.
+Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. The Lucia model is fan-made.
+
+NEEDS the HUD first: GTA-VI-Inspired-HUD-Enhanced.oiv and GTA-VI-Inspired-HUD-RegisterPatch.oiv (2.5.1 or newer),
+installed to the mods folder. Then install this package the same way.
+
+What it installs
+  - dlcpacks:/luciaped/    Lucia as a 4th character
+  - dlcpacks:/luciaolf/    the GTA Online female wardrobe and hairstyles for her
+  - both added to dlclist.xml, each only if it isn't listed yet (safe to install again)
+  - the packs are converted to the Enhanced (gen9) resource format
+
+Play as Lucia: hold Left Alt (controller: hold D-pad down), press E until her picture is highlighted, then let go.
+
+https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
+]]></description>
+    <licence><![CDATA[Personal use. By FBICat. The Lucia model is fan-made. Contains art cut from Rockstar's official GTA VI media (property of Rockstar Games). The GTA Online wardrobe and hairstyles are Rockstar Games' own assets, repacked for Lucia.]]></licence>
+  </metadata>
+  <colors>
+    <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>
+    <iconBackground>$FFE06AA8</iconBackground>
+  </colors>
+  <content>
+    <!-- FILES -->
+    <archive path="update\update.rpf" createIfNotExist="True" type="RPF7">
+      <xml path="common\data\dlclist.xml">
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/luciaped/'])]" append="Last">
+          <Item>dlcpacks:/luciaped/</Item>
+        </add>
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/luciaolf/'])]" append="Last">
+          <Item>dlcpacks:/luciaolf/</Item>
+        </add>
+      </xml>
+    </archive>
+  </content>
+</package>

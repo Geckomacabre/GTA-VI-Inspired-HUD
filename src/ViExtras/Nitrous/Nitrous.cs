@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using GTA;
 using GTA.Math;
 using GTA.Native;
@@ -11,7 +12,7 @@ namespace ViExtras
     /// The FiveM version's nitrous (sk_streetkings modules/nitrous/nitrous_c.lua,
     /// which the server runs, drawn by vice_hud), for single player.
     ///
-    /// Hold Left Alt (X / Square on a pad) in a car with a bottle: GTA's own
+    /// Hold Left Shift (X / Square on a pad) in a car with a bottle: GTA's own
     /// vehicle boost plus an engine torque multiplier, backfire flames from every
     /// exhaust, the RaceTurbo screen effect and a light camera shake. The bottle
     /// holds a few seconds of boost (its tier) and refills while it is not in
@@ -53,6 +54,8 @@ namespace ViExtras
         private Tier _tier;
         private static readonly PlateStore Bottles = new PlateStore("nitrous.txt");
         private readonly int _kbControl, _padControl, _hintMs;
+        private readonly Keys _kbKey;   // the key behind KeyboardControl, read itself (see Pressed)
+        private readonly bool _routeGauge;   // [VehicleCard] RouteGauge: GTA6Hud's own card for cars without a bottle
         private readonly float _nearMissRefill, _driftRefill, _oncomingRefill;
 
         private Vehicle _veh;
@@ -70,7 +73,7 @@ namespace ViExtras
         private bool _hintPending;
         private long _hintUntil = -1;
 
-        /// <summary>Left Alt is the boost right now (a bottle in the car, keyboard): other scripts leave it alone.</summary>
+        /// <summary>Left Alt is the boost right now ([Nitrous] KeyboardControl = 19, a bottle in the car, keyboard): other scripts leave it alone.</summary>
         public static bool HoldsCharacterKey { get; private set; }
 
         public Nitrous()
@@ -79,8 +82,10 @@ namespace ViExtras
             _enabled = Config.Get("Nitrous", "Enabled", true);
             _fittedBy = Config.Get("Nitrous", "FittedBy", "Shop");
             _defaultTier = Config.Get("Nitrous", "Tier", "Street");
-            _kbControl = Config.Get("Nitrous", "KeyboardControl", 19);   // INPUT_CHARACTER_WHEEL: Left Alt
+            _kbControl = Config.Get("Nitrous", "KeyboardControl", 21);   // INPUT_SPRINT: Left Shift (FiveM: 19, Left Alt)
             _padControl = Config.Get("Nitrous", "PadControl", 179);      // INPUT_CELLPHONE_EXTRA_OPTION: X / Square
+            _kbKey = _kbControl == 21 ? Keys.ShiftKey : _kbControl == 19 ? Keys.Menu : Keys.None;
+            _routeGauge = Config.Get("VehicleCard", "RouteGauge", false);
             _screenFx = Config.Get("Nitrous", "ScreenEffect", true);
             _flames = Config.Get("Nitrous", "Flames", true);
             _hintMs = Config.Get("Nitrous", "HintMs", 7000);
@@ -89,7 +94,7 @@ namespace ViExtras
             _oncomingRefill = Config.Get("Nitrous", "OncomingRefillPerSec", 0.22f);
 
             Tick += OnTick;
-            Aborted += (s, e) => { SetBoosting(false); Gta6HudCard.End(); HoldsCharacterKey = false; HudBridge.HoldSwapWheelOff(false); };
+            Aborted += (s, e) => { SetBoosting(false); Gta6HudCard.End(); HoldsCharacterKey = false; HudBridge.HoldSwapWheelOff("nitrous", false); };
         }
 
         private void OnTick(object sender, EventArgs e)
@@ -98,7 +103,7 @@ namespace ViExtras
             {
                 SetBoosting(false);
                 HoldsCharacterKey = false;
-                HudBridge.HoldSwapWheelOff(false);
+                HudBridge.HoldSwapWheelOff("nitrous", false);
                 return;
             }
             if (!_enabled) return;
@@ -110,7 +115,7 @@ namespace ViExtras
                 Gta6HudCard.End();
                 _cardTaken = false;
                 HoldsCharacterKey = false;
-                HudBridge.HoldSwapWheelOff(false);
+                HudBridge.HoldSwapWheelOff("nitrous", false);
             }
         }
 
@@ -127,12 +132,12 @@ namespace ViExtras
             if (handle != _vehHandle)
             {
                 SetBoosting(false);
-                if (_active)
+                if (_cardTaken)
                 {
                     Gta6HudCard.End();
                     _cardTaken = false;
-                    _active = false;
                 }
+                _active = false;
                 _hintPending = false;
                 _hintUntil = -1;
                 _veh = handle != 0 ? veh : null;
@@ -151,8 +156,7 @@ namespace ViExtras
                 _active = true;
                 _tier = tier;
                 _fuel = _shown = _tier.Capacity;
-                // GTA6Hud's card, drawn from here so the row stays centred with the pip in it.
-                _cardTaken = Gta6HudCard.Begin(_veh);
+                Log.Write("Nitrous", "bottle fitted: " + _tier.Capacity.ToString("0.#") + " s");
                 // client.lua: the reading going from "no kit" to "kit" while the
                 // player already sits in the car is a kit being fitted. Never the
                 // first reading, never the moment they get in, once a car a session.
@@ -161,19 +165,32 @@ namespace ViExtras
             else if (!fitted && _active)
             {
                 SetBoosting(false);
-                Gta6HudCard.End();
-                _cardTaken = false;
                 _active = false;
                 _hintPending = false;
                 _hintUntil = -1;
             }
             _seen = true;
 
-            // Left Alt is the boost here, as in FiveM; GTA6Hud's swap wheel, on the
-            // same key, stays shut meanwhile. A pad boosts on X / Square instead.
-            HoldsCharacterKey = _active && !Glyphs.UsingPad;
-            HudBridge.HoldSwapWheelOff(HoldsCharacterKey);
+            // GTA6Hud's vehicle card, drawn from here (Gta6HudCard) for every vehicle
+            // you're in: engine and fuel, and the nitrous gauge in the row, centred,
+            // only when the car has a bottle, as the FiveM HUD's card is. GTA6Hud's
+            // own route gauge (a double chevron like the nitrous one, up while a
+            // waypoint is set) is left out; [VehicleCard] RouteGauge = True gives
+            // cars without a bottle GTA6Hud's own card back.
+            bool wantCard = _veh != null && (_active || !_routeGauge);
+            if (wantCard && !_cardTaken) _cardTaken = Gta6HudCard.Begin(_veh);
+            else if (!wantCard && _cardTaken)
+            {
+                Gta6HudCard.End();
+                _cardTaken = false;
+            }
+
+            // With FiveM's Left Alt (KeyboardControl = 19), GTA6Hud's swap wheel on the
+            // same key stays shut meanwhile. A pad boosts on X / Square instead.
+            HoldsCharacterKey = _active && !Glyphs.UsingPad && _kbControl == 19;
+            HudBridge.HoldSwapWheelOff("nitrous", HoldsCharacterKey);
             if (_active) Drive(ped, now);
+            if (_cardTaken && Gta6HudCard.Draw(_veh, _active ? 1 : 0, out float sx, out float sy) && _active) DrawPip(sx, sy, true);
             DrawHint(now);
         }
 
@@ -209,12 +226,8 @@ namespace ViExtras
 
             // The ring follows the tank over 140 ms (style.css #pip-nitrous .pip-fill).
             _shown += (_fuel - _shown) * Math.Min(1f, dt / 0.14f);
-            if (_cardTaken)
-            {
-                // The card goes up and down with GTA6Hud's own, whatever is in the way.
-                if (Gta6HudCard.Draw(_veh, 1, out float sx, out float sy)) DrawPip(sx, sy, true);
-            }
-            else if (!blocked && HudBridge.VehicleGaugeRow(out float cx, out float cy, out _))
+            // On the card drawn from here (Run), the card going up and down with GTA6Hud's own.
+            if (!_cardTaken && !blocked && HudBridge.VehicleGaugeRow(out float cx, out float cy, out _))
             {
                 // GTA6Hud's card could not be drawn from here: after its row, off centre.
                 bool route = World.WaypointBlip != null && World.WaypointBlip.Exists();
@@ -245,7 +258,12 @@ namespace ViExtras
         {
             if (!Glyphs.UsingPad)
             {
+                // The key itself, not its control: 21 and 19 are pad buttons too (A, d-pad
+                // down), and a pad read as a keyboard for a moment (a nudged mouse) would
+                // boost on them. On a pad only PadControl boosts.
                 Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, _kbControl, true);
+                if (_kbKey == Keys.ShiftKey) return Game.IsKeyPressed(Keys.ShiftKey) || Game.IsKeyPressed(Keys.LShiftKey);
+                if (_kbKey == Keys.Menu) return Game.IsKeyPressed(Keys.Menu) || Game.IsKeyPressed(Keys.LMenu);
                 return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, _kbControl);
             }
             Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, _padControl, true);
@@ -257,6 +275,7 @@ namespace ViExtras
         {
             if (_boosting == on) return;
             _boosting = on;
+            if (!on && _active) Log.Write("Nitrous", "boost over: tank " + _fuel.ToString("0.0") + " of " + _tier.Capacity.ToString("0.#") + " s");
             if (_veh != null && _veh.Exists())
             {
                 Function.Call(Hash.SET_VEHICLE_BOOST_ACTIVE, _veh, on);

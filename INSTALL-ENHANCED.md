@@ -6,6 +6,10 @@ This guide is for the **2025 PC version** of GTA V, the one whose game folder ha
 
 Never modded GTA before? No problem. Follow the steps in order and don't skip any. It takes about 20 minutes.
 
+> 💬 **Questions or problems? Join the support Discord: [discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**
+> This version is a fork of FBICat's VI HUD. Please ask about it there or in a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues),
+> not in FBICat's Discord, which is for his original.
+
 > ⚠️ **Mods are for Story Mode only.** Never go into GTA Online with mods installed: you can get banned.
 > (Script Hook V, one of the tools below, closes the game if you try.)
 
@@ -97,8 +101,11 @@ never changed.
 **The mod.** Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
 Under **Assets**, download these **2 files**:
 
-- **`GTA-VI-Inspired-HUD-Enhanced.oiv`** (the mod, about 1.8 GB)
+- **`GTA-VI-Inspired-HUD-Enhanced.oiv`** (the mod, about 90 MB)
 - **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`** (a small patch that switches the mod on)
+
+**Want to play as Lucia?** Also download **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** (about 1.7 GB).
+She's optional: the HUD works without her.
 
 ❌ Don't download `GTA-VI-Inspired-HUD-Legacy.oiv`. It's for the other version and will crash Enhanced.
 
@@ -115,6 +122,7 @@ and unzip it anywhere, like your Desktop.
 3. When it asks for your game folder, pick the folder with **`GTA5_Enhanced.exe`**.
 4. Click **Install** and wait until it's finished.
 5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**.
+6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** the same way, last.
 
 ✅ Installing the RegisterPatch again, or over an older one, is safe: it never lists a pack twice.
 
@@ -137,7 +145,7 @@ Load **Story Mode**. The new HUD appears on its own.
 | --- | --- |
 | **See the minimap** | Get in a car. It only shows in vehicles, or when you're wanted. |
 | **Open the HUD settings** | Hold **V**. |
-| **Add your own music** | Put `.mp3` files in `scripts\Hud\Music` or `scripts\Hud\Radio\CustomMusic` in your game folder. |
+| **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. |
 
 ---
 
@@ -146,13 +154,14 @@ Load **Story Mode**. The new HUD appears on its own.
 | What happens | What to do |
 | --- | --- |
 | The game **closes by itself about 20 seconds after loading** | You have the normal Script Hook V .NET. Redo Step 3 with **SHVDNE**. Still happening? A ReShade add-on (a file ending in `.addon64` in your game folder) may be clashing. Move those files somewhere else and try again. |
-| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these 4 lines just above `</Paths>`: `<Item>dlcpacks:/vihudfonts/</Item>`, `<Item>dlcpacks:/vihudanims/</Item>`, `<Item>dlcpacks:/luciaped/</Item>`, `<Item>dlcpacks:/luciaolf/</Item>`. Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
+| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |
 | An error about **.NET** or **Visual C++** | Install [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer) and the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe), then restart your PC. |
+| A message says **Lucia is not registered** (and mentions a `VIHudSetup.exe`) | Her two packs are missing from `dlclist.xml`. Install `GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv` again, the same way as the others. With **NaturalVision Enhanced**, add her two lines to NVE's `dlclist.xml` instead (see the NVE row above). Ignore the `VIHudSetup.exe` part of the message: this mod doesn't use it. |
 | **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
-| **Something else** | [Open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
+| **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
 
 ---
 

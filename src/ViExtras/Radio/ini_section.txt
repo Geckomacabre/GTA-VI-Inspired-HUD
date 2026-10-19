@@ -33,9 +33,10 @@ HideRadar = True
 ; Hide the game's own radio station HUD for good.
 DisableRadioHUD = True
 RadioSounds = True
-SoundVolume = 50
-; The HUD. MuteDim drains it of colour while muted; Subtitle = none drops the
-; genre line under the station name. SlideTime is real ms.
+SoundVolume = 20
+; The HUD. Under the station name go the song and its artist; with no song
+; (a talk station) the genre, which Subtitle = none drops. MuteDim drains it of
+; colour while muted. SlideTime is real ms.
 Hud = True
 MuteDim = True
 SideIcons = True
@@ -48,6 +49,18 @@ OffLabel = RADIO OFF
 HiddenStations =
 ; Let the car radio carry outside the car, as the game's "big speaker" cars do.
 LoudRadio = True
+; While you are wanted and chase music plays (the game's wanted music, or
+; GTA6Hud's [Music] tracks), the car radio goes quiet until it ends.
+ChaseMusicTakesOver = True
+; On Demand: your own music. In the wheel, Down (arrow key) or the right stick
+; pushed down throws the switch to it, Up back to the radio. Put .mp3 / .wav /
+; .wma / .m4a files in scripts\Hud\Radio\CustomMusic (MY MUSIC), or a subfolder
+; of it for a station of its own. GTA's next / previous track keys skip.
+; CustomMusicVolume scales it against the game's radio volume; InvertSwitchAxis
+; for a pad whose stick reads the other way round.
+CustomMusic = True
+CustomMusicVolume = 0.20
+InvertSwitchAxis = False
 ; Audio scenes that silence the car radio, stopped while a station plays and
 ; started again after (comma separated; empty leaves audio scenes alone).
 RadioMutingScenes = CHARACTER_CHANGE_IN_SKY_SCENE

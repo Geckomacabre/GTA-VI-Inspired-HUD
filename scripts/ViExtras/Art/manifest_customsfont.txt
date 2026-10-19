@@ -3,3 +3,4 @@ customsfont_body 1024.00 320.00 0.00 0.00 1024.00 320.00
 customsfont_body_outline 1024.00 320.00 0.00 0.00 1024.00 320.00
 customsfont_display 512.00 384.00 0.00 0.00 512.00 384.00
 customsfont_display_outline 512.00 384.00 0.00 0.00 512.00 384.00
+customsfont_radio 1024.00 288.00 0.00 0.00 1024.00 288.00

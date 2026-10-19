@@ -36,7 +36,18 @@ namespace ViExtras
     /// stick, D-pad Right / Up on a pad), each one tuned as it is reached. Space
     /// (D-pad Down) mutes while the wheel is open; O mutes anywhere, flashing the
     /// HUD. Letting go closes it. GTA's next / previous station keys still
-    /// change station without the wheel on a keyboard. Nothing opens or mutes
+    /// change station without the wheel on a keyboard. Under the station name
+    /// go the song playing and its artist, the game's own names for them (the
+    /// genre when there is no song, as on a talk station). While you are wanted
+    /// and chase music plays (the game's wanted music, or GTA6Hud's own chase
+    /// tracks), the car radio goes quiet and comes back when it ends
+    /// ([Radio] ChaseMusicTakesOver). On Demand is your own music, thrown to
+    /// the way vi_radio throws its switch: Down (the arrow key) or the right stick
+    /// pushed down in the wheel, Up back to the radio. Its list is the tracks in
+    /// scripts\Hud\Radio\CustomMusic as MY MUSIC and each subfolder with tracks
+    /// as a station of its own (CustomMusic: GTA6Hud's own player). The game's
+    /// next / previous track keys skip through it, and it stops when you leave the
+    /// car. Nothing opens or mutes
     /// while something else has the keys (HudBridge.UiInTheWay): a GTA6Hud
     /// menu or wheel, the phone, the on-screen keyboard, a 2.5 panel.
     ///
@@ -72,7 +83,7 @@ namespace ViExtras
         private readonly int _timeScaleFade;
         private readonly string _timecycle;
         private readonly float _timecycleStrength;
-        private readonly bool _hiDof, _hideRadar, _disableRadioHud, _sounds, _hudEnabled, _includeOff, _loud;
+        private readonly bool _hiDof, _hideRadar, _disableRadioHud, _sounds, _hudEnabled, _includeOff, _loud, _chaseTakesOver;
         private readonly float _soundVolume;
         private readonly string _offLabel;
         private readonly HashSet<string> _hidden = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -104,6 +115,26 @@ namespace ViExtras
         private long _lastEase;
         private bool _standingDown;
         private string _lastError;
+        // the song playing (GET_AUDIBLE_MUSIC_TRACK_TEXT_ID)
+        private long _nextTrackPoll, _stationSince;
+        private string _trackStation, _trackTitle, _trackArtist;
+        private int _audible = -1, _audibleAtSwitch = -1, _trackId = -1;
+        // the chase music has the car's speakers (not the player's own mute)
+        private bool _chaseQuiet;
+        private long _chaseSeenAt;
+        private static readonly Hash AudioIsMusicPlaying = (Hash)0x845FFC3A4FEEFA3EUL;   // AUDIO_IS_MUSIC_PLAYING: the game's score
+        private FieldInfo _hudMusic, _musicLevel;
+        private bool _musicLooked;
+        // your own music (CustomMusic): the station playing and the car it plays in
+        private readonly CustomMusic _custom;
+        private readonly float _customGain;
+        private RadioHud.Item _customOn;
+        private int _customVeh;
+        // On Demand: the switch, its list, the radio's list, and what the radio played before it
+        private bool _onDemand, _stickYLatched;
+        private readonly bool _invertSwitch;
+        private List<RadioHud.Item> _radioStations = new List<RadioHud.Item>(), _odStations = new List<RadioHud.Item>();
+        private string _radioBefore;
 
         /// <summary>exports IsOpen / IsMuted.</summary>
         public static bool IsOpen { get; private set; }
@@ -135,11 +166,16 @@ namespace ViExtras
             _hideRadar = Config.Get(S, "HideRadar", true);
             _disableRadioHud = Config.Get(S, "DisableRadioHUD", true);
             _sounds = Config.Get(S, "RadioSounds", true);
-            _soundVolume = Config.Get(S, "SoundVolume", 50) / 100f;
+            _soundVolume = Config.Get(S, "SoundVolume", 20) / 100f;   // the open / close clicks, kept subtle
             _hudEnabled = Config.Get(S, "Hud", true);
             _includeOff = Config.Get(S, "IncludeOff", true);
             _offLabel = Config.Get(S, "OffLabel", "RADIO OFF") ?? "RADIO OFF";
             _loud = Config.Get(S, "LoudRadio", true);
+            _chaseTakesOver = Config.Get(S, "ChaseMusicTakesOver", true);
+            if (Config.Get(S, "CustomMusic", true))
+                _custom = new CustomMusic(Path.Combine(Paths.Scripts, "Hud", "Radio", "CustomMusic"));
+            _customGain = Config.Get(S, "CustomMusicVolume", 0.20f);   // GTA6Hud's own CustomGain is 0.12
+            _invertSwitch = Config.Get(S, "InvertSwitchAxis", false);
             foreach (string name in Split(Config.Get(S, "HiddenStations", ""))) _hidden.Add(name);
             _mutingScenes = Split(Config.Get(S, "RadioMutingScenes", "CHARACTER_CHANGE_IN_SKY_SCENE")).ToArray();
             _hud = new RadioHud(Config.Get(S, "SlideTime", 110), Config.Get(S, "MuteDim", true), Config.Get(S, "SideIcons", true),
@@ -225,11 +261,17 @@ namespace ViExtras
                     Housekeeping();
                 }
                 MainLoop(now);
+                CustomTick(now);
                 EaseTime(now);
                 if (now >= _nextScenes)
                 {
                     _nextScenes = now + 500;
                     MutingScenes();
+                }
+                if (_hudEnabled && now >= _nextTrackPoll)
+                {
+                    _nextTrackPoll = now + 250;
+                    UpdateTrack(now);
                 }
                 if (_hudEnabled && !HudBridge.Paused && !HudBridge.Busy) _hud.Draw();
             }
@@ -289,10 +331,27 @@ namespace ViExtras
                 bool baked = _tableOffLabel != null && _tableOffLabel == _offLabel;
                 list.Add(new RadioHud.Item { Name = OffName, Label = _offLabel, Off = true, Key = baked ? "off" : null });
             }
-            _stations = list;
+            _radioStations = list;
+
+            // On Demand: your own music's stations, or a tile saying how to add some
+            var od = new List<RadioHud.Item>();
+            if (_custom != null)
+                foreach (CustomMusic.Station st in _custom.Stations(RealTime.Ms))
+                    od.Add(new RadioHud.Item { Name = "CUSTOM:" + st.Folder, Label = st.Label, Custom = st.Folder });
+            if (od.Count == 0)
+                od.Add(new RadioHud.Item { Name = "CUSTOM:", Label = "NO MUSIC YET", Empty = true,
+                    Genre = _custom != null ? "ADD TRACKS TO SCRIPTS\\HUD\\RADIO\\CUSTOMMUSIC" : "NEEDS GTA6HUD" });
+            _odStations = od;
+            // the lists are new: your own music's station playing is its new entry of the same name
+            if (_customOn != null) _customOn = od.Find(x => x.Name == _customOn.Name) ?? _customOn;
+            if (_customOn != null) _onDemand = true;
+            _stations = _onDemand ? _odStations : _radioStations;
+            _hud.SetOnDemand(_onDemand);
 
             // keep the highlight on whatever is actually playing
-            string playing = PlayerStation() ?? OffName;
+            string playing = _customOn != null ? _customOn.Name : PlayerStation();
+            if (string.IsNullOrEmpty(playing)) playing = OffName;
+            if (_onDemand && _customOn == null) _index = 0;
             for (int i = 0; i < _stations.Count; i++)
                 if (string.Equals(_stations[i].Name, playing, StringComparison.OrdinalIgnoreCase)) { _index = i; break; }
             if (_index >= _stations.Count) _index = 0;
@@ -300,7 +359,20 @@ namespace ViExtras
 
         private void ApplyStation(RadioHud.Item entry)
         {
+            if (entry.Empty) return;   // On Demand with no music: the radio carries on
             int veh = CurrentVehicle();
+            if (entry.Custom != null)
+            {
+                // your own music: the car's radio off, GTA6Hud's player on this folder
+                if (veh != 0) Function.Call(Hash.SET_VEH_RADIO_STATION, veh, OffName);
+                Function.Call(Hash.SET_RADIO_TO_STATION_NAME, OffName);
+                _customOn = entry;
+                _customVeh = veh;
+                _lastStation = OffName;
+                _custom.Select(entry.Custom);
+                return;
+            }
+            _customOn = null;
             if (veh != 0)
             {
                 Function.Call(Hash.SET_VEH_RADIO_STATION, veh, entry.Name);
@@ -316,22 +388,63 @@ namespace ViExtras
         private void ApplyMute()
         {
             int veh = CurrentVehicle();
+            bool silent = _muted || _chaseQuiet;   // the player's mute, or the chase music's turn
             // the car muted before gets its radio back: on unmute, and when the mute moves to another
             // car (unmuting on foot or from another car used to leave it silent for good)
-            if (_mutedVehicle != 0 && (!_muted || veh != _mutedVehicle))
+            if (_mutedVehicle != 0 && (!silent || veh != _mutedVehicle))
             {
                 if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, _mutedVehicle)) Function.Call(Hash.SET_VEHICLE_RADIO_ENABLED, _mutedVehicle, true);
                 _mutedVehicle = 0;
             }
             if (veh != 0)
             {
-                Function.Call(Hash.SET_VEHICLE_RADIO_ENABLED, veh, !_muted);
-                _mutedVehicle = _muted ? veh : 0;
+                Function.Call(Hash.SET_VEHICLE_RADIO_ENABLED, veh, !silent);
+                _mutedVehicle = silent ? veh : 0;
             }
             // The mobile radio is only this wheel's business when it may be used on
             // foot; otherwise unmuting would switch the on-foot radio on in story mode.
-            if (_allowOnFoot) Function.Call(Hash.SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY, !_muted);
+            if (_allowOnFoot) Function.Call(Hash.SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY, !silent);
             IsMuted = _muted;
+        }
+
+        // The chase music takes over from the radio: while you are wanted and the
+        // game's wanted music (or GTA6Hud's chase tracks) plays, the car radio is
+        // off. It stays off until the music has been gone 3 s, so a gap between
+        // tracks doesn't bring it back, and comes back at once when the stars go.
+        private void ChaseMusic()
+        {
+            if (!_chaseTakesOver) return;
+            long now = RealTime.Ms;
+            bool wanted = Game.Player.WantedLevel > 0;
+            bool music = wanted && (Function.Call<bool>(AudioIsMusicPlaying) || Gta6HudChaseMusic());
+            if (music) _chaseSeenAt = now;
+            bool quiet = wanted && (music || (_chaseQuiet && now - _chaseSeenAt < 3000));
+            if (quiet == _chaseQuiet) return;
+            _chaseQuiet = quiet;
+            Log.Write("Radio", quiet ? "chase music: the radio is off" : "chase music over: the radio is back");
+            ApplyMute();
+        }
+
+        // GTA6Hud's MusicPlayer (its [Music] chase tracks) audible: its fade level above nothing.
+        private bool Gta6HudChaseMusic()
+        {
+            object hud = HudBridge.Gta6Hud();
+            if (hud == null) return false;
+            if (!_musicLooked)
+            {
+                _musicLooked = true;
+                const BindingFlags Own = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                _hudMusic = hud.GetType().GetField("_music", Own);
+                _musicLevel = _hudMusic?.FieldType.GetField("_level", Own);
+                if (_musicLevel != null && _musicLevel.FieldType != typeof(float)) _musicLevel = null;
+            }
+            if (_musicLevel == null) return false;
+            try
+            {
+                object music = _hudMusic.GetValue(hud);
+                return music != null && (float)_musicLevel.GetValue(music) > 0.01f;
+            }
+            catch { return false; }
         }
 
         // ---- NUI (the HUD) ------------------------------------------------------------------
@@ -340,6 +453,102 @@ namespace ViExtras
         {
             if (!_hudEnabled) return;
             _hud.State(withList ? new List<RadioHud.Item>(_stations) : null, _index, _muted, _wheelOpen);
+        }
+
+        // The song playing, from the game's own labels for the audible track:
+        // <id>S is its title, <id>A its artist. Just after a change of station the
+        // old station's track can still be the one heard, so for up to 3 s the
+        // track heard before the change shows nothing.
+        private void UpdateTrack(long now)
+        {
+            string playing = CanUseRadio() ? PlayerStation() : null;
+            int id = Function.Call<int>(Hash.GET_AUDIBLE_MUSIC_TRACK_TEXT_ID);
+            if (!string.Equals(playing, _trackStation, StringComparison.OrdinalIgnoreCase))
+            {
+                _trackStation = playing;
+                _audibleAtSwitch = _audible;
+                _stationSince = now;
+            }
+            _audible = id;
+            RadioHud.Item at = _index >= 0 && _index < _stations.Count ? _stations[_index] : null;
+            if (at != null && at.Custom != null)
+            {
+                // your own music: the song and artist from the files' tags
+                string title = null, artist = null;
+                bool mine = _customOn != null && at.Name == _customOn.Name && _custom.NowPlaying(at.Custom, out title, out artist);
+                _hud.NowPlaying(mine ? title : null, mine ? artist : null);
+                return;
+            }
+            bool show = at != null && !at.Off && id > 0
+                        && string.Equals(playing, at.Name, StringComparison.OrdinalIgnoreCase)
+                        && !(id == _audibleAtSwitch && now - _stationSince < 3000);
+            if (show && id != _trackId)
+            {
+                _trackId = id;
+                _trackTitle = TrackLabel(id + "S");
+                _trackArtist = TrackLabel(id + "A");
+            }
+            _hud.NowPlaying(show ? _trackTitle : null, show ? _trackArtist : null);
+        }
+
+        // Your own music, every frame: it plays while its station is on in the car
+        // it was put on in (not muted, not under chase music), at the game's radio
+        // volume times [Radio] CustomMusicVolume; the game's next / previous track
+        // keys skip through it. Leaving or changing car ends it.
+        private void CustomTick(long now)
+        {
+            if (_custom == null) return;
+            int veh = CurrentVehicle();
+            if ((_customOn != null || _onDemand) && veh != _customVeh)
+            {
+                // a new car plays its own radio
+                _customOn = null;
+                if (_onDemand) SetOnDemand(false, false);
+                else PushState(false);
+            }
+            bool on = _customOn != null && veh != 0 && !_muted && !_chaseQuiet;
+            float volume = Math.Max(0, Math.Min(10, Function.Call<int>(Hash.GET_PROFILE_SETTING, 301))) / 10f * _customGain;
+            _custom.Update(on, volume);
+            if (!on || _wheelOpen) return;
+            Disable(VehNextTrack);
+            Disable(VehPrevTrack);
+            if (JustPressed(VehNextTrack)) _custom.Next();
+            if (JustPressed(VehPrevTrack)) _custom.Previous();
+        }
+
+        // The radio / On Demand switch. Thrown to On Demand, the wheel lists your own
+        // music and plays the station highlighted there (the one playing, or the
+        // first); thrown back, it lists the radio again and puts back the station
+        // the radio played before. apply: false only changes the lists.
+        private void SetOnDemand(bool on, bool apply = true)
+        {
+            if (on == _onDemand) return;
+            _onDemand = on;
+            _customVeh = CurrentVehicle();
+            if (on)
+            {
+                _radioBefore = PlayerStation();
+                _stations = _odStations;
+                _index = Math.Max(0, _customOn != null ? _stations.FindIndex(x => x.Name == _customOn.Name) : 0);
+            }
+            else
+            {
+                _customOn = null;
+                _stations = _radioStations;
+                string back = string.IsNullOrEmpty(_radioBefore) ? OffName : _radioBefore;
+                _index = Math.Max(0, _stations.FindIndex(x => string.Equals(x.Name, back, StringComparison.OrdinalIgnoreCase)));
+            }
+            if (apply && _index < _stations.Count) ApplyStation(_stations[_index]);
+            _hud.SetOnDemand(on);
+            PushState(true);
+            Log.Write("Radio", on ? "On Demand: your own music" : "On Demand off: back to the radio");
+        }
+
+        private static string TrackLabel(string key)
+        {
+            if (!Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, key)) return null;
+            string text = Game.GetLocalizedString(key);
+            return string.IsNullOrWhiteSpace(text) || text == "NULL" ? null : text.Trim();
         }
 
         private void PlaySound(string file)
@@ -522,7 +731,35 @@ namespace ViExtras
                 Disable(RightY);
             }
 
-            // (The radio / On Demand switch on up / down only works with On Demand on.)
+            // The radio / On Demand switch, as vi_radio throws it: RADIO is the top
+            // position and ON DEMAND the bottom one, so down engages On Demand and up
+            // hands the radio back. The arrow keys on a keyboard; the right stick's
+            // up / down on a pad (its left / right steps), latched to one throw a push.
+            {
+                bool up = false, down = false;
+                if (pad)
+                {
+                    float y = Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, RightY);
+                    if (_invertSwitch) y = -y;
+                    if (Math.Abs(y) >= _deadzone)
+                    {
+                        if (!_stickYLatched)
+                        {
+                            _stickYLatched = true;
+                            if (y < 0f) up = true; else down = true;
+                        }
+                    }
+                    else _stickYLatched = false;
+                }
+                else
+                {
+                    _stickYLatched = false;
+                    up = JustPressed(CellUp);
+                    down = JustPressed(CellDown);
+                }
+                if (down) SetOnDemand(true);
+                else if (up) SetOnDemand(false);
+            }
 
             // Mute: Spacebar on a keyboard, D-pad Down on a pad.
             if (_muteInWheel)
@@ -656,9 +893,21 @@ namespace ViExtras
 
         private void Housekeeping()
         {
-            if (_muted && CurrentVehicle() != _mutedVehicle) ApplyMute();
+            if ((_muted || _chaseQuiet) && CurrentVehicle() != _mutedVehicle) ApplyMute();
+            ChaseMusic();
 
             string playing = PlayerStation();
+            if (_onDemand)
+            {
+                // On Demand has the car while its radio stays off; a station put on another
+                // way (GTA's next / previous station keys) throws the switch back to the radio
+                // (the game names no station, an empty name, while the radio is off)
+                // (with nothing of yours playing yet, the radio simply carries on underneath)
+                if (_customOn == null || string.IsNullOrEmpty(playing) || playing == OffName) return;
+                Log.Write("Radio", "On Demand: the car's radio was switched on (" + playing + ")");
+                _radioBefore = playing;
+                SetOnDemand(false, false);
+            }
             if (playing != _lastStation)
             {
                 _lastStation = playing;
@@ -731,11 +980,13 @@ namespace ViExtras
                     _wheelButtonHeld = false;
                     HudBridge.HoldVehicleWheelButton(false);
                 }
-                if (_muted)
+                if (_muted || _chaseQuiet)
                 {
-                    _muted = false;
+                    _muted = _chaseQuiet = false;
                     ApplyMute();
                 }
+                _customOn = null;
+                _custom?.Release();
                 IsOpen = false;
             }
             catch { }

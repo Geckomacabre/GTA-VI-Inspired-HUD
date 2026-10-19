@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ViExtras
 {
-    internal enum TextFace { Display, Body }
+    internal enum TextFace { Display, Body, Radio }
     internal enum TextAlign { Left, Center, Right }
 
     /// <summary>
@@ -57,7 +57,7 @@ namespace ViExtras
 
         private static void Load()
         {
-            _faces = new FaceData[2];
+            _faces = new FaceData[3];
             string path = Paths.Art("customs_glyphs.txt");
             try
             {
@@ -66,7 +66,8 @@ namespace ViExtras
                     if (line.Length == 0 || line[0] == '#') continue;
                     string[] p = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (p.Length < 2) continue;
-                    int fi = p[1] == "display" ? (int)TextFace.Display : p[1] == "body" ? (int)TextFace.Body : -1;
+                    int fi = p[1] == "display" ? (int)TextFace.Display : p[1] == "body" ? (int)TextFace.Body
+                        : p[1] == "radio" ? (int)TextFace.Radio : -1;
                     if (fi < 0) continue;
                     FaceData f = _faces[fi];
                     if (p[0] == "face" && p.Length >= 12)
