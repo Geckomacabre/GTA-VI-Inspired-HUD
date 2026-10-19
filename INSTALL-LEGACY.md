@@ -127,10 +127,7 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 | **Play as Lucia** | Hold **Left Alt** (controller: hold **D-pad down**), tap **E** until Lucia's picture is highlighted, then let go. |
 | **See the minimap** | Get in a car. It only shows in vehicles, or when you're wanted. |
 | **Open the HUD settings** | Hold **V**. |
-| **Add your own music** | Put `.mp3` files in `scripts\Hud\Music` or `scripts\Hud\Radio\CustomMusic` in your game folder. |
-
-> 💡 **Playing as Lucia?** Switch back to Franklin, Michael or Trevor **before you quit the game**.
-> Loading in as Lucia can freeze the game at Franklin's front door. A fix is coming.
+| **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. |
 
 ---
 

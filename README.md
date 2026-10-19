@@ -3,7 +3,7 @@
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD, minimap and playable Lucia for GTA V story mode on PC.**
-Made by **FBICat**. Version 2.5 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+Made by **FBICat**. Version 2.5.1 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
@@ -23,6 +23,8 @@ Made by **FBICat**. Version 2.5 adds features from the [FiveM version](https://g
 ---
 
 ## 🚀 Install in 3 steps
+
+> ⚡ **Never modded GTA?** The **[Quick start](QUICK-START.md)** is the whole install on one short page.
 
 **1. Which GTA V do you have?** Open your GTA V folder and look:
 
@@ -50,8 +52,9 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 | Play as Lucia | Hold **Left Alt**, then **E** to her picture *(needs the Lucia download)* |
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**). **O** mutes it |
-| Nitrous | Hold **Left Shift** in a car with a bottle |
-| Mod your car | Drive into a **Los Santos Customs** garage and stop |
+| Your own music (On Demand) | In the radio wheel, press **Down** (controller: right stick down). **Up** goes back to the radio |
+| Nitrous | Hold **Left Shift** (controller: **X** / **Square**) in a car with a bottle |
+| Mod your car | Drive into a **Los Santos Customs** garage and stop. Hold **Backspace** (or **B**) 2 s to leave from anywhere |
 | Crouch | **Left Ctrl** twice |
 | Lie down / crawl | **Right Ctrl**, then **W / S** |
 | Binoculars | Hold **Tab** (weapon wheel), let go on the binoculars |
@@ -60,17 +63,19 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 | Push-ups / sit-ups | **N** / **Shift + N** |
 | Greet / antagonize someone | **Y** / **U** |
 
-🎵 **Music:** none is included. Put your own `.mp3` files in `scripts\Hud\Music` or `scripts\Hud\Radio\CustomMusic`.
+🎵 **Music:** none is included. Put your own `.mp3` files in `scripts\Hud\Radio\CustomMusic` and pick **On Demand** in
+the radio wheel: each subfolder becomes a station of its own. Chase music goes in `scripts\Hud\Music`.
 
 ---
 
 ## ✨ What's in it
 
-- A **GTA VI-style HUD** and a **3D minimap**
+- A **GTA VI-style HUD** and a **3D minimap** with teal waypoint and pink mission routes
 - **Lucia** as a 4th character (a separate, optional download)
 - **Wanted stars and a wanted box** that tell you what the police know, plus **police lights** at the screen edge
 - **Police with stun guns:** they only shoot to kill when you're armed at 3+ stars. Otherwise they tase and arrest you,
   or arrest you when you stand still, unarmed. Hold **E** near a cop to surrender
+- A **radio wheel** with station logos, the song and artist, and **On Demand** for your own music
 - **WASTED / BUSTED** screens, a **crash cam** and **binoculars**
 - **Leonida Customs**: a full mod shop with nitrous
 - **Honor**, **skills**, a **gym**, and people who **remember you**

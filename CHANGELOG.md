@@ -4,7 +4,7 @@ This is a list of what this fork changed and fixed on top of **FBICat's** GTA VI
 
 Newest first. "Unreleased" is what's in testing and not yet on the Releases page.
 
-## 2.5.1 (unreleased, in testing)
+## 2.5.1 (19 October 2026)
 
 ### Changed
 
