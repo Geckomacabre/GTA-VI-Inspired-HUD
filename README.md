@@ -98,7 +98,8 @@ game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and `scripts\V
 - **2.5 ports:** from [GTA-VI-UI-and-HUD-for-FiveM](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM)
   by Geckomacabre, and the FiveM resources it builds on:
   - **Leonida Customs** after renzu_customs by Renzuzu (GPL-3).
-  - **Crouch and crawl** after rpemotes by Mads (GPL-3).
+  - **Crouch and crawl:** the script is ported from rpemotes' crouch / crawl by Mads (GPL-3). The animations
+    themselves are Rockstar's own, from GTA V.
   - **WASTED / BUSTED** from vi_wasted (GPL-3).
   - **Nitrous** from StreetKings.
   - **NPC memory** from um_memory.

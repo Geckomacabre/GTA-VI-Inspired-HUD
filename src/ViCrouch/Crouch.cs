@@ -8,7 +8,8 @@ namespace ViExtras
 {
     /// <summary>
     /// Crouch and crawl from the FiveM server's emotes (um_emotes client/Crouch.lua,
-    /// rpemotes' crouch and crawl by Mads), for single player.
+    /// rpemotes' crouch and crawl by Mads), for single player. The animations it
+    /// plays are Rockstar's own, from GTA V.
     ///
     /// Crouch (Left Ctrl): the crouched walk and strafe, slowed right down while
     /// aiming, no first person, no idle anims. Left Ctrl is also GTA's stealth

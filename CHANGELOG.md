@@ -71,7 +71,7 @@ These live in new script files next to FBICat's `GTA6Hud.dll`, which is left as 
   - Prices, labels and menus come straight from the FiveM config (`tools/gen_customs_data.py`). The text uses the shop's own fonts, rendered into glyph atlases.
   - Left out: the mechanic job (stock room, parts, spray cans), engine swaps, turbo kits, tire compounds and the custom colour picker.
   - FBICat's shop still opens the garage doors and keeps GTA's own shop shut; only its menu is kept from opening.
-- **Crouch and crawl** from the FiveM server's emotes (um_emotes / rpemotes, by Mads). It's its own `ViCrouch.dll`, GPL-3.
+- **Crouch and crawl**, its script ported from the FiveM server's emotes (um_emotes / rpemotes' crouch and crawl, by Mads). The animations are Rockstar's own, from GTA V. It's its own `ViCrouch.dll`, GPL-3.
   - **Left Ctrl crouches.** As on the server, it shares GTA's stealth key: tap once for stealth, again within a second to crouch.
   - **Right Ctrl lies down.** You dive if running. W / S crawl, A / D turn, Space rolls onto your back.
   - Keys are in `ViCrouch.ini`.

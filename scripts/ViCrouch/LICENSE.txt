@@ -1,4 +1,5 @@
-ViCrouch.dll (GTA VI-Inspired HUD 2.5): crouch and crawl, after rpemotes by Mads.
+ViCrouch.dll (GTA VI-Inspired HUD 2.5): crouch and crawl. Its script is ported from rpemotes' crouch and
+crawl by Mads; the animations it plays are Rockstar Games' own, from GTA V.
 It is licensed under the GNU General Public License, version 3, below.
 Source: https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/tree/main/src/ViCrouch
 
