@@ -48,7 +48,7 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 | Mod your car | Drive into a **Los Santos Customs** garage and stop |
 | Crouch | **Left Ctrl** twice |
 | Lie down / crawl | **Right Ctrl**, then **W / S** |
-| Binoculars | **B** |
+| Binoculars | Hold **Tab** (weapon wheel), let go on the binoculars |
 | Skills | **K** |
 | Push-ups / sit-ups | **N** / **Shift + N** |
 | Greet / antagonize someone | **Y** / **U** |

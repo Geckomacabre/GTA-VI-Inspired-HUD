@@ -18,8 +18,9 @@ namespace ViExtras
     /// ped can walk with them up, forward being wherever they point. The lens
     /// mask and the EXIT / ZOOM / VISION prompts are vice_hud's.
     ///
-    /// GTA6Hud's own binoculars (an item on its wheel) are separate and stay as
-    /// they are; these come up on their own key ([Binoculars] Key).
+    /// They come up from their tile on GTA6Hud's weapon wheel (BinocularsWheel),
+    /// or on a key if [Binoculars] Key names one. GTA6Hud's own binoculars, the
+    /// equipment item on its Items tab, are separate and stay as they are.
     /// </summary>
     public sealed class Binoculars : Script
     {
@@ -32,6 +33,8 @@ namespace ViExtras
 
         private readonly bool _enabled;
         private readonly Keys _key;
+        private readonly bool _wheel;
+        private readonly int _wheelRing;
         private readonly float _fovWide, _fovNarrow, _zoomSpeed, _wheelStep, _smoothing;
         private readonly float _lookPad, _lookMouse, _pitchMin, _pitchMax, _sway, _moveSpeed;
         private readonly bool _move, _allowInVehicle;
@@ -53,7 +56,9 @@ namespace ViExtras
         {
             Paths.Init(BaseDirectory);
             _enabled = Config.Get("Binoculars", "Enabled", true);
-            _key = Config.Get("Binoculars", "Key", Keys.B);
+            _key = Config.Get("Binoculars", "Key", Keys.None);
+            _wheel = Config.Get("Binoculars", "WheelSlot", true);
+            _wheelRing = Config.Get("Binoculars", "WheelRing", 3);
             _fovWide = Config.Get("Binoculars", "FovWide", 42f);
             _fovNarrow = Config.Get("Binoculars", "FovNarrow", 4f);
             _zoomSpeed = Config.Get("Binoculars", "ZoomSpeed", 38f);
@@ -83,6 +88,8 @@ namespace ViExtras
 
         private void OnTick(object sender, EventArgs e)
         {
+            // Every frame, ready or not, so the wheel shutting is seen when it happens.
+            bool picked = _enabled && _wheel && BinocularsWheel.Picked(_wheelRing);
             if (!GameReady.Now) return;
             // Polled, not heard through KeyDown: SHVDN queues key events until a
             // tick ends, and the loop in Run() is one long tick, so a press made
@@ -90,7 +97,7 @@ namespace ViExtras
             bool keyDown = _enabled && _key != Keys.None && Game.IsKeyPressed(_key);
             bool pressed = keyDown && !_keyWasDown;
             _keyWasDown = keyDown;
-            if (!pressed || _active) return;
+            if (!(pressed || picked) || _active) return;
             if (BlockedReason(Game.Player.Character) != null) return;
             try { Run(); }
             catch (Exception ex)

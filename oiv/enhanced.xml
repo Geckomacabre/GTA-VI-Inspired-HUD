@@ -32,10 +32,11 @@ Changes in 2.5.1
     RegisterPatch). This package is the HUD alone, and much smaller.
   - WASTED / BUSTED show every time, not just once a session, and frame the vehicle when you die in one.
   - Nitrous is on Left Shift (X / Square on a pad); Left Alt is GTA's character wheel.
+  - Binoculars are on the weapon wheel (hold Tab, or LB on a pad), not on B.
 
 Changes in 2.5 (full list: CHANGELOG.md on GitHub)
   - Ported from the FiveM version: WASTED / BUSTED, honor, crosshair and kill marks, Focus, skills and gym, NPC memory,
-    the FiveM crash cam, binoculars and radio, nitrous (hold Left Alt in a car with a bottle), Leonida Customs (drive
+    the FiveM crash cam, binoculars and radio, nitrous (in a car with a bottle), Leonida Customs (drive
     into an LS Customs garage), crouch (Left Ctrl twice) and crawl (Right Ctrl), the four-state wanted stars and wanted
     box, and directional police lights.
   - Fixed: Legacy black screen after dying; wanted box flickering; a crash while driving (traffic variety is off).
