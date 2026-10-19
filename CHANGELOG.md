@@ -12,6 +12,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ## Unreleased
 
+- **Enhanced: GTA6Hud's notifications show.** Messages like "Not enough money.", "Lose the cops first." and "Registered. It is yours now." never appeared on Enhanced, and `GTA6Hud.error.log` filled with a PostTicker error every 10 s: Script Hook V .NET Enhanced moved the type that call returns. ViExtras now posts them to the game's feed itself on Enhanced. Legacy is unchanged.
 - **Binoculars tell other scripts when D-pad down is theirs** (`Binoculars.HoldsCharacterKey`, like nitrous's), so a character wheel of another script stays shut while you zoom out.
 - **Nitrous logs which input started each boost**, to track down reports of the wrong button boosting.
 - **`GTA6Hud.ini` `[MapIcons] Sprites` is FBICat's list again.** 2.5.1 added LS Customs (72) to it, but that didn't make LS Customs show on the map from further away, so the change is undone.
