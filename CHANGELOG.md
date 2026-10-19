@@ -16,11 +16,13 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Smoother crawling:**
   - Holding W or S crawls continuously, one cycle running into the next. It used to start and stop on a timetable that didn't match the animation.
   - Letting go finishes the cycle before resting.
-  - Turning is 50° a second at any frame rate (it was a degree a frame).
-  - Turns in place ease in and out, and the blends are softer.
-- **The legs crawl too.** On your front, each knee draws up along the ground as the opposite arm reaches, then pushes as that arm pulls. Rockstar's crawl dragged them.
+  - Turning eases in and out at 75° a second, at any frame rate, and pivots at the shoulders so the hips swing round. It used to be a degree a frame.
+  - Holding A / D while lying still turns you on the spot the same way. It used to be a 10° step a second.
+  - The blends are softer.
+- **The legs crawl too.** On your front, each knee draws up along the ground as the opposite arm reaches, then pushes as that arm pulls. Rockstar's crawl dragged them. The hips roll and the waist bends with them.
   - These are our own clips, made from Rockstar's `move_crawl` (`vihud_crawl`, in the `vihudanims` pack). Arms, body and speed are Rockstar's.
   - `[Crawl] OwnClips = False` in `ViCrouch.ini` goes back to Rockstar's crawl, and so does a missing pack.
+- **Crawling uses a body-sized collision capsule**, to keep the lying body out of slopes, steps and walls. `[Crawl] BodyCapsule = False` turns it off.
 - **Lucia is a separate download:** `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` / `-Lucia-Enhanced.oiv`. Install it after the HUD and the RegisterPatch.
   - The HUD package is now the HUD alone, and much smaller.
   - Lucia's package adds her two packs to `dlclist.xml`, each only if it isn't listed yet.
@@ -32,6 +34,10 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Install guides:** a "Lucia is not registered" row (her two `dlclist.xml` lines are missing; the message's `VIHudSetup.exe` isn't part of this mod), and NVE's `dlclist.xml` lines listed one per line, so all four get copied.
 - **WASTED / BUSTED only showed once per session.** Releasing the screen's text movie threw an error, which left the screen marked as still playing, so later deaths and arrests got the game's own screen.
 - **WASTED in a vehicle:** the camera frames the vehicle from outside its body, follows it if it's still rolling, and comes back if the crash cam hands the view back at the same moment.
+
+### Known issues
+
+- **Switching to Michael, Franklin or Trevor doesn't work while the HUD's character wheel is on**, from the wheel or with F5-F7. The wheel holds GTA's character-switch input off every frame, and that also blocks the F keys. To switch, set `[Swap] Enabled = False` in `scripts\GTA6Hud.ini` and use GTA's own wheel (Lucia is then off the wheel). A fix is being tested.
 
 ## 2.5.0 (2026-10-19)
 

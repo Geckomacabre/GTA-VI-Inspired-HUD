@@ -73,7 +73,9 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 
 ## ⚠️ Known bugs (being fixed)
 
-- Switching to **Michael or Trevor** from the HUD's character wheel may not work (Legacy and Enhanced).
+- Switching to **Michael, Franklin or Trevor** doesn't work while the HUD's character wheel is on, from the wheel
+  or with F5-F7. To switch, set `[Swap] Enabled = False` in `scripts\GTA6Hud.ini` and use GTA's own wheel
+  (Lucia is then off the wheel).
 - The minimap's waypoint route can look shaky.
 - Greet / antagonize only work on the keyboard for now.
 - **NaturalVision Enhanced** users: see "Something went wrong?" in the [Enhanced guide](INSTALL-ENHANCED.md).

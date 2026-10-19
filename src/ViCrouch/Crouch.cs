@@ -25,9 +25,18 @@ namespace ViExtras
     {
         [DllImport("user32.dll")] private static extern short GetAsyncKeyState(int key);
 
-        // Turning while crawling, in degrees a second whatever the frame rate (the
-        // FiveM loop turned a degree a frame: fast at 144 fps, slow at 30).
-        private const float CrawlTurnPerSec = 50f;
+        // Turning, crawling or lying still: degrees a second whatever the frame rate (the
+        // FiveM loop turned a degree a frame, and lying still a 10-degree step a second),
+        // eased in and out, about the shoulders, where a crawler plants the elbows, so the
+        // hips swing round rather than the head sweeping sideways.
+        private const float CrawlTurnPerSec = 75f;
+        private const float TurnEase = 8f;
+        // The shoulders' distance ahead of the ped's origin in the lying poses (measured
+        // from the clips; on the back they're behind it).
+        private const float ShoulderAheadFront = 0.45f, ShoulderAheadBack = -0.5f;
+        // AF_EXPAND_PED_CAPSULE_FROM_SKELETON: the ped's collision follows the lying body,
+        // so it is pushed out of slopes, steps and walls instead of sinking into them.
+        private const int BodyCapsuleFlag = 134217728;
         // Blend into and out of a crawl cycle, and into the resting pose.
         private const float CrawlBlend = 4f;
 
@@ -49,6 +58,12 @@ namespace ViExtras
         private string _loopDir;
         private bool _stopPending;
         private float _lastPhase;
+        // Turning: the eased rate, whether the cycle is playing only to turn on the spot,
+        // and the shoulder point held still while it does.
+        private float _turnRate;
+        private bool _turnOnly, _pivotSet;
+        private GTA.Math.Vector3 _pivot;
+        private readonly bool _bodyCapsule;
         private bool _crouchWas, _crawlWas;
 
         public static bool IsCrouched { get; private set; }
@@ -64,6 +79,7 @@ namespace ViExtras
             _crawlOn = Config.Get("Crawl", "Enabled", true);
             _crawlKey = Config.Get("Crawl", "Key", Keys.RControlKey);
             _ownCrawl = Config.Get("Crawl", "OwnClips", true);
+            _bodyCapsule = Config.Get("Crawl", "BodyCapsule", true);
             Tick += OnTick;
             Aborted += (s, e) => DropStances();
         }
@@ -171,6 +187,7 @@ namespace ViExtras
             _crouched = _prone = _crawling = _inAction = _forceEndProne = false;
             _loopDir = null;
             _stopPending = false;
+            ResetTurn();
             _stancePed = null;
             IsCrouched = false;
         }
@@ -306,14 +323,14 @@ namespace ViExtras
         private void IdleCrawl(Ped p, float? heading = null, float blendIn = 2f)
         {
             GTA.Math.Vector3 c = p.Position;
-            Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, p, _crawlDict, _proneType + "_fwd", c.X, c.Y, c.Z, 0f, 0f, heading ?? p.Heading, blendIn, 2f, -1, 2, 1f, false, false);
+            Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, p, _crawlDict, _proneType + "_fwd", c.X, c.Y, c.Z, 0f, 0f, heading ?? p.Heading, blendIn, 2f, -1, 2 | CapsuleFlag, 1f, false, false);
         }
 
         // A crawl cycle on loop while the key is held: the clip's own length, so one
         // cycle runs into the next with no hold or cut between them.
         private void StartCrawlLoop(Ped p, string dir)
         {
-            Function.Call(Hash.TASK_PLAY_ANIM, p, _crawlDict, _proneType + "_" + dir, CrawlBlend, -CrawlBlend, -1, 1, 0f, false, false, false);
+            Function.Call(Hash.TASK_PLAY_ANIM, p, _crawlDict, _proneType + "_" + dir, CrawlBlend, -CrawlBlend, -1, 1 | CapsuleFlag, 0f, false, false, false);
             _loopDir = dir;
             _stopPending = false;
             _lastPhase = 0f;
@@ -359,12 +376,20 @@ namespace ViExtras
                 _forceEndProne = true;
                 _prone = false;
                 _loopDir = null;
+                ResetTurn();
                 EndProne();
                 return;
             }
             if (_inAction) return;
             bool forward = Game.IsControlPressed(GTA.Control.MoveUpOnly), back = Game.IsControlPressed(GTA.Control.MoveDownOnly);
-            string want = forward ? "fwd" : back ? "bwd" : null;
+            // A / D or the stick, + turning left (INPUT_MOVE_LR is -1 left .. +1 right)
+            float steer = -Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, 30);
+            if (Math.Abs(steer) < 0.25f) steer = 0f;
+            bool wasTurnOnly = _turnOnly;
+            _turnOnly = !forward && !back && steer != 0f;
+            // turning on the spot plays the forward cycle, its shoulders held where they are
+            string want = forward ? "fwd" : back ? "bwd" : _turnOnly ? "fwd" : null;
+            if (_loopDir != null && want == null && wasTurnOnly) StopCrawlLoop(p);   // done turning: rest now
             if (_loopDir != null)
             {
                 string clip = _proneType + "_" + _loopDir;
@@ -379,54 +404,52 @@ namespace ViExtras
                 _lastPhase = phase;
             }
             else if (want != null) StartCrawlLoop(p, want);
-            float turn = CrawlTurnPerSec * Math.Min(Game.LastFrameTime, 0.1f);
-            if (Game.IsControlPressed(GTA.Control.MoveLeftOnly))
+            // eased turn rate; crawling backwards turns the other way, as the FiveM one did
+            float dt = Math.Min(Game.LastFrameTime, 0.1f);
+            float target = steer * CrawlTurnPerSec * (back && !forward ? -1f : 1f);
+            _turnRate += (target - _turnRate) * Math.Min(1f, dt * TurnEase);
+            if (_turnOnly || Math.Abs(_turnRate) > 0.5f) TurnAboutShoulders(p, _turnRate * dt, _turnOnly);
+            else
             {
-                if (_crawling) p.Heading += forward ? turn : -turn;
-                else
-                {
-                    _inAction = true;
-                    if (_proneType == "onfront")
-                    {
-                        GTA.Math.Vector3 c = p.Position;
-                        Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, p, "move_crawlprone2crawlfront", "left", c.X, c.Y, c.Z, 0f, 0f, p.Heading, 2f, 2f, -1, 2, 0.1f, false, false);
-                        TurnSmooth(p, -10f, 300);
-                        Wait(700);
-                    }
-                    else
-                    {
-                        Once(p, "get_up@directional_sweep@combat@pistol@left", "left_to_prone");
-                        TurnSmooth(p, 25f, 400);
-                        IdleCrawl(p);
-                        Wait(600);
-                    }
-                    _inAction = false;
-                }
-            }
-            else if (Game.IsControlPressed(GTA.Control.MoveRightOnly))
-            {
-                if (_crawling) p.Heading += back ? turn : -turn;
-                else
-                {
-                    _inAction = true;
-                    if (_proneType == "onfront")
-                    {
-                        GTA.Math.Vector3 c = p.Position;
-                        Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, p, "move_crawlprone2crawlfront", "right", c.X, c.Y, c.Z, 0f, 0f, p.Heading, 2f, 2f, -1, 2, 0.1f, false, false);
-                        TurnSmooth(p, 10f, 300);
-                        Wait(700);
-                    }
-                    else
-                    {
-                        Once(p, "get_up@directional_sweep@combat@pistol@right", "right_to_prone");
-                        TurnSmooth(p, -25f, 400);
-                        IdleCrawl(p);
-                        Wait(600);
-                    }
-                    _inAction = false;
-                }
+                _turnRate = 0f;
+                _pivotSet = false;
             }
             if (!_crawling && Game.IsControlPressed(GTA.Control.Jump)) CrawlFlip(p);
+        }
+
+        private int CapsuleFlag => _bodyCapsule ? BodyCapsuleFlag : 0;
+
+        private void ResetTurn()
+        {
+            _turnRate = 0f;
+            _turnOnly = _pivotSet = false;
+        }
+
+        // Turns the ped by `deg` about its shoulders. On the spot (hold) the shoulders stay
+        // where they were when the turn began, which also stops the cycle crawling forward.
+        private void TurnAboutShoulders(Ped p, float deg, bool hold)
+        {
+            float ahead = _proneType == "onfront" ? ShoulderAheadFront : ShoulderAheadBack;
+            GTA.Math.Vector3 pos = p.Position;
+            float h = p.Heading;
+            if (!hold) _pivotSet = false;
+            else if (!_pivotSet)
+            {
+                _pivot = pos + Ahead(h, ahead);
+                _pivotSet = true;
+            }
+            GTA.Math.Vector3 pivot = _pivotSet ? _pivot : pos + Ahead(h, ahead);
+            float nh = h + deg;
+            GTA.Math.Vector3 np = pivot - Ahead(nh, ahead);
+            Function.Call(Hash.SET_ENTITY_COORDS_NO_OFFSET, p, np.X, np.Y, pos.Z, false, false, false);
+            p.Heading = nh;
+        }
+
+        // `d` metres ahead along a heading (GTA's: 0 is north, counter-clockwise)
+        private static GTA.Math.Vector3 Ahead(float heading, float d)
+        {
+            double r = heading * Math.PI / 180.0;
+            return new GTA.Math.Vector3((float)(-Math.Sin(r) * d), (float)(Math.Cos(r) * d), 0f);
         }
 
         /// <summary>The end of CrawlLoop: the get-up anims (unless forced), then back to normal.</summary>
@@ -458,6 +481,7 @@ namespace ViExtras
             _crawling = false;
             _loopDir = null;
             _stopPending = false;
+            ResetTurn();
             _inAction = false;
             _forceEndProne = false;
             _proneType = "onfront";
