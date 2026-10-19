@@ -44,6 +44,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ### Fixed
 
+- **Nitrous: a look-alike second circle** sat beside the nitrous gauge whenever a waypoint was set. It was FBICat's route gauge, with nearly the same double-chevron icon. The vehicle card of a car with nitrous now leaves it out, as the FiveM HUD's card does (engine, fuel, nitrous); other cars keep it.
 - **Binoculars: D-pad down (zoom out) opened the character switcher.** FBICat's HUD reads that button even while it's switched off, so its switcher is now held shut while the binoculars are up, and until you let go of the button.
 - **BUSTED never happened with FBICat's HUD.** It clears the wanted level the moment an arrest begins, and the game then drops the arrest (the cop walks back to his car). While one of our arrests is under way that's held off until the BUSTED screen shows, so the arrest completes.
 - **Lucia: loading a save you quit as her could freeze the game**, while the HUD switched you back to her. FBICat's automatic Lucia swap is switched off in `GTA6Hud.dll`: a 2-byte change in `UpdateLuciaMode`, the only change to his DLL. Lucia now only changes from the character wheel, and you load in as your story character.

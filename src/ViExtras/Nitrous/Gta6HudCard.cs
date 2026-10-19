@@ -14,8 +14,10 @@ namespace ViExtras
     /// GTA6Hud's own card is switched off ([VehicleCard] setting, the same one
     /// its options menu flips) and Draw lays the card out exactly as its
     /// DrawVehicleCard does, with GTA6Hud's own methods (background, brand
-    /// emblem, make and model in its font, engine / fuel / route gauges), and one
-    /// more slot in the row. Nothing of GTA6Hud's is changed or copied; End hands
+    /// emblem, make and model in its font, engine and fuel gauges), and one more
+    /// slot in the row. GTA6Hud's route gauge (a waypoint is set) is left out:
+    /// beside the nitrous gauge it read as a second one, both a double chevron,
+    /// and vice_hud's card has none (engine, fuel, nitrous). Nothing of GTA6Hud's is changed or copied; End hands
     /// the card back mid-drive without restarting it.
     ///
     /// GTA6Hud's DrawVehicleCard still runs every frame its card would be up, and
@@ -174,10 +176,9 @@ namespace ViExtras
                 }
                 if (!gauges) return false;
 
-                // DrawVehicleGauges, with the extra slots counted in the centring.
+                // DrawVehicleGauges without its route gauge, with the extra slots counted in the centring.
                 float cy = top + h - 18.35f;
-                bool route = World.WaypointBlip != null && World.WaypointBlip.Exists();
-                int n = 2 + (route ? 1 : 0) + extra;
+                int n = 2 + extra;
                 float x0 = cx - Pitch * (n - 1) * 0.5f;
                 int i = 0;
                 bool running = veh.IsEngineRunning;
@@ -186,7 +187,6 @@ namespace ViExtras
                 float fuel = (float)_fuel.Invoke(_hud, new object[] { veh });
                 Gauge(x0 + Pitch * i++, cy, engine, "hud_gauge_engine", 14.4f, 9.3f, running ? GaugeColour(engine) : idle);
                 Gauge(x0 + Pitch * i++, cy, fuel, "hud_gauge_fuel", 12.4f, 13.3f, running ? GaugeColour(fuel) : idle);
-                if (route) Gauge(x0 + Pitch * i++, cy, 1f, "hud_gauge_route", 14.5f, 13f, Color.FromArgb(255, 192, 240, 255));
                 slotX = x0 + Pitch * i;
                 slotY = cy;
                 return extra > 0;
