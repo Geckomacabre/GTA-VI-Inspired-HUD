@@ -1,0 +1,9 @@
+<Project>
+  <!-- No debug directory in the released DLLs: it would carry the path of the
+       machine they were built on. The .pdb files never ship anyway. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+</Project>

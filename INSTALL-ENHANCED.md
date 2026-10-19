@@ -149,6 +149,7 @@ Load **Story Mode**. The new HUD appears on its own.
 | What happens | What to do |
 | --- | --- |
 | The game **closes by itself about 20 seconds after loading** | You have the normal Script Hook V .NET. Redo Step 3 with **SHVDNE**. Still happening? A ReShade add-on (a file ending in `.addon64` in your game folder) may be clashing. Move those files somewhere else and try again. |
+| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these 4 lines just above `</Paths>`: `<Item>dlcpacks:/vihudfonts/</Item>`, `<Item>dlcpacks:/vihudanims/</Item>`, `<Item>dlcpacks:/luciaped/</Item>`, `<Item>dlcpacks:/luciaolf/</Item>`. Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |

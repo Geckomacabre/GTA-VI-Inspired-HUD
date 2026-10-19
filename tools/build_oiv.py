@@ -27,6 +27,9 @@ ROOT_FILES = ("ViMinimap.asi",)
 STORED = {".rpf", ".png", ".mp3", ".ogg", ".dds", ".jpg"}
 # Never packaged: player saves and caches the HUD writes at run time.
 SKIP_DIRS = {"Save", ".muffled"}
+# The 2.5 art is drawn from the vihudfonts pack's texture dictionaries (tools/build_txd.py);
+# the PNGs those are built from stay in the repo, their manifests ship.
+ART_PNGS = "scripts/ViExtras/Art/"
 OUTPUT_NAMES = {
     "legacy": "GTA-VI-Inspired-HUD-Legacy.oiv",
     "enhanced": "GTA-VI-Inspired-HUD-Enhanced.oiv",
@@ -43,6 +46,8 @@ def collect_files(dlcpacks):
         for name in sorted(filenames):
             src = os.path.join(dirpath, name)
             rel = os.path.relpath(src, ROOT).replace(os.sep, "/")
+            if rel.startswith(ART_PNGS) and name.lower().endswith(".png"):
+                continue
             files.append((src, rel, rel.replace("/", "\\")))
     for name in ROOT_FILES:
         src = os.path.join(ROOT, name)

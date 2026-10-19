@@ -1,0 +1,50 @@
+[Honor]
+; Every character has an honor standing, -100 to 100, kept between sessions
+; (scripts\ViExtras\Save\Honor.ini, one section each for Michael, Franklin,
+; Trevor and Lucia). Every deed that moves it pops a + or - and a face in the
+; middle of the screen; the mugshot panel in the bottom-right corner only
+; shows when the standing changes tier (angel / neutral / devil), or when
+; honor has just broken. Hitting the bottom breaks honor for good: the badge
+; stays grey and cracked whatever the number does afterwards.
+Enabled = True
+MinHonor = -100
+MaxHonor = 100
+DefaultHonor = 0
+; At or above AngelThreshold the badge is the angel; at or below
+; DevilThreshold the devil; in between, none.
+AngelThreshold = 40
+DevilThreshold = -40
+; How long the corner panel stays up, in ms. 0 keeps it up.
+HoldMs = 6000
+; A robbery-type deed counts as the worse version of itself when the police
+; are already after you, or you killed someone within RecentKillWindowMs
+; (game ms, like every cooldown here).
+EscalateWhenWanted = True
+EscalateWhenRecentKill = True
+RecentKillWindowMs = 180000
+; The conduct watcher: killing a bystander, a cop or an animal costs honor;
+; so does pulling a driver out of a car. A ped that hurt you within
+; SelfDefenceGraceMs (game ms), or that dies holding a weapon, is fair game.
+; Cops never are. Gang members and criminals cost nothing.
+ConductWatcher = True
+SelfDefenceGraceMs = 25000
+ArmedPedsAreFairGame = True
+; Pointing a gun at a civilian. Off: it fires on something you do all the time.
+PenaliseAiming = False
+PenaliseCarjacking = True
+PenalisePlayerKills = True
+; Animals taken while the game's own hunting is running cost nothing.
+HuntingIsLegal = True
+; True: nothing during a story mission moves honor (kills, stars, carjacks).
+SkipInMissions = False
+; Also post every change in the game's feed, top left.
+NotifyOnChange = False
+; Write each step (deed seen, hook applied or refused, panel shown) to
+; scripts\ViExtras.log.
+Debug = True
+; A key that shows what TestHook would do from where you stand, the pop and
+; the panel both, WITHOUT changing your honor. TestBroken shows the broken
+; look. None for none.
+TestKey = None
+TestHook = kill_civilian
+TestBroken = False

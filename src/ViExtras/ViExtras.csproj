@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The 2.5 additions: single-player ports of the FiveM version's features.
+       Builds scripts\ViExtras.dll. Point ShvdnDir at a folder holding
+       ScriptHookVDotNet3.dll (the game folder works):
+         dotnet build -c Release -p:ShvdnDir=D:\Games\GTAV -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>ViExtras</AssemblyName>
+    <RootNamespace>ViExtras</RootNamespace>
+    <Version>2.5.0</Version>
+    <Nullable>disable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- World.RenderingCamera / CreateCamera: obsolete in 3.7 nightlies, still there, and the same calls GTA6Hud makes. -->
+    <NoWarn>CS0618</NoWarn>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ShvdnDir Condition="'$(ShvdnDir)' == ''">D:\Games\GTAV</ShvdnDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ScriptHookVDotNet3">
+      <HintPath>$(ShvdnDir)\ScriptHookVDotNet3.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+</Project>

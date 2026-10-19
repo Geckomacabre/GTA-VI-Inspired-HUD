@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Leonida Customs, the FiveM version's mod shop (Lenonida_customs, after
+       renzu_customs by Renzuzu, GPL-3.0), for single player. Builds
+       scripts\ViCustoms.dll, its own assembly because of the licence. The HUD's
+       drawing code (src\ViExtras\Core) is compiled in from there.
+         dotnet build -c Release -p:ShvdnDir=D:\Games\GTAV -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>ViCustoms</AssemblyName>
+    <RootNamespace>ViExtras</RootNamespace>
+    <Version>2.5.0</Version>
+    <Nullable>disable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>CS0618</NoWarn>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DefineConstants>$(DefineConstants);VICUSTOMS</DefineConstants>
+    <ShvdnDir Condition="'$(ShvdnDir)' == ''">D:\Games\GTAV</ShvdnDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\ViExtras\Core\Base.cs" Link="Core\Base.cs" />
+    <Compile Include="..\ViExtras\Core\Canvas.cs" Link="Core\Canvas.cs" />
+    <Compile Include="..\ViExtras\Core\Art.cs" Link="Core\Art.cs" />
+    <Compile Include="..\ViExtras\Core\HudBridge.cs" Link="Core\HudBridge.cs" />
+    <Compile Include="..\ViExtras\Core\TextKit.cs" Link="Core\TextKit.cs" />
+    <Compile Include="..\ViExtras\Core\PlateStore.cs" Link="Core\PlateStore.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ScriptHookVDotNet3">
+      <HintPath>$(ShvdnDir)\ScriptHookVDotNet3.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,2 @@
+# name  width height  boxX boxY  boxWidth boxHeight   (CSS px at 1080p)
+police_lamp 128.00 128.00 0.00 0.00 128.00 128.00

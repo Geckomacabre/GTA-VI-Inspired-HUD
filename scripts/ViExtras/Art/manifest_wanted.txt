@@ -1,0 +1,17 @@
+# name  width height  boxX boxY  boxWidth boxHeight   (CSS px at 1080p)
+wanted_box_contact 468.00 126.00 12.80 12.36 441.59 101.08
+wanted_box_hollow 468.00 126.00 12.80 12.36 441.59 101.08
+wanted_box_red 468.00 126.00 12.80 12.36 441.59 101.08
+wanted_box_searching 468.00 126.00 12.80 12.36 441.59 101.08
+wanted_box_searching_on 468.00 126.00 12.80 12.36 441.59 101.08
+wanted_boxt_contact 468.00 152.00 12.80 12.36 441.59 126.03
+wanted_boxt_hollow 468.00 152.00 12.80 12.36 441.59 126.03
+wanted_boxt_red 468.00 152.00 12.80 12.36 441.59 126.03
+wanted_boxt_searching 468.00 152.00 12.80 12.36 441.59 126.03
+wanted_boxt_searching_on 468.00 152.00 12.80 12.36 441.59 126.03
+wanted_tell_camera 30.00 30.00 2.91 2.86 24.95 24.95
+wanted_tell_hanger 30.00 30.00 2.91 2.86 24.95 24.95
+wanted_tell_people 30.00 30.00 2.91 2.86 24.95 24.95
+wanted_tell_person 30.00 30.00 2.91 2.86 24.95 24.95
+wanted_tell_vehicle 30.00 30.00 2.91 2.86 24.95 24.95
+wanted_tell_weapon 30.00 30.00 2.91 2.86 24.95 24.95

@@ -1,0 +1,63 @@
+[Skills]
+; The FiveM version's skills. Michael, Franklin and Trevor keep the game's own
+; skill stats, and the panel shows them. Health is the one skill the game has
+; not got: jogging and the gym raise it, and each level adds max health.
+; Lucia earns every skill the FiveM way (vice_hud's XP curve), saved under
+; scripts\ViExtras\Save.
+Enabled = True
+; Opens and closes the skills panel (FiveM's /skills). Backspace, Esc or the
+; panel's X close it too; the mouse wheel or Up / Down scrolls Lucia's list.
+Key = K
+MouseCursor = True
+; Where Lucia's skills start the first time she is played (Health starts at 0).
+StartingLevel = 50
+; Max health the Health skill adds at level 100, on top of the stock 200.
+HealthMaxBonus = 60
+; Jogging builds Lucia's Stamina at this fraction of a sprint's rate.
+JogStaminaFactor = 0.4
+; Lucia's Driving skill changes the grip of the car she drives: stock at level
+; 50, 1 - DrivingGripBonus times stock at 0, 1 + DrivingGripBonus at 100.
+; Single player shares handling between every car of a model, so other cars of
+; that model on the road share it while she drives.
+DrivingAffectsHandling = True
+DrivingGripBonus = 0.2
+; The stat prefix Lucia's levels are written to. FiveM writes MP0_, the
+; freemode slot; in single player those are the GTA Online character's stats,
+; so nothing is written unless you set it. None writes nothing.
+LuciaStatPrefix = None
+; How often activity is sampled, how often unsaved XP is written (ms), how often
+; the story characters' stats are read, and the most metres one
+; sample may count (a teleport or a lift is not exercise).
+TickMs = 200
+SaveMs = 30000
+StatPollMs = 1000
+MaxStep = 40
+; A key that adds TestXp to Health and writes every skill to ViExtras.log
+; (FiveM's /skillxp health 500 and /skillinfo). None for none.
+TestKey = None
+TestXp = 500
+
+[Gym]
+; Training for the Health skill: push-ups and sit-ups anywhere, bench press and
+; chin-ups at the game's own gym benches and bars (Muscle Beach). A rep every
+; few seconds pays Health XP; a set is 25 reps, then a minute's rest.
+Enabled = True
+; Push-ups and sit-ups where you stand (FiveM's /pushups and /situps).
+; "N, Shift" means Shift+N. Moving, or X, stops a set.
+PushUpsKey = N
+SitUpsKey = N, Shift
+; The control that starts an exercise at a bench or bar (51: E / d-pad right).
+UseControl = 51
+; How close a bench, bar or station must be, in metres, and a station's default radius.
+TargetDistance = 2.0
+StationRadius = 1.2
+; Reps in a set (the on-screen count is drawn for 25) and the rest after one, in seconds.
+SetReps = 25
+RestSeconds = 60
+; Prop models that offer the bench press and chin-ups.
+BenchModels = prop_muscle_bench_01, prop_muscle_bench_02, prop_muscle_bench_03, prop_muscle_bench_04, prop_muscle_bench_05, prop_muscle_bench_06, prop_weight_bench_02, m25_2_prop_m52_gymbench_01a
+ChinUpModels = prop_beach_bars_01, prop_beach_bars_02, m25_2_prop_m52_gympullup_01a
+; Placed stations, FiveM's data/gym.json (empty there too): "exercise x y z
+; heading [radius]", several separated by ';'. Exercises: weights, bench, chinups.
+; For example: Stations = weights <x> <y> <z> <heading>; chinups <x> <y> <z> <heading> 1.5
+Stations =

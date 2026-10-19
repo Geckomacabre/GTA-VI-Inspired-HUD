@@ -1,0 +1,53 @@
+[Radio]
+; The FiveM version's radio wheel (vi_radio, after sej0bec's VI Radio). Hold Key
+; in a vehicle, or the game's radio wheel button on a pad (D-pad Left unless
+; rebound): slow motion, a blur, and the station carousel. Left / Right or the
+; mouse wheel change station (right stick, D-pad Right / Up on a pad); Space
+; (D-pad Down) mutes while it is open, MuteKey mutes anywhere.
+; GTA6Hud has a radio wheel of its own on the same button. This one stays off
+; while GTA6Hud.ini [Radio] Enabled is True: set that False to use this one.
+Enabled = True
+Key = Q
+MuteKey = O
+ScrollRadio = True
+ArrowAutoRepeat = True
+AutoRepeatDelay = 350
+AutoRepeatRate = 120
+Controller = True
+ControllerDeadzone = 0.5
+ControllerLockCamera = True
+MuteInWheel = True
+; Keep the game's own radio wheel and next / previous station keys off.
+DisableVanillaRadioControls = True
+; Who may open it: the driver only, or (False) any passenger too. AllowOnFoot
+; also opens it on foot while the mobile radio is playing.
+DriverOnly = True
+AllowOnFoot = False
+; While it is open. TimeScale = 1 keeps only the HUD. TimeScaleFade is real ms.
+TimeScale = 0.075
+TimeScaleFade = 180
+Timecycle = hud_def_blur
+TimecycleStrength = 1
+HiDof = True
+HideRadar = True
+; Hide the game's own radio station HUD for good.
+DisableRadioHUD = True
+RadioSounds = True
+SoundVolume = 50
+; The HUD. MuteDim drains it of colour while muted; Subtitle = none drops the
+; genre line under the station name. SlideTime is real ms.
+Hud = True
+MuteDim = True
+SideIcons = True
+Subtitle = genre
+SlideTime = 110
+; Stations: every one the game has unlocked, plus a RADIO OFF tile. Hide some
+; by their game names, comma separated (e.g. RADIO_05_TALK_01, RADIO_11_TALK_02).
+IncludeOff = True
+OffLabel = RADIO OFF
+HiddenStations =
+; Let the car radio carry outside the car, as the game's "big speaker" cars do.
+LoudRadio = True
+; Audio scenes that silence the car radio, stopped while a station plays and
+; started again after (comma separated; empty leaves audio scenes alone).
+RadioMutingScenes = CHARACTER_CHANGE_IN_SKY_SCENE

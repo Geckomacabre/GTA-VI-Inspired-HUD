@@ -1,0 +1,30 @@
+# Written by tools/render/radio.py from vi_radio's config.lua (Config.Stations, Config.OffLabel).
+# game name	label	genre	tile key	genre key
+RADIO_01_CLASS_ROCK	Los Santos Rock Radio	Classic Rock	01_class_rock	classic_rock
+RADIO_02_POP	Non-Stop-Pop FM	Pop	02_pop	pop
+RADIO_03_HIPHOP_NEW	Radio Los Santos	Contemporary Hip Hop	03_hiphop_new	contemporary_hip_hop
+RADIO_04_PUNK	Channel X	Punk	04_punk	punk
+RADIO_05_TALK_01	West Coast Talk Radio	Talk	05_talk_01	talk
+RADIO_06_COUNTRY	Rebel Radio	Country	06_country	country
+RADIO_07_DANCE_01	Soulwax FM	Dance	07_dance_01	dance
+RADIO_08_MEXICAN	East Los FM	Mexican	08_mexican	mexican
+RADIO_09_HIPHOP_OLD	West Coast Classics	Classic Hip Hop	09_hiphop_old	classic_hip_hop
+RADIO_11_TALK_02	Blaine County Radio	Talk	11_talk_02	talk
+RADIO_12_REGGAE	Blue Ark	Reggae	12_reggae	reggae
+RADIO_13_JAZZ	Worldwide FM	Jazz	13_jazz	jazz
+RADIO_14_DANCE_02	FlyLo FM	Electronic	14_dance_02	electronic
+RADIO_15_MOTOWN	The Lowdown 91.1	Motown	15_motown	motown
+RADIO_16_SILVERLAKE	Radio Mirror Park	Indie	16_silverlake	indie
+RADIO_17_FUNK	Space 103.2	Funk	17_funk	funk
+RADIO_18_90s_ROCK	Vinewood Boulevard Radio	Alternative Rock	18_90s_rock	alternative_rock
+RADIO_19_USER	Self Radio	Your Music	19_user	your_music
+RADIO_20_THELAB	The Lab	Experimental	20_thelab	experimental
+RADIO_21_DLC_XM17	Blonded Los Santos 97.8	Contemporary	21_dlc_xm17	contemporary
+RADIO_22_DLC_BATTLE_MIX1_RADIO	LS Underground Radio	House	22_dlc_battle_mix1_radio	house
+RADIO_23_DLC_XM19_RADIO	iFruit Radio	Alternative	23_dlc_xm19_radio	alternative
+RADIO_27_DLC_PRHEI4	Still Slipping Los Santos	Hip Hop	27_dlc_prhei4	hip_hop
+RADIO_34_DLC_HEI4_KULT	Kult FM	Post-Punk	34_dlc_hei4_kult	post_punk
+RADIO_35_DLC_HEI4_MLR	The Music Locker	House	35_dlc_hei4_mlr	house
+RADIO_36_AUDIOPLAYER	Media Player	Custom	36_audioplayer	custom
+RADIO_37_MOTOMAMI	MOTOMAMI Los Santos	Latin	37_motomami	latin
+OFF	RADIO OFF		off	

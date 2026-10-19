@@ -2,7 +2,7 @@
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
     <name>GTA VI-Inspired HUD + custom Lucia ped (GTA V Enhanced)</name>
-    <version><major>2</major><minor>2</minor><tag>ENHANCED</tag></version>
+    <version><major>2</major><minor>5</minor><tag>ENHANCED</tag></version>
     <author><displayName>FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD + custom Lucia ped for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -18,24 +18,36 @@ INSTALL - two packages, both to your mods folder
 
 What it installs: the HUD (scripts\GTA6Hud.dll, scripts\Hud\, GTA6Hud.ini), the 3D minimap (scripts\ViMinimap.dll,
 MiniMap.* data, ViMinimap.asi), and the packs vihudfonts, vihudanims, luciaped and luciaolf - all gen9.
+  - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's, unchanged):
+      scripts\ViExtras.dll + scripts\ViExtras\ + ViExtras.ini   honor, crosshair, focus, skills, NPC memory, crash cam,
+                                                                 binoculars, radio, nitrous, wanted stars and box, police lights
+      scripts\ViWasted.dll + ViWasted.ini                        WASTED / BUSTED
+      scripts\ViCustoms.dll + scripts\ViCustoms\ + ViCustoms.ini  Leonida Customs (GPL-3)
+      scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
 
-Changes in 2.2
-  - Added ViMinimap.asi, so the minimap shows in fullscreen (it was missing from 2.1).
-  - Lucia no longer crashes the game: the 1.3 register patch raises MetaDataStore (the pool her packs overflowed)
-    plus TxdStore and DwdStore, and registers her packs. Switch: hold Left Alt / D-pad down, press E to her portrait.
-  - Commercial music removed.
+Changes in 2.5 (full list: CHANGELOG.md on GitHub)
+  - Ported from the FiveM version: WASTED / BUSTED, honor, crosshair and kill marks, Focus, skills and gym, NPC memory,
+    the FiveM crash cam, binoculars and radio, nitrous (hold Left Alt in a car with a bottle), Leonida Customs (drive
+    into an LS Customs garage), crouch (Left Ctrl twice) and crawl (Right Ctrl), the four-state wanted stars and wanted
+    box, and directional police lights.
+  - Fixed: Legacy black screen after dying; wanted box flickering; a crash while driving (traffic variety is off).
+  - Lucia is no longer lent to the story characters near mission markers ([Lucia] MissionRange = 0).
 
 Requirements (not included)
-  - Script Hook V for Enhanced and a Script Hook V .NET 3 build that supports Enhanced
+  - Script Hook V for Enhanced and Script Hook V .NET Enhanced (SHVDNE), not the normal Script Hook V .NET
   - A mods-folder loader for Enhanced (OpenIV.asi only works with Legacy)
 
-NOT TESTED in GTA V Enhanced. If it does not work, send scripts\GTA6Hud.perf.log, scripts\GTA6Hud.error.log,
-scripts\MiniMap.log and ScriptHookVDotNet.log.
+Known issues on Enhanced
+  - 2.2's random crashes (a wrong memory read in Script Hook V .NET Enhanced) are fixed; if it still crashes, send the logs below.
+  - Don't switch to Lucia on Enhanced yet.
+  - With NaturalVision Enhanced: add the 4 packs to NVE's onigiri\common\data\dlclist.xml and keep NVE's gameconfig.xml
+    (see INSTALL-ENHANCED.md).
+  - Problems: send scripts\GTA6Hud.perf.log, scripts\GTA6Hud.error.log, scripts\ViExtras.log and ScriptHookVDotNet.log.
 
 https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
 ]]></description>
-    <licence><![CDATA[Personal use. By FBICat. Contains art cut from Rockstar's official GTA VI media (property of Rockstar Games) and the Grand Figma Kit VI (CC BY 4.0). Minimap based on "GTA VI MiniMap (3D Buildings)" by moddims.]]></licence>
+    <licence><![CDATA[Personal use. By FBICat. Contains art cut from Rockstar's official GTA VI media (property of Rockstar Games) and the Grand Figma Kit VI (CC BY 4.0). Minimap based on "GTA VI MiniMap (3D Buildings)" by moddims. 2.5 ports from GTA-VI-UI-and-HUD-for-FiveM by Geckomacabre: ViCustoms.dll, ViCrouch.dll and ViWasted.dll are GPL-3 (source on GitHub, licence beside them); the radio code is PolyForm Noncommercial 1.0.0 (scripts\ViExtras\Radio\LICENSE.md); Anton font by Vernon Adams, SIL OFL 1.1.]]></licence>
   </metadata>
   <colors>
     <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>

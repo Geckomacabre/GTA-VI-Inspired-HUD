@@ -2,3 +2,5 @@ build/
 *.part
 *.oiv
 dlcpacks/
+src/*/bin/
+src/*/obj/

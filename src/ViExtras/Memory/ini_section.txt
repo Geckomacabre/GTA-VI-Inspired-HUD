@@ -1,0 +1,165 @@
+[Memory]
+; RDR2's Greet / Antagonize / Defuse as body language, people who notice you,
+; people and neighbourhoods who remember you, and witnesses who run to report
+; what you did. Michael, Franklin, Trevor and Lucia each remember for themselves
+; (ViExtras\Save\memory_<name>.txt; delete one to start that character over).
+; GTA6Hud has a stranger conversation of its own (hold aim on someone, then
+; GREET / TAUNT). Turn it off while this is on: GTA6Hud.ini [Interactions]
+; NpcConversations = False.
+Enabled = True
+; Story missions run their own crowds and wanted levels; this keeps out of them.
+DuringMissions = False
+; NPC voice lines on top of their body language. Off, as on the FiveM server.
+NpcSpeech = False
+; Writes what it decides (witnesses, crimes, honor) to ViExtras.log.
+Debug = False
+; How this neighbourhood sees you, and how many people know your face (the FiveM
+; /standing command). None for none.
+StandingKey = None
+
+; ---- Greet / Antagonize / Defuse -------------------------------------------
+; Walk up to someone and look at them: the prompt comes up at their head. Greet
+; becomes Defuse while they're squaring up to you, and Intimidate on a witness
+; running to report you. Greet is hidden for a minute after you antagonize them.
+Interact = True
+GreetKey = Y
+AntagonizeKey = U
+; Pad buttons, as GTA control numbers (-1 for none: the keys above only).
+PadGreet = -1
+PadAntagonize = -1
+; Metres, and degrees either side of the camera.
+Range = 3.5
+Cone = 30
+ScanMs = 150
+PlayerCooldownMs = 1500
+PedCooldownMs = 3500
+ReactDelayMs = 900
+; Antagonizing the same person escalates (bump, feint, shadow-box); the count
+; resets after this long.
+StageResetMs = 30000
+HideGreetAfterAntagonizeMs = 60000
+; Defuse always works before blows land; once they're fighting it's this
+; chance (%), moved by your honor, their memory of you and their nerve.
+DefuseInFightChance = 40
+; Gang members pushed to a fight may pull a knife, bat or pistol (%).
+GangWeaponChance = 20
+; Cops can be greeted and antagonized; the third push is obstruction.
+Cops = True
+CopObstructionStars = 1
+; Honor for greeting / antagonizing, the RDR2 way: one tick per 3 different
+; people within a minute; cops and gangs never count. Honor prices it.
+ReportHonor = True
+HonorStreakCount = 3
+HonorStreakWindowMs = 60000
+; If GTA6Hud's own stranger conversation stays on, this prompt stands aside
+; while aim is held.
+YieldToGta6HudConversations = True
+
+; ---- People noticing you ----------------------------------------------------
+AmbientScanMs = 500
+; Follow someone (10 s walking at them, 20 s within 5 m, or 5 s within 1 m) and
+; they tell you off; 8 s more and the brave ones swing, the rest run.
+Follow = True
+FollowRange = 10
+FollowAngle = 45
+FollowMeterMs = 10000
+FollowCloseRange = 5
+FollowCloseMs = 20000
+FollowTouchRange = 1
+FollowTouchMs = 5000
+FollowEscalateMs = 8000
+; Stand in someone's way and they shove past you or wave you aside.
+BodyBlock = True
+BodyBlockRange = 1.5
+BodyBlockMs = 2500
+; Walk off from someone you antagonized and they get the last word in.
+TauntAsYouLeave = True
+TauntRange = 15
+TauntWithinMs = 15000
+; Push an argument and a bystander may step in (%).
+Bystander = True
+BystanderRange = 20
+BystanderChance = 50
+; Pull a gun or put a mask on near people and those who see it react.
+WeaponSeen = True
+WeaponSeenRange = 10
+WeaponSeenCooldownMs = 60000
+MaskSeen = True
+MaskSeenRange = 15
+
+; ---- Mood ----------------------------------------------------------------------
+; How someone feels about you before you speak, about -100..100: your honor,
+; the neighbourhood's opinion and this person's memory of you, less a gun in
+; your hand, stars, a mask, and the dark. Warm / polite / cold / hostile bands.
+HonorWeight = 0.45
+ZoneWeight = 0.35
+FaceWeight = 0.8
+ArmedPenalty = 25
+WantedPenaltyPerStar = 12
+MaskedPenalty = 20
+NightPenalty = 8
+RichHonorWeight = 0.2
+GangHonorWeight = -0.35
+BandWarm = 35
+BandPolite = 0
+BandCold = -35
+
+; ---- Memory -------------------------------------------------------------------
+; Anyone you deal with is kept as a face: model, face, hair, clothes and the
+; neighbourhood you met in. Anyone who spawns there looking exactly like that
+; is the same person. Opinions fade in real time.
+MaxFaces = 250
+MemoryScanMs = 2500
+ScanRadius = 30
+RecogniseRange = 18
+RecogniseChance = 70
+ReactCooldownMs = 60000
+FaceHalfLifeDays = 6
+ZoneHalfLifeDays = 10
+SaveMs = 15000
+; Now and then a local greets you first, or the other thing, by how the
+; neighbourhood feels about you.
+ZoneReactions = True
+ZoneReactionChance = 10
+ZoneLiked = 45
+ZoneDisliked = -45
+ZoneReactionCooldownMs = 90000
+
+; ---- Witnesses ------------------------------------------------------------------
+; Someone who saw it runs to report you (flashing blip); someone who only heard
+; it comes to look (steady blip). Kill them, keep a gun on them, or Intimidate
+; them. A mask still gets it reported, but nobody can say it was you. Reports
+; only ever raise the wanted level.
+Witnesses = True
+WitnessRange = 35
+MaxWitnesses = 8
+ReportDelayMinMs = 9000
+ReportDelayMaxMs = 15000
+IntimidateRange = 30
+IntimidateMs = 1500
+IntimidatePrompt = True
+IntimidatePromptRange = 6
+InvestigateMs = 8000
+HeardStarsMax = 1
+MaskBlocksIdentity = True
+GangsReport = False
+; Aiming a gun at someone counts once they've seen it this long.
+BrandishMs = 1200
+; Someone you killed with nobody watching gets found and reported.
+Bodies = True
+BodyFindRange = 12
+BodyScanMs = 2000
+BodyKeepMs = 600000
+BodyNearPlayerRange = 80
+; Someone who watched you kill, and recognises you later, may phone it in.
+Gossip = True
+GossipStars = 1
+; Stars each crime is worth when it's reported.
+AssaultStars = 1
+ShootingStars = 2
+CarjackStars = 2
+KillStars = 3
+KillCopStars = 4
+RobberyStars = 0
+BrandishStars = 0
+PettyStars = 0

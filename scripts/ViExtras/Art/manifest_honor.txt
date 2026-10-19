@@ -1,0 +1,10 @@
+# name  width height  boxX boxY  boxWidth boxHeight   (CSS px at 1080p)
+honor_badge_angel 32.00 32.00 6.22 6.39 19.19 19.19
+honor_badge_broken 32.00 32.00 6.22 6.39 19.19 19.19
+honor_badge_devil 32.00 32.00 6.22 6.39 19.19 19.19
+honor_panel 134.00 136.00 16.42 16.41 100.78 103.02
+honor_pop_broken 84.00 78.00 16.33 16.69 51.34 44.62
+honor_pop_down_bad 120.00 92.00 16.95 16.24 86.11 59.52
+honor_pop_down_terrible 120.00 92.00 16.95 16.24 86.11 59.52
+honor_pop_up_good 120.00 92.00 16.95 16.24 86.11 59.52
+honor_pop_up_terrible 120.00 92.00 16.95 16.24 86.11 59.52

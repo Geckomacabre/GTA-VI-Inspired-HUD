@@ -1,0 +1,20 @@
+[Crosshair]
+; The aim reticle: while you aim a gun, three ticks on foot that kick outward
+; with every shot, or a ring and dot in a vehicle. The game's own reticle is
+; hidden only while this one shows. A kill flashes a mark over it: red for a
+; one-hit headshot, yellow when it took more than one hit, white otherwise.
+; GTA6Hud draws hit markers of its own in the same spot; turn them off while
+; the kill marks here are on (GTA6Hud.ini [Hitmarkers] Enabled = False), or
+; set KillMarks = False here to keep GTA6Hud's instead.
+Enabled = True
+KillMarks = True
+; Which weapons bring it up, as the game's IS_PED_ARMED flags added together:
+; 1 melee, 2 thrown, 4 guns. Anything left out keeps the game's own reticle.
+ArmedWith = 4
+; The game's reticle, by HUD component number. -1 leaves it alone.
+ReticleComponent = 14
+; Writes each kill's hit count and last-hit bone to ViExtras.log, for when a
+; kill gets the wrong colour.
+Debug = False
+; A key that flashes the next kill mark (red, yellow, white) for trying it out. None for none.
+TestKey = None

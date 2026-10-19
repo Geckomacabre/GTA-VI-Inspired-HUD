@@ -1,0 +1,8 @@
+# name  width height  boxX boxY  boxWidth boxHeight   (CSS px at 1080p)
+xhair_kill_red 72.00 72.00 0.00 0.00 72.00 72.00
+xhair_kill_white 72.00 72.00 0.00 0.00 72.00 72.00
+xhair_kill_yellow 72.00 72.00 0.00 0.00 72.00 72.00
+xhair_tick_bottom 72.00 72.00 0.00 0.00 72.00 72.00
+xhair_tick_left 72.00 72.00 0.00 0.00 72.00 72.00
+xhair_tick_right 72.00 72.00 0.00 0.00 72.00 72.00
+xhair_vehicle 72.00 72.00 0.00 0.00 72.00 72.00

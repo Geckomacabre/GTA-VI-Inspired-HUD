@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Crouch and crawl, from the FiveM server's emotes (um_emotes, an rpemotes
+       fork, GPL-3.0; crouch and crawl by Mads), for single player. Builds
+       scripts\ViCrouch.dll, its own assembly because of the licence.
+         dotnet build -c Release -p:ShvdnDir=D:\Games\GTAV -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>ViCrouch</AssemblyName>
+    <RootNamespace>ViExtras</RootNamespace>
+    <Version>2.5.0</Version>
+    <Nullable>disable</Nullable>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>CS0618</NoWarn>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DefineConstants>$(DefineConstants);VICROUCH</DefineConstants>
+    <ShvdnDir Condition="'$(ShvdnDir)' == ''">D:\Games\GTAV</ShvdnDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\ViExtras\Core\Base.cs" Link="Core\Base.cs" />
+    <Compile Include="..\ViExtras\Core\HudBridge.cs" Link="Core\HudBridge.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ScriptHookVDotNet3">
+      <HintPath>$(ShvdnDir)\ScriptHookVDotNet3.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+</Project>
