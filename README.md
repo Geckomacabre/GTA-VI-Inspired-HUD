@@ -17,12 +17,12 @@ Open your GTA V folder and look for the game file:
 
 | You see... | You have... | Works? |
 | --- | --- | --- |
-| `GTA5.exe` | **Legacy** | ✅ Yes, tested |
-| `GTA5_Enhanced.exe` | **Enhanced** | ❌ Not yet. The game closes about 20 seconds after loading. Use Legacy for now. |
+| `GTA5.exe` | **Legacy** | ✅ Yes, tested. Follow the guide below. |
+| `GTA5_Enhanced.exe` | **Enhanced** | ✅ HUD and minimap work (tested on 1.0.1158.13). ⚠️ Don't switch to Lucia yet: it crashes on Enhanced. Follow the [Enhanced guide](#enhanced-install-guide). |
 
 ---
 
-## Install guide (for dummies)
+## Install guide (for dummies), Legacy
 
 ### Step 1: Get the 3 tools the mod needs
 
@@ -61,6 +61,32 @@ Start GTA V and load **Story Mode**. The new HUD shows up on its own. 🎉
 
 ---
 
+## Enhanced install guide
+
+Enhanced needs slightly different tools. Using the Legacy ones on Enhanced makes the game crash.
+
+1. **Script Hook V**: [download here](http://www.dev-c.com/gtav/scripthookv/). Copy everything in the zip's
+   `bin` folder except `NativeTrainer.asi` into your Enhanced folder (the one with `GTA5_Enhanced.exe`).
+   It only works on the game versions listed on that page. If your game just updated, wait for a new
+   Script Hook V.
+2. **Script Hook V .NET *Enhanced* (SHVDNE)**, not the normal one:
+   [download the newest release here](https://github.com/Chiheb-Bacha/ScriptHookVDotNetEnhanced/releases).
+   Copy the files from the zip's main folder into your Enhanced folder. ⚠️ The normal Script Hook V .NET
+   makes Enhanced close about 20 seconds after loading.
+3. **OpenRPF** (Enhanced's version of the mods folder):
+   [download here](https://www.gta5-mods.com/tools/openrpf-openiv-asi-for-gta-v-enhanced). Put it in your
+   Enhanced folder.
+4. **OIV Package Installer** (installs `.oiv` files on Enhanced):
+   [download here](https://www.gta5-mods.com/tools/oiv-package-installer).
+5. From [**Releases**](../../releases), download `GTA-VI-Inspired-HUD-Enhanced.oiv` and
+   `GTA-VI-Inspired-HUD-RegisterPatch.oiv`, then install both with the OIV Package Installer. Install the
+   RegisterPatch **only once**.
+6. Set the game to **Windowed Borderless** (Settings → Graphics → Screen Type). On Enhanced the minimap
+   is drawn in a window over the game, and that only shows in Borderless.
+7. Start the game and load **Story Mode**.
+
+---
+
 ## How to use it
 
 | I want to... | Do this |
@@ -78,7 +104,14 @@ Start GTA V and load **Story Mode**. The new HUD shows up on its own. 🎉
 Your Script Hook V .NET is too old. Install **3.7 or newer** (Step 1).
 
 **The minimap doesn't show in a car.**
-`ViMinimap.asi` isn't next to `GTA5.exe` (Step 4).
+Legacy: `ViMinimap.asi` isn't next to `GTA5.exe` (Step 4). Enhanced: switch to **Windowed Borderless**.
+
+**Enhanced closes by itself about 20 seconds after loading.**
+You're using the normal Script Hook V .NET. Use **SHVDNE** instead ([Enhanced guide](#enhanced-install-guide)).
+If it still happens, a ReShade add-on (`.addon64` file) may be clashing. Move your add-ons out and try again.
+
+**Enhanced crashes when I switch to Lucia.**
+Known problem. On Enhanced, stay as Franklin, Michael or Trevor for now.
 
 **The game crashes while loading.**
 You skipped the RegisterPatch, or another big mod is using up the game's limits. Install the
