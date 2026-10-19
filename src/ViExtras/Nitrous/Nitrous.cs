@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using GTA;
 using GTA.Math;
 using GTA.Native;
@@ -53,6 +54,7 @@ namespace ViExtras
         private Tier _tier;
         private static readonly PlateStore Bottles = new PlateStore("nitrous.txt");
         private readonly int _kbControl, _padControl, _hintMs;
+        private readonly Keys _kbKey;   // the key behind KeyboardControl, read itself (see Pressed)
         private readonly float _nearMissRefill, _driftRefill, _oncomingRefill;
 
         private Vehicle _veh;
@@ -81,6 +83,7 @@ namespace ViExtras
             _defaultTier = Config.Get("Nitrous", "Tier", "Street");
             _kbControl = Config.Get("Nitrous", "KeyboardControl", 21);   // INPUT_SPRINT: Left Shift (FiveM: 19, Left Alt)
             _padControl = Config.Get("Nitrous", "PadControl", 179);      // INPUT_CELLPHONE_EXTRA_OPTION: X / Square
+            _kbKey = _kbControl == 21 ? Keys.ShiftKey : _kbControl == 19 ? Keys.Menu : Keys.None;
             _screenFx = Config.Get("Nitrous", "ScreenEffect", true);
             _flames = Config.Get("Nitrous", "Flames", true);
             _hintMs = Config.Get("Nitrous", "HintMs", 7000);
@@ -246,7 +249,12 @@ namespace ViExtras
         {
             if (!Glyphs.UsingPad)
             {
+                // The key itself, not its control: 21 and 19 are pad buttons too (A, d-pad
+                // down), and a pad read as a keyboard for a moment (a nudged mouse) would
+                // boost on them. On a pad only PadControl boosts.
                 Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, _kbControl, true);
+                if (_kbKey == Keys.ShiftKey) return Game.IsKeyPressed(Keys.ShiftKey) || Game.IsKeyPressed(Keys.LShiftKey);
+                if (_kbKey == Keys.Menu) return Game.IsKeyPressed(Keys.Menu) || Game.IsKeyPressed(Keys.LMenu);
                 return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, _kbControl);
             }
             Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, _padControl, true);

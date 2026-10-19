@@ -35,8 +35,6 @@ namespace ViExtras
         private static object _hud;
         private static MethodInfo _kitReady, _stackWidth, _stackLeft, _cardBottom, _make, _brand, _tex, _text, _gauge, _gaugeColour, _fuel;
         private static FieldInfo _cardTop, _fullFor, _lastHandle, _assetsReady, _fullSeconds, _idle;
-        private static FieldInfo _turnBlend, _turnSign, _wheelOpen;   // the turn-by-turn box (TurnBox)
-        private static MethodInfo _gpsTop;
         private static int _topFrame = -1;
         private static float _topThisFrame;
         private static object[] _textTail;   // KitText's optional anchor and tracking, at their defaults
@@ -74,10 +72,6 @@ namespace ViExtras
                 _assetsReady = F("_assetsReady");
                 _fullSeconds = asm.GetType("GTA6Hud.Ref")?.GetField("VehCardFullSeconds", Static);
                 _idle = asm.GetType("GTA6Hud.RefColor")?.GetField("VehGaugeIdle", Static);
-                _turnBlend = F("_turnBlend");
-                _turnSign = F("_turnSign");
-                _wheelOpen = F("_wheelOpen");
-                _gpsTop = M("KitGpsTop");
                 if (_text != null)
                 {
                     ParameterInfo[] p = _text.GetParameters();
@@ -208,8 +202,7 @@ namespace ViExtras
         /// <summary>GTA6Hud PmTexAt: a picture from its vipause dictionary, canvas px.</summary>
         /// <summary>
         /// GTA6Hud's _vehCardTop as its DrawVehicleCard left it this frame: 0 or
-        /// more when it got to its card (and so to its turn-by-turn box, drawn just
-        /// before), -1 when it did not. Read once a frame for every caller here and
+        /// more when it got to its card, -1 when it did not. Read once a frame and
         /// left at -1 for the next frame; nothing in GTA6Hud reads it.
         /// </summary>
         private static float CardTopThisFrame()
@@ -222,37 +215,6 @@ namespace ViExtras
                 _cardTop.SetValue(_hud, -1f);
             }
             return _topThisFrame;
-        }
-
-        /// <summary>
-        /// Where GTA6Hud drew its turn-by-turn box this frame (UpdateTurnNavigation:
-        /// in a vehicle, its wheel shut, your waypoint set, the box faded in), with
-        /// its fade and which way the arrow points. False when it drew none.
-        /// </summary>
-        public static bool TurnBox(out float left, out float top, out float width, out float blend, out bool leftTurn)
-        {
-            left = top = width = blend = 0f;
-            leftTurn = false;
-            if (!Look() || _turnBlend == null || _turnSign == null || _wheelOpen == null || _gpsTop == null) return false;
-            try
-            {
-                if (CardTopThisFrame() < 0f) return false;
-                blend = (float)_turnBlend.GetValue(_hud);
-                if (blend < 0.01f) return false;
-                if (!Game.Player.Character.IsInVehicle() || (bool)_wheelOpen.GetValue(_hud)) return false;
-                if (World.WaypointBlip == null || !World.WaypointBlip.Exists() || !(bool)_kitReady.Invoke(_hud, null)) return false;
-                width = (float)_stackWidth.Invoke(_hud, null);
-                left = (float)_stackLeft.Invoke(_hud, null);
-                top = (float)_gpsTop.Invoke(_hud, null);
-                leftTurn = (int)_turnSign.GetValue(_hud) < 0;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Log.Write("Gta6HudCard", "turn box: " + ex.Message);
-                _turnBlend = null;
-                return false;
-            }
         }
 
         public static void Tex(string name, float x, float y, float w, float h, Color c) =>

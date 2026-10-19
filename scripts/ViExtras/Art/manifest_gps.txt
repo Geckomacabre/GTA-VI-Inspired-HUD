@@ -1,2 +1,0 @@
-# name  width height  boxX boxY  boxWidth boxHeight   (CSS px at 1080p)
-gps_turn_accent 304.00 60.00 0.00 0.00 304.00 60.00
