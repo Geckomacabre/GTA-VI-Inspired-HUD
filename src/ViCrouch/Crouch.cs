@@ -441,7 +441,9 @@ namespace ViExtras
             GTA.Math.Vector3 pivot = _pivotSet ? _pivot : pos + Ahead(h, ahead);
             float nh = h + deg;
             GTA.Math.Vector3 np = pivot - Ahead(nh, ahead);
-            Function.Call(Hash.SET_ENTITY_COORDS_NO_OFFSET, p, np.X, np.Y, pos.Z, false, false, false);
+            // keepTasks, keepIK, no warp: a nudge, not a teleport (dropping the tasks dropped the
+            // crawl animation itself, and the ped stood in its bind pose)
+            Function.Call(Hash.SET_ENTITY_COORDS_NO_OFFSET, p, np.X, np.Y, pos.Z, true, true, false);
             p.Heading = nh;
         }
 
