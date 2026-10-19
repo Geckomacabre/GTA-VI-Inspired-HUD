@@ -68,7 +68,8 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 - A **GTA VI-style HUD** and a **3D minimap**
 - **Lucia** as a 4th character (a separate, optional download)
 - **Wanted stars and a wanted box** that tell you what the police know, plus **police lights** at the screen edge
-- **Police with stun guns:** they only shoot to kill when you're armed at 3+ stars. Otherwise they tase and arrest you
+- **Police with stun guns:** they only shoot to kill when you're armed at 3+ stars. Otherwise they tase and arrest you,
+  or arrest you when you stand still, unarmed
 - **WASTED / BUSTED** screens, a **crash cam** and **binoculars**
 - **Leonida Customs**: a full mod shop with nitrous
 - **Honor**, **skills**, a **gym**, and people who **remember you**

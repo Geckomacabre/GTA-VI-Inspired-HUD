@@ -9,10 +9,10 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 ### Changed
 
 - **Support Discord:** [discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH), at the top of the README and both install guides, for questions about this version. FBICat's Discord is for his original.
-- **Police only shoot to kill when you're armed and wanted at 3+ stars.** The rest of the time every cop carries a stun gun, and a hit puts your weapon away and gets you arrested (BUSTED).
+- **Police only shoot to kill when you're armed and wanted at 3+ stars.** The rest of the time every cop carries a stun gun, and you're arrested (BUSTED) instead: when a stun gun drops you, or when you stand still, unarmed, near a cop at 1-2 stars.
   - "Armed" is a gun in your hand, or one fired in the last 5 seconds.
-  - Above 2 stars a stun-gun hit drops you to 1 star so the police can arrest you. Get away, or draw a gun, and the stars come back after 15 seconds.
-  - It works with FBICat's police AI: the weapon it re-arms each cop with is pointed at the stun gun, and back at the cop's own gun at 3+ stars when you're armed.
+  - The arrest is the game's own. You drop to 1 star (it only arrests at 1), FBICat's police AI pauses, and the nearest cop on foot is told to arrest you. Draw a gun, or go 15 seconds without an arrest, and your stars come back.
+  - The weapons work with FBICat's police AI: the weapon it re-arms each cop with is pointed at the stun gun, and back at the cop's own gun at 3+ stars when you're armed.
   - Settings: `[PoliceForce]` in `ViExtras.ini` (`LethalFromStars`, `ArmedGraceSeconds`, `ArrestWindowSeconds`, `Enabled`).
 - **Binoculars are on the weapon wheel:** hold Tab (LB on a pad) and let go on the binoculars tile.
   - The tile is bottom right, or the next empty tile clockwise when a weapon sits there. It uses FBICat's binoculars icon and opens the FiveM binoculars.

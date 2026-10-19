@@ -10,16 +10,20 @@ namespace ViExtras
     /// <summary>
     /// Police only shoot to kill when you're armed (a gun in your hand, or one fired in the
     /// last ArmedGraceSeconds) and wanted at LethalFromStars stars or more ([PoliceForce] in
-    /// ViExtras.ini). The rest of the time every cop carries a stun gun, and a hit puts your
-    /// weapon away and brings the arrest (BUSTED).
+    /// ViExtras.ini). The rest of the time every cop carries a stun gun, and you're arrested
+    /// (BUSTED) instead: when a stun gun drops you, or when you stand still, unarmed, near a
+    /// cop at 1-2 stars.
     ///
     /// GTA6Hud's police brain gives each cop a role and re-arms him with the weapon it noted
     /// when it took him on (Cop.Original). While force is non-lethal that note points at the
     /// stun gun, by reflection, so the brain hands it out itself, and it's put back to the
     /// cop's own gun after. Cops the brain isn't running get the same weapon directly and are
-    /// kept from switching away from it. The brain already arrests an unarmed suspect who
-    /// stays still at 1-2 stars (its Detain role). At 3+ stars a stun-gun hit drops you to
-    /// 1 star so that arrest can happen; get away, or draw a gun, and the stars come back.
+    /// kept from switching away from it.
+    ///
+    /// The arrest is the game's own: the wanted level goes to 1 (the game only arrests at
+    /// 1 star), the brain is held off (Ref.PoliceBrainEnabled) so it doesn't re-task the cops,
+    /// and the nearest cop on foot is told to arrest you (TASK_ARREST_PED). Draw a gun, or let
+    /// ArrestWindowSeconds pass without an arrest, and the stars come back.
     /// </summary>
     public sealed class PoliceForce : Script
     {
@@ -27,6 +31,9 @@ namespace ViExtras
         private const int ScanMs = 200;
         private const int GunTypes = 4;           // IS_PED_ARMED: guns
         private const int AnyWeapon = 7;          // melee, explosives and guns
+        private const float ComplyRange = 15f;    // a cop this close sees you give up
+        private const int ComplyMs = 2000;        // standing still this long, unarmed
+        private const float ArrestRange = 60f;    // the cop told to arrest you is within this
 
         private readonly bool _enabled;
         private readonly int _lethalFrom;
@@ -35,13 +42,19 @@ namespace ViExtras
         // cops given a stun gun here: handle -> their own weapon
         private readonly Dictionary<int, uint> _own = new Dictionary<int, uint>();
         private int _nextScan, _armedUntil;
-        private bool _lethal, _modeKnown, _stunned;
-        // a 3+ star wanted level dropped to 1 for the arrest, and until when it waits
-        private int _heldWanted, _heldUntil;
+        private bool _lethal, _modeKnown, _stunned, _wasDead;
+        private int _stillSince;
+
+        // the arrest: until when it waits, the wanted level it dropped from, the cop on it
+        private bool _arresting, _arrestStarted;
+        private int _arrestUntil, _heldWanted, _nextArrestOrder, _notArrestedSince;
+        private Ped _arrestCop;
 
         // GTA6Hud's police brain, by reflection
         private static bool _looked;
         private static FieldInfo _brainField, _copsField, _copPed, _copOriginal, _copDisarmed;
+        private static FieldInfo _brainEnabled;   // GTA6Hud.Ref.PoliceBrainEnabled
+        private bool _brainHeld, _brainWas;
 
         public PoliceForce()
         {
@@ -52,7 +65,7 @@ namespace ViExtras
             _armedGraceMs = (int)(Math.Max(0f, Config.Get(S, "ArmedGraceSeconds", 5f)) * 1000f);
             _arrestWindowMs = (int)(Math.Max(3f, Config.Get(S, "ArrestWindowSeconds", 15f)) * 1000f);
             Tick += OnTick;
-            Aborted += (s, e) => RestoreAll();
+            Aborted += (s, e) => { HoldBrain(false); RestoreAll(); };
         }
 
         private void OnTick(object sender, EventArgs e)
@@ -62,12 +75,24 @@ namespace ViExtras
             if (player == null || !player.Exists()) return;
             int now = Game.GameTime;
             int wanted = Game.Player.Wanted.WantedLevel;
-            if (_heldUntil != 0) WatchArrest(player, wanted, now);
-            if (wanted == 0 || player.IsDead)
+
+            if (player.IsDead)
+            {
+                if (!_wasDead) LogDeath(player, wanted);
+                _wasDead = true;
+                if (_arresting) EndArrest("died", false);
+                if (_own.Count > 0) RestoreAll();
+                _modeKnown = _stunned = false;
+                _armedUntil = _stillSince = 0;
+                return;
+            }
+            _wasDead = false;
+            if (_arresting) DriveArrest(player, wanted, now);
+            if (wanted == 0)
             {
                 if (_own.Count > 0) RestoreAll();
                 _modeKnown = _stunned = false;
-                _armedUntil = 0;
+                _armedUntil = _stillSince = 0;
                 return;
             }
 
@@ -82,9 +107,29 @@ namespace ViExtras
                 Log.Write("PoliceForce", (lethal ? "guns" : "stun guns") + " (" + wanted + " stars, " + (armedNow ? "armed" : "unarmed") + ")");
             }
 
-            bool stunned = Function.Call<bool>(Hash.IS_PED_BEING_STUNNED, player, 0);
-            if (stunned && !_stunned && !lethal) OnStunned(player, wanted, now);
+            // a stun-gun hit: the weapon goes away and the arrest starts
+            bool stunned = Function.Call<bool>(Hash.IS_PED_BEING_STUNNED, player, 0)
+                || Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_WEAPON, player, StunGun, 0);
+            if (stunned) Function.Call(Hash.CLEAR_ENTITY_LAST_WEAPON_DAMAGE, player);
+            if (stunned && !_stunned && !lethal)
+            {
+                _armedUntil = 0;
+                if (Function.Call<bool>(Hash.IS_PED_ARMED, player, AnyWeapon))
+                    Function.Call(Hash.SET_CURRENT_PED_WEAPON, player, Unarmed, true);
+                StartArrest("tased", wanted, now);
+            }
             _stunned = stunned;
+
+            // giving up: unarmed, on foot and still, a cop close by, at 1-2 stars
+            bool complying = !_arresting && !lethal && !armedNow && wanted <= 2 && !player.IsInVehicle()
+                && player.Velocity.Length() < 1.2f && NearestCop(player, ComplyRange) != null;
+            if (!complying) _stillSince = 0;
+            else if (_stillSince == 0) _stillSince = now;
+            else if (now - _stillSince >= ComplyMs)
+            {
+                _stillSince = 0;
+                StartArrest("gave up", wanted, now);
+            }
 
             if (now < _nextScan) return;
             _nextScan = now + ScanMs;
@@ -92,44 +137,129 @@ namespace ViExtras
             else ArmWithStunGuns(player);
         }
 
-        // A stun-gun hit: the weapon goes away, and above 2 stars the wanted level drops to 1
-        // for GTA6Hud's police to arrest you (they only do at 1-2 stars).
-        private void OnStunned(Ped player, int wanted, int now)
+        private void LogDeath(Ped player, int wanted)
         {
-            _armedUntil = 0;
-            if (Function.Call<bool>(Hash.IS_PED_ARMED, player, AnyWeapon))
-                Function.Call(Hash.SET_CURRENT_PED_WEAPON, player, Unarmed, true);
-            if (wanted > 2 && _heldUntil == 0)
-            {
-                _heldWanted = wanted;
-                _heldUntil = now + _arrestWindowMs;
-                Game.Player.Wanted.SetWantedLevel(1, false);
-                Game.Player.Wanted.ApplyWantedLevelChangeNow(false);
-                Log.Write("PoliceForce", "stunned at " + wanted + " stars: down to 1 for the arrest");
-            }
-            else Log.Write("PoliceForce", "stunned at " + wanted + " stars");
+            uint cause = unchecked((uint)Function.Call<int>(Hash.GET_PED_CAUSE_OF_DEATH, player));
+            string what = cause == StunGun ? "stun gun" : cause == Unarmed ? "fists" : "weapon 0x" + cause.ToString("X8");
+            Log.Write("PoliceForce", "died at " + wanted + " stars (" + (_modeKnown ? (_lethal ? "guns" : "stun guns") : "no police") + "): " + what);
         }
 
-        // The arrest window: over once the arrest starts, or the wanted level goes; the stars
-        // come back if it runs out, or a gun comes out, before then.
-        private void WatchArrest(Ped player, int wanted, int now)
+        // ------------------------------------------------------------------ the arrest
+        private void StartArrest(string why, int wanted, int now)
         {
-            bool arrested = Function.Call<bool>(Hash.IS_PLAYER_BEING_ARRESTED, Game.Player, false);
-            if (arrested || wanted == 0 || player.IsDead)
+            if (_arresting) return;
+            _arresting = true;
+            _arrestStarted = false;
+            _arrestUntil = now + _arrestWindowMs;
+            _nextArrestOrder = 0;
+            _notArrestedSince = 0;
+            _arrestCop = null;
+            _heldWanted = wanted;
+            if (wanted != 1)
             {
-                if (arrested) Log.Write("PoliceForce", "arrested");
-                _heldUntil = 0;
+                Game.Player.Wanted.SetWantedLevel(1, false);
+                Game.Player.Wanted.ApplyWantedLevelChangeNow(false);
+            }
+            HoldBrain(true);
+            Log.Write("PoliceForce", why + " at " + wanted + " stars: arrest" + (wanted != 1 ? " (down to 1 star)" : ""));
+        }
+
+        private void DriveArrest(Ped player, int wanted, int now)
+        {
+            HoldBrain(true);   // its settings reload would switch it back on
+            bool arrested = Function.Call<bool>(Hash.IS_PLAYER_BEING_ARRESTED, Game.Player, false);
+            if (arrested)
+            {
+                if (!_arrestStarted) Log.Write("PoliceForce", "arrest started");
+                _arrestStarted = true;
+                _notArrestedSince = 0;
                 return;
             }
-            bool drewGun = Function.Call<bool>(Hash.IS_PED_ARMED, player, GunTypes);
-            if (now < _heldUntil && !drewGun) return;
-            if (wanted < _heldWanted)
+            if (_arrestStarted)
+            {
+                // the arrest has played out (BUSTED): let the brain back once it's over
+                if (_notArrestedSince == 0) _notArrestedSince = now;
+                if (wanted == 0 || now - _notArrestedSince > 1500) EndArrest("arrest over", false);
+                return;
+            }
+            if (wanted == 0) { EndArrest("wanted level cleared", false); return; }
+            if (Function.Call<bool>(Hash.IS_PED_ARMED, player, GunTypes)) { EndArrest("drew a gun", true); return; }
+            if (now >= _arrestUntil) { EndArrest("no arrest", true); return; }
+            if (wanted > 1)
+            {
+                Game.Player.Wanted.SetWantedLevel(1, false);
+                Game.Player.Wanted.ApplyWantedLevelChangeNow(false);
+            }
+            if (now < _nextArrestOrder) return;
+            _nextArrestOrder = now + 1500;
+            Ped cop = _arrestCop != null && _arrestCop.Exists() && !_arrestCop.IsDead && !_arrestCop.IsInVehicle()
+                ? _arrestCop : NearestCop(player, ArrestRange, onFoot: true);
+            if (cop == null) return;
+            if (cop != _arrestCop)
+            {
+                _arrestCop = cop;
+                Log.Write("PoliceForce", "cop " + cop.Handle + " at " + cop.Position.DistanceTo(player.Position).ToString("0") + " m told to arrest");
+            }
+            Function.Call(Hash.TASK_ARREST_PED, cop, player);
+        }
+
+        private void EndArrest(string why, bool restoreWanted)
+        {
+            Ped player = Game.Player.Character;
+            if (restoreWanted && player != null && !player.IsDead && Game.Player.Wanted.WantedLevel < _heldWanted)
             {
                 Game.Player.Wanted.SetWantedLevel(_heldWanted, false);
                 Game.Player.Wanted.ApplyWantedLevelChangeNow(false);
-                Log.Write("PoliceForce", (drewGun ? "drew a gun" : "no arrest") + ": back to " + _heldWanted + " stars");
             }
-            _heldUntil = 0;
+            Log.Write("PoliceForce", why + (restoreWanted && _heldWanted > 1 ? ": back to " + _heldWanted + " stars" : ""));
+            _arresting = _arrestStarted = false;
+            _arrestCop = null;
+            HoldBrain(false);
+        }
+
+        // GTA6Hud's police brain off while held (it releases its cops when it sees it off), and
+        // back to what it was when let go.
+        private void HoldBrain(bool hold)
+        {
+            try
+            {
+                if (_brainEnabled == null)
+                {
+                    foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+                    {
+                        Type refs = asm.GetType("GTA6Hud.Ref", false);
+                        if (refs == null) continue;
+                        _brainEnabled = refs.GetField("PoliceBrainEnabled", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+                        break;
+                    }
+                    if (_brainEnabled == null) return;
+                }
+                if (hold)
+                {
+                    if (!_brainHeld) { _brainWas = (bool)_brainEnabled.GetValue(null); _brainHeld = true; }
+                    if ((bool)_brainEnabled.GetValue(null)) _brainEnabled.SetValue(null, false);
+                }
+                else if (_brainHeld)
+                {
+                    _brainEnabled.SetValue(null, _brainWas);
+                    _brainHeld = false;
+                }
+            }
+            catch (Exception ex) { Log.Write("PoliceForce", "police brain switch: " + ex.Message); }
+        }
+
+        private static Ped NearestCop(Ped player, float range, bool onFoot = false)
+        {
+            Ped best = null;
+            float bestD = range;
+            foreach (Ped ped in World.GetNearbyPeds(player, range))
+            {
+                if (ped == null || !ped.Exists() || ped.IsDead || !IsCop(ped)) continue;
+                if (onFoot && ped.IsInVehicle()) continue;
+                float d = ped.Position.DistanceTo(player.Position);
+                if (d < bestD) { bestD = d; best = ped; }
+            }
+            return best;
         }
 
         private static bool Look(object hud)
