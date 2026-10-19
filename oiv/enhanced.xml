@@ -2,7 +2,7 @@
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
     <name>GTA VI-Inspired HUD (GTA V Enhanced)</name>
-    <version><major>2</major><minor>5</minor><tag>ENHANCED 2.5.1</tag></version>
+    <version><major>2</major><minor>5</minor><tag>ENHANCED 2.5.2</tag></version>
     <author><displayName>FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -29,6 +29,17 @@ MiniMap.* data, ViMinimap.asi), and the packs vihudfonts and vihudanims - gen9.
       scripts\ViCustoms.dll + scripts\ViCustoms\ + ViCustoms.ini  Leonida Customs (GPL-3)
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.5.2
+  - Enhanced: GTA6Hud's own messages show ("Not enough money.", "Lose the cops first." ...), and its
+    error log no longer fills up with the same error every 10 s.
+  - Leonida Customs always lets you go when it closes, and leaving with Esc / B held no longer opens the
+    pause menu or the cinematic camera.
+  - Radio: your own music goes quiet over the pause menu and cutscenes, your car keeps its station when you
+    get out, and D-pad Down in the radio wheel no longer opens the character wheel.
+  - A nitrous kit changed in the shop works at once.
+  - Standing still with the weapon wheel, a menu or the phone open near a cop no longer counts as giving up.
+  - Steadier police, crouch and vehicle card scripts.
 
 Changes in 2.5.1
   - Lucia is a separate download now: GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv (install it after this one and the
