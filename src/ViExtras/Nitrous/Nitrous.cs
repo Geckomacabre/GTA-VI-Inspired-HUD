@@ -153,6 +153,7 @@ namespace ViExtras
                 _fuel = _shown = _tier.Capacity;
                 // GTA6Hud's card, drawn from here so the row stays centred with the pip in it.
                 _cardTaken = Gta6HudCard.Begin(_veh);
+                Log.Write("Nitrous", "bottle fitted: " + _tier.Capacity.ToString("0.#") + " s, gauge " + (_cardTaken ? "on GTA6Hud's card" : "after its gauge row"));
                 // client.lua: the reading going from "no kit" to "kit" while the
                 // player already sits in the car is a kit being fitted. Never the
                 // first reading, never the moment they get in, once a car a session.
@@ -257,6 +258,7 @@ namespace ViExtras
         {
             if (_boosting == on) return;
             _boosting = on;
+            if (!on && _active) Log.Write("Nitrous", "boost over: tank " + _fuel.ToString("0.0") + " of " + _tier.Capacity.ToString("0.#") + " s");
             if (_veh != null && _veh.Exists())
             {
                 Function.Call(Hash.SET_VEHICLE_BOOST_ACTIVE, _veh, on);

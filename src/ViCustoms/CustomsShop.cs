@@ -194,6 +194,7 @@ namespace ViExtras
             _veh.IsPositionFrozen = true;
             Function.Call(Hash.SET_VEHICLE_ENGINE_ON, _veh, true, true, false);
             _quiet.Hold(true);
+            Log.Write("Customs", "menu opened: " + Brand + " " + Model);
             OwnedStats = Shown = Logic.Stats(Logic.Owned);
             PadMode = Glyphs.UsingPad;
             Stack.Add(new MenuView { Type = "root", Tab = 0, RootSel = new int[Math.Max(1, Logic.Tabs.Count)] });
@@ -229,6 +230,7 @@ namespace ViExtras
 
         public void Close(bool restore, bool instant = false)
         {
+            Log.Write("Customs", "menu closed" + (instant ? " at once" : ""));
             if (_veh.Exists())
             {
                 if (restore)
