@@ -51,7 +51,7 @@ namespace ViExtras
                 FieldInfo destFill = map.GetField("RouteDestFillC", S), destRim = map.GetField("RouteDestRimC", S);
                 if (fill == null || rim == null || destFill == null || destRim == null)
                 {
-                    Log.Write("Minimap", "ViMinimap's route colours were not found; left as they are");
+                    Log.Write("Minimap", "ViMinimap’s route colours were not found; left as they are");
                     return;
                 }
                 fill.SetValue(null, Teal);
