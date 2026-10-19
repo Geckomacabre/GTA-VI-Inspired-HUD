@@ -4,11 +4,12 @@ namespace ViExtras
 {
     /// <summary>
     /// vice_hud's cinematic overlay (#cine-fx, SetCinematicFx): the Focus
-    /// effect's vignette in black with thin bars top and bottom, breathing on a
-    /// 2600 ms ease-in-out between scale 1 and 1.04. The vignette is vice_hud's
-    /// own CSS rendered to Art\cine_vignette.png (tools/render_fivem_art.py);
-    /// the bars are drawn here so they breathe with it, as they do in CSS where
-    /// they are children of the scaled element.
+    /// effect's vignette in black with thin bars top and bottom, the vignette
+    /// breathing on a 2600 ms ease-in-out between scale 1 and 1.04. The vignette
+    /// is vice_hud's own CSS rendered to Art\cine_vignette.png
+    /// (tools/render_fivem_art.py). In the CSS the bars are children of the
+    /// scaled element and breathe with it, which reads as the frame pulsing;
+    /// here they hold still at their resting size (the user's call).
     /// </summary>
     internal sealed class CineFx
     {
@@ -50,15 +51,11 @@ namespace ViExtras
             if (strength > 1f)
                 Canvas.Image(art, w * 0.5f, h * 0.5f, w * s, h * s, Canvas.Alpha(Color.White, strength - 1f), centered: true);
 
+            // .cine-bar at scale 1: the full width, at the top and the bottom.
             float bar = Num.Clamp(Bars, 0f, 0.2f) * h;
             if (bar <= 0f) return;
-            // .cine-bar: left/right -5%, top 0 / bottom 0, scaled about the centre.
-            float x0 = w * 0.5f + (-0.05f * w - w * 0.5f) * s;
-            float bw = w * 1.1f * s;
-            float topY = h * 0.5f + (0f - h * 0.5f) * s;
-            float botY = h * 0.5f + (h - bar - h * 0.5f) * s;
-            Canvas.Rect(x0, topY, bw, bar * s, Color.Black);
-            Canvas.Rect(x0, botY, bw, bar * s, Color.Black);
+            Canvas.Rect(0f, 0f, w, bar, Color.Black);
+            Canvas.Rect(0f, h - bar, w, bar, Color.Black);
         }
     }
 }

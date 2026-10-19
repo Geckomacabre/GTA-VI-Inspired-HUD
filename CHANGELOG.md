@@ -22,6 +22,8 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **The radio wheel has a new look:** each station's logo fills its tile, the highlighted station is a little larger with a thin light outline, and the line and text are light grey.
   - Under the station name are the song playing and its artist, the game's own names for them. A talk station shows its genre instead.
   - Just after you change station the old song's name stays off for up to 3 seconds, until the new station's song is the one playing.
+- **Minimap routes in the FiveM HUD's colours:** your own waypoint's route is teal (#47aba7) and a mission's or a race's is pink (#fc74a4), each with the FiveM HUD's lighter rim. They were the minimap's own light blue and a different pink. `[Minimap] RouteColours = False` in `ViExtras.ini` brings those back; it replaces `WaypointRoutePink`.
+- **Crash cam: the black bars top and bottom hold still.** They used to swell and shrink with the vignette's slow breathing, which looked like the frame pulsing. The vignette still breathes (`[CrashCam] OverlayPulse`).
 - **GTA's own on-foot camera.** FBICat's camera pulled in whenever you aimed or fired (LT / RT, right mouse) and held the walking camera at one distance, so V couldn't zoom out. It's off in `GTA6Hud.ini`; `[Camera] Enabled = True` brings it back.
 - **Nitrous is on Left Shift** (X / Square on a pad). FiveM's Left Alt is also GTA's character wheel. `[Nitrous] KeyboardControl = 19` puts it back on Left Alt, and the wheel then stays shut while you drive a car with a bottle.
 - **Smoother crawling:**
