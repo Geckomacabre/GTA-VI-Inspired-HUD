@@ -97,7 +97,7 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 4. Wait until it says it's finished, then click **Close**.
 5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**.
 
-⚠️ Install the RegisterPatch **only once**. Installing it twice can crash the game.
+✅ Installing the RegisterPatch again, or over an older one, is safe: it never lists a pack twice.
 
 ---
 

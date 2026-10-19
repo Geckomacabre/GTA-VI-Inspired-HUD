@@ -116,7 +116,7 @@ and unzip it anywhere, like your Desktop.
 4. Click **Install** and wait until it's finished.
 5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**.
 
-⚠️ Install the RegisterPatch **only once**. Installing it twice can crash the game.
+✅ Installing the RegisterPatch again, or over an older one, is safe: it never lists a pack twice.
 
 ---
 

@@ -112,6 +112,7 @@ These live in new script files next to FBICat's `GTA6Hud.dll`, which is left as 
     - Greet / Antagonize act once per key press.
     - In a car, only a hit counts as an attack.
   - **Nitrous:** the "Hold [key]" tip goes when you leave the car.
+- **RegisterPatch 1.4 is safe to install again.** Each pack is only added to `dlclist.xml` when it isn't listed yet, so installing it twice, or over an older version, can't list a pack twice. Older versions added the lines every time.
 - **Crash or freeze while driving.** FBICat's traffic variety gives passing cars custom paint, wheels and maxed-out mods. Fitting those mods (SET_VEHICLE_MOD) crashes the game on some cars. It's switched off (`[Traffic] VarietyEnabled = False`).
 
 - **Lucia (Legacy): lighter ped pack (v5).** 2.2's full-size Lucia could crash outdoors while the world streamed in.
