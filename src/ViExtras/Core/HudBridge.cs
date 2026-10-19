@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using GTA;
 using GTA.Native;
@@ -159,17 +160,20 @@ namespace ViExtras
             catch { }
         }
 
-        // GTA6Hud's character swap wheel opens on Left Alt (INPUT_CHARACTER_WHEEL)
-        // wherever you are, the key the FiveM nitrous holds for a boost.
+        // GTA6Hud's character swap wheel opens on Left Alt / d-pad down
+        // (INPUT_CHARACTER_WHEEL) wherever you are, read even while the control is
+        // disabled: the key the FiveM nitrous holds for a boost, and the binoculars'
+        // zoom out.
         private static FieldInfo _swapField;
         private static bool _swapLooked, _swapWas, _swapHeld;
+        private static readonly HashSet<string> _swapHolders = new HashSet<string>();
 
         /// <summary>
-        /// Keeps GTA6Hud's character swap wheel shut while held: its Ref.SwapEnabled
-        /// off, set again every frame (its settings reload turns it back on), and put
-        /// back to what it was when let go.
+        /// Keeps GTA6Hud's character swap wheel shut while anyone holds it: its
+        /// Ref.SwapEnabled off, set again every frame (its settings reload turns it
+        /// back on), and put back to what it was when the last holder lets go.
         /// </summary>
-        public static void HoldSwapWheelOff(bool hold)
+        public static void HoldSwapWheelOff(string who, bool hold)
         {
             try
             {
@@ -182,7 +186,9 @@ namespace ViExtras
                     _swapField = refs?.GetField("SwapEnabled", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
                 }
                 if (_swapField == null) return;
-                if (hold)
+                if (hold) _swapHolders.Add(who);
+                else _swapHolders.Remove(who);
+                if (_swapHolders.Count > 0)
                 {
                     if (!_swapHeld) { _swapWas = (bool)_swapField.GetValue(null); _swapHeld = true; }
                     if ((bool)_swapField.GetValue(null)) _swapField.SetValue(null, false);

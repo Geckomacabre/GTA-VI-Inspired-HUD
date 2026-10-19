@@ -36,7 +36,9 @@ namespace ViExtras
     /// stick, D-pad Right / Up on a pad), each one tuned as it is reached. Space
     /// (D-pad Down) mutes while the wheel is open; O mutes anywhere, flashing the
     /// HUD. Letting go closes it. GTA's next / previous station keys still
-    /// change station without the wheel on a keyboard. Nothing opens or mutes
+    /// change station without the wheel on a keyboard. Under the station name
+    /// go the song playing and its artist, the game's own names for them (the
+    /// genre when there is no song, as on a talk station). Nothing opens or mutes
     /// while something else has the keys (HudBridge.UiInTheWay): a GTA6Hud
     /// menu or wheel, the phone, the on-screen keyboard, a 2.5 panel.
     ///
@@ -104,6 +106,10 @@ namespace ViExtras
         private long _lastEase;
         private bool _standingDown;
         private string _lastError;
+        // the song playing (GET_AUDIBLE_MUSIC_TRACK_TEXT_ID)
+        private long _nextTrackPoll, _stationSince;
+        private string _trackStation, _trackTitle, _trackArtist;
+        private int _audible = -1, _audibleAtSwitch = -1, _trackId = -1;
 
         /// <summary>exports IsOpen / IsMuted.</summary>
         public static bool IsOpen { get; private set; }
@@ -231,6 +237,11 @@ namespace ViExtras
                     _nextScenes = now + 500;
                     MutingScenes();
                 }
+                if (_hudEnabled && now >= _nextTrackPoll)
+                {
+                    _nextTrackPoll = now + 250;
+                    UpdateTrack(now);
+                }
                 if (_hudEnabled && !HudBridge.Paused && !HudBridge.Busy) _hud.Draw();
             }
             catch (Exception ex)
@@ -340,6 +351,41 @@ namespace ViExtras
         {
             if (!_hudEnabled) return;
             _hud.State(withList ? new List<RadioHud.Item>(_stations) : null, _index, _muted, _wheelOpen);
+        }
+
+        // The song playing, from the game's own labels for the audible track:
+        // <id>S is its title, <id>A its artist. Just after a change of station the
+        // old station's track can still be the one heard, so for up to 3 s the
+        // track heard before the change shows nothing.
+        private void UpdateTrack(long now)
+        {
+            string playing = CanUseRadio() ? PlayerStation() : null;
+            int id = Function.Call<int>(Hash.GET_AUDIBLE_MUSIC_TRACK_TEXT_ID);
+            if (!string.Equals(playing, _trackStation, StringComparison.OrdinalIgnoreCase))
+            {
+                _trackStation = playing;
+                _audibleAtSwitch = _audible;
+                _stationSince = now;
+            }
+            _audible = id;
+            RadioHud.Item at = _index >= 0 && _index < _stations.Count ? _stations[_index] : null;
+            bool show = at != null && !at.Off && id > 0
+                        && string.Equals(playing, at.Name, StringComparison.OrdinalIgnoreCase)
+                        && !(id == _audibleAtSwitch && now - _stationSince < 3000);
+            if (show && id != _trackId)
+            {
+                _trackId = id;
+                _trackTitle = TrackLabel(id + "S");
+                _trackArtist = TrackLabel(id + "A");
+            }
+            _hud.NowPlaying(show ? _trackTitle : null, show ? _trackArtist : null);
+        }
+
+        private static string TrackLabel(string key)
+        {
+            if (!Function.Call<bool>(Hash.DOES_TEXT_LABEL_EXIST, key)) return null;
+            string text = Game.GetLocalizedString(key);
+            return string.IsNullOrWhiteSpace(text) || text == "NULL" ? null : text.Trim();
         }
 
         private void PlaySound(string file)

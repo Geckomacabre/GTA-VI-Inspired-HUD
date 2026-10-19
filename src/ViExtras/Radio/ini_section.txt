@@ -34,8 +34,9 @@ HideRadar = True
 DisableRadioHUD = True
 RadioSounds = True
 SoundVolume = 50
-; The HUD. MuteDim drains it of colour while muted; Subtitle = none drops the
-; genre line under the station name. SlideTime is real ms.
+; The HUD. Under the station name go the song and its artist; with no song
+; (a talk station) the genre, which Subtitle = none drops. MuteDim drains it of
+; colour while muted. SlideTime is real ms.
 Hud = True
 MuteDim = True
 SideIcons = True

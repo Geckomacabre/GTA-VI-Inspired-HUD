@@ -89,7 +89,7 @@ namespace ViExtras
             _oncomingRefill = Config.Get("Nitrous", "OncomingRefillPerSec", 0.22f);
 
             Tick += OnTick;
-            Aborted += (s, e) => { SetBoosting(false); Gta6HudCard.End(); HoldsCharacterKey = false; HudBridge.HoldSwapWheelOff(false); };
+            Aborted += (s, e) => { SetBoosting(false); Gta6HudCard.End(); HoldsCharacterKey = false; HudBridge.HoldSwapWheelOff("nitrous", false); };
         }
 
         private void OnTick(object sender, EventArgs e)
@@ -98,7 +98,7 @@ namespace ViExtras
             {
                 SetBoosting(false);
                 HoldsCharacterKey = false;
-                HudBridge.HoldSwapWheelOff(false);
+                HudBridge.HoldSwapWheelOff("nitrous", false);
                 return;
             }
             if (!_enabled) return;
@@ -110,7 +110,7 @@ namespace ViExtras
                 Gta6HudCard.End();
                 _cardTaken = false;
                 HoldsCharacterKey = false;
-                HudBridge.HoldSwapWheelOff(false);
+                HudBridge.HoldSwapWheelOff("nitrous", false);
             }
         }
 
@@ -172,7 +172,7 @@ namespace ViExtras
             // With FiveM's Left Alt (KeyboardControl = 19), GTA6Hud's swap wheel on the
             // same key stays shut meanwhile. A pad boosts on X / Square instead.
             HoldsCharacterKey = _active && !Glyphs.UsingPad && _kbControl == 19;
-            HudBridge.HoldSwapWheelOff(HoldsCharacterKey);
+            HudBridge.HoldSwapWheelOff("nitrous", HoldsCharacterKey);
             if (_active) Drive(ped, now);
             DrawHint(now);
         }

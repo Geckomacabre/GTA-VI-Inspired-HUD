@@ -19,6 +19,9 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Binoculars are on the weapon wheel:** hold Tab (LB on a pad) and let go on the binoculars tile.
   - The tile is bottom right, or the next empty tile clockwise when a weapon sits there. It uses FBICat's binoculars icon and opens the FiveM binoculars.
   - B no longer opens them. `[Binoculars] Key = B` brings the key back, and `WheelSlot = False` takes them off the wheel.
+- **The radio wheel has a new look:** each station's logo fills its tile, the highlighted station is a little larger with a thin light outline, and the line and text are light grey.
+  - Under the station name are the song playing and its artist, the game's own names for them. A talk station shows its genre instead.
+  - Just after you change station the old song's name stays off for up to 3 seconds, until the new station's song is the one playing.
 - **GTA's own on-foot camera.** FBICat's camera pulled in whenever you aimed or fired (LT / RT, right mouse) and held the walking camera at one distance, so V couldn't zoom out. It's off in `GTA6Hud.ini`; `[Camera] Enabled = True` brings it back.
 - **Nitrous is on Left Shift** (X / Square on a pad). FiveM's Left Alt is also GTA's character wheel. `[Nitrous] KeyboardControl = 19` puts it back on Left Alt, and the wheel then stays shut while you drive a car with a bottle.
 - **Smoother crawling:**
@@ -39,6 +42,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ### Fixed
 
+- **Binoculars: D-pad down (zoom out) opened the character switcher.** FBICat's HUD reads that button even while it's switched off, so its switcher is now held shut while the binoculars are up, and until you let go of the button.
 - **BUSTED never happened with FBICat's HUD.** It clears the wanted level the moment an arrest begins, and the game then drops the arrest (the cop walks back to his car). While one of our arrests is under way that's held off until the BUSTED screen shows, so the arrest completes.
 - **Lucia: loading a save you quit as her could freeze the game**, while the HUD switched you back to her. FBICat's automatic Lucia swap is switched off in `GTA6Hud.dll`: a 2-byte change in `UpdateLuciaMode`, the only change to his DLL. Lucia now only changes from the character wheel, and you load in as your story character.
 - **Install guides:** a "Lucia is not registered" row (her two `dlclist.xml` lines are missing; the message's `VIHudSetup.exe` isn't part of this mod), and NVE's `dlclist.xml` lines listed one per line, so all four get copied.

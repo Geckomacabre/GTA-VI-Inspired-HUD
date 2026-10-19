@@ -1,7 +1,8 @@
 // Pictures the radio wheel makes at run time. The station tiles, names and
 // genres vi_radio ships are rendered from its own page (tools/render/radio.py);
-// this covers what cannot be known in advance (a station the game has that
-// vi_radio's table does not, a changed OffLabel) and the muted look.
+// this covers what cannot be known in advance (the song playing, a station the
+// game has that vi_radio's table does not, a changed OffLabel) and the muted
+// look. In the single-player look: no frame on the tiles, no shadow on the text.
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,14 +16,12 @@ namespace ViExtras
     internal static class RadioImages
     {
         private const float Px = 2f;        // raster pixels per CSS px, as the rendered art
-        private const string Version = "r2";
+        private const string Version = "r3";
+        private const string Ellipsis = "\u2026";   // text-overflow: ellipsis (Anton has the glyph)
 
         // style.css, at vi_radio's Config.Hud defaults
-        private const float Icon = 103f, Border = 3.5f, Pad = 4f;
+        private const float Icon = 103f, Pad = 4f;
         private static readonly Color Box = Color.FromArgb(170, 0, 0, 0);              // boxColor 0,0,0,170
-        private static readonly Color BoxActive = Color.FromArgb(220, 45, 45, 45);     // boxActiveColor
-        private static readonly Color Outline = Color.FromArgb(90, 255, 255, 255);     // borderColor
-        private static readonly Color OutlineActive = Color.White;                     // borderActiveColor
 
         private static readonly Dictionary<string, Art.Entry> Made = new Dictionary<string, Art.Entry>();
         private static PrivateFontCollection _fonts;
@@ -80,18 +79,19 @@ namespace ViExtras
         /// <summary>
         /// A .tile holding .fallback text (the station's name), as app.js builds
         /// it for a station with no logo: Anton 15px, line-height 1.1,
-        /// letter-spacing .02em, upper case, centred, padding 0 8%. Box, border
-        /// and the two colour sets as style.css. Drawn with GDI+, so close to the
-        /// page rather than identical: kerning and hinting differ slightly.
+        /// letter-spacing .02em, upper case, centred, padding 0 8%. The box
+        /// colour as style.css; no border in the single-player look. Drawn with
+        /// GDI+, so close to the page rather than identical: kerning and hinting
+        /// differ slightly.
         /// </summary>
-        public static Art.Entry FallbackTile(string label, bool active)
+        public static Art.Entry FallbackTile(string label)
         {
-            string key = "t|" + (active ? "1|" : "0|") + label;
+            string key = "t|" + label;
             if (Made.TryGetValue(key, out Art.Entry done)) return done;
             Art.Entry result = null;
             try
             {
-                string path = CachePath(active ? "ta" : "t", key);
+                string path = CachePath("t", key);
                 if (!File.Exists(path))
                 {
                     int size = (int)Math.Round((Icon + Pad * 2) * Px);
@@ -102,20 +102,11 @@ namespace ViExtras
                             g.Clear(Color.Transparent);
                             g.SmoothingMode = SmoothingMode.AntiAlias;
                             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                            float o = Pad * Px, w = Icon * Px, t = Border * Px;
-                            // background-clip is border-box: the box colour runs under the border.
-                            using (var fill = new SolidBrush(active ? BoxActive : Box))
+                            float o = Pad * Px, w = Icon * Px;
+                            using (var fill = new SolidBrush(Box))
                                 g.FillRectangle(fill, o, o, w, w);
-                            using (var ring = new GraphicsPath(FillMode.Alternate))
-                            using (var brush = new SolidBrush(active ? OutlineActive : Outline))
-                            {
-                                ring.AddRectangle(new RectangleF(o, o, w, w));
-                                ring.AddRectangle(new RectangleF(o + t, o + t, w - t * 2, w - t * 2));
-                                g.FillPath(brush, ring);
-                            }
-                            float content = (Icon - Border * 2) * Px;
-                            float padX = content * 0.08f;
-                            DrawWrapped(g, label.ToUpperInvariant(), o + t + padX, o + t, content - padX * 2, content, 15f * Px, 1.1f, 0.02f);
+                            float padX = w * 0.08f;
+                            DrawWrapped(g, label.ToUpperInvariant(), o + padX, o, w - padX * 2, w, 15f * Px, 1.1f, 0.02f);
                         }
                         Save(bmp, path);
                     }
@@ -130,84 +121,41 @@ namespace ViExtras
             return result;
         }
 
-        /// <summary>
-        /// The inactive tile as it sits two slots from the centre: .tile's
-        /// opacity .55 and scale(.9), and #viewport's mask (transparent at the
-        /// edge, solid 18% in, i.e. 100.8px of the 560px viewport). Same box as
-        /// the tile, so it draws like the rendered radio_tile_*_l / _r.
-        /// </summary>
-        public static Art.Entry EdgeTile(Art.Entry tile, bool left)
-        {
-            if (tile == null) return null;
-            string key = (left ? "l|" : "r|") + tile.Path;
-            if (Made.TryGetValue(key, out Art.Entry done)) return done;
-            Art.Entry result = null;
-            try
-            {
-                string path = CachePath(left ? "l" : "r", tile.Path);
-                if (!File.Exists(path))
-                {
-                    using (Bitmap src = Load(tile.Path))
-                    using (var bmp = new Bitmap(src.Width, src.Height, PixelFormat.Format32bppArgb))
-                    {
-                        float k = src.Width / tile.W;   // raster px per CSS px
-                        using (Graphics g = Graphics.FromImage(bmp))
-                        using (var attrs = new ImageAttributes())
-                        {
-                            g.Clear(Color.Transparent);
-                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                            attrs.SetColorMatrix(new ColorMatrix { Matrix33 = 0.55f });
-                            // scale(.9) about the layout box's centre
-                            float cx = (tile.BoxX + tile.BoxW / 2f) * k, cy = (tile.BoxY + tile.BoxH / 2f) * k;
-                            float x0 = cx * 0.1f, y0 = cy * 0.1f, w = src.Width * 0.9f, h = src.Height * 0.9f;
-                            g.DrawImage(src, new[] { new PointF(x0, y0), new PointF(x0 + w, y0), new PointF(x0, y0 + h) },
-                                new RectangleF(0, 0, src.Width, src.Height), GraphicsUnit.Pixel, attrs);
-                        }
-                        // The layout box's left edge, in the 560px viewport: centre 56
-                        // two slots left, 504 two slots right.
-                        float boxLeft = (left ? 56f : 504f) - Icon / 2f;
-                        Pixels(bmp, (int x, int y, ref byte b, ref byte g, ref byte r, ref byte a) =>
-                        {
-                            float local = boxLeft - tile.BoxX + (x + 0.5f) / k;
-                            float m = left ? local / 100.8f : (560f - local) / 100.8f;
-                            if (local < 0f || local > 560f) m = 0f;   // overflow: hidden
-                            a = (byte)Math.Round(a * Math.Max(0f, Math.Min(1f, m)));
-                        });
-                        Save(bmp, path);
-                    }
-                }
-                result = Copy(tile, path);
-            }
-            catch (Exception ex)
-            {
-                Log.Write("Radio", "edge tile: " + ex.Message);
-            }
-            Made[key] = result;
-            return result;
-        }
-
-        // ---- text for names vi_radio has no art for ------------------------------
+        // ---- text: the song, and names vi_radio has no art for --------------------
 
         /// <summary>
-        /// One line of #station / #artist: Anton, upper case, centred, white,
-        /// text-shadow 0 2px 6px rgba(0,0,0,.75), clipped to the line box
-        /// (overflow: hidden). The box is the text's advance width by the line
+        /// One line of #station / #title / #artist: Anton, upper case, centred,
+        /// white (the HUD tints it), cut with an ellipsis past maxWidth as
+        /// text-overflow does. The box is the text's advance width by the line
         /// box, as in the rendered radio_name_* pictures. GDI+, so close to the
         /// page rather than identical.
         /// </summary>
-        public static Art.Entry TextLine(string text, float fontPx, float lineHeight, float spacingEm, float opacity)
+        public static Art.Entry TextLine(string text, float fontPx, float lineHeight, float spacingEm, float maxWidth)
         {
             if (string.IsNullOrEmpty(text)) return null;
-            string key = "x|" + fontPx.ToString("0.###") + "|" + lineHeight + "|" + spacingEm + "|" + opacity + "|" + text;
+            string key = "x|" + fontPx.ToString("0.###") + "|" + lineHeight + "|" + spacingEm + "|" + maxWidth + "|" + text;
             if (Made.TryGetValue(key, out Art.Entry done)) return done;
             Art.Entry result = null;
             try
             {
-                string upper = text.ToUpperInvariant();
+                string upper = text.ToUpperInvariant().Trim();
                 FontFamily fam = Anton();
                 float em = fontPx * Px;
                 float[] pens = Advances(upper, fam, em, spacingEm, out float advance);
+                if (advance > maxWidth * Px)
+                {
+                    // Chrome keeps whole characters and puts the ellipsis after them.
+                    int keep = upper.Length;
+                    string cutText;
+                    do
+                    {
+                        keep--;
+                        cutText = upper.Substring(0, keep).TrimEnd() + Ellipsis;
+                        pens = Advances(cutText, fam, em, spacingEm, out advance);
+                    }
+                    while (keep > 1 && advance > maxWidth * Px);
+                    upper = cutText;
+                }
                 const float padCss = 12f;
                 float pad = padCss * Px;
                 float lineH = fontPx * lineHeight * Px;
@@ -221,23 +169,10 @@ namespace ViExtras
                         using (var glyphs = new GraphicsPath())
                         {
                             AddText(glyphs, upper, pens, fam, em, pad, baseline);
-                            // the shadow: the glyphs' coverage, blurred (6px is a
-                            // Gaussian of sigma 3) and moved 2px down
-                            float[] cover = Coverage(glyphs, w, h, 0f, 2f * Px);
-                            Blur(cover, w, h, 3f * Px);
-                            using (Graphics g = Graphics.FromImage(bmp))
-                            {
-                                g.Clear(Color.Transparent);
-                                g.SmoothingMode = SmoothingMode.AntiAlias;
-                                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                            }
+                            // clipped to the line box (overflow: hidden)
                             int top = (int)Math.Floor(pad), bottom = (int)Math.Ceiling(pad + lineH);
-                            Paint(bmp, cover, Color.FromArgb((int)(0.75f * 255), 0, 0, 0), top, bottom);
-                            float[] fill = Coverage(glyphs, w, h, 0f, 0f);
-                            Paint(bmp, fill, Color.White, top, bottom);
+                            Paint(bmp, Coverage(glyphs, w, h), Color.White, top, bottom);
                         }
-                        if (opacity < 1f)
-                            Pixels(bmp, (int x, int y, ref byte b, ref byte g, ref byte r, ref byte a) => { a = (byte)Math.Round(a * opacity); });
                         Save(bmp, path);
                     }
                 }
@@ -359,60 +294,21 @@ namespace ViExtras
             }
         }
 
-        private static float[] Coverage(GraphicsPath path, int w, int h, float dx, float dy)
+        private static float[] Coverage(GraphicsPath path, int w, int h)
         {
             var cover = new float[w * h];
             using (var bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb))
             {
                 using (Graphics g = Graphics.FromImage(bmp))
-                using (var moved = (GraphicsPath)path.Clone())
                 {
                     g.Clear(Color.Transparent);
                     g.SmoothingMode = SmoothingMode.AntiAlias;
                     g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    using (var m = new Matrix()) { m.Translate(dx, dy); moved.Transform(m); }
-                    g.FillPath(Brushes.White, moved);
+                    g.FillPath(Brushes.White, path);
                 }
                 Pixels(bmp, (int x, int y, ref byte b, ref byte gg, ref byte r, ref byte a) => { cover[y * w + x] = a / 255f; });
             }
             return cover;
-        }
-
-        // Three box blurs, which add up to a Gaussian of the given sigma.
-        private static void Blur(float[] v, int w, int h, float sigma)
-        {
-            int r = Math.Max(1, (int)Math.Round((Math.Sqrt(4 * sigma * sigma + 1) - 1) / 2));
-            var tmp = new float[v.Length];
-            for (int pass = 0; pass < 3; pass++)
-            {
-                BoxPass(v, tmp, w, h, r, true);
-                BoxPass(tmp, v, w, h, r, false);
-            }
-        }
-
-        private static void BoxPass(float[] src, float[] dst, int w, int h, int r, bool horizontal)
-        {
-            int n = horizontal ? w : h, lines = horizontal ? h : w;
-            float inv = 1f / (r * 2 + 1);
-            for (int l = 0; l < lines; l++)
-            {
-                float sum = 0f;
-                for (int k = -r; k <= r; k++) sum += At(src, w, h, l, Math.Max(0, Math.Min(n - 1, k)), horizontal, n);
-                for (int i = 0; i < n; i++)
-                {
-                    Set(dst, w, l, i, horizontal, sum * inv);
-                    int add = Math.Min(n - 1, i + r + 1), sub = Math.Max(0, i - r);
-                    sum += At(src, w, h, l, add, horizontal, n) - At(src, w, h, l, sub, horizontal, n);
-                }
-            }
-        }
-
-        private static float At(float[] a, int w, int h, int line, int i, bool horizontal, int n) =>
-            horizontal ? a[line * w + i] : a[i * w + line];
-
-        private static void Set(float[] a, int w, int line, int i, bool horizontal, float value)
-        {
-            if (horizontal) a[line * w + i] = value; else a[i * w + line] = value;
         }
 
         // Lays `color` at `cover` over what is in the bitmap, rows top..bottom only.
