@@ -36,6 +36,13 @@ namespace ViExtras
 
         private bool _crouched, _prone, _crawling, _inAction, _forceEndProne;
         private string _proneType = "onfront";
+        // The crawl's clips: our own (Rockstar's move_crawl with the legs drawing up and
+        // pushing, in the vihudanims pack), or Rockstar's when that pack isn't there or
+        // [Crawl] OwnClips is off. Same clip names in both.
+        private const string OwnCrawl = "vihud_crawl", GameCrawl = "move_crawl";
+        private readonly bool _ownCrawl;
+        private string _crawlDict = GameCrawl;
+        private bool _crawlDictLogged;
         private long _lastKeyPress;
         // The crawl cycle looping while W / S is held ("fwd" / "bwd"), and whether a
         // release is waiting for the cycle to come round to its end before resting.
@@ -56,6 +63,7 @@ namespace ViExtras
             _fpsMode = Config.Get("Crouch", "FpsMode", false);
             _crawlOn = Config.Get("Crawl", "Enabled", true);
             _crawlKey = Config.Get("Crawl", "Key", Keys.RControlKey);
+            _ownCrawl = Config.Get("Crawl", "OwnClips", true);
             Tick += OnTick;
             Aborted += (s, e) => DropStances();
         }
@@ -298,14 +306,14 @@ namespace ViExtras
         private void IdleCrawl(Ped p, float? heading = null, float blendIn = 2f)
         {
             GTA.Math.Vector3 c = p.Position;
-            Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, p, "move_crawl", _proneType + "_fwd", c.X, c.Y, c.Z, 0f, 0f, heading ?? p.Heading, blendIn, 2f, -1, 2, 1f, false, false);
+            Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, p, _crawlDict, _proneType + "_fwd", c.X, c.Y, c.Z, 0f, 0f, heading ?? p.Heading, blendIn, 2f, -1, 2, 1f, false, false);
         }
 
         // A crawl cycle on loop while the key is held: the clip's own length, so one
         // cycle runs into the next with no hold or cut between them.
         private void StartCrawlLoop(Ped p, string dir)
         {
-            Function.Call(Hash.TASK_PLAY_ANIM, p, "move_crawl", _proneType + "_" + dir, CrawlBlend, -CrawlBlend, -1, 1, 0f, false, false, false);
+            Function.Call(Hash.TASK_PLAY_ANIM, p, _crawlDict, _proneType + "_" + dir, CrawlBlend, -CrawlBlend, -1, 1, 0f, false, false, false);
             _loopDir = dir;
             _stopPending = false;
             _lastPhase = 0f;
@@ -360,8 +368,8 @@ namespace ViExtras
             if (_loopDir != null)
             {
                 string clip = _proneType + "_" + _loopDir;
-                float phase = Function.Call<float>(Hash.GET_ENTITY_ANIM_CURRENT_TIME, p, "move_crawl", clip);
-                bool playing = Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, p, "move_crawl", clip, 3);
+                float phase = Function.Call<float>(Hash.GET_ENTITY_ANIM_CURRENT_TIME, p, _crawlDict, clip);
+                bool playing = Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, p, _crawlDict, clip, 3);
                 if (want == _loopDir) _stopPending = false;
                 else if (want != null) StartCrawlLoop(p, want);           // turned round: straight into the other cycle
                 else _stopPending = true;
@@ -454,7 +462,7 @@ namespace ViExtras
             _forceEndProne = false;
             _proneType = "onfront";
             Function.Call(Hash.SET_PED_CONFIG_FLAG, p, 48, false);   // CPED_CONFIG_FLAG_BlockWeaponSwitching
-            Function.Call(Hash.REMOVE_ANIM_DICT, "move_crawl");
+            Function.Call(Hash.REMOVE_ANIM_DICT, _crawlDict);
             Function.Call(Hash.REMOVE_ANIM_DICT, "move_crawlprone2crawlfront");
         }
 
@@ -485,7 +493,13 @@ namespace ViExtras
                 Function.Call(Hash.SET_PED_STEALTH_MOVEMENT, p, false, "DEFAULT_ACTION");
                 Wait(100);
             }
-            LoadDict("move_crawl");
+            _crawlDict = _ownCrawl && LoadDict(OwnCrawl) ? OwnCrawl : GameCrawl;
+            if (_crawlDict == GameCrawl) LoadDict(GameCrawl);
+            if (!_crawlDictLogged)
+            {
+                _crawlDictLogged = true;
+                Log.Write("Crawl", "crawling with " + _crawlDict + (_ownCrawl && _crawlDict == GameCrawl ? " (vihud_crawl isn't installed)" : ""));
+            }
             LoadDict("move_crawlprone2crawlfront");
             // a dive when running, otherwise lie down
             if (Function.Call<bool>(Hash.IS_PED_RUNNING, p) || Function.Call<bool>(Hash.IS_PED_SPRINTING, p))

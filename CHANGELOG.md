@@ -17,6 +17,9 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
   - Letting go finishes the cycle before resting.
   - Turning is 50° a second at any frame rate (it was a degree a frame).
   - Turns in place ease in and out, and the blends are softer.
+- **The legs crawl too.** On your front, each knee draws up along the ground as the opposite arm reaches, then pushes as that arm pulls. Rockstar's crawl dragged them.
+  - These are our own clips, made from Rockstar's `move_crawl` (`vihud_crawl`, in the `vihudanims` pack). Arms, body and speed are Rockstar's.
+  - `[Crawl] OwnClips = False` in `ViCrouch.ini` goes back to Rockstar's crawl, and so does a missing pack.
 - **Lucia is a separate download:** `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` / `-Lucia-Enhanced.oiv`. Install it after the HUD and the RegisterPatch.
   - The HUD package is now the HUD alone, and much smaller.
   - Lucia's package adds her two packs to `dlclist.xml`, each only if it isn't listed yet.
