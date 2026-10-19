@@ -5,10 +5,10 @@ This is a list of what this fork changed and fixed on top of **FBICat's** GTA VI
 Newest first. "Unreleased" is what's in testing and not yet on the Releases page.
 
 > [!IMPORTANT]
-> ### 💬 This is a fork. Get help in OUR Discord, not FBICat's.
-> This version is a **fork of FBICat's VI HUD** with extra features. For questions or problems with it, join
-> **[our support Discord: discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)** or open a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
-> **Please don't ask about it in FBICat's Discord.** That one is for his original mod, not this fork.
+> ### 💬 Need help? Join our support Discord
+> This version is a **fork of FBICat's VI HUD** with extra features, so it has its own support:
+> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
 ## 2.5.1 (19 October 2026)
 
