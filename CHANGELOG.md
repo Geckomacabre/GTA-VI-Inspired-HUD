@@ -4,6 +4,21 @@ This is a list of what this fork changed and fixed on top of **FBICat's** GTA VI
 
 Newest first. "Unreleased" is what's in testing and not yet on the Releases page.
 
+## 2.5.1 (unreleased, in testing)
+
+### Changed
+
+- **Lucia is a separate download:** `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` / `-Lucia-Enhanced.oiv`. Install it after the HUD and the RegisterPatch.
+  - The HUD package is now the HUD alone, and much smaller.
+  - Lucia's package adds her two packs to `dlclist.xml`, each only if it isn't listed yet.
+  - The RegisterPatch (1.5) registers only the HUD's packs. Installs that already list Lucia's keep them.
+  - Without Lucia installed, picking her on the character wheel shows FBICat's notice that she isn't registered, and nothing else changes.
+
+### Fixed
+
+- **WASTED / BUSTED only showed once per session.** Releasing the screen's text movie threw an error, which left the screen marked as still playing, so later deaths and arrests got the game's own screen.
+- **WASTED in a vehicle:** the camera frames the vehicle from outside its body, follows it if it's still rolling, and comes back if the crash cam hands the view back at the same moment.
+
 ## 2.5.0 (2026-10-19)
 
 ### Added: ported from the FiveM version

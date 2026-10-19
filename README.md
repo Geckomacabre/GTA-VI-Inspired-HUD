@@ -29,6 +29,8 @@ Made by **FBICat**. Version 2.5 adds features from the [FiveM version](https://g
 - the `.oiv` with your version's name (Legacy **or** Enhanced);
 - `GTA-VI-Inspired-HUD-RegisterPatch.oiv`.
 
+Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-Enhanced.oiv`. She's optional.
+
 **3. Follow your guide.** It's written for people who've never modded GTA. Only follow the guide for
 **your** version: mixing them up crashes the game.
 
@@ -39,7 +41,7 @@ Made by **FBICat**. Version 2.5 adds features from the [FiveM version](https://g
 | To do this | Press |
 | :--- | :--- |
 | HUD settings | Hold **V** |
-| Play as Lucia | Hold **Left Alt**, then **E** to her picture |
+| Play as Lucia | Hold **Left Alt**, then **E** to her picture *(needs the Lucia download)* |
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**). **O** mutes it |
 | Nitrous | Hold **Left Alt** in a car with a bottle |
@@ -58,7 +60,7 @@ Made by **FBICat**. Version 2.5 adds features from the [FiveM version](https://g
 ## ✨ What's in it
 
 - A **GTA VI-style HUD** and a **3D minimap**
-- **Lucia** as a 4th character
+- **Lucia** as a 4th character (a separate, optional download)
 - **Wanted stars and a wanted box** that tell you what the police know, plus **police lights** at the screen edge
 - **WASTED / BUSTED** screens, a **crash cam** and **binoculars**
 - **Leonida Customs**: a full mod shop with nitrous

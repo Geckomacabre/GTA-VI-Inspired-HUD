@@ -2,16 +2,18 @@
 <package version="2.1" id="{3c7d5a19-8e24-4b6f-a0d3-6f1b2e9c4a57}" target="Five">
   <metadata>
     <name>GTA VI-Inspired HUD - gameconfig + dlclist patch</name>
-    <version><major>1</major><minor>4</minor><tag>PATCH</tag></version>
+    <version><major>1</major><minor>5</minor><tag>PATCH</tag></version>
     <author><displayName>FBICat</displayName></author>
     <description><![CDATA[Edits mods\update\update.rpf. Install to the mods folder. Works for GTA V Legacy and Enhanced.
 
-dlclist.xml     adds dlcpacks:/vihudfonts/, dlcpacks:/vihudanims/, dlcpacks:/luciaped/ and dlcpacks:/luciaolf/
+dlclist.xml     adds dlcpacks:/vihudfonts/ and dlcpacks:/vihudanims/ (Lucia's package adds hers)
 gameconfig.xml  MetaDataStore 4000, ExprDictStore 400, TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600
 
 1.3: registers Lucia again and raises MetaDataStore (3200 by default), the pool her ped files overflowed while the
 game was loading. With all packs registered the game uses about 3208 MetaDataStore, 90874 TxdStore and
 21194 DwdStore slots, so all three stock limits (3200 / 80200 / 20500) must be raised.
+1.5: Lucia is a separate package from 2.5.1 and registers her own packs, so this patch lists only the HUD's.
+Installs that already list Lucia's packs keep them.
 1.4: safe to install again, or over an older version. Each pack is only added when dlclist.xml doesn't list it
 yet, so no pack can end up listed twice; the pool sizes are set, never added to.]]></description>
   </metadata>
@@ -27,12 +29,6 @@ yet, so no pack can end up listed twice; the pool sizes are set, never added to.
         </add>
         <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudanims/'])]" append="Last">
           <Item>dlcpacks:/vihudanims/</Item>
-        </add>
-        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/luciaped/'])]" append="Last">
-          <Item>dlcpacks:/luciaped/</Item>
-        </add>
-        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/luciaolf/'])]" append="Last">
-          <Item>dlcpacks:/luciaolf/</Item>
         </add>
       </xml>
       <xml path="common\data\gameconfig.xml">

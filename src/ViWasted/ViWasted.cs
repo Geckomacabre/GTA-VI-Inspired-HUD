@@ -202,8 +202,23 @@ namespace ViWasted
                 Game.TimeScale = _timeScale;
 
                 // Starts close behind and to one side, ends further back and higher.
-                double rad = (ped.Heading + 160.0) * Math.PI / 180.0;
-                const float startDist = 2f, endDist = 6f, startZ = 0.8f, endZ = 3f;
+                // In a vehicle the shot frames the vehicle instead, from far enough out
+                // to clear its body, and follows it if it's still rolling.
+                Vehicle veh = ped.IsInVehicle() ? ped.CurrentVehicle : null;
+                Entity focus = veh != null && veh.Exists() ? (Entity)veh : ped;
+                if (focus != ped) at = focus.Position;
+                double rad = (focus.Heading + 160.0) * Math.PI / 180.0;
+                float startDist = 2f, endDist = 6f, startZ = 0.8f, endZ = 3f;
+                if (focus != ped)
+                {
+                    var (rearBottomLeft, frontTopRight) = veh.Model.Dimensions;
+                    Vector3 size = frontTopRight - rearBottomLeft;
+                    float length = Math.Max(size.X, size.Y), height = size.Z;
+                    startDist = Math.Max(startDist, length * 0.9f);
+                    endDist = Math.Max(endDist, length * 1.9f);
+                    startZ = Math.Max(startZ, height * 0.8f);
+                    endZ = Math.Max(endZ, height * 1.8f);
+                }
 
                 cam = Function.Call<int>(Hash.CREATE_CAM, "DEFAULT_SCRIPTED_CAMERA", true);
                 Vector3 startPos = at + new Vector3((float)Math.Sin(rad) * startDist, (float)Math.Cos(rad) * startDist, startZ);
@@ -230,6 +245,13 @@ namespace ViWasted
                         DrawSkipHint();
                     }
 
+                    if (focus != ped && focus.Exists()) at = focus.Position;
+                    // another script's camera hand-back (a crash cam ending on the death) turns ours off
+                    if (!Function.Call<bool>(Hash.IS_CAM_RENDERING, cam))
+                    {
+                        Function.Call(Hash.SET_CAM_ACTIVE, cam, true);
+                        Function.Call(Hash.RENDER_SCRIPT_CAMS, true, false, 0, true, true, 0);
+                    }
                     float dist = startDist + (endDist - startDist) * ease;
                     float z = startZ + (endZ - startZ) * ease;
                     double angle = rad + 15.0 * ease * Math.PI / 180.0;
@@ -307,16 +329,26 @@ namespace ViWasted
             }
             finally
             {
-                if (cam != 0) DropCam(cam);
-                if (_bigMessage != 0)
-                {
-                    int handle = _bigMessage;
-                    Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, new OutputArgument(handle));
-                    _bigMessage = 0;
-                }
                 _playing = false;
                 IsPlaying = false;
+                if (cam != 0) DropCam(cam);
+                ReleaseBigMessage();
             }
+        }
+
+        // SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED takes a pointer to the handle.
+        private void ReleaseBigMessage()
+        {
+            if (_bigMessage == 0) return;
+            IntPtr p = System.Runtime.InteropServices.Marshal.AllocHGlobal(8);
+            try
+            {
+                System.Runtime.InteropServices.Marshal.WriteInt64(p, _bigMessage);
+                Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, p);
+            }
+            catch { }
+            finally { System.Runtime.InteropServices.Marshal.FreeHGlobal(p); }
+            _bigMessage = 0;
         }
 
         private static void DropCam(int cam)

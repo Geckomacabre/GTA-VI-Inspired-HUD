@@ -97,8 +97,11 @@ never changed.
 **The mod.** Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
 Under **Assets**, download these **2 files**:
 
-- **`GTA-VI-Inspired-HUD-Enhanced.oiv`** (the mod, about 1.8 GB)
+- **`GTA-VI-Inspired-HUD-Enhanced.oiv`** (the mod, about 90 MB)
 - **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`** (a small patch that switches the mod on)
+
+**Want to play as Lucia?** Also download **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** (about 1.7 GB).
+She's optional: the HUD works without her.
 
 ❌ Don't download `GTA-VI-Inspired-HUD-Legacy.oiv`. It's for the other version and will crash Enhanced.
 
@@ -115,6 +118,7 @@ and unzip it anywhere, like your Desktop.
 3. When it asks for your game folder, pick the folder with **`GTA5_Enhanced.exe`**.
 4. Click **Install** and wait until it's finished.
 5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**.
+6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** the same way, last.
 
 ✅ Installing the RegisterPatch again, or over an older one, is safe: it never lists a pack twice.
 
@@ -146,7 +150,7 @@ Load **Story Mode**. The new HUD appears on its own.
 | What happens | What to do |
 | --- | --- |
 | The game **closes by itself about 20 seconds after loading** | You have the normal Script Hook V .NET. Redo Step 3 with **SHVDNE**. Still happening? A ReShade add-on (a file ending in `.addon64` in your game folder) may be clashing. Move those files somewhere else and try again. |
-| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these 4 lines just above `</Paths>`: `<Item>dlcpacks:/vihudfonts/</Item>`, `<Item>dlcpacks:/vihudanims/</Item>`, `<Item>dlcpacks:/luciaped/</Item>`, `<Item>dlcpacks:/luciaolf/</Item>`. Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
+| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`: `<Item>dlcpacks:/vihudfonts/</Item>` and `<Item>dlcpacks:/vihudanims/</Item>`, plus, if you installed Lucia, `<Item>dlcpacks:/luciaped/</Item>` and `<Item>dlcpacks:/luciaolf/</Item>`. Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |

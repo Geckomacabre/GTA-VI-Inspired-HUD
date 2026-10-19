@@ -82,8 +82,10 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
 2. Under **Assets**, download these **2 files**:
-   - **`GTA-VI-Inspired-HUD-Legacy.oiv`** (the mod, about 1.8 GB)
+   - **`GTA-VI-Inspired-HUD-Legacy.oiv`** (the mod, about 90 MB)
    - **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`** (a small patch that switches the mod on)
+3. **Want to play as Lucia?** Also download **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** (about 1.7 GB).
+   She's optional: the HUD works without her.
 
 ❌ Don't download `GTA-VI-Inspired-HUD-Enhanced.oiv`. That one is for the other version of the game.
 
@@ -96,6 +98,7 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 3. When it asks where to install, choose **mods folder**. If it offers to create the folder, say yes.
 4. Wait until it says it's finished, then click **Close**.
 5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**.
+6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** the same way, last.
 
 ✅ Installing the RegisterPatch again, or over an older one, is safe: it never lists a pack twice.
 

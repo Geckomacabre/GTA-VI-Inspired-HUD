@@ -1,12 +1,16 @@
 """Build the GTA VI-Inspired HUD OIV packages.
 
-    python tools/build_oiv.py legacy   --dlcpacks <folder> [--out build]
-    python tools/build_oiv.py enhanced --dlcpacks <folder> [--out build]
-    python tools/build_oiv.py patch    [--out build]
+    python tools/build_oiv.py legacy         --dlcpacks <folder> [--out build]
+    python tools/build_oiv.py enhanced       --dlcpacks <folder> [--out build]
+    python tools/build_oiv.py lucia-legacy   --dlcpacks <folder> [--out build]
+    python tools/build_oiv.py lucia-enhanced --dlcpacks <folder> [--out build]
+    python tools/build_oiv.py patch          [--out build]
 
-<folder> holds one sub-folder per pack (luciaped, luciaolf, vihudfonts,
-vihudanims), each with its dlc.rpf. Legacy and Enhanced need different
-dlcpacks: the Enhanced ones are converted to the gen9 resource format.
+<folder> holds one sub-folder per pack, each with its dlc.rpf: vihudfonts and
+vihudanims for the HUD, luciaped and luciaolf for Lucia. Legacy and Enhanced
+need different dlcpacks: the Enhanced ones are converted to the gen9 resource
+format. The HUD packages carry the scripts, ViMinimap.asi and the HUD packs;
+the Lucia packages only her two packs (and register them in dlclist.xml).
 
 The package is a zip laid out like FBICat's originals: assembly.xml and
 icon.png at the top, the files under content/. assembly.xml comes from
@@ -21,7 +25,8 @@ import zipfile
 from xml.sax.saxutils import escape
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PACKS = ("luciaped", "luciaolf", "vihudfonts", "vihudanims")
+HUD_PACKS = ("vihudfonts", "vihudanims")
+LUCIA_PACKS = ("luciaped", "luciaolf")
 ROOT_FILES = ("ViMinimap.asi",)
 # Already compressed, or too big to be worth deflating; FBICat's packages store these.
 STORED = {".rpf", ".png", ".mp3", ".ogg", ".dds", ".jpg"}
@@ -33,13 +38,18 @@ ART_PNGS = "scripts/ViExtras/Art/"
 OUTPUT_NAMES = {
     "legacy": "GTA-VI-Inspired-HUD-Legacy.oiv",
     "enhanced": "GTA-VI-Inspired-HUD-Enhanced.oiv",
+    "lucia-legacy": "GTA-VI-Inspired-HUD-Lucia-Legacy.oiv",
+    "lucia-enhanced": "GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv",
     "patch": "GTA-VI-Inspired-HUD-RegisterPatch.oiv",
 }
 
 
-def collect_files(dlcpacks):
+def collect_files(dlcpacks, lucia):
     """Return (source path on disk, path inside content/, install path) for every file."""
     files = []
+    if lucia:
+        add_packs(files, dlcpacks, LUCIA_PACKS)
+        return files
     scripts = os.path.join(ROOT, "scripts")
     for dirpath, dirnames, filenames in os.walk(scripts):
         dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS)
@@ -54,14 +64,17 @@ def collect_files(dlcpacks):
         if not os.path.isfile(src):
             sys.exit(f"missing {name}")
         files.append((src, name, name))
-    if dlcpacks:
-        for pack in PACKS:
-            src = os.path.join(dlcpacks, pack, "dlc.rpf")
-            if not os.path.isfile(src):
-                sys.exit(f"missing {src}")
-            files.append((src, f"dlcpacks/{pack}/dlc.rpf",
-                          f"update\\x64\\dlcpacks\\{pack}\\dlc.rpf"))
+    add_packs(files, dlcpacks, HUD_PACKS)
     return files
+
+
+def add_packs(files, dlcpacks, packs):
+    for pack in packs:
+        src = os.path.join(dlcpacks, pack, "dlc.rpf")
+        if not os.path.isfile(src):
+            sys.exit(f"missing {src}")
+        files.append((src, f"dlcpacks/{pack}/dlc.rpf",
+                      f"update\\x64\\dlcpacks\\{pack}\\dlc.rpf"))
 
 
 def assembly_xml(edition, files):
@@ -94,7 +107,7 @@ def write_entry(zf, arcname, data=None, src=None):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("edition", choices=sorted(OUTPUT_NAMES))
-    ap.add_argument("--dlcpacks", help="folder with luciaped/, luciaolf/, vihudfonts/, vihudanims/")
+    ap.add_argument("--dlcpacks", help="folder with vihudfonts/, vihudanims/ (HUD) or luciaped/, luciaolf/ (Lucia)")
     ap.add_argument("--out", default=os.path.join(ROOT, "build"))
     args = ap.parse_args()
 
@@ -104,7 +117,7 @@ def main():
     else:
         if not args.dlcpacks:
             ap.error(f"{args.edition} needs --dlcpacks")
-        files = collect_files(args.dlcpacks)
+        files = collect_files(args.dlcpacks, lucia=args.edition.startswith("lucia"))
         extra = {}
 
     os.makedirs(args.out, exist_ok=True)
