@@ -19,7 +19,7 @@ and look at the game file:
 | Your game folder has... | You have... | Your guide |
 | --- | --- | --- |
 | `GTA5.exe` | **Legacy** (the original PC version) | 👉 **[Legacy install guide](INSTALL-LEGACY.md)** |
-| `GTA5_Enhanced.exe` | **Enhanced** (the 2025 PC version) | 👉 **[Enhanced install guide](INSTALL-ENHANCED.md)** |
+| `GTA5_Enhanced.exe` | **Enhanced** (the 2025 PC version, tested on 1.0.1158.13 and 1.0.1158.16) | 👉 **[Enhanced install guide](INSTALL-ENHANCED.md)** |
 
 Both guides are written for people who've never modded GTA before. Follow only the guide for your
 version: the two use different tools, and mixing them up crashes the game.
