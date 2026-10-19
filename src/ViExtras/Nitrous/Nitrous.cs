@@ -11,7 +11,7 @@ namespace ViExtras
     /// The FiveM version's nitrous (sk_streetkings modules/nitrous/nitrous_c.lua,
     /// which the server runs, drawn by vice_hud), for single player.
     ///
-    /// Hold Left Alt (X / Square on a pad) in a car with a bottle: GTA's own
+    /// Hold Left Shift (X / Square on a pad) in a car with a bottle: GTA's own
     /// vehicle boost plus an engine torque multiplier, backfire flames from every
     /// exhaust, the RaceTurbo screen effect and a light camera shake. The bottle
     /// holds a few seconds of boost (its tier) and refills while it is not in
@@ -70,7 +70,7 @@ namespace ViExtras
         private bool _hintPending;
         private long _hintUntil = -1;
 
-        /// <summary>Left Alt is the boost right now (a bottle in the car, keyboard): other scripts leave it alone.</summary>
+        /// <summary>Left Alt is the boost right now ([Nitrous] KeyboardControl = 19, a bottle in the car, keyboard): other scripts leave it alone.</summary>
         public static bool HoldsCharacterKey { get; private set; }
 
         public Nitrous()
@@ -79,7 +79,7 @@ namespace ViExtras
             _enabled = Config.Get("Nitrous", "Enabled", true);
             _fittedBy = Config.Get("Nitrous", "FittedBy", "Shop");
             _defaultTier = Config.Get("Nitrous", "Tier", "Street");
-            _kbControl = Config.Get("Nitrous", "KeyboardControl", 19);   // INPUT_CHARACTER_WHEEL: Left Alt
+            _kbControl = Config.Get("Nitrous", "KeyboardControl", 21);   // INPUT_SPRINT: Left Shift (FiveM: 19, Left Alt)
             _padControl = Config.Get("Nitrous", "PadControl", 179);      // INPUT_CELLPHONE_EXTRA_OPTION: X / Square
             _screenFx = Config.Get("Nitrous", "ScreenEffect", true);
             _flames = Config.Get("Nitrous", "Flames", true);
@@ -169,9 +169,9 @@ namespace ViExtras
             }
             _seen = true;
 
-            // Left Alt is the boost here, as in FiveM; GTA6Hud's swap wheel, on the
-            // same key, stays shut meanwhile. A pad boosts on X / Square instead.
-            HoldsCharacterKey = _active && !Glyphs.UsingPad;
+            // With FiveM's Left Alt (KeyboardControl = 19), GTA6Hud's swap wheel on the
+            // same key stays shut meanwhile. A pad boosts on X / Square instead.
+            HoldsCharacterKey = _active && !Glyphs.UsingPad && _kbControl == 19;
             HudBridge.HoldSwapWheelOff(HoldsCharacterKey);
             if (_active) Drive(ped, now);
             DrawHint(now);

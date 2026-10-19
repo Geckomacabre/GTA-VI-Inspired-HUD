@@ -8,6 +8,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ### Changed
 
+- **Nitrous is on Left Shift** (X / Square on a pad). FiveM's Left Alt is also GTA's character wheel. `[Nitrous] KeyboardControl = 19` puts it back on Left Alt, and the wheel then stays shut while you drive a car with a bottle.
 - **Lucia is a separate download:** `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` / `-Lucia-Enhanced.oiv`. Install it after the HUD and the RegisterPatch.
   - The HUD package is now the HUD alone, and much smaller.
   - Lucia's package adds her two packs to `dlclist.xml`, each only if it isn't listed yet.

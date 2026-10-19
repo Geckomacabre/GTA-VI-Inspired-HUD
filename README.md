@@ -44,7 +44,7 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 | Play as Lucia | Hold **Left Alt**, then **E** to her picture *(needs the Lucia download)* |
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**). **O** mutes it |
-| Nitrous | Hold **Left Alt** in a car with a bottle |
+| Nitrous | Hold **Left Shift** in a car with a bottle |
 | Mod your car | Drive into a **Los Santos Customs** garage and stop |
 | Crouch | **Left Ctrl** twice |
 | Lie down / crawl | **Right Ctrl**, then **W / S** |
