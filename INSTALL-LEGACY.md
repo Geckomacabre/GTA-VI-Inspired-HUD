@@ -135,6 +135,7 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 | The game starts but **the new HUD doesn't show** | Your Script Hook V .NET is too old. Redo Step 3 with the newest version. |
 | **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`. Redo Step 7. |
 | The game **crashes while loading** | Make sure you installed the RegisterPatch (Step 6). If you have other big mods (extra characters, maps), try turning them off. |
+| **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
 | **Something else** | [Open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `ViMinimap.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
 
 ---

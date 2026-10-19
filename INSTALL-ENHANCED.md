@@ -153,6 +153,7 @@ Load **Story Mode**. The new HUD appears on its own.
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |
 | An error about **.NET** or **Visual C++** | Install [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer) and the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe), then restart your PC. |
+| **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
 | **Something else** | [Open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
 
 ---
