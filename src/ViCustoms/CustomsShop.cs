@@ -156,6 +156,9 @@ namespace ViExtras
         private float _rpm;
         private readonly Input _input = new Input();
         private bool _waitRelease = true;
+        private long _openedAt, _backHeldSince;
+        private const int ReleaseWaitMs = 1500;   // the keys held driving in get this long to come up
+        private const int ForceExitMs = 2000;     // Back held this long leaves from anywhere
 
         internal sealed class DialogState
         {
@@ -195,6 +198,7 @@ namespace ViExtras
             Function.Call(Hash.SET_VEHICLE_ENGINE_ON, _veh, true, true, false);
             _quiet.Hold(true);
             Log.Write("Customs", "menu opened: " + Brand + " " + Model);
+            _openedAt = RealTime.Ms;
             OwnedStats = Shown = Logic.Stats(Logic.Owned);
             PadMode = Glyphs.UsingPad;
             Stack.Add(new MenuView { Type = "root", Tab = 0, RootSel = new int[Math.Max(1, Logic.Tabs.Count)] });
@@ -262,6 +266,19 @@ namespace ViExtras
             Function.Call(Hash.DISABLE_ALL_CONTROL_ACTIONS, 0);
             Function.Call(Hash.DISABLE_CONTROL_ACTION, 2, 199, true);
             Function.Call(Hash.DISABLE_CONTROL_ACTION, 2, 200, true);
+            // A way out whatever the menu is doing: Back held 2 s (Backspace, Esc, B / Circle).
+            long now = RealTime.Ms;
+            if (Game.IsKeyPressed(Keys.Back) || Game.IsKeyPressed(Keys.Escape) || PadPressed(202))
+            {
+                if (_backHeldSince == 0) _backHeldSince = now;
+                else if (now - _backHeldSince >= ForceExitMs)
+                {
+                    Log.Write("Customs", "Back held " + ForceExitMs / 1000 + " s" + (Dialog != null ? " on \"" + Dialog.Title + "\"" : "") + (_waitRelease ? ", input still held off" : ""));
+                    Close(true);
+                    return false;
+                }
+            }
+            else _backHeldSince = 0;
             ReadInput(dt);
             if (_closed) return false;
             if (_previewAt >= 0 && RealTime.Ms >= _previewAt) { _previewAt = -1; Preview(); }
@@ -304,18 +321,25 @@ namespace ViExtras
             Keys.Back, Keys.Escape, Keys.Tab, Keys.Q, Keys.E, Keys.R,
         };
 
-        private static bool AnyMenuInputHeld()
+        // The menu input still held from driving in (a key, or a pad control by number), or null.
+        private static string HeldMenuInput()
         {
-            foreach (Keys k in MenuKeys) if (Game.IsKeyPressed(k)) return true;
-            for (int c = 187; c <= 206; c++) if (c != 191 && c != 192 && c != 193 && c != 194 && c != 195 && c != 196 && c != 197 && c != 198 && c != 199 && c != 200 && PadPressed(c)) return true;
-            return Math.Abs(Normal(195)) > 0.6f || Math.Abs(Normal(196)) > 0.6f || Normal(207) > 0.1f || Normal(208) > 0.1f;
+            foreach (Keys k in MenuKeys) if (Game.IsKeyPressed(k)) return k.ToString();
+            for (int c = 187; c <= 206; c++) if (c != 191 && c != 192 && c != 193 && c != 194 && c != 195 && c != 196 && c != 197 && c != 198 && c != 199 && c != 200 && PadPressed(c)) return "control " + c;
+            if (Math.Abs(Normal(195)) > 0.6f || Math.Abs(Normal(196)) > 0.6f) return "the left stick";
+            if (Normal(207) > 0.1f || Normal(208) > 0.1f) return "a trigger";
+            return null;
         }
 
         private void ReadInput(float dt)
         {
             if (_waitRelease)
             {
-                if (AnyMenuInputHeld()) return;
+                // Nothing acts until what was held driving in comes up, for a moment at most:
+                // an input that never reads as up (a stuck key, a drifting trigger) no longer locks the menu.
+                string held = HeldMenuInput();
+                if (held != null && RealTime.Ms - _openedAt < ReleaseWaitMs) return;
+                if (held != null) Log.Write("Customs", held + " still read as held after " + ReleaseWaitMs / 1000f + " s; taking input anyway");
                 _waitRelease = false;
             }
             bool usingPad = Glyphs.UsingPad;
@@ -714,6 +738,7 @@ namespace ViExtras
         {
             if (Dialog != null)
             {
+                if (action == "ok" || action == "back") Log.Write("Customs", "\"" + Dialog.Title + "\": " + action);
                 if (action == "ok") { Sfx.Play("click"); Dialog.Ok(); }
                 else if (action == "back") (Dialog.Back ?? Dialog.Ok)();
                 return;
@@ -745,6 +770,7 @@ namespace ViExtras
         private void Ask(string title, List<string> lines, Action ok, Action back)
         {
             Dialog = new DialogState { Title = title, Lines = lines, Ok = ok, Back = back };
+            Log.Write("Customs", "asks: " + title);
         }
 
         private void RepairDialog()
