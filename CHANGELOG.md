@@ -44,6 +44,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 ### Known issues
 
 - **Switching to Michael, Franklin or Trevor doesn't work while the HUD's character wheel is on**, from the wheel or with F5-F7. The wheel holds GTA's character-switch input off every frame, and that also blocks the F keys. To switch, set `[Swap] Enabled = False` in `scripts\GTA6Hud.ini` and use GTA's own wheel (Lucia is then off the wheel). A fix is being tested.
+- **Lucia: loading a save you quit as her can freeze the game**, while the HUD switches you back to her. Switch to Franklin, Michael or Trevor before you quit. A fix is being tested.
 
 ## 2.5.0 (2026-10-19)
 

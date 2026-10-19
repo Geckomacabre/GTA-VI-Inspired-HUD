@@ -83,6 +83,8 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 - Switching to **Michael, Franklin or Trevor** doesn't work while the HUD's character wheel is on, from the wheel
   or with F5-F7. To switch, set `[Swap] Enabled = False` in `scripts\GTA6Hud.ini` and use GTA's own wheel
   (Lucia is then off the wheel).
+- Playing as **Lucia**: loading a save you quit as her can freeze the game. Switch to Franklin, Michael or
+  Trevor before you quit.
 - The minimap's waypoint route can look shaky.
 - Greet / antagonize only work on the keyboard for now.
 - **NaturalVision Enhanced** users: see "Something went wrong?" in the [Enhanced guide](INSTALL-ENHANCED.md).
