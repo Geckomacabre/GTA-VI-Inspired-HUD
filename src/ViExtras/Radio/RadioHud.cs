@@ -41,7 +41,7 @@ namespace ViExtras
             public string Key, GenreKey;        // art keys from stations.txt, or null
             public bool Off;
 
-            internal Art.Entry Tile, NameArt, GenreArt;
+            internal Art.Entry Tile, NameArt, GenreArt;   // rendered art; null: the label / genre set in TextKit's Anton
             internal bool Resolved;
         }
 
@@ -74,8 +74,7 @@ namespace ViExtras
         private int _index;
         private bool _muted, _isOpen, _visible;
         private long _flashUntil = -1;
-        private string _title, _artist;
-        private Art.Entry _titleArt, _artistArt;
+        private string _title, _artist;   // upper case, as #title / #artist set them
 
         private float _opFrom, _opTo;
         private long _opStart = long.MinValue;
@@ -157,13 +156,8 @@ namespace ViExtras
         /// </summary>
         public void NowPlaying(string title, string artist)
         {
-            if (string.IsNullOrEmpty(title)) title = artist = null;
-            if (string.IsNullOrEmpty(artist)) artist = null;
-            if (title == _title && artist == _artist) return;
-            _title = title;
-            _artist = artist;
-            _titleArt = title != null ? RadioImages.TextLine(title, TitlePx, LineHeight, LetterSpacing, InfoW) : null;
-            _artistArt = artist != null ? RadioImages.TextLine(artist, ArtistPx, LineHeight, LetterSpacing, InfoW) : null;
+            _title = string.IsNullOrEmpty(title) ? null : title.ToUpperInvariant();
+            _artist = _title == null || string.IsNullOrEmpty(artist) ? null : artist.ToUpperInvariant();
         }
 
         private void SetMuted(bool muted, long now)
@@ -269,14 +263,30 @@ namespace ViExtras
             Canvas.Rect(cx - LineW * 0.5f, InfoTop + LineY, LineW, LineH, text);
             Item station = _index >= 0 && _index < _list.Count ? Resolve(_list[_index]) : null;
             if (station == null) return;
-            Centred(station.NameArt, cx, InfoTop + StationY, text);
+            if (station.NameArt != null) Centred(station.NameArt, cx, InfoTop + StationY, text);
+            else Line(station.Label, StationPx, cx, InfoTop + StationY, text);
             if (station.Off) return;   // a highlighted RADIO OFF tile blanks the rest
-            if (_titleArt != null)
+            if (_title != null)
             {
-                Centred(_titleArt, cx, InfoTop + TitleY, text);
-                Centred(_artistArt, cx, InfoTop + ArtistY, text);
+                Line(_title, TitlePx, cx, InfoTop + TitleY, text);
+                Line(_artist, ArtistPx, cx, InfoTop + ArtistY, text);
             }
-            else if (_genreLine) Centred(station.GenreArt, cx, InfoTop + ArtistY, text);
+            else if (_genreLine)
+            {
+                if (station.GenreArt != null) Centred(station.GenreArt, cx, InfoTop + ArtistY, text);
+                else Line(station.Genre, ArtistPx, cx, InfoTop + ArtistY, text);
+            }
+        }
+
+        // One #station / #title / #artist line in TextKit's Anton (drawn from a
+        // texture dictionary, so on Enhanced too), centred, cut with an ellipsis at
+        // #info's width. top is the CSS line box's (line-height 1.05); TextKit
+        // takes the top of a line-height 1 box, centred in it.
+        private static void Line(string s, float px, float cx, float top, Color color)
+        {
+            if (string.IsNullOrEmpty(s)) return;
+            TextKit.Draw(s.ToUpperInvariant(), TextFace.Radio, px, cx, top + (LineHeight - 1f) * px * 0.5f, color,
+                TextAlign.Center, false, LetterSpacing, InfoW);
         }
 
         private static Art.Entry Pic(Art.Entry e, bool dim) => dim ? RadioImages.Muted(e) : e;
@@ -316,12 +326,8 @@ namespace ViExtras
             }
             // app.js fallbackNode: the label as text on the tile.
             if (it.Tile == null) it.Tile = RadioImages.FallbackTile(it.Label ?? "");
-            if (it.NameArt == null) it.NameArt = RadioImages.TextLine(it.Label, StationPx, LineHeight, LetterSpacing, InfoW);
-            if (!string.IsNullOrEmpty(it.Genre))
-            {
-                if (it.GenreKey != null) it.GenreArt = Art.Get("radio_genre_" + it.GenreKey);
-                if (it.GenreArt == null) it.GenreArt = RadioImages.TextLine(it.Genre, ArtistPx, LineHeight, LetterSpacing, InfoW);
-            }
+            // no rendered name or genre: Draw sets the label in TextKit's Anton
+            if (!string.IsNullOrEmpty(it.Genre) && it.GenreKey != null) it.GenreArt = Art.Get("radio_genre_" + it.GenreKey);
             return it;
         }
     }

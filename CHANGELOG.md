@@ -22,6 +22,9 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **The radio wheel has a new look:** each station's logo fills its tile, the highlighted station is a little larger with a thin light outline, and the line and text are light grey.
   - Under the station name are the song playing and its artist, the game's own names for them. A talk station shows its genre instead.
   - Just after you change station the old song's name stays off for up to 3 seconds, until the new station's song is the one playing.
+  - The song and artist are set in vi_radio's Anton from a glyph atlas in the HUD pack, so they show on Enhanced too (it can't draw pictures made while the game runs).
+  - The open and close clicks are quieter (`[Radio] SoundVolume` 50 → 20).
+- **Chase music takes over from the car radio:** while you're wanted and chase music plays (the game's wanted music, or GTA6Hud's `[Music]` tracks), the car radio goes quiet, and comes back when it ends. `[Radio] ChaseMusicTakesOver = False` lets them play together.
 - **Minimap routes in the FiveM HUD's colours:** your own waypoint's route is teal (#47aba7) and a mission's or a race's is pink (#fc74a4), each with the FiveM HUD's lighter rim. They were the minimap's own light blue and a different pink. `[Minimap] RouteColours = False` in `ViExtras.ini` brings those back; it replaces `WaypointRoutePink`.
 - **The turn-by-turn box matches the route:** the square behind the arrow is teal like your waypoint's route, not FBICat's pink. The box follows your own waypoint, so it's always teal. It's drawn over FBICat's box with a mask cut from his own texture; `[Minimap] RouteColours = False` keeps his pink.
 - **LS Customs shows on the map from any distance**, like the stores, barbers and Ammu-Nation: blip 72 is added to `GTA6Hud.ini` `[MapIcons] Sprites`. It used to appear only once you were close.

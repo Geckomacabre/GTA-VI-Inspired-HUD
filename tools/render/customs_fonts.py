@@ -17,6 +17,11 @@ Faces (style.css):
             TextKit maps a-z onto A-Z.
   body      'GTAArtDeco' 400 (html/fonts/GTAArtDecoRegular.ttf), mixed case:
             list rows, names, hints.
+  radio     vi_radio's 'Anton' 400 (vi_radio/html/fonts/Anton.ttf, beside
+            vice_hud), upper case, no outline: the radio wheel's song and
+            artist lines (and a station or genre it has no picture for), which
+            are only known in game. Its capitals take the accented ones from
+            Latin-1 too, for song names.
 Letter-spacing is not baked in: TextKit adds it (the display rule's .01em is
 the caller's to pass), as it adds kerning.
 
@@ -29,7 +34,7 @@ so the atlas is always drawn at or below its own size there; build_txd.py
 gives the atlases a full mip chain for the small sizes (1.6vh = 17 px).
 
 Pictures (atlas pixels = the "CSS px" in manifest_customsfont.txt; box =
-the whole picture):
+the whole picture; the radio face has no _outline atlas, "-" in the metrics):
   customsfont_display          the display glyphs, white
   customsfont_display_outline  the shop's --outline-mid text-shadow alone
                                (eight rgba(20,20,26,.9) copies round the
@@ -73,11 +78,21 @@ OUTLINE_AXIS = 0.07
 EXTRA = "\u2191\u2193\u00b7\u2026\u2019\u201c\u201d\u2013\u2014\u00d7\u00a0"
 ASCII = "".join(chr(c) for c in range(32, 127))
 
+UPPER_LATIN1 = "".join(chr(c) for c in range(0xC0, 0xDF) if c != 0xD7) + "\u00a1\u00bf"
+
 FACES = [
-    # name, CSS class, characters (kerning is measured for every pair of them)
-    ("display", "display", "".join(c for c in ASCII if not ("a" <= c <= "z")) + EXTRA),
-    ("body", "body", ASCII + EXTRA),
+    # name, CSS class, characters (kerning is measured for every pair of them), outline layer
+    ("display", "display", "".join(c for c in ASCII if not ("a" <= c <= "z")) + EXTRA, True),
+    ("body", "body", ASCII + EXTRA, True),
+    ("radio", "radio", "".join(c for c in ASCII if not ("a" <= c <= "z")) + EXTRA + UPPER_LATIN1, False),
 ]
+
+# Each face's font stack, weight and whether it is set condensed (METRICS).
+FAMILY = {
+    "display": ("'CustomsDisplay', 'Bahnschrift Condensed', 'Arial Narrow', 'GTAArtDeco', sans-serif", 700, True),
+    "body": ("'GTAArtDeco', 'Segoe UI', Arial, sans-serif", 400, False),
+    "radio": ("'Anton', Impact, sans-serif", 400, False),
+}
 KERN_MIN = 0.05    # px at BASE; the page measures widths to 1/64 px
 
 EDGE = "rgba(20, 20, 26, .9)"
@@ -89,19 +104,21 @@ def outline_shadow():
     return ", ".join(f"{x:.3f}px {y:.3f}px 0 {EDGE}" for x, y in offs)
 
 
-def page_html(fonts):
-    """A blank page with the shop's font rules and the two faces' CSS."""
+def page_html(fonts, anton):
+    """A blank page with the shop's font rules, vi_radio's Anton and the faces' CSS."""
     url = lambda f: "file:///" + os.path.join(fonts, f).replace("\\", "/")
     return f"""<!DOCTYPE html><html><head><meta charset="utf-8"><style>
 @font-face {{ font-family: 'GTAArtDeco'; src: url('{url("GTAArtDecoRegular.ttf")}') format('truetype'); font-weight: 400; font-style: normal; font-display: block; }}
 @font-face {{ font-family: 'GTAArtDeco'; src: url('{url("GTAArtDecoMedium.ttf")}') format('truetype'); font-weight: 500; font-style: normal; font-display: block; }}
 @font-face {{ font-family: 'GTAArtDeco'; src: url('{url("GTAArtDecoBold.ttf")}') format('truetype'); font-weight: 700; font-style: normal; font-display: block; }}
 @font-face {{ font-family: 'CustomsDisplay'; src: local('Bahnschrift'); font-weight: 300 700; font-stretch: 75% 100%; }}
+@font-face {{ font-family: 'Anton'; src: url('{"file:///" + anton.replace(chr(92), "/")}') format('truetype'); font-weight: 400; font-style: normal; font-display: block; }}
 html, body {{ margin: 0; padding: 0; background: transparent; }}
 body {{ color: #fff; -webkit-font-smoothing: antialiased; }}
 .display {{ font-family: 'CustomsDisplay', 'Bahnschrift Condensed', 'Arial Narrow', 'GTAArtDeco', sans-serif;
            font-weight: 700; font-stretch: 75%; text-transform: uppercase; }}
 .body {{ font-family: 'GTAArtDeco', 'Segoe UI', Arial, sans-serif; font-weight: 400; }}
+.radio {{ font-family: 'Anton', Impact, sans-serif; font-weight: 400; text-transform: uppercase; }}
 .g {{ position: absolute; font-size: {BASE}px; line-height: 1; white-space: pre; letter-spacing: 0; }}
 .mark {{ display: inline-block; width: 0; height: 0; vertical-align: baseline; }}
 .outline .g {{ color: transparent; text-shadow: {outline_shadow()}; }}
@@ -226,21 +243,28 @@ def pack(sizes, width):
     return pos, y + shelf + GAP
 
 
-def render_face(browser, ctx, html_path, name, cls, chars, out_dir):
+def vi_radio_anton(ctx):
+    """vi_radio sits beside vice_hud too; its page's Anton."""
+    path = os.path.join(os.path.dirname(leonida_dir(ctx)), "vi_radio", "html", "fonts", "Anton.ttf")
+    if not os.path.isfile(path):
+        raise SystemExit(f"customsfont: no vi_radio Anton beside vice_hud ({path})")
+    return path
+
+
+def render_face(browser, ctx, html_path, name, cls, chars, outline, out_dir):
     from PIL import Image
 
     rows = (len(chars) + COLS - 1) // COLS
     page = browser.new_page(viewport={"width": COLS * SLOT, "height": rows * SLOT}, device_scale_factor=1)
     page.goto("file:///" + html_path.replace("\\", "/"))
     page.wait_for_load_state("load")
-    family = "'CustomsDisplay', 'Bahnschrift Condensed', 'Arial Narrow', 'GTAArtDeco', sans-serif" if cls == "display" \
-        else "'GTAArtDeco', 'Segoe UI', Arial, sans-serif"
-    page.evaluate("() => Promise.all([document.fonts.load(\"700 64px CustomsDisplay\"), document.fonts.load(\"400 64px GTAArtDeco\")])")
+    family, weight, condensed = FAMILY[cls]
+    page.evaluate("() => Promise.all([document.fonts.load(\"700 64px CustomsDisplay\"), document.fonts.load(\"400 64px GTAArtDeco\"), document.fonts.load(\"400 64px Anton\")])")
     placed = page.evaluate(SLOTS, {"chars": list(chars), "cls": cls, "slot": SLOT, "cols": COLS, "penX": PEN_X, "top": LINE_TOP})
 
     with tempfile.TemporaryDirectory() as tmp:
         shots = {}
-        for layer, body_cls in (("plain", ""), ("outline", "outline")):
+        for layer, body_cls in (("plain", ""), ("outline", "outline")) if outline else (("plain", ""),):
             page.evaluate("c => { document.body.className = c; }", body_cls)
             page.wait_for_timeout(100)
             path = os.path.join(tmp, layer + ".png")
@@ -248,8 +272,7 @@ def render_face(browser, ctx, html_path, name, cls, chars, out_dir):
             shots[layer] = Image.open(path).convert("RGBA")
             shots[layer].load()
     page.evaluate("() => { document.body.className = ''; }")
-    m = page.evaluate(METRICS, {"cls": cls, "family": family, "weight": 700 if cls == "display" else 400,
-                                "condensed": cls == "display"})
+    m = page.evaluate(METRICS, {"cls": cls, "family": family, "weight": weight, "condensed": condensed})
     kerns = page.evaluate(KERN, {"cls": cls, "set": chars, "min": KERN_MIN})
     page.close()
 
@@ -299,7 +322,7 @@ def render_face(browser, ctx, html_path, name, cls, chars, out_dir):
         img.save(os.path.join(out_dir, names[layer] + ".png"))
         ctx.manifest[names[layer]] = (float(width), float(height), 0.0, 0.0, float(width), float(height))
     print(f"  {name}: {len(chars)} glyphs, atlas {width} x {height}, {len(kerns)} kerning pairs")
-    return {"name": name, "atlas": atlas, "outline": atlas + "_outline", "w": width, "h": height,
+    return {"name": name, "atlas": atlas, "outline": atlas + "_outline" if outline else "-", "w": width, "h": height,
             "metrics": m, "glyphs": glyphs, "kerns": kerns}
 
 
@@ -328,7 +351,8 @@ HEADER = """# Leonida Customs glyph metrics, written by tools/render/customs_fon
 #   oy        how far the baseline is below the cell's top
 # kern <face> <codeA> <codeB> <adjust>
 #   added to the pen between A and B (the face's kerning as the browser shapes
-#   it); pairs not listed are 0. The display face lists upper case only.
+#   it); pairs not listed are 0. The display and radio faces list upper case only;
+#   the radio face has no outline atlas ("-").
 """
 
 
@@ -340,9 +364,9 @@ def render(browser, ctx):
     with tempfile.TemporaryDirectory() as tmp:
         html_path = os.path.join(tmp, "customs_fonts.html")
         with open(html_path, "w", encoding="utf-8") as f:
-            f.write(page_html(fonts))
-        for name, cls, chars in FACES:
-            faces.append(render_face(browser, ctx, html_path, name, cls, chars, OUT))
+            f.write(page_html(fonts, vi_radio_anton(ctx)))
+        for name, cls, chars, outline in FACES:
+            faces.append(render_face(browser, ctx, html_path, name, cls, chars, outline, OUT))
 
     with open(os.path.join(OUT, "customs_glyphs.txt"), "w", encoding="utf-8", newline="\n") as f:
         f.write(HEADER)

@@ -38,7 +38,10 @@ namespace ViExtras
     /// HUD. Letting go closes it. GTA's next / previous station keys still
     /// change station without the wheel on a keyboard. Under the station name
     /// go the song playing and its artist, the game's own names for them (the
-    /// genre when there is no song, as on a talk station). Nothing opens or mutes
+    /// genre when there is no song, as on a talk station). While you are wanted
+    /// and chase music plays (the game's wanted music, or GTA6Hud's own chase
+    /// tracks), the car radio goes quiet and comes back when it ends
+    /// ([Radio] ChaseMusicTakesOver). Nothing opens or mutes
     /// while something else has the keys (HudBridge.UiInTheWay): a GTA6Hud
     /// menu or wheel, the phone, the on-screen keyboard, a 2.5 panel.
     ///
@@ -74,7 +77,7 @@ namespace ViExtras
         private readonly int _timeScaleFade;
         private readonly string _timecycle;
         private readonly float _timecycleStrength;
-        private readonly bool _hiDof, _hideRadar, _disableRadioHud, _sounds, _hudEnabled, _includeOff, _loud;
+        private readonly bool _hiDof, _hideRadar, _disableRadioHud, _sounds, _hudEnabled, _includeOff, _loud, _chaseTakesOver;
         private readonly float _soundVolume;
         private readonly string _offLabel;
         private readonly HashSet<string> _hidden = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -110,6 +113,12 @@ namespace ViExtras
         private long _nextTrackPoll, _stationSince;
         private string _trackStation, _trackTitle, _trackArtist;
         private int _audible = -1, _audibleAtSwitch = -1, _trackId = -1;
+        // the chase music has the car's speakers (not the player's own mute)
+        private bool _chaseQuiet;
+        private long _chaseSeenAt;
+        private static readonly Hash AudioIsMusicPlaying = (Hash)0x845FFC3A4FEEFA3EUL;   // AUDIO_IS_MUSIC_PLAYING: the game's score
+        private FieldInfo _hudMusic, _musicLevel;
+        private bool _musicLooked;
 
         /// <summary>exports IsOpen / IsMuted.</summary>
         public static bool IsOpen { get; private set; }
@@ -141,11 +150,12 @@ namespace ViExtras
             _hideRadar = Config.Get(S, "HideRadar", true);
             _disableRadioHud = Config.Get(S, "DisableRadioHUD", true);
             _sounds = Config.Get(S, "RadioSounds", true);
-            _soundVolume = Config.Get(S, "SoundVolume", 50) / 100f;
+            _soundVolume = Config.Get(S, "SoundVolume", 20) / 100f;   // the open / close clicks, kept subtle
             _hudEnabled = Config.Get(S, "Hud", true);
             _includeOff = Config.Get(S, "IncludeOff", true);
             _offLabel = Config.Get(S, "OffLabel", "RADIO OFF") ?? "RADIO OFF";
             _loud = Config.Get(S, "LoudRadio", true);
+            _chaseTakesOver = Config.Get(S, "ChaseMusicTakesOver", true);
             foreach (string name in Split(Config.Get(S, "HiddenStations", ""))) _hidden.Add(name);
             _mutingScenes = Split(Config.Get(S, "RadioMutingScenes", "CHARACTER_CHANGE_IN_SKY_SCENE")).ToArray();
             _hud = new RadioHud(Config.Get(S, "SlideTime", 110), Config.Get(S, "MuteDim", true), Config.Get(S, "SideIcons", true),
@@ -327,22 +337,63 @@ namespace ViExtras
         private void ApplyMute()
         {
             int veh = CurrentVehicle();
+            bool silent = _muted || _chaseQuiet;   // the player's mute, or the chase music's turn
             // the car muted before gets its radio back: on unmute, and when the mute moves to another
             // car (unmuting on foot or from another car used to leave it silent for good)
-            if (_mutedVehicle != 0 && (!_muted || veh != _mutedVehicle))
+            if (_mutedVehicle != 0 && (!silent || veh != _mutedVehicle))
             {
                 if (Function.Call<bool>(Hash.DOES_ENTITY_EXIST, _mutedVehicle)) Function.Call(Hash.SET_VEHICLE_RADIO_ENABLED, _mutedVehicle, true);
                 _mutedVehicle = 0;
             }
             if (veh != 0)
             {
-                Function.Call(Hash.SET_VEHICLE_RADIO_ENABLED, veh, !_muted);
-                _mutedVehicle = _muted ? veh : 0;
+                Function.Call(Hash.SET_VEHICLE_RADIO_ENABLED, veh, !silent);
+                _mutedVehicle = silent ? veh : 0;
             }
             // The mobile radio is only this wheel's business when it may be used on
             // foot; otherwise unmuting would switch the on-foot radio on in story mode.
-            if (_allowOnFoot) Function.Call(Hash.SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY, !_muted);
+            if (_allowOnFoot) Function.Call(Hash.SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY, !silent);
             IsMuted = _muted;
+        }
+
+        // The chase music takes over from the radio: while you are wanted and the
+        // game's wanted music (or GTA6Hud's chase tracks) plays, the car radio is
+        // off. It stays off until the music has been gone 3 s, so a gap between
+        // tracks doesn't bring it back, and comes back at once when the stars go.
+        private void ChaseMusic()
+        {
+            if (!_chaseTakesOver) return;
+            long now = RealTime.Ms;
+            bool wanted = Game.Player.WantedLevel > 0;
+            bool music = wanted && (Function.Call<bool>(AudioIsMusicPlaying) || Gta6HudChaseMusic());
+            if (music) _chaseSeenAt = now;
+            bool quiet = wanted && (music || (_chaseQuiet && now - _chaseSeenAt < 3000));
+            if (quiet == _chaseQuiet) return;
+            _chaseQuiet = quiet;
+            Log.Write("Radio", quiet ? "chase music: the radio is off" : "chase music over: the radio is back");
+            ApplyMute();
+        }
+
+        // GTA6Hud's MusicPlayer (its [Music] chase tracks) audible: its fade level above nothing.
+        private bool Gta6HudChaseMusic()
+        {
+            object hud = HudBridge.Gta6Hud();
+            if (hud == null) return false;
+            if (!_musicLooked)
+            {
+                _musicLooked = true;
+                const BindingFlags Own = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                _hudMusic = hud.GetType().GetField("_music", Own);
+                _musicLevel = _hudMusic?.FieldType.GetField("_level", Own);
+                if (_musicLevel != null && _musicLevel.FieldType != typeof(float)) _musicLevel = null;
+            }
+            if (_musicLevel == null) return false;
+            try
+            {
+                object music = _hudMusic.GetValue(hud);
+                return music != null && (float)_musicLevel.GetValue(music) > 0.01f;
+            }
+            catch { return false; }
         }
 
         // ---- NUI (the HUD) ------------------------------------------------------------------
@@ -702,7 +753,8 @@ namespace ViExtras
 
         private void Housekeeping()
         {
-            if (_muted && CurrentVehicle() != _mutedVehicle) ApplyMute();
+            if ((_muted || _chaseQuiet) && CurrentVehicle() != _mutedVehicle) ApplyMute();
+            ChaseMusic();
 
             string playing = PlayerStation();
             if (playing != _lastStation)
@@ -777,9 +829,9 @@ namespace ViExtras
                     _wheelButtonHeld = false;
                     HudBridge.HoldVehicleWheelButton(false);
                 }
-                if (_muted)
+                if (_muted || _chaseQuiet)
                 {
-                    _muted = false;
+                    _muted = _chaseQuiet = false;
                     ApplyMute();
                 }
                 IsOpen = false;

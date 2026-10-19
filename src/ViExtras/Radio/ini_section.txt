@@ -33,7 +33,7 @@ HideRadar = True
 ; Hide the game's own radio station HUD for good.
 DisableRadioHUD = True
 RadioSounds = True
-SoundVolume = 50
+SoundVolume = 20
 ; The HUD. Under the station name go the song and its artist; with no song
 ; (a talk station) the genre, which Subtitle = none drops. MuteDim drains it of
 ; colour while muted. SlideTime is real ms.
@@ -49,6 +49,9 @@ OffLabel = RADIO OFF
 HiddenStations =
 ; Let the car radio carry outside the car, as the game's "big speaker" cars do.
 LoudRadio = True
+; While you are wanted and chase music plays (the game's wanted music, or
+; GTA6Hud's [Music] tracks), the car radio goes quiet until it ends.
+ChaseMusicTakesOver = True
 ; Audio scenes that silence the car radio, stopped while a station plays and
 ; started again after (comma separated; empty leaves audio scenes alone).
 RadioMutingScenes = CHARACTER_CHANGE_IN_SKY_SCENE

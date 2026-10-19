@@ -1,8 +1,9 @@
 // Pictures the radio wheel makes at run time. The station tiles, names and
 // genres vi_radio ships are rendered from its own page (tools/render/radio.py);
-// this covers what cannot be known in advance (the song playing, a station the
-// game has that vi_radio's table does not, a changed OffLabel) and the muted
-// look. In the single-player look: no frame on the tiles, no shadow on the text.
+// this covers what cannot be known in advance (the tile of a station the game
+// has that vi_radio's table does not, a changed OffLabel) and the muted look;
+// text known only in game (the song, such a station's name) is set with
+// TextKit's Anton. In the single-player look: no frame on the tiles.
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,7 +18,6 @@ namespace ViExtras
     {
         private const float Px = 2f;        // raster pixels per CSS px, as the rendered art
         private const string Version = "r3";
-        private const string Ellipsis = "\u2026";   // text-overflow: ellipsis (Anton has the glyph)
 
         // style.css, at vi_radio's Config.Hud defaults
         private const float Icon = 103f, Pad = 4f;
@@ -116,71 +116,6 @@ namespace ViExtras
             catch (Exception ex)
             {
                 Log.Write("Radio", "fallback tile: " + ex.Message);
-            }
-            Made[key] = result;
-            return result;
-        }
-
-        // ---- text: the song, and names vi_radio has no art for --------------------
-
-        /// <summary>
-        /// One line of #station / #title / #artist: Anton, upper case, centred,
-        /// white (the HUD tints it), cut with an ellipsis past maxWidth as
-        /// text-overflow does. The box is the text's advance width by the line
-        /// box, as in the rendered radio_name_* pictures. GDI+, so close to the
-        /// page rather than identical.
-        /// </summary>
-        public static Art.Entry TextLine(string text, float fontPx, float lineHeight, float spacingEm, float maxWidth)
-        {
-            if (string.IsNullOrEmpty(text)) return null;
-            string key = "x|" + fontPx.ToString("0.###") + "|" + lineHeight + "|" + spacingEm + "|" + maxWidth + "|" + text;
-            if (Made.TryGetValue(key, out Art.Entry done)) return done;
-            Art.Entry result = null;
-            try
-            {
-                string upper = text.ToUpperInvariant().Trim();
-                FontFamily fam = Anton();
-                float em = fontPx * Px;
-                float[] pens = Advances(upper, fam, em, spacingEm, out float advance);
-                if (advance > maxWidth * Px)
-                {
-                    // Chrome keeps whole characters and puts the ellipsis after them.
-                    int keep = upper.Length;
-                    string cutText;
-                    do
-                    {
-                        keep--;
-                        cutText = upper.Substring(0, keep).TrimEnd() + Ellipsis;
-                        pens = Advances(cutText, fam, em, spacingEm, out advance);
-                    }
-                    while (keep > 1 && advance > maxWidth * Px);
-                    upper = cutText;
-                }
-                const float padCss = 12f;
-                float pad = padCss * Px;
-                float lineH = fontPx * lineHeight * Px;
-                int w = (int)Math.Ceiling(advance + pad * 2), h = (int)Math.Ceiling(lineH + pad * 2);
-                string path = CachePath("x", key);
-                if (!File.Exists(path))
-                {
-                    using (var bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb))
-                    {
-                        float baseline = pad + Baseline(fam, em, lineH);
-                        using (var glyphs = new GraphicsPath())
-                        {
-                            AddText(glyphs, upper, pens, fam, em, pad, baseline);
-                            // clipped to the line box (overflow: hidden)
-                            int top = (int)Math.Floor(pad), bottom = (int)Math.Ceiling(pad + lineH);
-                            Paint(bmp, Coverage(glyphs, w, h), Color.White, top, bottom);
-                        }
-                        Save(bmp, path);
-                    }
-                }
-                result = new Art.Entry { Path = path, W = w / Px, H = h / Px, BoxX = padCss, BoxY = padCss, BoxW = advance / Px, BoxH = lineH / Px };
-            }
-            catch (Exception ex)
-            {
-                Log.Write("Radio", "text: " + ex.Message);
             }
             Made[key] = result;
             return result;
@@ -292,41 +227,6 @@ namespace ViExtras
                 }
                 g.FillPath(Brushes.White, path);
             }
-        }
-
-        private static float[] Coverage(GraphicsPath path, int w, int h)
-        {
-            var cover = new float[w * h];
-            using (var bmp = new Bitmap(w, h, PixelFormat.Format32bppArgb))
-            {
-                using (Graphics g = Graphics.FromImage(bmp))
-                {
-                    g.Clear(Color.Transparent);
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                    g.FillPath(Brushes.White, path);
-                }
-                Pixels(bmp, (int x, int y, ref byte b, ref byte gg, ref byte r, ref byte a) => { cover[y * w + x] = a / 255f; });
-            }
-            return cover;
-        }
-
-        // Lays `color` at `cover` over what is in the bitmap, rows top..bottom only.
-        private static void Paint(Bitmap bmp, float[] cover, Color color, int top, int bottom)
-        {
-            int w = bmp.Width;
-            Pixels(bmp, (int x, int y, ref byte b, ref byte g, ref byte r, ref byte a) =>
-            {
-                float s = y >= top && y < bottom ? cover[y * w + x] * color.A / 255f : 0f;
-                if (s <= 0f) return;
-                float da = a / 255f;
-                float oa = s + da * (1f - s);
-                if (oa <= 0f) return;
-                r = (byte)Math.Round((color.R * s + r * da * (1f - s)) / oa);
-                g = (byte)Math.Round((color.G * s + g * da * (1f - s)) / oa);
-                b = (byte)Math.Round((color.B * s + b * da * (1f - s)) / oa);
-                a = (byte)Math.Round(oa * 255f);
-            });
         }
 
         private delegate void PixelFn(int x, int y, ref byte b, ref byte g, ref byte r, ref byte a);
