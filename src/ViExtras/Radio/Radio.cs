@@ -332,7 +332,8 @@ namespace ViExtras
             if (_customOn != null) _customOn = list.Find(x => x.Name == _customOn.Name) ?? _customOn;
 
             // keep the highlight on whatever is actually playing
-            string playing = _customOn != null ? _customOn.Name : PlayerStation() ?? OffName;
+            string playing = _customOn != null ? _customOn.Name : PlayerStation();
+            if (string.IsNullOrEmpty(playing)) playing = OffName;
             for (int i = 0; i < _stations.Count; i++)
                 if (string.Equals(_stations[i].Name, playing, StringComparison.OrdinalIgnoreCase)) { _index = i; break; }
             if (_index >= _stations.Count) _index = 0;
@@ -823,7 +824,8 @@ namespace ViExtras
             {
                 // your own music has the car while its radio stays off; a station put on
                 // another way (GTA's next / previous station keys) takes over from it
-                if (playing == null || playing == OffName) return;
+                // (the game names no station, an empty name, while the radio is off)
+                if (string.IsNullOrEmpty(playing) || playing == OffName) return;
                 _customOn = null;
                 Log.Write("Radio", "custom music: the car's radio was switched on (" + playing + ")");
             }
