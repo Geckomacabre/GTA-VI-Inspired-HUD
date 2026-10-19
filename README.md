@@ -71,7 +71,7 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 
 ## ⚠️ Known bugs (being fixed)
 
-- **Enhanced:** switching to Michael or Trevor from the HUD's wheel may not work.
+- Switching to **Michael or Trevor** from the HUD's character wheel may not work (Legacy and Enhanced).
 - **Enhanced:** don't switch to Lucia yet. It can crash.
 - The minimap's waypoint route can look shaky.
 - Greet / antagonize only work on the keyboard for now.

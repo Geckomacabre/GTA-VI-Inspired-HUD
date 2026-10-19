@@ -127,7 +127,7 @@ These live in new script files next to FBICat's `GTA6Hud.dll`, which is left as 
 
 ### Known issues
 
-- **Enhanced: switching to Michael or Trevor from the HUD's character wheel may not work.** The game ignores the wheel's simulated key press. A fix is being tested.
+- **Switching to Michael or Trevor from the HUD's character wheel may not work, on Legacy and Enhanced.** The game ignores the wheel's simulated key press. A fix is being tested.
 - **The minimap's waypoint route can look shaky.** A smoother route is being tested.
 - **Greet / Antagonize** are keyboard only for now (Y / U).
 - **Enhanced:** the random crashes have a fix (above), still being confirmed in play. If Enhanced crashes, send the logs listed in the install guide.
