@@ -8,6 +8,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ### Changed
 
+- **Support Discord:** [discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH), at the top of the README and both install guides, for questions about this version. FBICat's Discord is for his original.
 - **Binoculars are on the weapon wheel:** hold Tab (LB on a pad) and let go on the binoculars tile.
   - The tile is bottom right, or the next empty tile clockwise when a weapon sits there. It uses FBICat's binoculars icon and opens the FiveM binoculars.
   - B no longer opens them. `[Binoculars] Key = B` brings the key back, and `WheelSlot = False` takes them off the wheel.

@@ -7,7 +7,13 @@ Made by **FBICat**. Version 2.5 adds features from the [FiveM version](https://g
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
+### [💬 Support Discord](https://discord.gg/C7gE5SHEzH)
+
 </div>
+
+> 💬 **Questions or problems? Join the support Discord: [discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**
+> This version is a fork of FBICat's VI HUD. Please ask about it there or in a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues),
+> not in FBICat's Discord, which is for his original.
 
 > **Disclaimer:** fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two.
 > Some HUD art is taken from Rockstar's official GTA VI media
@@ -82,8 +88,8 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 
 ## 🆘 Something wrong?
 
-Each install guide ends with a **"Something went wrong?"** section. Still stuck?
-[Open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your
+Each install guide ends with a **"Something went wrong?"** section. Still stuck? Ask in the
+**[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your
 game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and `scripts\ViExtras.log`.
 
 ---

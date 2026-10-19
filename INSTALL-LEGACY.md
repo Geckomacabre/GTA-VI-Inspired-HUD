@@ -5,6 +5,10 @@ This guide is for the **original PC version** of GTA V. If your game folder has 
 
 Never modded GTA before? No problem. Follow the steps in order and don't skip any. It takes about 20 minutes.
 
+> 💬 **Questions or problems? Join the support Discord: [discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**
+> This version is a fork of FBICat's VI HUD. Please ask about it there or in a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues),
+> not in FBICat's Discord, which is for his original.
+
 > ⚠️ **Mods are for Story Mode only.** Never go into GTA Online with mods installed: you can get banned.
 > (Script Hook V, one of the tools below, closes the game if you try.)
 
@@ -140,7 +144,7 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 | The game **crashes while loading** | Make sure you installed the RegisterPatch (Step 6). If you have other big mods (extra characters, maps), try turning them off. |
 | A message says **Lucia is not registered** (and mentions a `VIHudSetup.exe`) | Her two packs are missing from `dlclist.xml`. Install `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` again, the same way as the others. Ignore the `VIHudSetup.exe` part of the message: this mod doesn't use it. |
 | **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
-| **Something else** | [Open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `ViMinimap.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
+| **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `ViMinimap.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
 
 ---
 
