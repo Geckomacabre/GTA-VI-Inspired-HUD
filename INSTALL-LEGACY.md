@@ -5,9 +5,11 @@ This guide is for the **original PC version** of GTA V. If your game folder has 
 
 Never modded GTA before? No problem. Follow the steps in order and don't skip any. It takes about 20 minutes.
 
-> 💬 **Questions or problems? Join the support Discord: [discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**
-> This version is a fork of FBICat's VI HUD. Please ask about it there or in a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues),
-> not in FBICat's Discord, which is for his original.
+> [!IMPORTANT]
+> ### 💬 This is a fork. Get help in OUR Discord, not FBICat's.
+> This version is a **fork of FBICat's VI HUD** with extra features. For questions or problems with it, join
+> **[our support Discord: discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)** or open a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> **Please don't ask about it in FBICat's Discord.** That one is for his original mod, not this fork.
 
 > ⚠️ **Mods are for Story Mode only.** Never go into GTA Online with mods installed: you can get banned.
 > (Script Hook V, one of the tools below, closes the game if you try.)
@@ -132,6 +134,9 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 ---
 
 ## Something went wrong?
+
+**Still stuck?** Ask in **[our support Discord](https://discord.gg/C7gE5SHEzH)** (this fork's, **not FBICat's**) or
+[open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 
 | What happens | What to do |
 | --- | --- |
