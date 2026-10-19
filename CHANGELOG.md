@@ -11,6 +11,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Binoculars are on the weapon wheel:** hold Tab (LB on a pad) and let go on the binoculars tile.
   - The tile is bottom right, or the next empty tile clockwise when a weapon sits there. It uses FBICat's binoculars icon and opens the FiveM binoculars.
   - B no longer opens them. `[Binoculars] Key = B` brings the key back, and `WheelSlot = False` takes them off the wheel.
+- **GTA's own on-foot camera.** FBICat's camera pulled in whenever you aimed or fired (LT / RT, right mouse) and held the walking camera at one distance, so V couldn't zoom out. It's off in `GTA6Hud.ini`; `[Camera] Enabled = True` brings it back.
 - **Nitrous is on Left Shift** (X / Square on a pad). FiveM's Left Alt is also GTA's character wheel. `[Nitrous] KeyboardControl = 19` puts it back on Left Alt, and the wheel then stays shut while you drive a car with a bottle.
 - **Smoother crawling:**
   - Holding W or S crawls continuously, one cycle running into the next. It used to start and stop on a timetable that didn't match the animation.

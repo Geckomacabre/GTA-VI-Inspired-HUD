@@ -34,6 +34,7 @@ Changes in 2.5.1
   - WASTED / BUSTED show every time, not just once a session, and frame the vehicle when you die in one.
   - Nitrous is on Left Shift (X / Square on a pad); Left Alt is GTA's character wheel.
   - Binoculars are on the weapon wheel (hold Tab, or LB on a pad), not on B.
+  - GTA's own on-foot camera: no zooming in when you aim or fire, and V zooms out again.
   - The crawl moves its legs: each knee draws up as the opposite arm reaches, then pushes.
 
 Changes in 2.5 (full list: CHANGELOG.md on GitHub)
