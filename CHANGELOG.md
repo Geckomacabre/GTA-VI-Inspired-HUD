@@ -39,6 +39,8 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 - **A big "Updating? You only need one file" box** in the README and the release notes.
 - **The Enhanced guide has a NaturalVision Enhanced section** (no OpenRPF; the HUD's packs go into `onigiri\dlcpacks`) and more on **AuraV-Lite**: move RenoDX's add-ons out (its menu crashes with them, and NVE comes with them), and move its menu key off F10, the HUD's settings-reload key.
+- **AuraV-Lite with NVE: make `AuraV\AuraV.ini` before the first start**, with its three `[boot]` lines at `0`, so the game doesn't crash once first (the Enhanced guide's AuraV step 3).
+- **A "Debug Assertion Failed!" box naming `renodx-dlssfix.addon64`** has a row in the Enhanced guide's troubleshooting table: that's RenoDX's DLSS fix add-on, not the HUD; without DLSS 5 you can delete it, and Visual C++ doesn't need reinstalling.
 
 ## 2.5.3 (20 October 2026)
 
