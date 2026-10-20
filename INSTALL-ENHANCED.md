@@ -231,11 +231,33 @@ heaviest settings on a weaker graphics card. If something goes wrong, `AuraV\Aur
 | You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
+| You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |
 | An error about **.NET** or **Visual C++** | Install [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer) and the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe), then restart your PC. |
 | A message says **Lucia is not registered** (and mentions a `VIHudSetup.exe`) | Her two packs are missing from `dlclist.xml`. Install `GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv` again, the same way as the others. With **NaturalVision Enhanced**, add her two lines to NVE's `dlclist.xml` instead (see the NVE row above). Ignore the `VIHudSetup.exe` part of the message: this mod doesn't use it. |
 | **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
 | **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
+
+---
+
+## Updating by hand (game in Program Files)
+
+If your game is in **Program Files** (where the Rockstar Games Launcher and Steam put it), Windows guards that folder,
+and an update through the OIV Package Installer doesn't always replace the old files. You can copy the new scripts in yourself
+instead. An `.oiv` is just a zip:
+
+1. Close the game.
+2. Copy **`GTA-VI-Inspired-HUD-Enhanced.oiv`** to your Desktop and rename the copy to **`.zip`**.
+   Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
+3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
+4. Paste it into the **`scripts`** folder in your game folder, for example
+   `C:\Program Files\Rockstar Games\Grand Theft Auto V Enhanced\scripts`. Pick **Replace the files in the destination**, then
+   **Continue** when Windows asks for admin permission.
+5. Clear Script Hook V .NET's cache, so it loads the new files: press **Win + R**, type `%LOCALAPPDATA%\assembly`
+   and press Enter, then delete the **`dl3`** folder. It's only a cache, and it's made again the next time you start
+   the game.
+6. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line that shows the version you
+   downloaded.
 
 ---
 

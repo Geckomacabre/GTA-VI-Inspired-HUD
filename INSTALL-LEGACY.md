@@ -144,11 +144,33 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 | Installing the **RegisterPatch a second time** says it **failed** ("Unable to find XML Node") | It's already installed: `dlclist.xml` lists the HUD's packs, so there was nothing to add. Your game is set up, carry on. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Your Script Hook V .NET is too old. Redo Step 3 with the newest version. |
+| You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`. Redo Step 7. |
 | The game **crashes while loading** | Make sure you installed the RegisterPatch (Step 6). If you have other big mods (extra characters, maps), try turning them off. |
 | A message says **Lucia is not registered** (and mentions a `VIHudSetup.exe`) | Her two packs are missing from `dlclist.xml`. Install `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` again, the same way as the others. Ignore the `VIHudSetup.exe` part of the message: this mod doesn't use it. |
 | **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
 | **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `ViMinimap.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
+
+---
+
+## Updating by hand (game in Program Files)
+
+If your game is in **Program Files** (where the Rockstar Games Launcher and Steam put it), Windows guards that folder,
+and an update through OpenIV doesn't always replace the old files. You can copy the new scripts in yourself
+instead. An `.oiv` is just a zip:
+
+1. Close the game.
+2. Copy **`GTA-VI-Inspired-HUD-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
+   Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
+3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
+4. Paste it into the **`scripts`** folder in your game folder, for example
+   `C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts`. Pick **Replace the files in the destination**, then
+   **Continue** when Windows asks for admin permission.
+5. Clear Script Hook V .NET's cache, so it loads the new files: press **Win + R**, type `%LOCALAPPDATA%\assembly`
+   and press Enter, then delete the **`dl3`** folder. It's only a cache, and it's made again the next time you start
+   the game.
+6. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line that shows the version you
+   downloaded.
 
 ---
 
