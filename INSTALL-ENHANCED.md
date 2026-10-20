@@ -191,16 +191,19 @@ HUD. Download it from Kypos's site.
    folder as well.
 2. In the game, go to **Settings** → **Graphics** and turn on **Ray Tracing** and **NVIDIA DLSS**. Path tracing
    needs both.
-3. **Using NaturalVision Enhanced too?** AuraV's start-up shortcuts crash NVE's loader. Open
-   **`AuraV\AuraV.ini`** and set these three to `0`:
+3. **Using NaturalVision Enhanced too?** AuraV's start-up shortcuts crash NVE's loader, so switch them off
+   **before you start the game for the first time**: in the **`AuraV`** folder, make a text file called
+   **`AuraV.ini`** with just these lines:
    ```ini
    [boot]
    skip_legal=0
    skip_menu=0
    story=0
    ```
-   AuraV writes that file the first time it runs, so with NVE the very first start can crash once. Change the
-   three lines, save, and start the game again.
+   AuraV keeps them and adds the rest of its settings to the file the first time it runs. Make sure the file is
+   called `AuraV.ini`, not `AuraV.ini.txt` (File Explorer: **View** → **Show** → **File name extensions**).
+   Already started the game with AuraV once? Then `AuraV\AuraV.ini` is already there: set those three lines to
+   `0`, save, and start the game again.
 4. **Using RenoDX** (ReShade add-ons named `renodx-*.addon64`, which **NVE comes with**)? Opening AuraV's menu
    crashes the game while they're in your game folder. Move the `renodx-*.addon64` files out of the game folder
    while you use AuraV.
