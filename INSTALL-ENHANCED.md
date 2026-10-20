@@ -201,6 +201,11 @@ HUD. Download it from Kypos's site.
    ```
    AuraV writes that file the first time it runs, so with NVE the very first start can crash once. Change the
    three lines, save, and start the game again.
+4. **Using RenoDX** (ReShade add-ons named `renodx-*.addon64`, which **NVE comes with**)? Opening AuraV's menu
+   crashes the game while they're in your game folder. Move the `renodx-*.addon64` files out of the game folder
+   while you use AuraV.
+5. **Move AuraV's menu key off F10.** F10 is also the HUD's own key for reloading its settings. Open AuraV's menu
+   once with F10, and change **"The key that opens and closes this menu"** to another key, like **F11**.
 
 Good to know: don't let **DLSS Swapper** replace GTA's DLSS files (path tracing can freeze), and go easy on the
 heaviest settings on a weaker graphics card. If something goes wrong, `AuraV\AuraV.log` says why.
@@ -217,6 +222,7 @@ heaviest settings on a weaker graphics card. If something goes wrong, `AuraV\Aur
 | --- | --- |
 | Installing the **RegisterPatch a second time** says it **failed** | It's already installed: `dlclist.xml` lists the HUD's packs, so there was nothing to add. Your game is set up, carry on. |
 | The game **closes by itself about 20 seconds after loading** | You have the normal Script Hook V .NET. Redo Step 3 with **SHVDNE**. Still happening? A ReShade add-on (a file ending in `.addon64` in your game folder) may be clashing. Move those files somewhere else and try again. |
+| The game **crashes when you open AuraV-Lite's menu** | You have RenoDX's ReShade add-ons (`renodx-*.addon64`, NVE comes with them) in your game folder. Move them out while you use AuraV (see "Optional: AuraV-Lite" above). |
 | You use **AuraV-Lite** with **NaturalVision Enhanced**, and the game **crashes at start-up** | Set `skip_legal=0`, `skip_menu=0` and `story=0` under `[boot]` in `AuraV\AuraV.ini` (see "Optional: AuraV-Lite" above), then start the game again. |
 | You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |

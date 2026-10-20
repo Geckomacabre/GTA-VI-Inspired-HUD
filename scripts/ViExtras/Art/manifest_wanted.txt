@@ -15,3 +15,8 @@ wanted_tell_people 30.00 30.00 2.91 2.86 24.95 24.95
 wanted_tell_person 30.00 30.00 2.91 2.86 24.95 24.95
 wanted_tell_vehicle 30.00 30.00 2.91 2.86 24.95 24.95
 wanted_tell_weapon 30.00 30.00 2.91 2.86 24.95 24.95
+wanted_star_contact 30.00 30.00 0.00 0.00 30.00 30.00
+wanted_star_hollow 30.00 30.00 0.00 0.00 30.00 30.00
+wanted_star_red 30.00 30.00 0.00 0.00 30.00 30.00
+wanted_star_searching 30.00 30.00 0.00 0.00 30.00 30.00
+wanted_star_searching_on 30.00 30.00 0.00 0.00 30.00 30.00

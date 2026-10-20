@@ -34,7 +34,7 @@ namespace ViExtras
     /// the minimap goes, and the station carousel comes up at the top of the
     /// screen. Left / Right or the mouse wheel step through the stations (right
     /// stick, D-pad Right / Up on a pad), each one tuned as it is reached. Space
-    /// (D-pad Down) mutes while the wheel is open; O mutes anywhere, flashing the
+    /// (a right-stick click) mutes while the wheel is open; O mutes anywhere, flashing the
     /// HUD. Letting go closes it. GTA's next / previous station keys still
     /// change station without the wheel on a keyboard. Under the station name
     /// go the song playing and its artist, the game's own names for them (the
@@ -45,9 +45,11 @@ namespace ViExtras
     /// the way vi_radio throws its switch: Down (the arrow key) or the right stick
     /// pushed down in the wheel, Up back to the radio. Its list is the tracks in
     /// scripts\Hud\Radio\CustomMusic as MY MUSIC and each subfolder with tracks
-    /// as a station of its own (CustomMusic: GTA6Hud's own player). The game's
-    /// next / previous track keys skip through it, and it stops when you leave the
-    /// car. Nothing opens or mutes
+    /// as a station of its own (CustomMusic, played by MusicPlayer). In the
+    /// wheel, Left / Right (the right stick on a pad) change the song while it
+    /// plays, and the mouse wheel (D-pad Right / Up) steps through its stations;
+    /// the game's next / previous track keys skip too, and it stops when you leave
+    /// the car. Nothing opens or mutes
     /// while something else has the keys (HudBridge.UiInTheWay): a GTA6Hud
     /// menu or wheel, the phone, the on-screen keyboard, a 2.5 panel.
     ///
@@ -66,12 +68,13 @@ namespace ViExtras
         private const int CellUp = 172, CellDown = 173, CellLeft = 174, CellRight = 175;
         private const int WheelNext = 14, WheelPrev = 15;
         private const int LookLR = 1, LookUD = 2, RightX = 220, RightY = 221;
+        private const int FrontendRs = 210, VehLookBehind = 79;   // a right-stick click
         private const int CharacterWheel = 19, MultiplayerInfo = 20, Headlight = 74, VehNextWeapon = 99, VehPrevWeapon = 100;
         private const int HudRadioStations = 16;
         private const string OffName = "OFF";
 
         // ---- settings, [Radio] in ViExtras.ini (defaults: vi_radio's config.lua) --------
-        private readonly bool _enabled;
+        private bool _enabled, _wasOn;   // _enabled: [Radio] Enabled, switched live from GTA6Hud's HUD OPTIONS (HudMenu)
         private readonly Keys _key, _muteKey;
         private readonly bool _scrollRadio, _autoRepeat;
         private readonly int _autoRepeatDelay, _autoRepeatRate;
@@ -106,6 +109,8 @@ namespace ViExtras
         private long _nextHousekeeping, _nextScenes;
         private string _lastStation = "\0";
         private readonly HashSet<string> _suspendedScenes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _restartedScenes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        private string _tuned;   // the station last put on from this wheel (OffName: the radio off, or your own music)
         private bool _minimapHeld;
         private bool _timeOwned;
         private float _timeScaleNow = 1f;
@@ -132,6 +137,7 @@ namespace ViExtras
         private readonly bool _invertSwitch;
         private List<RadioHud.Item> _radioStations = new List<RadioHud.Item>(), _odStations = new List<RadioHud.Item>();
         private string _radioBefore;
+        private long _customSince, _muteToggledAt;   // when your music last took the car; the last mute toggle
 
         /// <summary>exports IsOpen / IsMuted.</summary>
         public static bool IsOpen { get; private set; }
@@ -142,6 +148,7 @@ namespace ViExtras
             Paths.Init(BaseDirectory);
             const string S = "Radio";
             _enabled = Config.Get(S, "Enabled", true);
+            Instance = this;
             _key = Config.Get(S, "Key", Keys.None);
             _muteKey = Config.Get(S, "MuteKey", Keys.O);
             _scrollRadio = Config.Get(S, "ScrollRadio", true);
@@ -233,7 +240,12 @@ namespace ViExtras
                 ReleaseSwapWheel();
                 return;
             }
-            if (!_enabled) return;
+            if (!_enabled)
+            {
+                if (_wasOn) StandDown();
+                return;
+            }
+            _wasOn = true;
             try
             {
                 long now = RealTime.Ms;
@@ -298,9 +310,9 @@ namespace ViExtras
             }
         }
 
-        // D-pad Down mutes in the wheel on a pad, and is GTA6Hud's character swap wheel too, which
-        // reads it even disabled: the swap wheel is held shut while the wheel is open, and after it
-        // closes until D-pad Down is let go (as the binoculars do).
+        // D-pad Down is GTA6Hud's character swap wheel, which reads it even disabled: the swap wheel
+        // is held shut while the wheel is open, and after it closes until D-pad Down is let go (as
+        // the binoculars do). It used to mute in the wheel too; a right-stick click does that now.
         private bool _swapHeld;
 
         private void HoldSwapWheel()
@@ -400,13 +412,15 @@ namespace ViExtras
             int veh = CurrentVehicle();
             if (entry.Custom != null)
             {
-                // your own music: the car's radio off, GTA6Hud's player on this folder
+                // your own music: the car's radio off, MusicPlayer on this folder
                 if (veh != 0) Function.Call(Hash.SET_VEH_RADIO_STATION, veh, OffName);
                 Function.Call(Hash.SET_RADIO_TO_STATION_NAME, OffName);
                 _customOn = entry;
                 _customVeh = veh;
                 _lastStation = OffName;
                 _custom.Select(entry.Custom);
+                _customSince = RealTime.Ms;
+                _tuned = OffName;
                 return;
             }
             _customOn = null;
@@ -420,6 +434,10 @@ namespace ViExtras
                 if (_loud) Function.Call(Hash.SET_VEHICLE_RADIO_LOUD, veh, entry.Name != OffName);
             }
             Function.Call(Hash.SET_RADIO_TO_STATION_NAME, entry.Name);
+            _tuned = entry.Name;
+            // a muting scene left running holds the radio off and makes it name no station, so
+            // waiting to see one play would wait for good: a station put on lifts them now
+            if (entry.Name != OffName && !_muted) LiftScenes();
         }
 
         private void ApplyMute()
@@ -530,7 +548,7 @@ namespace ViExtras
 
         // Your own music, every frame: it plays while its station is on in the car
         // it was put on in (not muted, not under chase music; quiet over the pause
-        // menu, a cutscene, a black screen or death, as GTA6Hud's own player), at the game's radio
+        // menu, a cutscene, a black screen or death, as GTA6Hud's own player was), at the game's radio
         // volume times [Radio] CustomMusicVolume; the game's next / previous track
         // keys skip through it. Leaving or changing car ends it.
         private void CustomTick(long now)
@@ -772,6 +790,7 @@ namespace ViExtras
             Disable(Headlight);
 
             bool pad = _openedByControl;
+            if (pad) Disable(VehLookBehind);   // a right-stick click mutes in here
             if (pad && _lockCamera)
             {
                 Disable(LookLR);
@@ -810,15 +829,27 @@ namespace ViExtras
                 else if (up) SetOnDemand(false);
             }
 
-            // Mute: Spacebar on a keyboard, D-pad Down on a pad.
+            // Mute: Spacebar on a keyboard, a right-stick click on a pad (D-pad Down is the
+            // character wheel's).
             if (_muteInWheel)
             {
-                if (pad) { if (JustPressed(CellDown)) ToggleMute(); }
+                // (the click reads as two controls; one toggle per click however they arrive)
+                if (pad)
+                {
+                    if ((JustPressed(FrontendRs) || JustPressed(VehLookBehind)) && now - _muteToggledAt > 250)
+                    {
+                        _muteToggledAt = now;
+                        ToggleMute();
+                    }
+                }
                 else if (JustPressed(Handbrake)) ToggleMute();
             }
 
-            // navigation
-            int dir = 0, held = 0;
+            // navigation. While your own music plays, Left / Right (the right stick on a
+            // pad) change the song, one a press or a throw; the mouse wheel (D-pad Right
+            // / Up) still steps through your music's stations.
+            bool songs = _onDemand && _customOn != null;
+            int dir = 0, held = 0, song = 0;
             if (pad)
             {
                 // D-pad Left holds the wheel open, so it cannot also mean "previous":
@@ -826,10 +857,11 @@ namespace ViExtras
                 float axis = Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, RightX);
                 if (Math.Abs(axis) >= _deadzone)
                 {
-                    held = axis > 0f ? 1 : -1;
+                    int side = axis > 0f ? 1 : -1;
+                    if (!songs) held = side;
                     if (!_stickLatched)
                     {
-                        dir = held;
+                        if (songs) song = side; else dir = side;
                         _stickLatched = true;
                     }
                 }
@@ -845,14 +877,17 @@ namespace ViExtras
             else
             {
                 _stickLatched = false;
-                if (JustPressed(CellRight)) dir = 1;
-                else if (JustPressed(CellLeft)) dir = -1;
+                if (JustPressed(CellRight)) { if (songs) song = 1; else dir = 1; }
+                else if (JustPressed(CellLeft)) { if (songs) song = -1; else dir = -1; }
                 else if (_scrollRadio && JustPressed(WheelNext)) dir = 1;
                 else if (_scrollRadio && JustPressed(WheelPrev)) dir = -1;
 
-                if (Pressed(CellRight)) held = 1;
-                else if (Pressed(CellLeft)) held = -1;
+                if (!songs && Pressed(CellRight)) held = 1;
+                else if (!songs && Pressed(CellLeft)) held = -1;
             }
+
+            if (song > 0) _custom.Next();
+            else if (song < 0) _custom.Previous();
 
             if (dir != 0)
             {
@@ -953,6 +988,18 @@ namespace ViExtras
                 // (the game names no station, an empty name, while the radio is off)
                 // (with nothing of yours playing yet, the radio simply carries on underneath)
                 if (_customOn == null || string.IsNullOrEmpty(playing) || playing == OffName) return;
+                // A muted (or chase-quiet) car keeps naming the station it had, and a car whose
+                // radio has only just been put off, or switched back on after a mute, can still
+                // name it for a moment: neither is someone tuning in. In those first 2 s the
+                // radio is put off again instead.
+                if (_muted || _chaseQuiet) return;
+                if (RealTime.Ms - _customSince < 2000)
+                {
+                    int veh = CurrentVehicle();
+                    if (veh != 0) Function.Call(Hash.SET_VEH_RADIO_STATION, veh, OffName);
+                    Function.Call(Hash.SET_RADIO_TO_STATION_NAME, OffName);
+                    return;
+                }
                 Log.Write("Radio", "On Demand: the car's radio was switched on (" + playing + ")");
                 _radioBefore = playing;
                 SetOnDemand(false, false);
@@ -979,30 +1026,48 @@ namespace ViExtras
         private void MutingScenes()
         {
             if (_mutingScenes.Length == 0) return;
-            string station = CurrentVehicle() != 0 ? PlayerStation() : null;
-            bool playing = station != null && station != OffName && !_muted;
-            if (playing)
+            bool inCar = CurrentVehicle() != 0;
+            string station = inCar ? PlayerStation() : null;
+            // the station the game names, or the one put on from the wheel (a scene can hide it)
+            bool playing = inCar && !_muted && ((station != null && station != OffName) || (_tuned != null && _tuned != OffName));
+            if (playing) LiftScenes();
+            else if (_suspendedScenes.Count > 0) RestoreScenes();
+        }
+
+        private void LiftScenes()
+        {
+            if (_mutingScenes.Length == 0 || HudBridge.Busy) return;
+            foreach (string scene in _mutingScenes)
             {
-                if (HudBridge.Busy) return;
-                foreach (string scene in _mutingScenes)
-                {
-                    if (Function.Call<bool>(Hash.IS_AUDIO_SCENE_ACTIVE, scene))
-                    {
-                        Function.Call(Hash.STOP_AUDIO_SCENE, scene);
-                        _suspendedScenes.Add(scene);
-                    }
-                }
-            }
-            else if (_suspendedScenes.Count > 0)
-            {
-                RestoreScenes();
+                if (!Function.Call<bool>(Hash.IS_AUDIO_SCENE_ACTIVE, scene)) continue;
+                Function.Call(Hash.STOP_AUDIO_SCENE, scene);
+                _suspendedScenes.Add(scene);
+                _restartedScenes.Remove(scene);
+                Log.Write("Radio", "stopped " + scene + " while a station plays");
             }
         }
 
         private void RestoreScenes()
         {
             foreach (string scene in _suspendedScenes)
-                if (!Function.Call<bool>(Hash.IS_AUDIO_SCENE_ACTIVE, scene)) Function.Call(Hash.START_AUDIO_SCENE, scene);
+            {
+                if (Function.Call<bool>(Hash.IS_AUDIO_SCENE_ACTIVE, scene)) continue;
+                Function.Call(Hash.START_AUDIO_SCENE, scene);
+                _restartedScenes.Add(scene);
+                Log.Write("Radio", "started " + scene + " again (no station playing)");
+            }
+            _suspendedScenes.Clear();
+        }
+
+        // Switched off: GTA's own radio wheel takes over, and neither a scene this wheel started
+        // again nor one left running (the save's sky descent can leave one) should keep that radio
+        // off, nor be started again later by a wheel that is no longer looking after them.
+        private void HandOverScenes()
+        {
+            LiftScenes();
+            foreach (string scene in _restartedScenes)
+                if (Function.Call<bool>(Hash.IS_AUDIO_SCENE_ACTIVE, scene)) Function.Call(Hash.STOP_AUDIO_SCENE, scene);
+            _restartedScenes.Clear();
             _suspendedScenes.Clear();
         }
 
@@ -1040,6 +1105,53 @@ namespace ViExtras
                 IsOpen = false;
             }
             catch { }
+        }
+
+        // ---- switched from GTA6Hud's HUD OPTIONS menu (HudMenu) ------------------------------------
+
+        internal static RadioWheel Instance { get; private set; }
+
+        /// <summary>Whether this wheel is on ([Radio] Enabled, as switched since).</summary>
+        internal static bool On => Instance != null && Instance._enabled;
+
+        /// <summary>On or off from now on; the next frame does the rest.</summary>
+        internal static void Switch(bool on)
+        {
+            if (Instance != null) Instance._enabled = on;
+        }
+
+        // Switched off: GTA's own radio wheel is back, so this one lets go of everything it
+        // holds, and a car playing your own music gets back the station it had before.
+        private void StandDown()
+        {
+            _wasOn = false;
+            try
+            {
+                if (_wheelOpen) CloseWheel();
+                if (_timeOwned)
+                {
+                    Function.Call(Hash.SET_TIME_SCALE, 1f);
+                    _timeScaleNow = 1f;
+                    _timeOwned = false;
+                }
+                if (_onDemand)
+                {
+                    if (_customVeh != 0 && Function.Call<bool>(Hash.DOES_ENTITY_EXIST, _customVeh))
+                        Function.Call(Hash.SET_VEH_RADIO_STATION, _customVeh, string.IsNullOrEmpty(_radioBefore) ? OffName : _radioBefore);
+                    SetOnDemand(false, false);
+                }
+                _customOn = null;
+                _custom?.Update(false, 0f);
+                if (_muted || _chaseQuiet)
+                {
+                    _muted = _chaseQuiet = false;
+                    ApplyMute();
+                }
+                ReleaseSwapWheel();
+                HandOverScenes();
+                Log.Write("Radio", "switched off in HUD OPTIONS: GTA's own radio wheel is back");
+            }
+            catch (Exception ex) { Log.Write("Radio", "switching off: " + ex.Message); }
         }
 
         // ---- GTA6Hud's radio -----------------------------------------------------------------------

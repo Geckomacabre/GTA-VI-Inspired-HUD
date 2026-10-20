@@ -10,6 +10,35 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## 2.5.4 (20 October 2026)
+
+### Fixed
+
+- **Your own music (On Demand) no longer freezes the game.** It played through GTA6Hud's player, which starts Windows' WPF media player inside GTA; on GTA V Legacy the game stopped responding as soon as it did. ViExtras now plays your music itself (Windows' Media Foundation decodes mp3, wav, wma and m4a, waveOut plays them) in the same order, with the same skipping and the same song and artist names, and it still remembers where each station was for half an hour.
+- **Ammu-Nation works on GTA V Enhanced again** (no more black screen looping at the counter). FBICat's gun shop read the weapon stats in a way only Legacy's script hook supports; it now reads them on both.
+- **Surrendering (hold E near a cop) fills up and works every time.** The prompt shared GTA6Hud's single hold timer with its loot, shop and cash prompts, which it runs every frame for anything nearby, so the circle kept starting over at about 10%. The surrender now keeps its own timer, stays on the same cop while he can see you, and forgives the camera slipping off his head for a moment.
+- **The star in the wanted box is sharp again.** The box is packed compressed, which broke the small red star up into blocks; the star is now a picture of its own, packed uncompressed and drawn over the box (`tools/wanted_star.py`).
+- **On Demand no longer jumps straight back to the radio** after the radio was muted.
+- **The radio wheel clears a leftover character-switch sound scene when you pick a station.** A switch can leave that scene running, and it keeps the car radio silent. If the radio ever stays stuck on RADIO OFF anyway, switch **VI RADIO WHEEL** off in HUD OPTIONS, pick a station in GTA's own radio wheel, then switch it back on.
+
+### Added
+
+- **Four new switches in HUD OPTIONS** (hold V, or the camera button; the pause menu's HUD page has them too): **GREET / ANTAGONIZE**, **POLICE MEMORY**, **SPIN-OUTS** and **VI RADIO WHEEL**. Each one takes effect at once and is saved. Police memory off also makes the police forget you there and then. The VI radio wheel off gives you GTA's own radio wheel back.
+- **Change the song from the radio wheel.** While your own music plays, **Left / Right** (the right stick on a controller) skip to the next or previous song; the mouse wheel (D-pad Right / Up) still steps between your music's stations.
+- **Greet and antagonize work on a controller:** Y / Triangle greets (or defuses, or intimidates), B / Circle antagonizes. While the prompt is up, those buttons don't also get you into a car, reload or punch. X stays free for the HUD's shop and loot prompts. (`[Memory] PadGreet` / `PadAntagonize` in `ViExtras.ini`; they were off.)
+- **On a controller, a right-stick click mutes the radio** while the wheel is open. D-pad Down did it before, and it's the character switcher's button too.
+
+### Changed
+
+- **Smoother in traffic.** Every frame, the HUD's spin-out check read the driver and all four tyres of every car within 150 m, parked ones included: about 4 ms a frame in town. It now skips cars that are parked or slow (they can't spin out), and the HUD's whole share of a frame dropped from about 5-6 ms to about 2 ms. Spin-outs work as before.
+- **Fewer police patrols closing in on you after a crime.** While the police remember your face, outfit or plate, FBICat's Heat now sends 2 patrols at most, a minute apart, from 250-350 m away instead of 6 every 12 s from 90-160 m, and the police forget you twice as fast (`GTA6Hud.ini` `[Heat]` and `[Police]`). They still only recognise you when a cop can see you.
+- **The Greet / Antagonize prompt is easy to switch off.** Set `Interact = False` under `[Memory]` in `scripts\ViExtras.ini`; the settings file and the README now say so. People still notice and remember you.
+
+### Guides
+
+- **A big "Updating? You only need one file" box** in the README and the release notes.
+- **The Enhanced guide has a NaturalVision Enhanced section** (no OpenRPF; the HUD's packs go into `onigiri\dlcpacks`) and more on **AuraV-Lite**: move RenoDX's add-ons out (its menu crashes with them, and NVE comes with them), and move its menu key off F10, the HUD's settings-reload key.
+
 ## 2.5.3 (20 October 2026)
 
 ### Fixed

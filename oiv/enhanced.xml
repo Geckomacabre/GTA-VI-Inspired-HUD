@@ -2,7 +2,7 @@
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
     <name>GTA VI-Inspired HUD (GTA V Enhanced)</name>
-    <version><major>2</major><minor>5</minor><tag>ENHANCED 2.5.3</tag></version>
+    <version><major>2</major><minor>5</minor><tag>ENHANCED 2.5.4</tag></version>
     <author><displayName>FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -22,7 +22,8 @@ INSTALL - two packages, both to your mods folder
 
 What it installs: the HUD (scripts\GTA6Hud.dll, scripts\Hud\, GTA6Hud.ini), the 3D minimap (scripts\ViMinimap.dll,
 MiniMap.* data, ViMinimap.asi), and the packs vihudfonts and vihudanims - gen9.
-  - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's, with one 2-byte fix: no automatic Lucia swap):
+  - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's with small fixes: no automatic Lucia swap, the gun shop on
+    Enhanced, a lighter spin-out check, and the HUD OPTIONS switches for these scripts):
       scripts\ViExtras.dll + scripts\ViExtras\ + ViExtras.ini   honor, crosshair, focus, skills, NPC memory, crash cam,
                                                                  binoculars, radio, nitrous, wanted stars and box, police lights
       scripts\ViWasted.dll + ViWasted.ini                        WASTED / BUSTED
@@ -30,6 +31,14 @@ MiniMap.* data, ViMinimap.asi), and the packs vihudfonts and vihudanims - gen9.
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor and Lucia
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.5.4
+  - Your own music (On Demand) no longer freezes the game, and Left / Right in the radio wheel skip songs.
+  - Ammu-Nation works on Enhanced again, and the HUD is smoother in traffic.
+  - New switches in HUD OPTIONS (hold V): GREET / ANTAGONIZE, POLICE MEMORY, SPIN-OUTS, VI RADIO WHEEL.
+  - Surrendering (hold E near a cop) fills every time, and fewer police patrols close in on you.
+  - Greet / antagonize work on a controller (Y / B), and the wanted box's star is sharp again.
+  - NaturalVision Enhanced: copy vihudfonts from mods\update\x64\dlcpacks into onigiri\dlcpacks again.
 
 Changes in 2.5.3
   - Switching to Michael, Franklin and Trevor works again, from the HUD's character wheel and with F5-F7,

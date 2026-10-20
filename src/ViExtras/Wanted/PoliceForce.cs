@@ -48,6 +48,8 @@ namespace ViExtras
         private const int ComplyRetryMs = 10000;  // after an arrest that didn't happen, before giving up counts again
         private const float ArrestRange = 60f;    // the cop told to arrest you is within this
         private const float SurrenderRange = 15f; // a cop this close, who can see you, takes a surrender
+        private const float SurrenderHoldSeconds = 0.75f; // as long as GTA6Hud's own hold prompts
+        private const int FocusGraceMs = 300;     // the camera may slip off the cop's head this long
 
         // The surrender pose (fenix-police's clips): hands up, then down on the knees, hands on the head.
         private const string HandsDict = "missheist_agency2ahands_up", KneelDict = "random@arrests", HeadDict = "random@arrests@busted";
@@ -78,6 +80,11 @@ namespace ViExtras
         private static FieldInfo _brainEnabled;   // GTA6Hud.Ref.PoliceBrainEnabled
         private static FieldInfo _deadOrArrested; // GTA6Hud's "death / arrest already handled"
         private static MethodInfo _holdWorldItem; // GTA6Hud's hold-E prompt on a ped or prop
+        // that prompt's pieces, so the surrender keeps a hold timer of its own (SurrenderPrompt)
+        private static MethodInfo _focused, _holdDown, _drawMarker, _drawRim, _passiveDot;
+        private Ped _surrenderCop;
+        private float _surrenderHold;
+        private int _unfocusedSince;
         private static bool _hudLooked, _surrenderBroken;
         private bool _brainHeld, _brainWas;
 
@@ -281,21 +288,41 @@ namespace ViExtras
         // ------------------------------------------------------------------ surrender
         private void OfferSurrender(Ped player, int wanted, int now)
         {
-            if (_surrenderBroken || wanted == 0 || player.IsInVehicle() || player.IsRagdoll || HudBridge.UiInTheWay) return;
-            Ped cop = null;
-            float best = SurrenderRange;
-            foreach (Ped ped in World.GetNearbyPeds(player, SurrenderRange))
+            if (_surrenderBroken || wanted == 0 || player.IsInVehicle() || player.IsRagdoll || HudBridge.UiInTheWay)
             {
-                if (ped == null || !ped.Exists() || ped.IsDead || ped.IsInVehicle() || !IsCop(ped)) continue;
-                if (!Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY, ped, player, 17)) continue;
-                float d = ped.Position.DistanceTo(player.Position);
-                if (d < best) { best = d; cop = ped; }
+                _surrenderCop = null;
+                _surrenderHold = 0f;
+                return;
+            }
+            // the same cop while he stays near, on foot and in sight (picking the nearest afresh every
+            // frame started the hold over whenever two cops traded places), else the nearest who can see you
+            Ped cop = _surrenderCop != null && CanTakeSurrender(_surrenderCop, player) ? _surrenderCop : null;
+            if (cop == null)
+            {
+                float best = SurrenderRange;
+                foreach (Ped ped in World.GetNearbyPeds(player, SurrenderRange))
+                {
+                    if (!CanTakeSurrender(ped, player)) continue;
+                    float d = ped.Position.DistanceTo(player.Position);
+                    if (d < best) { best = d; cop = ped; }
+                }
+            }
+            if (cop != _surrenderCop)
+            {
+                _surrenderCop = cop;
+                _surrenderHold = 0f;
+                _unfocusedSince = 0;
             }
             if (cop == null) return;
             object hud = HudBridge.Gta6Hud();
-            if (hud == null || !LookHud(hud) || _holdWorldItem == null) return;
+            if (hud == null || !LookHud(hud)) return;
             bool held;
-            try { held = (bool)_holdWorldItem.Invoke(hud, new object[] { cop.Handle, "SURRENDER" }); }
+            try
+            {
+                if (_focused != null && _holdDown != null && _drawMarker != null && _drawRim != null) held = SurrenderPrompt(hud, cop);
+                else if (_holdWorldItem != null) held = (bool)_holdWorldItem.Invoke(hud, new object[] { cop.Handle, "SURRENDER" });
+                else return;
+            }
             catch (Exception ex)
             {
                 _surrenderBroken = true;
@@ -313,6 +340,41 @@ namespace ViExtras
             StartArrest("surrendered", wanted, now);
             _arrestCop = cop;
             _nextArrestOrder = 0;
+            _surrenderCop = null;
+        }
+
+        private bool CanTakeSurrender(Ped ped, Ped player) =>
+            ped != null && ped.Exists() && !ped.IsDead && !ped.IsInVehicle() && IsCop(ped)
+            && ped.Position.DistanceTo(player.Position) <= SurrenderRange
+            && Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY, ped, player, 17);
+
+        // GTA6Hud's hold-E prompt (its marker, E glyph and filling rim), drawn here with a hold timer of
+        // its own. GTA6Hud's HoldWorldItem keeps one timer for every hold prompt, and GTA6Hud runs it every
+        // frame for the loot, priced props and cash bags around you: each of those, or any of them out of
+        // the camera's focus, set it back to 0, so the surrender's rim stuck at a frame or two's worth.
+        private bool SurrenderPrompt(object hud, Ped cop)
+        {
+            GTA.Math.Vector3 at = cop.Position + new GTA.Math.Vector3(0f, 0f, 0.7f);   // the head, as GTA6Hud aims at peds
+            if (!(bool)_focused.Invoke(null, new object[] { at }))
+            {
+                if (_unfocusedSince == 0) _unfocusedSince = Environment.TickCount;
+                if (Environment.TickCount - _unfocusedSince > FocusGraceMs)
+                {
+                    _surrenderHold = 0f;
+                    _passiveDot?.Invoke(hud, new object[] { at });
+                    return false;
+                }
+            }
+            else _unfocusedSince = 0;
+            var p = GTA.UI.Screen.WorldToScreen(at, true);
+            if (p.X <= 0f || p.Y <= 0f) return false;
+            float x = p.X * 1.5f, y = p.Y * 1.5f;   // GTA6Hud's FromSprite
+            _drawMarker.Invoke(hud, new object[] { x, y, "SURRENDER", "square", "E", true, false, true });
+            _surrenderHold = (bool)_holdDown.Invoke(null, null) ? _surrenderHold + Math.Min(Game.LastFrameTime, 0.1f) : 0f;
+            if (_surrenderHold > 0f) _drawRim.Invoke(hud, new object[] { x, y, 48.07f, _surrenderHold / SurrenderHoldSeconds });
+            if (_surrenderHold < SurrenderHoldSeconds) return false;
+            _surrenderHold = 0f;
+            return true;
         }
 
         // One step of the surrender pose at a time, each started when the last one ends.
@@ -394,6 +456,15 @@ namespace ViExtras
             Type t = hud.GetType();
             _deadOrArrested = t.GetField("_deadOrArrested", Own);
             _holdWorldItem = t.GetMethod("HoldWorldItem", Own, null, new[] { typeof(int), typeof(string) }, null);
+            const BindingFlags Stat = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            _focused = t.GetMethod("Focused", Stat, null, new[] { typeof(GTA.Math.Vector3) }, null);
+            _holdDown = t.GetMethod("ServiceHoldDown", Stat, null, Type.EmptyTypes, null);
+            _drawMarker = t.GetMethod("DrawWorldMarker", Own, null, new[] { typeof(float), typeof(float), typeof(string), typeof(string),
+                typeof(string), typeof(bool), typeof(bool), typeof(bool) }, null);
+            _drawRim = t.GetMethod("DrawProgressRim", Own, null, new[] { typeof(float), typeof(float), typeof(float), typeof(float) }, null);
+            _passiveDot = t.GetMethod("PassiveDot", Own, null, new[] { typeof(GTA.Math.Vector3) }, null);
+            if (_focused == null || _holdDown == null || _drawMarker == null || _drawRim == null)
+                Log.Write("PoliceForce", "GTA6Hud's prompt pieces weren't all found: the surrender uses its shared hold prompt");
             if (_deadOrArrested == null) Log.Write("PoliceForce", "GTA6Hud's arrest flag wasn't found: it may cancel arrests");
             if (_holdWorldItem == null) Log.Write("PoliceForce", "GTA6Hud's hold prompt wasn't found: no surrender on E");
             return true;
