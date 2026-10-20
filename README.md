@@ -91,7 +91,7 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 
 - The minimap's waypoint route can look shaky.
 - Greet / antagonize only work on the keyboard for now.
-- **NaturalVision Enhanced** users: see "Something went wrong?" in the [Enhanced guide](INSTALL-ENHANCED.md).
+- **NaturalVision Enhanced** and **AuraV-Lite** users: follow their "Optional" sections in the [Enhanced guide](INSTALL-ENHANCED.md).
 
 ## 🆘 Something wrong?
 
