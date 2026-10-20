@@ -19,7 +19,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Surrendering (hold E near a cop) fills up and works every time.** The prompt shared GTA6Hud's single hold timer with its loot, shop and cash prompts, which it runs every frame for anything nearby, so the circle kept starting over at about 10%. The surrender now keeps its own timer, stays on the same cop while he can see you, and forgives the camera slipping off his head for a moment.
 - **The star in the wanted box is sharp again.** The box is packed compressed, which broke the small red star up into blocks; the star is now a picture of its own, packed uncompressed and drawn over the box (`tools/wanted_star.py`).
 - **On Demand no longer jumps straight back to the radio** after the radio was muted.
-- **The radio wheel clears a leftover character-switch sound scene when you pick a station.** A switch can leave that scene running, and it keeps the car radio silent. If the radio ever stays stuck on RADIO OFF anyway, switch **VI RADIO WHEEL** off in HUD OPTIONS, pick a station in GTA's own radio wheel, then switch it back on.
+- **The radio wheel clears a leftover character-switch sound scene when you pick a station.** A switch can leave that scene running, and it keeps the car radio silent.
 
 ### Added
 
@@ -27,6 +27,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Change the song from the radio wheel.** While your own music plays, **Left / Right** (the right stick on a controller) skip to the next or previous song; the mouse wheel (D-pad Right / Up) still steps between your music's stations.
 - **Greet and antagonize work on a controller:** Y / Triangle greets (or defuses, or intimidates), B / Circle antagonizes. While the prompt is up, those buttons don't also get you into a car, reload or punch. X stays free for the HUD's shop and loot prompts. (`[Memory] PadGreet` / `PadAntagonize` in `ViExtras.ini`; they were off.)
 - **On a controller, a right-stick click mutes the radio** while the wheel is open. D-pad Down did it before, and it's the character switcher's button too.
+- **The logs say which build you have.** `ViExtras.log`, `ViCustoms.log` and `ViCrouch.log` start every session with a line like `==== ViExtras 2.5.4+202610201742.550baac on GTA V Enhanced 1.0.1158.16 ... ====`: the version, when it was built, and the game it runs on. Handy when asking for help.
 
 ### Changed
 
