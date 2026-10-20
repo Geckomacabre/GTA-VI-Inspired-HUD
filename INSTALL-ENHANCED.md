@@ -126,7 +126,8 @@ and unzip it anywhere, like your Desktop.
 5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**.
 6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** the same way, last.
 
-✅ Installing the RegisterPatch again, or over an older one, is safe: it never lists a pack twice.
+✅ Installing the RegisterPatch again, or over an older one, is fine: it never lists a pack twice. If it then
+says it **failed**, that only means it's already in.
 
 ---
 
