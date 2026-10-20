@@ -152,6 +152,32 @@ Load **Story Mode**. The new HUD appears on its own.
 
 ---
 
+## Optional: AuraV-Lite (path tracing)
+
+[AuraV-Lite](https://kyposmods.com) by **Kypos** adds path tracing to GTA V Enhanced, and it works alongside this
+HUD. Download it from Kypos's site.
+
+1. Copy **`AuraV.asi`**, **`msdmo.dll`** and **`nvngx_dlssd.dll`** into your **game folder**, and the **`AuraV`**
+   folder as well.
+2. In the game, go to **Settings** → **Graphics** and turn on **Ray Tracing** and **NVIDIA DLSS**. Path tracing
+   needs both.
+3. **Using NaturalVision Enhanced too?** AuraV's start-up shortcuts crash NVE's loader. Open
+   **`AuraV\AuraV.ini`** and set these three to `0`:
+   ```ini
+   [boot]
+   skip_legal=0
+   skip_menu=0
+   story=0
+   ```
+   AuraV writes that file the first time it runs, so with NVE the very first start can crash once. Change the
+   three lines, save, and start the game again.
+
+Good to know: don't let **DLSS Swapper** replace GTA's DLSS files (path tracing can freeze), and go easy on the
+heaviest settings on a weaker graphics card. If something goes wrong, `AuraV\AuraV.log` says why.
+**To remove it:** delete those 3 files and the `AuraV` folder.
+
+---
+
 ## Something went wrong?
 
 **Still stuck?** Ask in **[our support Discord](https://discord.gg/C7gE5SHEzH)**, the one for this version, or
@@ -161,6 +187,7 @@ Load **Story Mode**. The new HUD appears on its own.
 | --- | --- |
 | Installing the **RegisterPatch a second time** says it **failed** | It's already installed: `dlclist.xml` lists the HUD's packs, so there was nothing to add. Your game is set up, carry on. |
 | The game **closes by itself about 20 seconds after loading** | You have the normal Script Hook V .NET. Redo Step 3 with **SHVDNE**. Still happening? A ReShade add-on (a file ending in `.addon64` in your game folder) may be clashing. Move those files somewhere else and try again. |
+| You use **AuraV-Lite** with **NaturalVision Enhanced**, and the game **crashes at start-up** | Set `skip_legal=0`, `skip_menu=0` and `story=0` under `[boot]` in `AuraV\AuraV.ini` (see "Optional: AuraV-Lite" above), then start the game again. |
 | You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |

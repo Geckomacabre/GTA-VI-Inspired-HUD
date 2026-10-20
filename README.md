@@ -3,7 +3,7 @@
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD, minimap and playable Lucia for GTA V story mode on PC.**
-Made by **FBICat**. Version 2.5.2 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+Made by **FBICat**. Version 2.5.3 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
@@ -89,9 +89,6 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 
 ## ⚠️ Known bugs (being fixed)
 
-- Switching to **Michael, Franklin or Trevor** doesn't work while the HUD's character wheel is on, from the wheel
-  or with F5-F7. To switch, set `[Swap] Enabled = False` in `scripts\GTA6Hud.ini` and use GTA's own wheel
-  (Lucia is then off the wheel).
 - The minimap's waypoint route can look shaky.
 - Greet / antagonize only work on the keyboard for now.
 - **NaturalVision Enhanced** users: see "Something went wrong?" in the [Enhanced guide](INSTALL-ENHANCED.md).

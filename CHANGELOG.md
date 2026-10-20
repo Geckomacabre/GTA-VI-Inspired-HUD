@@ -10,6 +10,17 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## 2.5.3 (20 October 2026)
+
+### Fixed
+
+- **Switching to Michael, Franklin and Trevor works again**, from the HUD's character wheel (hold Left Alt, or D-pad down) and with F5-F7. The wheel held GTA's switch input off, so the game ignored it. A new script, `ViSwitch.dll`, now runs the HUD's wheel: Michael, Franklin and Trevor switch with the game's own sky camera, and Lucia goes through the sky too, landing mid-scene at one of the characters' spots. It needs `[Lucia] Enabled = True` in `GTA6Hud.ini`, the default. With Lucia switched off, switch with GTA's own wheel (`[Swap] Enabled = False`).
+- **Enhanced: no more crash right after switching to or from Lucia.** GTA6Hud's police code read the player's info in the middle of the swap; `ViSwitch` turns that one memory read off on Enhanced.
+
+### Added
+
+- **AuraV-Lite (path tracing) with the HUD** in the [Enhanced guide](INSTALL-ENHANCED.md): how to install it, and the one setting that keeps it from crashing with NaturalVision Enhanced.
+
 ## 2.5.2 (19 October 2026)
 
 ### Fixed
