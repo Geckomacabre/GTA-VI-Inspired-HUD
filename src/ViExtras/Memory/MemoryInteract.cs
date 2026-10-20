@@ -636,6 +636,13 @@ namespace ViExtras.NpcMemory
             }
 
             bool pad = Glyphs.UsingPad;
+            if (pad)
+            {
+                // the game's own use of the same buttons waits while the prompt is up (osm-target's
+                // blocks), or one press would greet and get you into a car, or antagonize and punch
+                BlockShared(MemCfg.PadGreet);
+                BlockShared(MemCfg.PadAntagonize);
+            }
             bool first = _greetPressed, second = _antagonizePressed;
             _greetPressed = _antagonizePressed = false;
             if (pad && MemCfg.PadGreet >= 0)
@@ -721,6 +728,20 @@ namespace ViExtras.NpcMemory
             foreach (char c in token.Replace(' ', '_'))
                 sb.Append(char.IsLetterOrDigit(c) || c == '_' ? c.ToString() : "x" + ((int)c).ToString("X2"));
             return sb.ToString();
+        }
+
+        // What else each pad button does on foot (osm-target's Config.Input blocks).
+        private static readonly Dictionary<int, int[]> PadBlocks = new Dictionary<int, int[]>
+        {
+            [204] = new[] { 23, 75, 53, 56 },     // Y / Triangle: get in or out of a car, weapon special, drop weapon
+            [203] = new[] { 22 },                 // X / Square: jump
+            [194] = new[] { 45, 140, 141, 142 },  // B / Circle: reload and melee
+        };
+
+        private static void BlockShared(int padControl)
+        {
+            if (padControl < 0 || !PadBlocks.TryGetValue(padControl, out int[] blocks)) return;
+            foreach (int c in blocks) Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, c, true);
         }
 
         /// <summary>

@@ -65,8 +65,8 @@ namespace ViExtras.NpcMemory
             // um_memory's own prompt was G / H; GTA6Hud has both in single player.
             GreetKey = Config.Get(S, "GreetKey", Keys.Y);
             AntagonizeKey = Config.Get(S, "AntagonizeKey", Keys.U);
-            PadGreet = Config.Get(S, "PadGreet", -1);
-            PadAntagonize = Config.Get(S, "PadAntagonize", -1);
+            PadGreet = Config.Get(S, "PadGreet", 204);
+            PadAntagonize = Config.Get(S, "PadAntagonize", 194);
             Range = Config.Get(S, "Range", 3.5f);
             Cone = Config.Get(S, "Cone", 30f);
             ScanMs = Config.Get(S, "ScanMs", 150);

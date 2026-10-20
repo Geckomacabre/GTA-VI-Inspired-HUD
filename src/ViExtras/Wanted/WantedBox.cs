@@ -35,6 +35,10 @@ namespace ViExtras
         // 1.1 --w and 1.5cqh, gap 1.1cqh) and one .tell plus its 0.55 --w gap
         private const float Top = 26.7f * 10.8f;
         private const float TellX = 21.1137f, TellY = 86.5f, TellStep = 35.5f;
+        // The star, cut out of the box art (tools/wanted_star.py) so it packs uncompressed: in the box,
+        // which packs as DXT5, its 4 x 4 blocks broke the star up. Its square there is left empty; this is
+        // where the square sits in the box picture (1080p units, from the picture's top-left corner).
+        private const float StarX = 406f, StarY = 26f;
 
         private readonly bool _enabled;
         private readonly int _blinkMs;            // style.css @keyframes starHunt, in step with the stars
@@ -143,12 +147,14 @@ namespace ViExtras
 
         private static void Draw(string state, List<string> tells, long now, int blinkMs)
         {
-            string name = (tells.Count > 0 ? "wanted_boxt_" : "wanted_box_") + state;
-            if (state == "searching" && now % blinkMs >= blinkMs / 2) name += "_on";   // starHunt: hollow, then filled
-            Art.Entry box = Art.Get(name);
+            string look = state;
+            if (state == "searching" && now % blinkMs >= blinkMs / 2) look += "_on";   // starHunt: hollow, then filled
+            Art.Entry box = Art.Get((tells.Count > 0 ? "wanted_boxt_" : "wanted_box_") + look);
             if (box == null) return;
             float x = 0.015f * Canvas.W;
             Art.Draw(box, x, Top, Color.White);
+            Art.Entry star = Art.Get("wanted_star_" + look);
+            if (star != null) Art.Draw(star, x - box.BoxX + StarX, Top - box.BoxY + StarY, Color.White);
             for (int i = 0; i < tells.Count; i++)
             {
                 Art.Entry tell = Art.Get("wanted_tell_" + tells[i]);

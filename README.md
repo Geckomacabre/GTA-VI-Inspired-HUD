@@ -3,7 +3,7 @@
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD, minimap and playable Lucia for GTA V story mode on PC.**
-Made by **FBICat**. Version 2.5.3 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+Made by **FBICat**. Version 2.5.4 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
@@ -16,6 +16,20 @@ Made by **FBICat**. Version 2.5.3 adds features from the [FiveM version](https:/
 > This version is a **fork of FBICat's VI HUD** with extra features, so it has its own support:
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
+
+> [!TIP]
+> ## 🔄 Updating? You only need one file
+> **Already have 2.5.1 or newer?** Just install the new HUD package over the old one, the same way as before:
+> - **Legacy:** `GTA-VI-Inspired-HUD-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-Enhanced.oiv` with the OIV Package Installer.
+>
+> **No need to reinstall** Script Hook V, Script Hook V .NET, OpenIV or OpenRPF, the RegisterPatch, or Lucia.
+>
+> - **Your progress stays.** Saves are never touched by the package.
+> - **Your settings go back to the defaults:** the package brings fresh `.ini` files, so if you changed any settings, note them down first.
+> - **NaturalVision Enhanced users:** after updating, copy the `vihudfonts` folder from `mods\update\x64\dlcpacks` into `onigiri\dlcpacks` again, replacing the old one.
+>
+> Coming from **2.5.0 or older**? Install the HUD package and the RegisterPatch, plus Lucia's package if you want her.
 
 > **Disclaimer:** fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two.
 > Some HUD art is taken from Rockstar's official GTA VI media
@@ -50,11 +64,11 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 
 | To do this | Press |
 | :--- | :--- |
-| HUD settings | Hold **V** |
+| HUD settings | Hold **V** (controller: hold the camera button). Greet / antagonize, police memory, spin-outs and the VI radio wheel switch on and off here too |
 | Play as Lucia | Hold **Left Alt**, then **E** to her picture *(needs the Lucia download)* |
 | Minimap | Get in a car (it also shows when you're wanted) |
-| Radio | Hold GTA's radio button in a car (**Q**). **O** mutes it |
-| Your own music (On Demand) | In the radio wheel, press **Down** (controller: right stick down). **Up** goes back to the radio |
+| Radio | Hold GTA's radio button in a car (**Q**; controller: **D-pad Left**). **O** mutes it (controller: click the right stick while the wheel is open) |
+| Your own music (On Demand) | In the radio wheel, press **Down** (controller: right stick down). **Left / Right** (right stick) change the song, **Up** goes back to the radio |
 | Nitrous | Hold **Left Shift** (controller: **X** / **Square**) in a car with a bottle |
 | Mod your car | Drive into a **Los Santos Customs** garage and stop. Hold **Backspace** (or **B**) 2 s to leave from anywhere |
 | Crouch | **Left Ctrl** twice |
@@ -64,6 +78,9 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 | Skills | **K** |
 | Push-ups / sit-ups | **N** / **Shift + N** |
 | Greet / antagonize someone | **Y** / **U** |
+
+🙋 **Rather not greet people?** Set `Interact = False` under `[Memory]` in `scripts\ViExtras.ini` and the
+Greet / Antagonize prompt stays off.
 
 🎵 **Music:** none is included. Put your own `.mp3` files in `scripts\Hud\Radio\CustomMusic` and pick **On Demand** in
 the radio wheel: each subfolder becomes a station of its own. Chase music goes in `scripts\Hud\Music`.
@@ -90,7 +107,6 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 ## ⚠️ Known bugs (being fixed)
 
 - The minimap's waypoint route can look shaky.
-- Greet / antagonize only work on the keyboard for now.
 - **NaturalVision Enhanced** and **AuraV-Lite** users: follow their "Optional" sections in the [Enhanced guide](INSTALL-ENHANCED.md).
 
 ## 🆘 Something wrong?

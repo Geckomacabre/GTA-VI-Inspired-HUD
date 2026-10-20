@@ -1,7 +1,8 @@
-// Your own music as stations on the radio wheel, played by GTA6Hud's own
-// custom radio player. Credits and licence: see Radio.cs.
+// Your own music as stations on the radio wheel. Credits and licence: see Radio.cs.
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace ViExtras
@@ -10,104 +11,74 @@ namespace ViExtras
     /// Your own music on the radio wheel: the tracks loose in
     /// scripts\Hud\Radio\CustomMusic are one station (MY MUSIC), and each
     /// subfolder with tracks in it is another, named after the folder. They play
-    /// through GTA6Hud's own custom radio player (its CustomRadio: mp3, wav, wma
-    /// and m4a on a thread of its own, title and artist read from the files'
-    /// tags), the player its own radio's On Demand uses, run from here as an
-    /// instance of its own by reflection. Without GTA6Hud there are no custom
-    /// stations.
+    /// through MusicPlayer (mp3, wav, wma and m4a, on a thread of its own). The
+    /// song and artist come from GTA6Hud's own tag reader (TrackTags: the file's
+    /// ID3 title and artist, else its name), so they read as they did on GTA6Hud's
+    /// player; without GTA6Hud, from the file name.
     /// </summary>
     internal sealed class CustomMusic
     {
         internal struct Station { public string Folder, Label; }   // Folder "": the loose tracks
 
-        private const BindingFlags Any = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
         private const int RescanMs = 5000;
 
         private readonly string _directory;
-        private bool _looked, _broken;
-        private object _player;
-        private MethodInfo _stations, _loose, _select, _update, _next, _previous, _release;
-        private PropertyInfo _now;
-        private FieldInfo _station, _title, _artist, _status;
+        private readonly MusicPlayer _player;
+        private bool _tagsLooked;
+        private MethodInfo _tagRead;
+        private FieldInfo _tagTitle, _tagArtist;
         private long _scanAt;
         private bool _scanned;
         private List<Station> _list = new List<Station>();
 
-        public CustomMusic(string directory) { _directory = directory; }
-
-        private bool Look()
+        public CustomMusic(string directory)
         {
-            if (_looked) return _player != null;
-            _looked = true;
-            try
+            _directory = directory;
+            _player = new MusicPlayer(directory, Tags);
+        }
+
+        /// <summary>CustomRadio.IsTrack: what counts as a track.</summary>
+        public static bool IsTrack(string path)
+        {
+            switch (Path.GetExtension(path).ToLowerInvariant())
             {
-                Type t = null;
-                foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
-                    if ((t = asm.GetType("GTA6Hud.CustomRadio", false)) != null) break;
-                if (t == null) return false;
-                MethodInfo M(string name, params Type[] args) => t.GetMethod(name, Any, null, args, null);
-                _stations = M("Stations");
-                _loose = M("HasLooseTracks");
-                _select = M("Select", typeof(string));
-                _update = M("Update", typeof(bool), typeof(float), typeof(float));
-                _next = M("Next");
-                _previous = M("Previous");
-                _release = M("Release");
-                _now = t.GetProperty("Now", Any);
-                Type now = _now?.PropertyType;
-                _station = now?.GetField("Station", Any);
-                _title = now?.GetField("Title", Any);
-                _artist = now?.GetField("Artist", Any);
-                _status = now?.GetField("Status", Any);
-                MethodInfo init = M("Init", typeof(string));
-                if (init == null || _stations == null || _loose == null || _select == null || _update == null || _next == null
-                    || _previous == null || _now == null || _station == null || _title == null || _artist == null || _status == null)
-                {
-                    Log.Write("Radio", "GTA6Hud's custom radio player was not as expected; no custom music stations");
+                case ".mp3": case ".wav": case ".wma": case ".m4a":
+                    return !path.EndsWith(".part.mp3", StringComparison.OrdinalIgnoreCase);
+                default:
                     return false;
-                }
-                object player = Activator.CreateInstance(t, true);
-                init.Invoke(player, new object[] { _directory });
-                _player = player;
             }
-            catch (Exception ex)
-            {
-                Log.Write("Radio", "custom music: " + (ex.InnerException ?? ex).Message);
-                _player = null;
-            }
-            return _player != null;
         }
 
         /// <summary>The stations there are now (the folder is looked at again every 5 s).</summary>
         public List<Station> Stations(long now)
         {
-            if (_broken || !Look()) return _list;
             if (_scanned && now - _scanAt < RescanMs) return _list;
             _scanned = true;
             _scanAt = now;
             var list = new List<Station>();
             try
             {
-                if ((bool)_loose.Invoke(_player, null)) list.Add(new Station { Folder = "", Label = "MY MUSIC" });
-                foreach (string folder in (string[])_stations.Invoke(_player, null))
-                    list.Add(new Station { Folder = folder, Label = folder });
+                if (Directory.Exists(_directory))
+                {
+                    if (Directory.GetFiles(_directory).Any(IsTrack)) list.Add(new Station { Folder = "", Label = "MY MUSIC" });
+                    foreach (string folder in Directory.GetDirectories(_directory).Select(Path.GetFileName)
+                                 .Where(n => !n.StartsWith(".") && Directory.GetFiles(Path.Combine(_directory, n)).Any(IsTrack))
+                                 .OrderBy(n => n, StringComparer.OrdinalIgnoreCase))
+                        list.Add(new Station { Folder = folder, Label = folder });
+                }
             }
-            catch (Exception ex) { Fail(ex); }
+            catch (Exception ex) { Log.Write("Radio", "custom music: " + ex.Message); }
             _list = list;
             return _list;
         }
 
-        public void Select(string folder) => Call(_select, folder ?? "");
+        public void Select(string folder) => _player.Select(folder ?? "");
 
         /// <summary>Every frame: playing or not, at what volume (0..1).</summary>
-        public void Update(bool on, float volume)
-        {
-            if (_player == null) return;
-            Call(_update, on, volume, 0f);
-        }
+        public void Update(bool on, float volume) => _player.Update(on, volume);
 
-        public void Next() => Call(_next);
-        public void Previous() => Call(_previous);
+        public void Next() => _player.Next();
+        public void Previous() => _player.Previous();
 
         /// <summary>
         /// What plays for this station: the song and artist, or the player's
@@ -117,36 +88,45 @@ namespace ViExtras
         public bool NowPlaying(string folder, out string title, out string artist)
         {
             title = artist = null;
-            if (_player == null || _broken) return false;
-            try
+            MusicPlayer.State now = _player.Now;
+            if (now == null || !string.Equals(now.Station ?? "", folder ?? "", StringComparison.OrdinalIgnoreCase)) return false;
+            if (!string.IsNullOrEmpty(now.Status)) { title = now.Status; return true; }
+            title = now.Title;
+            artist = now.Artist;
+            return !string.IsNullOrEmpty(title);
+        }
+
+        public void Release() => _player.Release();
+
+        // GTA6Hud.TrackTags.Read, found once; the music thread calls this
+        private (string title, string artist) Tags(string path)
+        {
+            if (!_tagsLooked)
             {
-                object now = _now.GetValue(_player);
-                if (now == null || !string.Equals((string)_station.GetValue(now) ?? "", folder ?? "", StringComparison.OrdinalIgnoreCase)) return false;
-                string status = (string)_status.GetValue(now);
-                if (!string.IsNullOrEmpty(status)) { title = status; return true; }
-                title = (string)_title.GetValue(now);
-                artist = (string)_artist.GetValue(now);
-                return !string.IsNullOrEmpty(title);
+                _tagsLooked = true;
+                try
+                {
+                    Type t = null;
+                    foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+                        if ((t = asm.GetType("GTA6Hud.TrackTags", false)) != null) break;
+                    _tagRead = t?.GetMethod("Read", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic, null, new[] { typeof(string) }, null);
+                    Type tag = _tagRead?.ReturnType;
+                    _tagTitle = tag?.GetField("Title");
+                    _tagArtist = tag?.GetField("Artist");
+                    if (_tagRead == null || _tagTitle == null || _tagArtist == null) _tagRead = null;
+                }
+                catch { _tagRead = null; }
             }
-            catch (Exception ex) { Fail(ex); return false; }
-        }
-
-        public void Release()
-        {
-            if (_player != null) Call(_release);
-        }
-
-        private void Call(MethodInfo m, params object[] args)
-        {
-            if (_player == null || _broken || m == null) return;
-            try { m.Invoke(_player, args); }
-            catch (Exception ex) { Fail(ex); }
-        }
-
-        private void Fail(Exception ex)
-        {
-            _broken = true;
-            Log.Write("Radio", "custom music stopped: " + (ex.InnerException ?? ex).Message);
+            if (_tagRead != null)
+            {
+                try
+                {
+                    object tag = _tagRead.Invoke(null, new object[] { path });
+                    return ((string)_tagTitle.GetValue(tag) ?? "", (string)_tagArtist.GetValue(tag) ?? "");
+                }
+                catch { }
+            }
+            return (Path.GetFileNameWithoutExtension(path).Replace('_', ' ').Trim().ToUpperInvariant(), "");
         }
     }
 }
