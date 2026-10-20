@@ -2,7 +2,7 @@
 <package version="2.1" id="{9a4c2e61-7b3f-4d08-8e15-2c6b0f9a7d43}" target="Five">
   <metadata>
     <name>GTA VI-Inspired HUD (GTA V Legacy)</name>
-    <version><major>2</major><minor>5</minor><tag>LEGACY 2.5.2</tag></version>
+    <version><major>2</major><minor>5</minor><tag>LEGACY 2.5.3</tag></version>
     <author><displayName>FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V LEGACY (the original PC version, GTA5.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -29,7 +29,12 @@ What it installs
       scripts\ViWasted.dll + ViWasted.ini                        WASTED / BUSTED
       scripts\ViCustoms.dll + scripts\ViCustoms\ + ViCustoms.ini  Leonida Customs (GPL-3)
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
+      scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor and Lucia
   - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
+
+Changes in 2.5.3
+  - Switching to Michael, Franklin and Trevor works again, from the HUD's character wheel and with F5-F7,
+    with the game's own sky camera. Lucia switches through the sky too ([Lucia] Enabled = True, the default).
 
 Changes in 2.5.2
   - Enhanced: GTA6Hud's own messages show ("Not enough money.", "Lose the cops first." ...), and its

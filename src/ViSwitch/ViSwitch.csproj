@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Builds scripts\ViSwitch.dll: dotnet build -c Release -p:ShvdnDir=D:\Games\GTAV -->
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>ViSwitch</AssemblyName>
+    <RootNamespace>ViSwitch</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <ShvdnDir Condition="'$(ShvdnDir)' == ''">D:\Games\GTAV</ShvdnDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Built against ScriptHookVDotNet 3.7 (the API GTA6Hud targets); SHVDN Enhanced resolves it too. -->
+    <Reference Include="ScriptHookVDotNet3">
+      <HintPath>$(ShvdnDir)\ScriptHookVDotNet3.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+</Project>
