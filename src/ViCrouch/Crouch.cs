@@ -115,7 +115,11 @@ namespace ViExtras
                 IsCrouched = _crouched;
                 IsProne = _prone;
             }
-            catch (Exception ex) { Log.Write("Crouch", ex.Message); }
+            catch (Exception ex)
+            {
+                Log.Write("Crouch", ex.Message);
+                _inAction = false;   // a move cut short by it would otherwise leave the keys ignored
+            }
         }
 
         /// <summary>CanPlayerCrouchCrawl: on foot, not jumping, falling, hurt, fighting or ragdolled.</summary>

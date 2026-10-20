@@ -32,6 +32,7 @@ namespace ViExtras
         private readonly bool _enabled, _chameleon;
         private readonly float _radius;
         private CustomsMenu _menu;
+        private bool _swallowBack;   // the menu just closed: Back / Esc / B stay off until let go
         private bool _armed = true;   // the car has left the garage since the menu last opened
         private FieldInfo _leftSince;
         private bool _lookedLeftSince;
@@ -58,9 +59,14 @@ namespace ViExtras
             {
                 if (_menu != null)
                 {
-                    if (!_menu.Tick()) _menu = null;
+                    if (!_menu.Tick())
+                    {
+                        _menu = null;
+                        _swallowBack = true;
+                    }
                     return;
                 }
+                if (_swallowBack) SwallowBack();
                 KeepGta6HudShopShut();
                 Approach();
             }
@@ -69,6 +75,21 @@ namespace ViExtras
                 Log.Write("Customs", ex.ToString());
                 try { _menu?.Close(restore: true, instant: true); } catch { }
                 _menu = null;
+            }
+        }
+
+        // Back held to leave (or tapped at the top of the menu) is still down when the menu has
+        // gone: until it's let go it stays away from the game, so Esc doesn't open the pause menu
+        // and B doesn't switch to the cinematic camera on the way out.
+        private void SwallowBack()
+        {
+            bool held = Game.IsKeyPressed(Keys.Back) || Game.IsKeyPressed(Keys.Escape)
+                || Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 2, 202);
+            if (!held) { _swallowBack = false; return; }
+            foreach (int control in new[] { 199, 200, 202, 177, 80 })
+            {
+                Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, control, true);
+                Function.Call(Hash.DISABLE_CONTROL_ACTION, 2, control, true);
             }
         }
 
@@ -235,19 +256,32 @@ namespace ViExtras
         public void Close(bool restore, bool instant = false)
         {
             Log.Write("Customs", "menu closed" + (instant ? " at once" : ""));
-            if (_veh.Exists())
+            try
             {
-                if (restore)
+                if (_veh.Exists())
                 {
-                    // back to what was last paid for
-                    foreach (var kv in Logic.Owned) if (kv.Key != "nitrous" && kv.Key != "kit") Logic.Apply(kv.Key, Logic.Owned);
+                    if (restore)
+                    {
+                        // back to what was last paid for
+                        try { foreach (var kv in Logic.Owned) if (kv.Key != "nitrous" && kv.Key != "kit") Logic.Apply(kv.Key, Logic.Owned); }
+                        catch (Exception ex) { Log.Write("Customs", "putting the car back as paid for: " + ex.Message); }
+                    }
+                    for (int door = 0; door <= 5; door++) Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, _veh, door, false);
+                    Function.Call(Hash.SET_VEHICLE_LIGHTS, _veh, 0);
                 }
-                for (int door = 0; door <= 5; door++) Function.Call(Hash.SET_VEHICLE_DOOR_SHUT, _veh, door, false);
-                Function.Call(Hash.SET_VEHICLE_LIGHTS, _veh, 0);
-                _veh.IsPositionFrozen = false;
             }
-            _camera.Stop(!instant);
-            _quiet.Hold(false);
+            catch (Exception ex) { Log.Write("Customs", "closing: " + ex.Message); }
+            // whatever went wrong above, the car, the camera and the HUD are let go
+            try { if (_veh.Exists()) _veh.IsPositionFrozen = false; }
+            catch (Exception ex) { Log.Write("Customs", "unfreezing the car: " + ex.Message); }
+            try { _camera.Stop(!instant); }
+            catch (Exception ex)
+            {
+                Log.Write("Customs", "camera: " + ex.Message);
+                Function.Call(Hash.RENDER_SCRIPT_CAMS, false, false, 0, true, false);
+            }
+            try { _quiet.Hold(false); }
+            catch (Exception ex) { Log.Write("Customs", "HUD: " + ex.Message); }
             _closed = true;
         }
 

@@ -10,6 +10,31 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## 2.5.2 (19 October 2026)
+
+### Fixed
+
+- **Enhanced: GTA6Hud's notifications show.** Messages like "Not enough money.", "Lose the cops first." and "Registered. It is yours now." never appeared on Enhanced, and `GTA6Hud.error.log` filled with a PostTicker error every 10 s: Script Hook V .NET Enhanced moved the type that call returns. ViExtras now posts them to the game's feed itself on Enhanced. Legacy is unchanged.
+- **Leonida Customs always lets you go when it closes.** If putting the car back as paid for went wrong while closing, the car stayed frozen with the shop's camera on. Now the car, the camera and the HUD are let go whatever happens.
+- **Leaving Leonida Customs with Esc or B held doesn't carry on into the game** (Esc's pause menu, B's cinematic camera): the key stays off until you let go of it.
+- **D-pad Down in the radio wheel (mute, on a pad) no longer opens the character wheel**, the same fix the binoculars got: the character wheel stays shut while the radio wheel is open, and until you let go of D-pad Down.
+- **On Demand goes quiet over the pause menu, cutscenes, black screens and death**, as FBICat's own radio player does. Your music used to keep playing over the pause menu.
+- **Leaving the car while your music plays gives the car its station back.** Its radio was left switched off, so getting back in was silent.
+- **Throwing the switch to On Demand while the radio is muted unmutes it first**, as browsing stations does, so going back to the radio brings back the station you had (it came back as RADIO OFF).
+- **A loading screen or a character switch pauses your music at once** and ends the radio wheel's slow motion there and then. If GTA6Hud's own radio takes over (`[Radio] Enabled = True`), it gets the car unmuted.
+- **A nitrous kit changed in the shop works at once:** an upgrade gives the new bottle there and then. It used to need getting out of the car and back in.
+- **Standing still with the weapon wheel, a menu or the phone open near a cop no longer counts as giving up** at 1-2 stars, and an arrest that didn't happen isn't tried again for 10 s.
+- **The vehicle card can't go missing after Leonida Customs** with `[VehicleCard] RouteGauge = True`: the shop put GTA6Hud's card setting back to an old value when it closed.
+- **RegisterPatch 1.6: installing it again sets the pool sizes.** OpenIV stops at the first pack that is already listed in `dlclist.xml` and calls the install failed, and that used to come before the pool sizes, so a second install (or one over an older patch) never set them. The pools come first now, and the guides say a "failed" second install just means it is already in.
+- **Steadier scripts:** a one-off error no longer stops the police script for the session (with the stars held at 1), or leaves crouch ignoring its keys.
+
+### Changed
+
+- **`GTA6Hud.ini` `[MapIcons] Sprites` is FBICat's list again.** 2.5.1 added LS Customs (72) to it, but that didn't make LS Customs show on the map from further away, so the change is undone.
+- **Binoculars tell other scripts when D-pad down is theirs** (`Binoculars.HoldsCharacterKey`, like nitrous's), so a character wheel of another script stays shut while you zoom out.
+- **Nitrous logs which input started each boost**, to track down reports of the wrong button boosting.
+- `ViExtras.log` no longer says On Demand is disabled at every start; it says where your own music goes.
+
 ## 2.5.1 (19 October 2026)
 
 ### Changed
@@ -38,7 +63,6 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Chase music takes over from the car radio:** while you're wanted and chase music plays (the game's wanted music, or GTA6Hud's `[Music]` tracks), the car radio goes quiet, and comes back when it ends. `[Radio] ChaseMusicTakesOver = False` lets them play together.
 - **Minimap routes in the FiveM HUD's colours:** your own waypoint's route is teal (#47aba7) and a mission's or a race's is pink (#fc74a4), each with the FiveM HUD's lighter rim. They were the minimap's own light blue and a different pink. `[Minimap] RouteColours = False` in `ViExtras.ini` brings those back; it replaces `WaypointRoutePink`.
 - **The turn-by-turn box matches the route:** the square behind the arrow is teal like your waypoint's route, not FBICat's pink. The box follows your own waypoint, so it's always teal. The square is recoloured in FBICat's own texture (`hud_gps_bg`, in the HUD pack's `vipause`; the rest of it is his, pixel for pixel), so it fades in and out cleanly.
-- **LS Customs shows on the map from any distance**, like the stores, barbers and Ammu-Nation: blip 72 is added to `GTA6Hud.ini` `[MapIcons] Sprites`. It used to appear only once you were close.
 - **Crash cam: the black bars top and bottom hold still.** They used to swell and shrink with the vignette's slow breathing, which looked like the frame pulsing. The vignette still breathes (`[CrashCam] OverlayPulse`).
 - **GTA's own on-foot camera.** FBICat's camera pulled in whenever you aimed or fired (LT / RT, right mouse) and held the walking camera at one distance, so V couldn't zoom out. It's off in `GTA6Hud.ini`; `[Camera] Enabled = True` brings it back.
 - **Nitrous is on Left Shift** (X / Square on a pad). FiveM's Left Alt is also GTA's character wheel. `[Nitrous] KeyboardControl = 19` puts it back on Left Alt, and the wheel then stays shut while you drive a car with a bottle.

@@ -59,6 +59,13 @@ namespace ViExtras
 
         public static bool IsActive { get; private set; }
 
+        /// <summary>
+        /// D-pad down / Left Alt (INPUT_CHARACTER_WHEEL) is the binoculars' (zoom out) while
+        /// they're up and until it is let go after: a character wheel of another script
+        /// (ViSwitch reads this, as it reads Nitrous.HoldsCharacterKey) stays shut meanwhile.
+        /// </summary>
+        public static bool HoldsCharacterKey { get; private set; }
+
         public Binoculars()
         {
             Paths.Init(BaseDirectory);
@@ -236,6 +243,7 @@ namespace ViExtras
             HudBridge.HoldMinimapHidden(true);
             HudBridge.HoldGta6HudPanelsHidden(true);   // #stage.bino: the rest of the HUD waits
             _swapHeld = true;
+            HoldsCharacterKey = true;
             HudBridge.HoldSwapWheelOff(SwapHold, true);
 
             // Per z-unit, the field of view changes by Wide * ln(Wide / Narrow)
@@ -369,6 +377,7 @@ namespace ViExtras
         {
             if (!_swapHeld) return;
             _swapHeld = false;
+            HoldsCharacterKey = false;
             HudBridge.HoldSwapWheelOff(SwapHold, false);
         }
     }
