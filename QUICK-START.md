@@ -32,6 +32,8 @@ Everything below says which one each step is for. Don't mix them up: the wrong f
 | **Script Hook V .NET** | the **[nightly](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases)** zip: its 4 `ScriptHookVDotNet` files | **[SHVDNE](https://github.com/Chiheb-Bacha/ScriptHookVDotNetEnhanced/releases/latest)** (the Enhanced one!): its 5 files |
 | **Mod loader** | **[OpenIV](https://openiv.com/)**: install it, then **Tools → ASI Manager** → install **ASI Loader** and **OpenIV.asi** | **[OpenRPF](https://www.gta5-mods.com/tools/openrpf-openiv-asi-for-gta-v-enhanced)**: copy `OpenRPF.asi`, and make a folder called `mods` |
 
+Using **NaturalVision Enhanced** or **AuraV-Lite** on Enhanced? Follow their "Optional" sections in the **[Enhanced guide](INSTALL-ENHANCED.md)** (with NVE, skip OpenRPF).
+
 ## 3. Download the mod
 
 From **[Releases](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)**, grab:

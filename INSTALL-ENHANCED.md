@@ -152,6 +152,36 @@ Load **Story Mode**. The new HUD appears on its own.
 
 ---
 
+## Optional: NaturalVision Enhanced
+
+**NaturalVision Enhanced** (NVE) by **Razed** works with this HUD. NVE loads mods with its own loader (onigiri),
+so a few steps go differently:
+
+1. Do Steps 1 to 3 of this guide (Script Hook V and SHVDNE). **Skip Step 4: don't install OpenRPF.** NVE warns
+   about `OpenRPF.asi` when the game starts; if you already copied it, delete it from your game folder.
+2. Install NVE: open its zip, go into the **`Main Package`** folder and copy everything inside it into your
+   **game folder** (NVE's own `README Install Guide.html` has the details). If Windows asks to replace
+   `xinput1_4.dll`, click **Replace**: it's the same file Script Hook V uses.
+3. Install the HUD with Steps 5 and 6 (and Lucia if you want her).
+4. The installer puts the HUD's packs in **`mods\update\x64\dlcpacks`**, which NVE's loader doesn't read. Copy
+   the **`vihudfonts`** and **`vihudanims`** folders from there into **`onigiri\dlcpacks`**. With Lucia, copy
+   **`luciaped`** and **`luciaolf`** as well.
+5. NVE brings its own **`dlclist.xml`**, and the game uses that one. Open **`onigiri\common\data\dlclist.xml`**
+   (Notepad is fine) and add these lines just above `</Paths>`, each on its own line:
+   ```xml
+   <Item>dlcpacks:/vihudfonts/</Item>
+   <Item>dlcpacks:/vihudanims/</Item>
+   ```
+   With Lucia, add these 2 as well:
+   ```xml
+   <Item>dlcpacks:/luciaped/</Item>
+   <Item>dlcpacks:/luciaolf/</Item>
+   ```
+   Leave NVE's `gameconfig.xml` as it is.
+6. Do Step 7 (Windowed Borderless), and play.
+
+---
+
 ## Optional: AuraV-Lite (path tracing)
 
 [AuraV-Lite](https://kyposmods.com) by **Kypos** adds path tracing to GTA V Enhanced, and it works alongside this
@@ -188,7 +218,7 @@ heaviest settings on a weaker graphics card. If something goes wrong, `AuraV\Aur
 | Installing the **RegisterPatch a second time** says it **failed** | It's already installed: `dlclist.xml` lists the HUD's packs, so there was nothing to add. Your game is set up, carry on. |
 | The game **closes by itself about 20 seconds after loading** | You have the normal Script Hook V .NET. Redo Step 3 with **SHVDNE**. Still happening? A ReShade add-on (a file ending in `.addon64` in your game folder) may be clashing. Move those files somewhere else and try again. |
 | You use **AuraV-Lite** with **NaturalVision Enhanced**, and the game **crashes at start-up** | Set `skip_legal=0`, `skip_menu=0` and `story=0` under `[boot]` in `AuraV\AuraV.ini` (see "Optional: AuraV-Lite" above), then start the game again. |
-| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
+| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |
