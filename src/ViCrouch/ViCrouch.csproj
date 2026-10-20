@@ -8,7 +8,9 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>ViCrouch</AssemblyName>
     <RootNamespace>ViExtras</RootNamespace>
-    <Version>2.5.2</Version>
+    <Version>2.5.4</Version>
+    <!-- the build time rides along in the log's first line (Paths.Banner), so two builds of one version can be told apart -->
+    <InformationalVersion>$(Version)+$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmm"))</InformationalVersion>
     <Nullable>disable</Nullable>
     <PlatformTarget>x64</PlatformTarget>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>

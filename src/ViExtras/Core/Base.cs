@@ -30,8 +30,39 @@ namespace ViExtras
 
         public static void Init(string scriptsDir)
         {
-            if (Scripts == null) Scripts = scriptsDir;
+            if (Scripts == null)
+            {
+                Scripts = scriptsDir;
+                Log.Write(Name, Banner());
+            }
             EnhancedPlayerInfo.TurnOff();
+        }
+
+        // The first line of every session in the log: which build this is (version and the
+        // time it was built), on which game, under which Script Hook V .NET. What to ask a
+        // player for when something goes wrong.
+        private static string Banner()
+        {
+            string me = "?", game = "?", hook = "?";
+            try
+            {
+                var asm = typeof(Paths).Assembly;
+                var info = (System.Reflection.AssemblyInformationalVersionAttribute)Attribute.GetCustomAttribute(asm, typeof(System.Reflection.AssemblyInformationalVersionAttribute));
+                me = info?.InformationalVersion ?? asm.GetName().Version.ToString();
+                // "2.5.4+<build time>.<commit>": the commit cut to its short form
+                int plus = me.IndexOf('+'), dot = plus < 0 ? -1 : me.IndexOf('.', plus);
+                if (dot > 0 && me.Length > dot + 8) me = me.Substring(0, dot + 8);
+            }
+            catch { }
+            try
+            {
+                Process p = Process.GetCurrentProcess();
+                game = (string.Equals(p.ProcessName, "GTA5_Enhanced", StringComparison.OrdinalIgnoreCase) ? "GTA V Enhanced " : "GTA V Legacy ")
+                       + (p.MainModule?.FileVersionInfo.FileVersion ?? "");
+            }
+            catch { }
+            try { hook = typeof(Script).Assembly.GetName().Name + " " + typeof(Script).Assembly.GetName().Version; } catch { }
+            return "==== " + Name + " " + me + " on " + game.Trim() + " (" + hook + ") ====";
         }
     }
 
