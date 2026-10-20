@@ -25,6 +25,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **A nitrous kit changed in the shop works at once:** an upgrade gives the new bottle there and then. It used to need getting out of the car and back in.
 - **Standing still with the weapon wheel, a menu or the phone open near a cop no longer counts as giving up** at 1-2 stars, and an arrest that didn't happen isn't tried again for 10 s.
 - **The vehicle card can't go missing after Leonida Customs** with `[VehicleCard] RouteGauge = True`: the shop put GTA6Hud's card setting back to an old value when it closed.
+- **RegisterPatch 1.6: installing it again sets the pool sizes.** OpenIV stops at the first pack that is already listed in `dlclist.xml` and calls the install failed, and that used to come before the pool sizes, so a second install (or one over an older patch) never set them. The pools come first now, and the guides say a "failed" second install just means it is already in.
 - **Steadier scripts:** a one-off error no longer stops the police script for the session (with the stars held at 1), or leaves crouch ignoring its keys.
 
 ### Changed

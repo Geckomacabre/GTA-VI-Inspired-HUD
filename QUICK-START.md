@@ -45,6 +45,7 @@ From **[Releases](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/l
 - **Legacy:** OpenIV → **Tools → Package Installer** → pick the file → install to the **mods folder**.
 - **Enhanced:** the **[OIV Package Installer](https://www.gta5-mods.com/tools/oiv-package-installer)**
   (`CodeWalker.OIVInstaller.exe`) → drag the file in → pick your GTA V folder → **Install**.
+- Installed the RegisterPatch before? If it now says it **failed**, that's fine: it's already in.
 
 ## 5. One last check
 

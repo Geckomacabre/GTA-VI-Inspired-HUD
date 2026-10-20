@@ -140,6 +140,7 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 
 | What happens | What to do |
 | --- | --- |
+| Installing the **RegisterPatch a second time** says it **failed** ("Unable to find XML Node") | It's already installed: `dlclist.xml` lists the HUD's packs, so there was nothing to add. Your game is set up, carry on. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Your Script Hook V .NET is too old. Redo Step 3 with the newest version. |
 | **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`. Redo Step 7. |

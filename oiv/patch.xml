@@ -2,7 +2,7 @@
 <package version="2.1" id="{3c7d5a19-8e24-4b6f-a0d3-6f1b2e9c4a57}" target="Five">
   <metadata>
     <name>GTA VI-Inspired HUD - gameconfig + dlclist patch</name>
-    <version><major>1</major><minor>5</minor><tag>PATCH</tag></version>
+    <version><major>1</major><minor>6</minor><tag>PATCH</tag></version>
     <author><displayName>FBICat</displayName></author>
     <description><![CDATA[Edits mods\update\update.rpf. Install to the mods folder. Works for GTA V Legacy and Enhanced.
 Part of the GTA VI-Inspired HUD, a fork of FBICat's VI HUD. Help with this version: discord.gg/C7gE5SHEzH.
@@ -15,8 +15,11 @@ game was loading. With all packs registered the game uses about 3208 MetaDataSto
 21194 DwdStore slots, so all three stock limits (3200 / 80200 / 20500) must be raised.
 1.5: Lucia is a separate package from 2.5.1 and registers her own packs, so this patch lists only the HUD's.
 Installs that already list Lucia's packs keep them.
-1.4: safe to install again, or over an older version. Each pack is only added when dlclist.xml doesn't list it
-yet, so no pack can end up listed twice; the pool sizes are set, never added to.]]></description>
+1.4: each pack is only added when dlclist.xml doesn't list it yet, so no pack can end up listed twice; the pool
+sizes are set, never added to.
+1.6: the pool sizes come first, so installing it again (or over an older version) always sets them. If the HUD's
+packs are already listed, the installer stops there and may say the install FAILED ("Unable to find XML Node"):
+that only means they're registered already, and nothing is wrong.]]></description>
   </metadata>
   <colors>
     <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>
@@ -24,14 +27,6 @@ yet, so no pack can end up listed twice; the pool sizes are set, never added to.
   </colors>
   <content>
     <archive path="update\update.rpf" createIfNotExist="True" type="RPF7">
-      <xml path="common\data\dlclist.xml">
-        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudfonts/'])]" append="Last">
-          <Item>dlcpacks:/vihudfonts/</Item>
-        </add>
-        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudanims/'])]" append="Last">
-          <Item>dlcpacks:/vihudanims/</Item>
-        </add>
-      </xml>
       <xml path="common\data\gameconfig.xml">
         <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']/PoolSize">
           <PoolSize value="4000" />
@@ -48,6 +43,14 @@ yet, so no pack can end up listed twice; the pool sizes are set, never added to.
         <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/ConfigModelInfo/MaxExtraPedModelInfos">
           <MaxExtraPedModelInfos value="600" />
         </replace>
+      </xml>
+      <xml path="common\data\dlclist.xml">
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudanims/'])]" append="Last">
+          <Item>dlcpacks:/vihudanims/</Item>
+        </add>
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudfonts/'])]" append="Last">
+          <Item>dlcpacks:/vihudfonts/</Item>
+        </add>
       </xml>
     </archive>
   </content>
