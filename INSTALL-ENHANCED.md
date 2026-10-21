@@ -185,6 +185,36 @@ so a few steps go differently:
 
 ---
 
+## Optional: Lively World Expansion (with NaturalVision Enhanced)
+
+**Lively World Expansion** (LWE) fills the map with more plants and props, and its NVE package loads through NVE's
+onigiri too. Its zip comes with its own **`dlclist.xml`**, though, and that file **replaces** the one you already
+have. LWE's copy leaves out the HUD's packs, Lucia, three of NVE's newer packs (`NVE_lights`, `NVE_vegetation`,
+`NVE_vehicles_addon`) and GTA's 2026 update. So add LWE's packs to your list instead:
+
+1. Set up NVE and the HUD first ("Optional: NaturalVision Enhanced" above).
+2. Open LWE's zip and pick a density folder: **`LWE Enhanced - High Density`**, **`Medium Density`** or
+   **`Low Density`**. Go into its **`onigiri\dlcpacks`** folder and copy the **5 folders** in there into
+   **`onigiri\dlcpacks`** in your game folder.
+3. **Don't copy LWE's `onigiri\common\data\dlclist.xml`.** Open your own **`onigiri\common\data\dlclist.xml`** instead
+   and add these lines just above `</Paths>`, each on its own line (these are for High density):
+   ```xml
+   <Item>dlcpacks:/lwecityhigh/</Item>
+   <Item>dlcpacks:/lwedeserthigh/</Item>
+   <Item>dlcpacks:/lweforesthigh/</Item>
+   <Item>dlcpacks:/lwemountainshigh/</Item>
+   <Item>dlcpacks:/lweprops/</Item>
+   ```
+   For Medium or Low, change `high` to `medium` or `low` in the first 4 lines. `lweprops` stays the same.
+4. **Already copied LWE's `dlclist.xml` over yours?** Put NVE's back: from NVE's zip, copy
+   **`Main Package\onigiri\common\data\dlclist.xml`** into `onigiri\common\data` in your game folder. Then add
+   the HUD's lines (step 5 of the NVE section) and LWE's lines (step 3 here).
+5. Leave NVE's `gameconfig.xml` as it is, and play.
+
+LWE's [installation page](https://livelyworldexpansion.com/installation/) has its own graphics tips.
+
+---
+
 ## Optional: AuraV-Lite (path tracing)
 
 [AuraV-Lite](https://kyposmods.com) by **Kypos** adds path tracing to GTA V Enhanced, and it works alongside this
@@ -232,6 +262,7 @@ heaviest settings on a weaker graphics card. If something goes wrong, `AuraV\Aur
 | A **"Debug Assertion Failed!"** box from Microsoft Visual C++ names **`renodx-dlssfix.addon64`** | That's RenoDX's DLSS fix add-on, not the HUD, and it's a debug build of it. If you don't use DLSS 5, you don't need it: delete `renodx-dlssfix.addon64` from your game folder (`renodx-gtav-enhanced.addon64` can stay). You don't need to reinstall Visual C++ for this one. |
 | You use **AuraV-Lite** with **NaturalVision Enhanced**, and the game **crashes at start-up** | Set `skip_legal=0`, `skip_menu=0` and `story=0` under `[boot]` in `AuraV\AuraV.ini` (see "Optional: AuraV-Lite" above), then start the game again. |
 | You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihud/</Item>`<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
+| You installed **Lively World Expansion** (LWE), and now **parts of the HUD are missing** or a message says **Lucia is not registered** | LWE's `dlclist.xml` replaced NVE's, and it doesn't list the HUD's packs (or some of NVE's own). Put NVE's `dlclist.xml` back and add LWE's lines and the HUD's lines to it: see "Optional: Lively World Expansion" above. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Copy the scripts in yourself: see "Updating by hand" below. |

@@ -53,6 +53,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Game in Program Files?** Both install guides have an "Updating by hand" section for when the installer can't write there, and a troubleshooting row for an update that still shows the old version.
 - **The update box, the install guides and the NaturalVision Enhanced steps** name RegisterPatch 1.7 and the `vihud` pack.
 - **The Enhanced guide names the right mod loader.** On GTA V Enhanced, Script Hook V's `xinput1_4.dll` is what loads `.asi` mods; `dinput8.dll` is the Legacy loader and Enhanced doesn't use it. Step 2 had them the other way round and called `xinput1_4.dll` optional.
+- **Lively World Expansion with NaturalVision Enhanced.** The Enhanced guide has a section and a troubleshooting row for it. LWE's own `dlclist.xml` replaces NVE's and leaves out the HUD's packs, Lucia, three of NVE's newer packs and GTA's 2026 update, so the guide copies only LWE's packs and adds its lines to the list you already have.
 
 ## 2.5.4 (20 October 2026)
 
