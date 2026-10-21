@@ -51,12 +51,12 @@ This is the folder with **`GTA5_Enhanced.exe`** inside. We'll call it your **gam
 2. Unzip it and open the **`bin`** folder inside.
 3. Copy these files into your **game folder**:
    - `ScriptHookV.dll`
-   - `dinput8.dll` (loads mods ending in `.asi`)
+   - `xinput1_4.dll` (loads mods ending in `.asi` on Enhanced)
    - `args.txt` (turns off BattlEye, Rockstar's anti-cheat, which blocks mods)
-   - `xinput1_4.dll`, if it's there
+   - `dinput8.dll` (the mod loader for Legacy; Enhanced doesn't use it, so copying it does no harm)
 4. **Don't** copy `NativeTrainer.asi` (a cheat menu you don't need).
 
-✅ Your game folder now has `ScriptHookV.dll` and `dinput8.dll` next to `GTA5_Enhanced.exe`.
+✅ Your game folder now has `ScriptHookV.dll` and `xinput1_4.dll` next to `GTA5_Enhanced.exe`.
 
 ---
 
@@ -90,7 +90,7 @@ never changed.
    download it.
 2. Unzip it and copy **`OpenRPF.asi`** into your **game folder**.
 3. If the download also has a `dsound.dll`, **don't copy it**. Script Hook V already gave you a mod
-   loader (`dinput8.dll` from Step 2). Two loaders at once cause crashes.
+   loader (`xinput1_4.dll` from Step 2). Two loaders at once cause crashes.
 4. In your game folder, create a new folder called **`mods`** if there isn't one already
    (right-click → **New** → **Folder**).
 
