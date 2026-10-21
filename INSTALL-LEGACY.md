@@ -88,22 +88,24 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
 2. Under **Assets**, download these **2 files**:
-   - **`GTA-VI-Inspired-HUD-Legacy.oiv`** (the mod, about 90 MB)
-   - **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`** (a small patch that switches the mod on)
+   - **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`** (the mod, about 100 MB)
+   - **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** (a small patch that switches the mod on)
 3. **Want to play as Lucia?** Also download **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** (about 1.7 GB).
    She's optional: the HUD works without her.
 
-❌ Don't download `GTA-VI-Inspired-HUD-Enhanced.oiv`. That one is for the other version of the game.
+❌ Don't download `GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`. That one is for the other version of the game.
+
+💡 The number in the file name is the version (2.5.5 here), so you can always tell which one you installed. Mention it when you ask for help.
 
 ---
 
 ## Step 6: Install the mod with OpenIV
 
 1. In OpenIV, click **Tools** → **Package Installer**.
-2. Pick **`GTA-VI-Inspired-HUD-Legacy.oiv`**, then click **Install**.
+2. Pick **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`**, then click **Install**.
 3. When it asks where to install, choose **mods folder**. If it offers to create the folder, say yes.
 4. Wait until it says it's finished, then click **Close**.
-5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**.
+5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`**.
 6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** the same way, last.
 
 ✅ Installing the RegisterPatch again, or over an older one, is fine: it never lists a pack twice. If it then
@@ -160,7 +162,7 @@ and an update through OpenIV doesn't always replace the old files. You can copy 
 instead. An `.oiv` is just a zip:
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
+2. Copy **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
 4. Paste it into the **`scripts`** folder in your game folder, for example
@@ -169,7 +171,10 @@ instead. An `.oiv` is just a zip:
 5. Clear Script Hook V .NET's cache, so it loads the new files: press **Win + R**, type `%LOCALAPPDATA%\assembly`
    and press Enter, then delete the **`dl3`** folder. It's only a cache, and it's made again the next time you start
    the game.
-6. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line that shows the version you
+6. Coming from 2.5.4 or older? 2.5.5 adds a pack: also copy the zip's **`content`** → **`dlcpacks`** → **`vihud`**
+   folder into **`mods\update\x64\dlcpacks`** in your game folder, and install
+   **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** as in Step 6.
+7. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line that shows the version you
    downloaded.
 
 ---

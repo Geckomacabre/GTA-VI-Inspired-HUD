@@ -13,6 +13,11 @@
 //     before the screen comes back, so its sky camera rises from where Lucia stood.
 // A scene's idle animation ends as soon as the player moves.
 //
+// GTA6Hud 2.1 and later switch to and from Lucia themselves: a Lucia ped stays in the world and the game's sky
+// switch goes between her and the host. ViSwitch then leaves both Lucia directions to GTA6Hud, still runs the
+// wheel (2.1 draws it with the game's player_switch movie) and still does the select-key hold for Michael,
+// Franklin and Trevor, including the one GTA6Hud asks for after switching from Lucia back to her host.
+//
 // Talks to GTA6Hud only by reflection, so it builds without it and stands aside if it is missing,
 // if [Swap] Enabled = False, or if [Lucia] Enabled = False. Natives are called by raw hash so the same
 // build runs on ScriptHookVDotNet 3.7 (Legacy) and ScriptHookVDotNet Enhanced.
@@ -155,7 +160,9 @@ namespace ViSwitch
             _realKeyDown = 0;
         }
         static readonly string[] StoryNames = { "Michael", "Franklin", "Trevor" };
-        static readonly int[] WheelBlocked = { 37, 44, 51, 205, 206, 174, 175, 189, 190 };
+        // In a vehicle Q / LB, which step the wheel, are also the radio's (radio wheel 85, next / previous station
+        // 81 / 82), so those are held off too while the wheel is open.
+        static readonly int[] WheelBlocked = { 37, 44, 51, 205, 206, 174, 175, 189, 190, 85, 81, 82 };
 
         struct Scene
         {
@@ -194,6 +201,9 @@ namespace ViSwitch
         int _hudLookAt;
         FieldInfo _fSwapBlend, _fSwapSel, _fWheelOpen, _fSettingsOpen, _fLuciaHost, _fRefSwapEnabled, _fRefLuciaEnabled, _fRefLuciaModel;
         FieldInfo _fRefHeat, _fRefBrain;
+        // GTA6Hud 2.1: the wheel's movie state and the select pulse it asks for after a switch back from Lucia
+        FieldInfo _fSwapOpen, _fSwapMovieShown, _fSwapHideAt, _fSwapPulse, _fSwapPulseInput;
+        bool _hudSwitches; // GTA6Hud switches Lucia itself (2.1 and later)
 
         // GTA6Hud's Heat and PoliceBrain read the player's police memory (Game.Player.IgnoredByPolice) every frame.
         // On Enhanced that read hit junk during a swap in the sky (10:43 crash: access violation in a SHVDNE memory
@@ -375,9 +385,17 @@ namespace ViSwitch
                 _fRefLuciaModel = refType.GetField("LuciaModelName", S);
                 _fRefHeat = refType.GetField("HeatEnabled", S);
                 _fRefBrain = refType.GetField("PoliceBrainEnabled", S);
+                _fSwapOpen = t.GetField("_swapOpen", I);
+                _fSwapMovieShown = t.GetField("_swapMovieShown", I);
+                _fSwapHideAt = t.GetField("_swapHideAt", I);
+                _fSwapPulse = t.GetField("_swapPulse", I);
+                _fSwapPulseInput = t.GetField("_swapPulseInput", I);
+                _hudSwitches = _fSwapOpen != null && _fSwapMovieShown != null && _fSwapHideAt != null
+                               && _fSwapPulse != null && _fSwapPulseInput != null && t.GetMethod("StartLuciaSwitch", I) != null;
                 bool ok = _fSwapBlend != null && _fSwapSel != null && _mDraw != null && _mSwapToLucia != null
                           && _mSwapFromLucia != null && _fRefSwapEnabled != null && _fRefLuciaEnabled != null;
-                Log("found GTA6Hud; bridge " + (ok ? "complete" : "INCOMPLETE - standing aside"));
+                Log("found GTA6Hud; bridge " + (ok ? "complete" : "INCOMPLETE - standing aside")
+                    + (ok && _hudSwitches ? "; GTA6Hud switches Lucia itself" : ""));
                 if (!ok) { _hud = null; _enabled = false; return false; }
                 string model = _fRefLuciaModel != null ? (string)_fRefLuciaModel.GetValue(null) : "lucia_s";
                 _lucia = Call<int>(HASH_KEY, string.IsNullOrEmpty(model) ? "lucia_s" : model);
@@ -465,6 +483,7 @@ namespace ViSwitch
             try { _fRefSwapEnabled.SetValue(null, false); } catch { } // stand GTA6Hud's wheel down every tick
 
             UpdatePoliceHold();
+            if (_hudSwitches) TakeHudSwitchPulse();
             UpdateGameSwitchPulse();
 
             int ped = Me();
@@ -506,7 +525,19 @@ namespace ViSwitch
                 if (prev) _sel = (_sel + 3) % 4;
             }
             _blend = Math.Max(0f, Math.Min(1f, _blend + (_open ? 1f : -1f) * Game.LastFrameTime / 0.18f));
-            if (_blend > 0.01f)
+            if (_hudSwitches)
+            {
+                // 2.1 shows and hides its movie from _swapOpen and keeps drawing it for the close (_swapHideAt)
+                try
+                {
+                    _fSwapOpen.SetValue(_hud, _open);
+                    _fSwapSel.SetValue(_hud, _sel);
+                    _fSwapBlend.SetValue(_hud, _blend);
+                    if (_open || HudBool(_fSwapMovieShown) || Now() < (int)_fSwapHideAt.GetValue(_hud)) _mDraw.Invoke(_hud, null);
+                }
+                catch { }
+            }
+            else if (_blend > 0.01f)
             {
                 try
                 {
@@ -676,6 +707,11 @@ namespace ViSwitch
             _sceneActive = false;
             try
             {
+                if (_hudSwitches && (target == 3 || cur == 3))
+                {
+                    HudLuciaSwitch(ped, cur, target);
+                    return;
+                }
                 if (target == 3)
                 {
                     if (cur < 0 || cur > 2) { Log("  not on a story character, nothing to do"); return; }
@@ -693,6 +729,43 @@ namespace ViSwitch
                 StartGameSwitch(target);
             }
             finally { _lastModel = Call<int>(ENTITY_MODEL, Me()); } // ViSwitch's own swaps are not "outside" ones
+        }
+
+        // GTA6Hud 2.1: to Lucia, SwapToLucia starts the game's sky switch to her ped. From Lucia, SwapFromLucia
+        // switches back to her host and, for the other story character, asks for the game's switch after it
+        // (TakeHudSwitchPulse); with no host ped left it swaps the model back and returns true for that switch.
+        void HudLuciaSwitch(int ped, int cur, int target)
+        {
+            Ped p = (Ped)Entity.FromHandle(ped);
+            try
+            {
+                if (target == 3)
+                {
+                    if (cur < 0 || cur > 2) { Log("  not on a story character, nothing to do"); return; }
+                    Log("  GTA6Hud's switch to Lucia");
+                    _mSwapToLucia.Invoke(_hud, new object[] { p });
+                    return;
+                }
+                Log("  GTA6Hud's switch back from Lucia");
+                if ((bool)_mSwapFromLucia.Invoke(_hud, new object[] { p, target })) StartGameSwitch(target);
+            }
+            catch (Exception ex) { Log("  GTA6Hud switch failed: " + (ex.InnerException ?? ex).Message); }
+        }
+
+        // GTA6Hud 2.1 asks for the game's switch with a 4-frame select pulse in its own wheel, which ViSwitch
+        // keeps stood down, so ViSwitch takes the request and holds the key the way the game's selector needs.
+        void TakeHudSwitchPulse()
+        {
+            try
+            {
+                if ((int)_fSwapPulse.GetValue(_hud) <= 0) return;
+                int target = Array.IndexOf(SelectInputs, (int)_fSwapPulseInput.GetValue(_hud));
+                _fSwapPulse.SetValue(_hud, 0);
+                if (target < 0 || _pulseUntil >= 0) return;
+                Log("GTA6Hud asked for the game's switch to " + StoryNames[target]);
+                StartGameSwitch(target);
+            }
+            catch (Exception ex) { Log("switch request error: " + ex.Message); _hudSwitches = false; }
         }
 
         int HostIndex()
@@ -863,7 +936,7 @@ namespace ViSwitch
             bool quiet = !_busy && !Call<bool>(SWITCH_IN_PROGRESS) && _pulseUntil < 0 && _pulseCheckUntil < 0;
             if (quiet && _lastModel != 0 && model != _lastModel)
                 Log("player became " + ModelName(model) + " (was " + ModelName(_lastModel) + ") without ViSwitch"
-                    + (_lastModel == _lucia ? ": GTA6Hud lends Lucia's host near a mission marker or on a mission ([Lucia] MissionRange)" : ""));
+                    + (_lastModel == _lucia && !_hudSwitches ? ": GTA6Hud lends Lucia's host near a mission marker or on a mission ([Lucia] MissionRange)" : ""));
             _lastModel = model;
         }
 

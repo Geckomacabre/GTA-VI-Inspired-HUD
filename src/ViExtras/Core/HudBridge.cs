@@ -315,8 +315,10 @@ namespace ViExtras
         }
 
         // GTA6Hud's own menus that take the keys while they are up: its weapon /
-        // item wheel, settings menu (held camera button), trunk and shop.
-        private static readonly string[] UiFlags = { "_wheelOpen", "_settingsOpen", "_trunkOpen", "_shopOpen" };
+        // item wheel, settings menu (held camera button), trunk and shop, and the
+        // character wheel (_swapOpen, which ViSwitch keeps set while it runs the
+        // wheel), whose Q / LB and E / RB are the radio's keys in a vehicle.
+        private static readonly string[] UiFlags = { "_wheelOpen", "_settingsOpen", "_trunkOpen", "_shopOpen", "_swapOpen" };
         private static FieldInfo[] _uiFields;
 
         /// <summary>One of GTA6Hud's wheel, settings, trunk or shop menus is open.</summary>

@@ -103,13 +103,15 @@ never changed.
 **The mod.** Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
 Under **Assets**, download these **2 files**:
 
-- **`GTA-VI-Inspired-HUD-Enhanced.oiv`** (the mod, about 90 MB)
-- **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`** (a small patch that switches the mod on)
+- **`GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`** (the mod, about 100 MB)
+- **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** (a small patch that switches the mod on)
 
 **Want to play as Lucia?** Also download **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** (about 1.7 GB).
 She's optional: the HUD works without her.
 
-❌ Don't download `GTA-VI-Inspired-HUD-Legacy.oiv`. It's for the other version and will crash Enhanced.
+❌ Don't download `GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`. It's for the other version and will crash Enhanced.
+
+💡 The number in the file name is the version (2.5.5 here), so you can always tell which one you installed. Mention it when you ask for help.
 
 **The installer.** OpenIV doesn't install mods on Enhanced, so you'll use the **OIV Package Installer**
 instead. Download it from [its gta5-mods page](https://www.gta5-mods.com/tools/oiv-package-installer)
@@ -120,10 +122,10 @@ and unzip it anywhere, like your Desktop.
 ## Step 6: Install the mod
 
 1. Open the OIV Package Installer folder and run **`CodeWalker.OIVInstaller.exe`**.
-2. Drag **`GTA-VI-Inspired-HUD-Enhanced.oiv`** onto its window (or click **Browse** and pick it).
+2. Drag **`GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`** onto its window (or click **Browse** and pick it).
 3. When it asks for your game folder, pick the folder with **`GTA5_Enhanced.exe`**.
 4. Click **Install** and wait until it's finished.
-5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**.
+5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`**.
 6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** the same way, last.
 
 ✅ Installing the RegisterPatch again, or over an older one, is fine: it never lists a pack twice. If it then
@@ -164,11 +166,12 @@ so a few steps go differently:
    `xinput1_4.dll`, click **Replace**: it's the same file Script Hook V uses.
 3. Install the HUD with Steps 5 and 6 (and Lucia if you want her).
 4. The installer puts the HUD's packs in **`mods\update\x64\dlcpacks`**, which NVE's loader doesn't read. Copy
-   the **`vihudfonts`** and **`vihudanims`** folders from there into **`onigiri\dlcpacks`**. With Lucia, copy
+   the **`vihud`**, **`vihudfonts`** and **`vihudanims`** folders from there into **`onigiri\dlcpacks`**. With Lucia, copy
    **`luciaped`** and **`luciaolf`** as well.
 5. NVE brings its own **`dlclist.xml`**, and the game uses that one. Open **`onigiri\common\data\dlclist.xml`**
    (Notepad is fine) and add these lines just above `</Paths>`, each on its own line:
    ```xml
+   <Item>dlcpacks:/vihud/</Item>
    <Item>dlcpacks:/vihudfonts/</Item>
    <Item>dlcpacks:/vihudanims/</Item>
    ```
@@ -228,7 +231,7 @@ heaviest settings on a weaker graphics card. If something goes wrong, `AuraV\Aur
 | The game **crashes when you open AuraV-Lite's menu** | You have RenoDX's ReShade add-ons (`renodx-*.addon64`, NVE comes with them) in your game folder. Move them out while you use AuraV (see "Optional: AuraV-Lite" above). |
 | A **"Debug Assertion Failed!"** box from Microsoft Visual C++ names **`renodx-dlssfix.addon64`** | That's RenoDX's DLSS fix add-on, not the HUD, and it's a debug build of it. If you don't use DLSS 5, you don't need it: delete `renodx-dlssfix.addon64` from your game folder (`renodx-gtav-enhanced.addon64` can stay). You don't need to reinstall Visual C++ for this one. |
 | You use **AuraV-Lite** with **NaturalVision Enhanced**, and the game **crashes at start-up** | Set `skip_legal=0`, `skip_menu=0` and `story=0` under `[boot]` in `AuraV\AuraV.ini` (see "Optional: AuraV-Lite" above), then start the game again. |
-| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
+| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihud/</Item>`<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Copy the scripts in yourself: see "Updating by hand" below. |
@@ -247,7 +250,7 @@ and an update through the OIV Package Installer doesn't always replace the old f
 instead. An `.oiv` is just a zip:
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-Enhanced.oiv`** to your Desktop and rename the copy to **`.zip`**.
+2. Copy **`GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`** to your Desktop and rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
 4. Paste it into the **`scripts`** folder in your game folder, for example
@@ -256,7 +259,10 @@ instead. An `.oiv` is just a zip:
 5. Clear Script Hook V .NET's cache, so it loads the new files: press **Win + R**, type `%LOCALAPPDATA%\assembly`
    and press Enter, then delete the **`dl3`** folder. It's only a cache, and it's made again the next time you start
    the game.
-6. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line that shows the version you
+6. Coming from 2.5.4 or older? 2.5.5 adds a pack: also copy the zip's **`content`** → **`dlcpacks`** → **`vihud`**
+   folder into **`mods\update\x64\dlcpacks`** in your game folder, and install
+   **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** as in Step 6.
+7. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line that shows the version you
    downloaded.
 
 ---

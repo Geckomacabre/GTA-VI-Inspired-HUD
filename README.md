@@ -3,7 +3,7 @@
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD, minimap and playable Lucia for GTA V story mode on PC.**
-Made by **FBICat**. Version 2.5.4 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+Made by **FBICat**. Version 2.5.5 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
@@ -18,16 +18,22 @@ Made by **FBICat**. Version 2.5.4 adds features from the [FiveM version](https:/
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
 > [!TIP]
-> ## 🔄 Updating? You only need one file
-> **Already have 2.5.1 or newer?** Just install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-Enhanced.oiv` with the OIV Package Installer.
+> ## 🔄 Updating? Two files this time
+> **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv` with the OIV Package Installer.
 >
-> **No need to reinstall** Script Hook V, Script Hook V .NET, OpenIV or OpenRPF, the RegisterPatch, or Lucia.
+> **New in 2.5.5:** then install **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** once, the same way. 2.5.5 brings a new pack
+> (`vihud`, FBICat's 2.1 HUD art), and the RegisterPatch switches it on. If it says the install **failed**
+> ("Unable to find XML Node"), that's fine: it only means your older packs are switched on already.
+>
+> The number in the file name is the version, so you can always tell which one you have.
+>
+> **No need to reinstall** Script Hook V, Script Hook V .NET, OpenIV or OpenRPF, or Lucia.
 >
 > - **Your progress stays.** Saves are never touched by the package.
 > - **Your settings go back to the defaults:** the package brings fresh `.ini` files, so if you changed any settings, note them down first.
-> - **NaturalVision Enhanced users:** after updating, copy the `vihudfonts` folder from `mods\update\x64\dlcpacks` into `onigiri\dlcpacks` again, replacing the old one.
+> - **NaturalVision Enhanced users:** after updating, copy the `vihud` and `vihudfonts` folders from `mods\update\x64\dlcpacks` into `onigiri\dlcpacks` (replace the old `vihudfonts`), and add `<Item>dlcpacks:/vihud/</Item>` to NVE's `onigiri\common\data\dlclist.xml`, just above `</Paths>`.
 >
 > Coming from **2.5.0 or older**? Install the HUD package and the RegisterPatch, plus Lucia's package if you want her.
 
@@ -51,7 +57,7 @@ Made by **FBICat**. Version 2.5.4 adds features from the [FiveM version](https:/
 
 **2. Download 2 files** from the [latest release](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest):
 - the `.oiv` with your version's name (Legacy **or** Enhanced);
-- `GTA-VI-Inspired-HUD-RegisterPatch.oiv`.
+- `GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`.
 
 Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-Enhanced.oiv`. She's optional.
 
@@ -64,7 +70,7 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 
 | To do this | Press |
 | :--- | :--- |
-| HUD settings | Hold **V** (controller: hold the camera button). Greet / antagonize, police memory, spin-outs and the VI radio wheel switch on and off here too |
+| HUD settings | Hold **V** (controller: hold the camera button). Greet / antagonize, spin-outs and the VI radio wheel switch on and off here too |
 | Play as Lucia | Hold **Left Alt**, then **E** to her picture *(needs the Lucia download)* |
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**; controller: **D-pad Left**). **O** mutes it (controller: click the right stick while the wheel is open) |

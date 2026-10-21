@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD (GTA V Enhanced)</name>
-    <version><major>2</major><minor>5</minor><tag>ENHANCED 2.5.4</tag></version>
+    <name>GTA VI-Inspired HUD 2.5.5 (GTA V Enhanced)</name>
+    <version><major>2</major><minor>5</minor><tag>ENHANCED 2.5.5</tag></version>
     <author><displayName>FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -16,14 +16,16 @@ gen9 writer (the same conversion as CodeWalker's Tools > Convert Assets).
 
 INSTALL - two packages, both to your mods folder
   1. This package (the files).
-  2. GTA-VI-Inspired-HUD-RegisterPatch.oiv: registers the HUD's DLC packs in dlclist.xml and raises the gameconfig.xml pools.
+  2. GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv: registers the HUD's DLC packs in dlclist.xml and raises the gameconfig.xml pools.
+     Updating from 2.5.4 or older? Install it once more: 2.5.5 adds a pack (vihud). If it then says the install
+     FAILED ("Unable to find XML Node"), that only means the older packs are registered already.
   3. Optional: GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv, for Lucia.
   ViMinimap.asi must end up next to GTA5_Enhanced.exe; the minimap needs it to draw in fullscreen.
 
 What it installs: the HUD (scripts\GTA6Hud.dll, scripts\Hud\, GTA6Hud.ini), the 3D minimap (scripts\ViMinimap.dll,
-MiniMap.* data, ViMinimap.asi), and the packs vihudfonts and vihudanims - gen9.
-  - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's with small fixes: no automatic Lucia swap, the gun shop on
-    Enhanced, a lighter spin-out check, and the HUD OPTIONS switches for these scripts):
+MiniMap.* data, ViMinimap.asi), and the packs vihud (FBICat's 2.1 HUD art and movies), vihudfonts and vihudanims - gen9.
+  - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's 2.1 with small fixes: the gun shop on Enhanced, a lighter
+    spin-out check, the HUD OPTIONS switches for these scripts, no interaction dots in cutscenes, and more):
       scripts\ViExtras.dll + scripts\ViExtras\ + ViExtras.ini   honor, crosshair, focus, skills, NPC memory, crash cam,
                                                                  binoculars, radio, nitrous, wanted stars and box, police lights
       scripts\ViWasted.dll + ViWasted.ini                        WASTED / BUSTED
@@ -31,6 +33,16 @@ MiniMap.* data, ViMinimap.asi), and the packs vihudfonts and vihudanims - gen9.
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor and Lucia
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.5.5
+  - FBICat's VI HUD 2.1: GTA V-style character switching with Lucia as her own character, a new weapon wheel,
+    his VI pause menu with ROBBER challenges, a kill cam that never freezes you, outfits, hats and new sounds.
+  - Updates really update now: the files carry their real dates, so Script Hook V .NET runs the new scripts.
+  - Fixed: Lucia shown as missing, the radio opening while you pick a character in a car, interaction dots in
+    cutscenes, selling the same car to the fence again and again.
+  - Police memory is off, and people report you less often.
+  - New pack vihud: install GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv once more. With NaturalVision Enhanced,
+    copy vihud and vihudfonts into onigiri\dlcpacks and add dlcpacks:/vihud/ to NVE's dlclist.xml.
 
 Changes in 2.5.4
   - Your own music (On Demand) no longer freezes the game, and Left / Right in the radio wheel skip songs.

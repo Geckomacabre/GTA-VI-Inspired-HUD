@@ -38,8 +38,8 @@ Using **NaturalVision Enhanced** or **AuraV-Lite** on Enhanced? Follow their "Op
 
 From **[Releases](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)**, grab:
 
-- **`GTA-VI-Inspired-HUD-Legacy.oiv`** *or* **`GTA-VI-Inspired-HUD-Enhanced.oiv`** (yours only)
-- **`GTA-VI-Inspired-HUD-RegisterPatch.oiv`**
+- **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`** *or* **`GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`** (yours only)
+- **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`**
 - *(optional)* **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** or **`-Lucia-Enhanced.oiv`** to play as Lucia
 
 ## 4. Install the files, in this order: mod, RegisterPatch, Lucia

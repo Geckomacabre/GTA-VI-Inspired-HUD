@@ -131,7 +131,9 @@ F	cam	prop_cctv_cam_06a	251.832	225.382	104.785	220.0
 F	unit	prop_cctv_unit_05	265.499	219.071	101.860	70.0
 F	panel	v_corp_bk_secpanel	252.862	228.547	102.088	250.0
 F	vaultdoor	v_ilev_bk_vaultdoor	255.228	223.976	102.393	160.0
-SITE	JEWEL	-622.219	-230.622	37.221	36.0	post_hiest_unload.ymap
+# Vangelico is closed for refurbishment in single player, so it is CLOSED here (no marker, no robbery).
+# It stays in this spot so the sites after it keep their numbers.
+SITE	CLOSED	-622.219	-230.622	37.221	36.0	post_hiest_unload.ymap
 F	officedoor	v_23_doors	-622.139	-230.799	38.244	36.0
 F	cam	prop_cctv_cam_06a	-620.280	-224.155	40.669	81.0
 F	cam	prop_cctv_cam_06a	-627.559	-229.444	40.669	81.0
