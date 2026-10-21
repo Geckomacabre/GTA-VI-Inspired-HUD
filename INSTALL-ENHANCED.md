@@ -106,8 +106,7 @@ Under **Assets**, download these **2 files**:
 - **`GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`** (the mod, about 100 MB)
 - **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** (a small patch that switches the mod on)
 
-**Want to play as Lucia?** Also download **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** (about 1.7 GB).
-She's optional: the HUD works without her.
+**Want to play as Lucia?** She isn't included: her model is someone else's paid work. Get her from her creator, **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)**, or get **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** is there too. The HUD works without her.
 
 ❌ Don't download `GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`. It's for the other version and will crash Enhanced.
 
@@ -126,7 +125,6 @@ and unzip it anywhere, like your Desktop.
 3. When it asks for your game folder, pick the folder with **`GTA5_Enhanced.exe`**.
 4. Click **Install** and wait until it's finished.
 5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`**.
-6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv`** the same way, last.
 
 ✅ Installing the RegisterPatch again, or over an older one, is fine: it never lists a pack twice. If it then
 says it **failed**, that only means it's already in.
@@ -164,10 +162,9 @@ so a few steps go differently:
 2. Install NVE: open its zip, go into the **`Main Package`** folder and copy everything inside it into your
    **game folder** (NVE's own `README Install Guide.html` has the details). If Windows asks to replace
    `xinput1_4.dll`, click **Replace**: it's the same file Script Hook V uses.
-3. Install the HUD with Steps 5 and 6 (and Lucia if you want her).
+3. Install the HUD with Steps 5 and 6.
 4. The installer puts the HUD's packs in **`mods\update\x64\dlcpacks`**, which NVE's loader doesn't read. Copy
-   the **`vihud`**, **`vihudfonts`** and **`vihudanims`** folders from there into **`onigiri\dlcpacks`**. With Lucia, copy
-   **`luciaped`** and **`luciaolf`** as well.
+   the **`vihud`**, **`vihudfonts`** and **`vihudanims`** folders from there into **`onigiri\dlcpacks`**.
 5. NVE brings its own **`dlclist.xml`**, and the game uses that one. Open **`onigiri\common\data\dlclist.xml`**
    (Notepad is fine) and add these lines just above `</Paths>`, each on its own line:
    ```xml
@@ -175,11 +172,7 @@ so a few steps go differently:
    <Item>dlcpacks:/vihudfonts/</Item>
    <Item>dlcpacks:/vihudanims/</Item>
    ```
-   With Lucia, add these 2 as well:
-   ```xml
-   <Item>dlcpacks:/luciaped/</Item>
-   <Item>dlcpacks:/luciaolf/</Item>
-   ```
+   Got a Lucia model? Add her pack's lines too.
    Leave NVE's `gameconfig.xml` as it is.
 6. Do Step 7 (Windowed Borderless), and play.
 
@@ -189,7 +182,7 @@ so a few steps go differently:
 
 **Lively World Expansion** (LWE) fills the map with more plants and props, and its NVE package loads through NVE's
 onigiri too. Its zip comes with its own **`dlclist.xml`**, though, and that file **replaces** the one you already
-have. LWE's copy leaves out the HUD's packs, Lucia, three of NVE's newer packs (`NVE_lights`, `NVE_vegetation`,
+have. LWE's copy leaves out the HUD's packs, three of NVE's newer packs (`NVE_lights`, `NVE_vegetation`,
 `NVE_vehicles_addon`) and GTA's 2026 update. So add LWE's packs to your list instead:
 
 1. Set up NVE and the HUD first ("Optional: NaturalVision Enhanced" above).
@@ -261,14 +254,14 @@ heaviest settings on a weaker graphics card. If something goes wrong, `AuraV\Aur
 | The game **crashes when you open AuraV-Lite's menu** | You have RenoDX's ReShade add-ons (`renodx-*.addon64`, NVE comes with them) in your game folder. Move them out while you use AuraV (see "Optional: AuraV-Lite" above). |
 | A **"Debug Assertion Failed!"** box from Microsoft Visual C++ names **`renodx-dlssfix.addon64`** | That's RenoDX's DLSS fix add-on, not the HUD, and it's a debug build of it. If you don't use DLSS 5, you don't need it: delete `renodx-dlssfix.addon64` from your game folder (`renodx-gtav-enhanced.addon64` can stay). You don't need to reinstall Visual C++ for this one. |
 | You use **AuraV-Lite** with **NaturalVision Enhanced**, and the game **crashes at start-up** | Set `skip_legal=0`, `skip_menu=0` and `story=0` under `[boot]` in `AuraV\AuraV.ini` (see "Optional: AuraV-Lite" above), then start the game again. |
-| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihud/</Item>`<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br>If you installed Lucia, add these 2 as well:<br>`<Item>dlcpacks:/luciaped/</Item>`<br>`<Item>dlcpacks:/luciaolf/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
-| You installed **Lively World Expansion** (LWE), and now **parts of the HUD are missing** or a message says **Lucia is not registered** | LWE's `dlclist.xml` replaced NVE's, and it doesn't list the HUD's packs (or some of NVE's own). Put NVE's `dlclist.xml` back and add LWE's lines and the HUD's lines to it: see "Optional: Lively World Expansion" above. |
+| You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the RegisterPatch's. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihud/</Item>`<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
+| You installed **Lively World Expansion** (LWE), and now **parts of the HUD are missing** | LWE's `dlclist.xml` replaced NVE's, and it doesn't list the HUD's packs (or some of NVE's own). Put NVE's `dlclist.xml` back and add LWE's lines and the HUD's lines to it: see "Optional: Lively World Expansion" above. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |
 | An error about **.NET** or **Visual C++** | Install [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer) and the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe), then restart your PC. |
-| A message says **Lucia is not registered** (and mentions a `VIHudSetup.exe`) | Her two packs are missing from `dlclist.xml`. Install `GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv` again, the same way as the others. With **NaturalVision Enhanced**, add her two lines to NVE's `dlclist.xml` instead (see the NVE row above). Ignore the `VIHudSetup.exe` part of the message: this mod doesn't use it. |
+| A message says **Lucia is not registered** | Lucia isn't included with the HUD any more (see Step 5). Don't have her? Set `Enabled = False` under `[Lucia]` in `scripts\GTA6Hud.ini` and the message goes away. Have a Lucia model? Her pack is missing from `dlclist.xml` (with **NaturalVision Enhanced**, from NVE's): add its line. If the message mentions a `VIHudSetup.exe`, ignore that part: this mod doesn't use it. |
 | **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
 | **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
 

@@ -40,9 +40,9 @@ From **[Releases](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/l
 
 - **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`** *or* **`GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`** (yours only)
 - **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`**
-- *(optional)* **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** or **`-Lucia-Enhanced.oiv`** to play as Lucia
+- *(optional)* Lucia isn't included: her model is someone else's paid work. Get her from her creator, **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)**, or get **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** is there too.
 
-## 4. Install the files, in this order: mod, RegisterPatch, Lucia
+## 4. Install the files, in this order: mod, then RegisterPatch
 
 - **Legacy:** OpenIV → **Tools → Package Installer** → pick the file → install to the **mods folder**.
 - **Enhanced:** the **[OIV Package Installer](https://www.gta5-mods.com/tools/oiv-package-installer)**
@@ -61,6 +61,6 @@ Start **Story Mode**. The HUD shows up on its own.
 - **Hold V:** HUD settings
 - **Hold Q in a car:** radio. Press **Down** (or right stick down) for **On Demand**: your own music. Put
   `.mp3` files in `scripts\Hud\Radio\CustomMusic` first.
-- **Hold Left Alt:** characters (Lucia too, if you installed her)
+- **Hold Left Alt:** characters (Lucia too, if you have her model)
 
 All the controls are in the **[README](README.md#-controls)**.

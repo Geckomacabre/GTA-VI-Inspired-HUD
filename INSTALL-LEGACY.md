@@ -90,8 +90,7 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 2. Under **Assets**, download these **2 files**:
    - **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`** (the mod, about 100 MB)
    - **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** (a small patch that switches the mod on)
-3. **Want to play as Lucia?** Also download **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** (about 1.7 GB).
-   She's optional: the HUD works without her.
+3. **Want to play as Lucia?** She isn't included: her model is someone else's paid work. Get her from her creator, **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)**, or get **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** is there too. The HUD works without her.
 
 ❌ Don't download `GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`. That one is for the other version of the game.
 
@@ -106,7 +105,6 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 3. When it asks where to install, choose **mods folder**. If it offers to create the folder, say yes.
 4. Wait until it says it's finished, then click **Close**.
 5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`**.
-6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** the same way, last.
 
 ✅ Installing the RegisterPatch again, or over an older one, is fine: it never lists a pack twice. If it then
 says it **failed**, that only means it's already in.
@@ -129,7 +127,7 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 
 | To... | Do this |
 | --- | --- |
-| **Play as Lucia** | Hold **Left Alt** (controller: hold **D-pad down**), tap **E** until Lucia's picture is highlighted, then let go. |
+| **Play as Lucia** | Hold **Left Alt** (controller: hold **D-pad down**), tap **E** until Lucia's picture is highlighted, then let go. Needs a Lucia model (not included, see Step 5). |
 | **See the minimap** | Get in a car. It only shows in vehicles, or when you're wanted. |
 | **Open the HUD settings** | Hold **V**. |
 | **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. |
@@ -149,7 +147,7 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 | You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`. Redo Step 7. |
 | The game **crashes while loading** | Make sure you installed the RegisterPatch (Step 6). If you have other big mods (extra characters, maps), try turning them off. |
-| A message says **Lucia is not registered** (and mentions a `VIHudSetup.exe`) | Her two packs are missing from `dlclist.xml`. Install `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` again, the same way as the others. Ignore the `VIHudSetup.exe` part of the message: this mod doesn't use it. |
+| A message says **Lucia is not registered** | Lucia isn't included with the HUD any more (see Step 5). Don't have her? Set `Enabled = False` under `[Lucia]` in `scripts\GTA6Hud.ini` and the message goes away. Have a Lucia model? Her pack is missing from `dlclist.xml`: add its line. If the message mentions a `VIHudSetup.exe`, ignore that part: this mod doesn't use it. |
 | **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
 | **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `ViMinimap.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
 

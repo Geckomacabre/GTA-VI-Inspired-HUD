@@ -2,7 +2,7 @@
 
 # 🌴 GTA VI-Inspired HUD
 
-**A GTA VI-style HUD, minimap and playable Lucia for GTA V story mode on PC.**
+**A GTA VI-style HUD and minimap for GTA V story mode on PC.**
 Made by **FBICat**. Version 2.5.5 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
@@ -29,18 +29,18 @@ Made by **FBICat**. Version 2.5.5 adds features from the [FiveM version](https:/
 >
 > The number in the file name is the version, so you can always tell which one you have.
 >
-> **No need to reinstall** Script Hook V, Script Hook V .NET, OpenIV or OpenRPF, or Lucia.
+> **No need to reinstall** Script Hook V, Script Hook V .NET, OpenIV or OpenRPF.
 >
 > - **Your progress stays.** Saves are never touched by the package.
 > - **Your settings go back to the defaults:** the package brings fresh `.ini` files, so if you changed any settings, note them down first.
 > - **NaturalVision Enhanced users:** after updating, copy the `vihud` and `vihudfonts` folders from `mods\update\x64\dlcpacks` into `onigiri\dlcpacks` (replace the old `vihudfonts`), and add `<Item>dlcpacks:/vihud/</Item>` to NVE's `onigiri\common\data\dlclist.xml`, just above `</Paths>`.
 >
-> Coming from **2.5.0 or older**? Install the HUD package and the RegisterPatch, plus Lucia's package if you want her.
+> Coming from **2.5.0 or older**? Install the HUD package and the RegisterPatch.
 
 > **Disclaimer:** fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two.
 > Some HUD art is taken from Rockstar's official GTA VI media
 > ([rockstargames.com/vi/media](https://www.rockstargames.com/VI/media)) and belongs to Rockstar Games.
-> No GTA VI game files are included. The Lucia model is fan-made.
+> No GTA VI game files are included.
 
 ---
 
@@ -59,7 +59,8 @@ Made by **FBICat**. Version 2.5.5 adds features from the [FiveM version](https:/
 - the `.oiv` with your version's name (Legacy **or** Enhanced);
 - `GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`.
 
-Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-Enhanced.oiv`. She's optional.
+Want to play as **Lucia**? She isn't included: her model is someone else's paid work.
+Get her from her creator, **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)**, or get **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** is there too.
 
 **3. Follow your guide.** It's written for people who've never modded GTA. Only follow the guide for
 **your** version: mixing them up crashes the game.
@@ -71,7 +72,7 @@ Want **Lucia** too? Also grab `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` or `-Lucia-
 | To do this | Press |
 | :--- | :--- |
 | HUD settings | Hold **V** (controller: hold the camera button). Greet / antagonize, spin-outs and the VI radio wheel switch on and off here too |
-| Play as Lucia | Hold **Left Alt**, then **E** to her picture *(needs the Lucia download)* |
+| Play as Lucia | Hold **Left Alt**, then **E** to her picture *(needs a Lucia model, not included: see above)* |
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**; controller: **D-pad Left**). **O** mutes it (controller: click the right stick while the wheel is open) |
 | Your own music (On Demand) | In the radio wheel, press **Down** (controller: right stick down). **Left / Right** (right stick) change the song, **Up** goes back to the radio |
@@ -96,7 +97,7 @@ the radio wheel: each subfolder becomes a station of its own. Chase music goes i
 ## ✨ What's in it
 
 - A **GTA VI-style HUD** and a **3D minimap** with teal waypoint and pink mission routes
-- **Lucia** as a 4th character (a separate, optional download)
+- Character switching with room for **Lucia** as a 4th character (her model isn't included)
 - **Wanted stars and a wanted box** that tell you what the police know, plus **police lights** at the screen edge
 - **Police with stun guns:** they only shoot to kill when you're armed at 3+ stars. Otherwise they tase and arrest you,
   or arrest you when you stand still, unarmed. Hold **E** near a cop to surrender
@@ -125,7 +126,7 @@ from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and 
 
 ## 🙏 Credits
 
-- **FBICat**: the HUD (first released as "VI HUD"), the custom Lucia ped and wardrobe, the minimap
+- **FBICat**: the HUD (first released as "VI HUD"), Lucia's character switching and wardrobe, the minimap
   additions, and everything else in this mod.
 - **moddims** (Discord `@moddims`): the original "GTA VI MiniMap (3D Buildings)" mod the minimap is built
   on, including `ViMinimap.asi`.
