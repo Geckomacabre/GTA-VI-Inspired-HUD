@@ -113,7 +113,7 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 ## ⚠️ Known bugs (being fixed)
 
 - The minimap's waypoint route can look shaky.
-- **NaturalVision Enhanced** and **AuraV-Lite** users: follow their "Optional" sections in the [Enhanced guide](INSTALL-ENHANCED.md).
+- **NaturalVision Enhanced**, **Lively World Expansion** and **AuraV-Lite** users: follow their "Optional" sections in the [Enhanced guide](INSTALL-ENHANCED.md).
 
 ## 🆘 Something wrong?
 
