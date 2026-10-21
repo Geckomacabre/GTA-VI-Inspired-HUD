@@ -10,6 +10,49 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## 2.5.5 (20 October 2026)
+
+### FBICat's VI HUD 2.1
+
+**FBICat's 2.1 is in**, with this fork's changes kept on top. What his 2.1 brings:
+
+- **Character switching like GTA V.** Michael, Franklin and Trevor swap exactly like the base game, and **Lucia is her own character in the world**, switched to with the same sky camera. The portraits lost their white background.
+- **A new weapon wheel.** It just appears (no pop-in), with outlined text. Q (RB on a controller) changes tabs and E only uses. Gun pictures are sized by the gun, all snacks share one slot (and can be eaten in missions too), the fishing rod is gone, and the flashlight slot stays empty until you own one.
+- **His VI pause menu is back** (CHALLENGES / COLLECTABLES), with new **ROBBER challenges**: rob tills, hold up stores, rob all 19 stores, steal cars and one of every vehicle type.
+- **The kill cam never freezes you:** a slow-motion pan across the victim and you while you keep aiming, moving and turning. The crash camera got a "car crash cinematic" sound.
+- **Clothes:** an OUTFITS rack with the full outfits the stores sell Michael, Franklin and Trevor. Hats and glasses only show what you own (Lucia's too).
+- **Hats:** a hat or helmet knocked off anyone, you included, can be picked up and worn for a while. More people and nearly all guards wear hats.
+- **New sounds** for notifications, picking up a weapon, "Crime reported", cash and the crash camera (`scripts\Hud\*.wav`).
+- **Smaller fixes:** picking things up uses a full-body crouch, and the "+ item" lines sit on the right. GTA's own HUD pieces no longer come back in some parts of the map. Traffic cars no longer change colour in front of you, and the maker's emblem stays inside the vehicle card. Race and rental markers only show within 50 m. The HUD no longer stalls for 3-4 seconds after you spawn while police patrols wait for their models.
+
+**Kept as in 2.5.4:** the 3D minimap (FBICat's 2.1 minimap isn't included), and the look of GTA's own pause screens and the character wheel (his restyled versions of those game screens aren't included). His VicePoint crosshair is built into 2.1 but switched off (`GTA6Hud.ini` `[Reticle] Enabled = False`), because this fork has its own crosshair.
+
+### Added
+
+- **FBICat's VI start screen on GTA V Legacy.** The landing page (STORY MODE / ONLINE) and the startup loading screen are his: a black screen, the GTA VI logo and a drifting Vice City picture strip. The GTA Online overlay has been removed from the Story Mode loading screen. GTA V Enhanced keeps its own start screen.
+- **RegisterPatch 1.7, for FBICat's new `vihud` pack.** His 2.1 HUD art and movies come as a new pack, `vihud`, and `GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv` switches it on. Updating from 2.5.4 or older? Install the RegisterPatch once more. If it then says the install failed ("Unable to find XML Node"), that only means your older packs are registered already: it adds `vihud` first. NaturalVision Enhanced: copy `vihud` into `onigiri\dlcpacks` too and add `dlcpacks:/vihud/` to NVE's `dlclist.xml`.
+
+### Fixed
+
+- **Updating now really updates.** Up to 2.5.4, every file in the OIVs carried the same date, so Script Hook V .NET kept running the copy it had cached from your first install, and an update could look like it did nothing (HUD OPTIONS rows showing N/A, for example). The 2.5.5 files carry their real dates. If an earlier update still looks old, the install guides' troubleshooting has a row for clearing that cache.
+- **The HUD no longer says Lucia is missing when she's installed.** FBICat's 2.1 checks for her `lucia_nophys` model, which this fork's Lucia pack doesn't have. It now checks for the model she actually uses.
+- **The radio stays shut while you pick a character in a car.** Q / LB and E / RB step through the character wheel, but in a vehicle they are also the radio's keys, so picking someone opened the radio wheel or changed the station. The radio now waits until the character wheel is closed.
+- **No more interaction dots in cutscenes.** FBICat's small white dots on people, car doors, dropped weapons and shop items now stay hidden during cutscenes, character switches and any moment you don't have control, and only show within 2.5 m of you (they used to show from 5-6 m).
+- **Switching to Lucia no longer traps you inside a building.** In FBICat's 2.1 she waits for you somewhere in the world, and her first spot was inside the building under Floyd's apartment in Vespucci, with no way out. If her spot is inside a building, she now waits on Vespucci Beach instead.
+- **The fence keeps the cars it buys.** After you sell a car, it can't be sold again (you could get back in and sell the same car over and over), and it's gone once you walk away from it.
+- **No more Vangelico marker.** The jewel store is closed for refurbishment in single player, so its robbery could never start. Its diamond is gone from the map (`Hud\Robbery\sites.txt`); the banks and stores are unchanged.
+
+### Changed
+
+- **The police no longer remember you.** FBICat's police memory (cops recognising your face, outfit or car later and coming after you again) is off (`GTA6Hud.ini` `[Police] MemoryEnabled = False`), and its POLICE MEMORY switch is gone from HUD OPTIONS.
+- **People report you less often.** Someone who saw an old crime no longer phones the police later when they spot you again (`ViExtras.ini` `[Memory] Gossip = False`), so no more stars out of nowhere. Witnesses now notice crimes from 25 m (was 35 m), recognise you half the time (was 70%), and take 12-20 seconds to make the call (was 9-15), so you have longer to stop them.
+- **The OIV files say their version.** They're called `GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv` and `GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`, and the installer shows "GTA VI-Inspired HUD 2.5.5", so you can always tell which one you have. Handy when asking for help.
+
+### Guides
+
+- **Game in Program Files?** Both install guides have an "Updating by hand" section for when the installer can't write there, and a troubleshooting row for an update that still shows the old version.
+- **The update box, the install guides and the NaturalVision Enhanced steps** name RegisterPatch 1.7 and the `vihud` pack.
+
 ## 2.5.4 (20 October 2026)
 
 ### Fixed
