@@ -10,6 +10,12 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Guides
+
+- **An old 3D minimap's files.** Both install guides' troubleshooting tables now say to delete `MiniMap.asi` or `MiniMapHudPresent.asi` (and `scripts\MiniMap.dll`) left by another 3D minimap mod or an older install. The HUD brings its own copy as `ViMinimap.asi`, and two copies at once get in each other's way.
+
 ## 2.6.2 (22 October 2026)
 
 ### Fixed
