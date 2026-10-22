@@ -32,7 +32,7 @@ namespace ViExtras
         private const int HoldMs = 6000 + 1200;   // vice_hud's hold (app.js WANTED_HOLD_MS, then HIDE_HOLD_MS)
         // Where the box sits (vice_hud's #wanted: left 1.5cqw, top 26.7cqh), and inside it, from its top
         // left corner: the star, and the first tell and the step between tells (wanted.py prints them).
-        private const float Top = 26.7f * 10.8f;
+        internal const float Top = 26.7f * 10.8f;
         private const float StarX = 377f, StarY = 12f;
         private const float TellX = 20.0037f, TellY = 74f, TellStep = 34f;
         private static readonly string[] TellNames = { "camera", "weapon", "hanger", "person", "people", "vehicle" };
@@ -50,6 +50,12 @@ namespace ViExtras
 
         private int _lastStars, _lastTells;   // what the box last saw: stars, and the tells as bits of TellNames
         private long _hideAt = -1;
+
+        /// <summary>On screen this frame (FeedBesideMap puts GTA's feed under it).</summary>
+        internal static bool Up;
+
+        /// <summary>Its bottom edge, on the canvas.</summary>
+        internal static float Bottom => Top + (Art.Get("wanted_box")?.BoxH ?? 110f);
 
         public WantedBox()
         {
@@ -75,6 +81,7 @@ namespace ViExtras
 
         private void OnTick(object sender, EventArgs e)
         {
+            Up = false;
             if (!GameReady.Now) return;
             try
             {
@@ -121,6 +128,7 @@ namespace ViExtras
                 if (now >= _hideAt) return;
                 if (HudBridge.Paused || HudBridge.Busy || HudBridge.HudMenuOpen || CrashCam.IsPlaying || Binoculars.IsActive) return;
                 Draw(tells);
+                Up = true;
             }
             catch (Exception ex)
             {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{9a4c2e61-7b3f-4d08-8e15-2c6b0f9a7d43}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.6.1 (GTA V Legacy)</name>
-    <version><major>2</major><minor>6</minor><tag>LEGACY 2.6.1</tag></version>
+    <name>GTA VI-Inspired HUD 2.6.2 (GTA V Legacy)</name>
+    <version><major>2</major><minor>6</minor><tag>LEGACY 2.6.2</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V LEGACY (the original PC version, GTA5.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -45,6 +45,11 @@ What it installs
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
   - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
+
+Changes in 2.6.2
+  - Notifications now really clear the 3D minimap (2.6.1's move didn't take): they hang at the left, where GTA VI's
+    wanted box goes, newest on top, and move under the wanted box while it's up.
+  - The house over a safehouse and your car's badge are no longer drawn over notifications.
 
 Changes in 2.6.1
   - GTA's tips show again: a help box the HUD can't redraw in its style is left to the game, not hidden.
