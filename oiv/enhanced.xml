@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.6.0 (GTA V Enhanced)</name>
-    <version><major>2</major><minor>6</minor><tag>ENHANCED 2.6.0</tag></version>
+    <name>GTA VI-Inspired HUD 2.6.1 (GTA V Enhanced)</name>
+    <version><major>2</major><minor>6</minor><tag>ENHANCED 2.6.1</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -42,6 +42,12 @@ TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600.
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.6.1
+  - GTA's tips show again: a help box the HUD can't redraw in its style is left to the game, not hidden.
+  - Notifications sit beside the 3D minimap while it's on screen, not behind it.
+  - The minimap's mission circle no longer flickers, jumps far away or doubles the pink one.
+  - Jason: a kit and a guide section for putting his model in the game (see the install guides on GitHub).
 
 Changes in 2.6.0
   - One package to install: it registers the HUD's packs itself, so the RegisterPatch is gone. Lucia isn't included
