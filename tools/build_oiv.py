@@ -2,15 +2,25 @@
 
     python tools/build_oiv.py legacy         --dlcpacks <folder> [--startscreen <folder>] [--out build]
     python tools/build_oiv.py enhanced       --dlcpacks <folder> [--out build]
-    python tools/build_oiv.py lucia-legacy   --dlcpacks <folder> [--out build]
-    python tools/build_oiv.py lucia-enhanced --dlcpacks <folder> [--out build]
-    python tools/build_oiv.py patch          [--out build]
 
 <folder> holds one sub-folder per pack, each with its dlc.rpf: vihud, vihudfonts
-and vihudanims for the HUD, luciaped and luciaolf for Lucia. Legacy and Enhanced
-need different dlcpacks: the Enhanced ones are converted to the gen9 resource
-format. The HUD packages carry the scripts, ViMinimap.asi and the HUD packs;
-the Lucia packages only her two packs (and register them in dlclist.xml).
+and vihudanims. Legacy and Enhanced need different dlcpacks: the Enhanced ones
+are converted to the gen9 resource format. The packages carry the scripts,
+ViMinimap.asi and the HUD packs.
+
+There are no Lucia packages any more: her model is someone else's paid work,
+shared without their permission, so it isn't ours to publish (removed from
+every release on 2026-10-22).
+
+The HUD packages also register their packs, which the separate RegisterPatch
+did up to 2.5.5: oiv/register.xml goes in place of <!-- REGISTER -->, after
+every file. It sets the gameconfig.xml pools and adds each pack to dlclist.xml
+once. Each pack's <add> targets Paths when the pack isn't listed yet and an
+empty <ViHudScratch /> when it is, and the scratch element is removed at the
+end. That way every step finds its node: OpenIV calls the install FAILED when
+one doesn't ("Unable to find XML Node"), which a plain guarded add did on
+every update. The OIV installer for Enhanced runs all adds before the removes,
+which this order needs too.
 
 --startscreen (Legacy): every file in that folder goes into the game's
 update\\update.rpf\\x64\\data\\cdimages\\scaleform_frontend.rpf (FBICat's VI start
@@ -23,8 +33,7 @@ icon.png at the top, the files under content/. assembly.xml comes from
 oiv/<edition>.xml, with the <add> list generated from the files found here.
 
 File names carry the version: the HUD packages the one in their <tag>
-(GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv), the RegisterPatch its own
-(GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv). The Lucia packages keep theirs.
+(GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv).
 
 Every file keeps its real modification time in the zip, and the installers
 write that time. Script Hook V .NET loads scripts through .NET shadow copies
@@ -43,7 +52,6 @@ from xml.sax.saxutils import escape
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HUD_PACKS = ("vihud", "vihudfonts", "vihudanims")
-LUCIA_PACKS = ("luciaped", "luciaolf")
 ROOT_FILES = ("ViMinimap.asi",)
 # Already compressed, or too big to be worth deflating; FBICat's packages store these.
 STORED = {".rpf", ".png", ".mp3", ".ogg", ".dds", ".jpg"}
@@ -52,11 +60,7 @@ SKIP_DIRS = {"Save", ".muffled"}
 # The 2.5 art is drawn from the vihudfonts pack's texture dictionaries (tools/build_txd.py);
 # the PNGs those are built from stay in the repo, their manifests ship.
 ART_PNGS = "scripts/ViExtras/Art/"
-EDITIONS = ("legacy", "enhanced", "lucia-legacy", "lucia-enhanced", "patch")
-FIXED_NAMES = {
-    "lucia-legacy": "GTA-VI-Inspired-HUD-Lucia-Legacy.oiv",
-    "lucia-enhanced": "GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv",
-}
+EDITIONS = ("legacy", "enhanced")
 STARTSCREEN_ARCHIVE = r"x64\data\cdimages\scaleform_frontend.rpf"
 
 
@@ -66,26 +70,16 @@ def template(edition):
 
 
 def output_name(edition):
-    if edition in FIXED_NAMES:
-        return FIXED_NAMES[edition]
     xml = template(edition)
-    if edition == "patch":
-        m = re.search(r"<major>(\d+)</major><minor>(\d+)</minor>", xml)
-        if not m:
-            sys.exit("oiv/patch.xml: no <major>/<minor>")
-        return f"GTA-VI-Inspired-HUD-RegisterPatch-{m.group(1)}.{m.group(2)}.oiv"
     m = re.search(r"<tag>[A-Z ]*?(\d+\.\d+\.\d+)</tag>", xml)
     if not m:
         sys.exit(f"oiv/{edition}.xml: no version in <tag>")
     return f"GTA-VI-Inspired-HUD-{m.group(1)}-{edition.capitalize()}.oiv"
 
 
-def collect_files(dlcpacks, lucia):
+def collect_files(dlcpacks):
     """Return (source path on disk, path inside content/, install path) for every file."""
     files = []
-    if lucia:
-        add_packs(files, dlcpacks, LUCIA_PACKS)
-        return files
     scripts = os.path.join(ROOT, "scripts")
     for dirpath, dirnames, filenames in os.walk(scripts):
         dirnames[:] = sorted(d for d in dirnames if d not in SKIP_DIRS)
@@ -139,6 +133,11 @@ def assembly_xml(edition, files, startscreen):
         xml = xml.replace("    <!-- STARTSCREEN -->", block)
     elif startscreen:
         sys.exit(f"oiv/{edition}.xml has no <!-- STARTSCREEN --> place for --startscreen")
+    if "<!-- REGISTER -->" in xml:
+        with open(os.path.join(ROOT, "oiv", "register.xml"), encoding="utf-8") as f:
+            xml = xml.replace("    <!-- REGISTER -->", f.read().rstrip("\n"))
+    elif edition in ("legacy", "enhanced"):
+        sys.exit(f"oiv/{edition}.xml has no <!-- REGISTER --> place for the pack registration")
     return xml
 
 
@@ -167,20 +166,15 @@ def write_entry(zf, arcname, data=None, src=None):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("edition", choices=EDITIONS)
-    ap.add_argument("--dlcpacks", help="folder with vihud/, vihudfonts/, vihudanims/ (HUD) or luciaped/, luciaolf/ (Lucia)")
+    ap.add_argument("--dlcpacks", help="folder with vihud/, vihudfonts/ and vihudanims/")
     ap.add_argument("--startscreen", help="Legacy: folder of files for update.rpf's scaleform_frontend.rpf")
     ap.add_argument("--out", default=os.path.join(ROOT, "build"))
     args = ap.parse_args()
 
     startscreen = []
-    if args.edition == "patch":
-        files = []
-        extra = {"content/readme.txt": b"GTA VI-Inspired HUD gameconfig + dlclist patch: the edits are in assembly.xml.\r\n"}
-    else:
-        if not args.dlcpacks:
-            ap.error(f"{args.edition} needs --dlcpacks")
-        files = collect_files(args.dlcpacks, lucia=args.edition.startswith("lucia"))
-        extra = {}
+    if not args.dlcpacks:
+        ap.error(f"{args.edition} needs --dlcpacks")
+    files = collect_files(args.dlcpacks)
     if args.startscreen:
         if args.edition != "legacy":
             ap.error("--startscreen is for the Legacy package")
@@ -192,8 +186,6 @@ def main():
     with zipfile.ZipFile(tmp, "w", allowZip64=True) as zf:
         write_entry(zf, "assembly.xml", data=assembly_xml(args.edition, files, startscreen).encode("utf-8"))
         write_entry(zf, "icon.png", src=os.path.join(ROOT, "oiv", "icon.png"))
-        for arcname, data in extra.items():
-            write_entry(zf, arcname, data=data)
         for src, content, _ in files + startscreen:
             write_entry(zf, "content/" + content, src=src)
     os.replace(tmp, out)

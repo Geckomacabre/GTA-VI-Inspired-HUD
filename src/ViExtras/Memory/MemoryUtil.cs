@@ -18,9 +18,29 @@ namespace ViExtras.NpcMemory
         public static readonly Random Rng = new Random();
 
         /// <summary>GetGameTimer(): stops while the game is paused, as the Lua timers did.</summary>
-        public static int Now => Game.GameTime;
+        public static int Now => _inTick ? _tickNow : Game.GameTime;
 
-        public static Ped Player => Game.Player.Character;
+        public static Ped Player => _inTick ? _tickPlayer : Game.Player.Character;
+
+        // Memory's tick asks for both hundreds of times (a ped at a time, in IsPerson),
+        // and neither changes within it (nothing in it waits a frame): read once at its
+        // start, and live again outside it (key presses, other scripts' calls).
+        private static bool _inTick;
+        private static int _tickNow;
+        private static Ped _tickPlayer;
+
+        internal static void BeginTick(Ped player)
+        {
+            _tickPlayer = player;
+            _tickNow = Game.GameTime;
+            _inTick = true;
+        }
+
+        internal static void EndTick()
+        {
+            _inTick = false;
+            _tickPlayer = null;
+        }
 
         public static void Debug(string text)
         {

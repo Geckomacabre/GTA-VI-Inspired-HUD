@@ -63,6 +63,10 @@ namespace ViExtras
 
         // cops given a stun gun here: handle -> their own weapon
         private readonly Dictionary<int, uint> _own = new Dictionary<int, uint>();
+        // cops the brain doesn't run, armed here: handle -> the sweep that last saw them
+        private readonly Dictionary<int, int> _stunArmed = new Dictionary<int, int>();
+        private readonly List<int> _stunGone = new List<int>();
+        private int _stunSweep;
         private int _nextScan, _armedUntil;
         private bool _lethal, _modeKnown, _stunned, _wasDead;
         private int _stillSince;
@@ -79,12 +83,19 @@ namespace ViExtras
         private static FieldInfo _brainField, _copsField, _copPed, _copOriginal, _copDisarmed;
         private static FieldInfo _brainEnabled;   // GTA6Hud.Ref.PoliceBrainEnabled
         private static FieldInfo _deadOrArrested; // GTA6Hud's "death / arrest already handled"
-        private static MethodInfo _holdWorldItem; // GTA6Hud's hold-E prompt on a ped or prop
-        // that prompt's pieces, so the surrender keeps a hold timer of its own (SurrenderPrompt)
-        private static MethodInfo _focused, _holdDown, _drawMarker, _drawRim, _passiveDot;
+        // GTA6Hud's hold-E prompt on a ped or prop, and that prompt's pieces, so the surrender keeps
+        // a hold timer of its own (SurrenderPrompt): typed delegates, made once (HudBridge.Bind),
+        // as they run every frame the prompt is up
+        private static Func<int, string, bool> _holdWorldItem;
+        private static Func<GTA.Math.Vector3, bool> _focused;
+        private static Func<bool> _holdDown;
+        private static Action<float, float, string, string, string, bool, bool, bool> _drawMarker;
+        private static Action<float, float, float, float> _drawRim;
+        private static Action<GTA.Math.Vector3> _passiveDot;
         private Ped _surrenderCop;
         private float _surrenderHold;
-        private int _unfocusedSince;
+        private int _unfocusedSince, _nextSurrenderLook;
+        private const int SurrenderLookMs = 250;   // a new cop to surrender to is looked for this often
         private static bool _hudLooked, _surrenderBroken;
         private bool _brainHeld, _brainWas;
 
@@ -137,6 +148,16 @@ namespace ViExtras
                 return;
             }
             _wasDead = false;
+            // Story missions run their own police, as they run their own crowds for Memory: stun guns,
+            // giving up and arrests stand down, and the cops get their own guns back.
+            if (Game.IsMissionActive)
+            {
+                if (_arresting) EndArrest("a story mission", true);
+                if (_own.Count > 0) RestoreAll();
+                _modeKnown = _stunned = false;
+                _armedUntil = _stillSince = 0;
+                return;
+            }
             if (_arresting) DriveArrest(player, wanted, now);
             if (_pose != 0) DrivePose(player, now);
             if (wanted == 0)
@@ -171,11 +192,15 @@ namespace ViExtras
             }
             _stunned = stunned;
 
+            // on foot, and whether something else has the keys: asked once for both below
+            bool onFoot = !player.IsInVehicle();
+            bool uiInTheWay = onFoot && HudBridge.UiInTheWay;
+
             // giving up: unarmed, on foot and still, a cop close by, at 1-2 stars
             // (not while a wheel, a menu or the phone is up: standing still there is choosing,
             // and not again straight after an arrest that didn't happen)
-            bool complying = !_arresting && !lethal && !armedNow && wanted <= 2 && !player.IsInVehicle()
-                && now >= _complyAfter && !HudBridge.UiInTheWay
+            bool complying = !_arresting && !lethal && !armedNow && wanted <= 2 && onFoot
+                && now >= _complyAfter && !uiInTheWay
                 && player.Velocity.Length() < 1.2f && NearestCop(player, ComplyRange) != null;
             if (!complying) _stillSince = 0;
             else if (_stillSince == 0) _stillSince = now;
@@ -185,7 +210,7 @@ namespace ViExtras
                 StartArrest("gave up", wanted, now);
             }
 
-            if (!_arresting) OfferSurrender(player, wanted, now);
+            if (!_arresting) OfferSurrender(player, wanted, now, onFoot, uiInTheWay);
 
             if (now < _nextScan) return;
             _nextScan = now + ScanMs;
@@ -286,24 +311,26 @@ namespace ViExtras
         }
 
         // ------------------------------------------------------------------ surrender
-        private void OfferSurrender(Ped player, int wanted, int now)
+        private void OfferSurrender(Ped player, int wanted, int now, bool onFoot, bool uiInTheWay)
         {
-            if (_surrenderBroken || wanted == 0 || player.IsInVehicle() || player.IsRagdoll || HudBridge.UiInTheWay)
+            if (_surrenderBroken || wanted == 0 || !onFoot || player.IsRagdoll || uiInTheWay)
             {
                 _surrenderCop = null;
                 _surrenderHold = 0f;
                 return;
             }
             // the same cop while he stays near, on foot and in sight (picking the nearest afresh every
-            // frame started the hold over whenever two cops traded places), else the nearest who can see you
-            Ped cop = _surrenderCop != null && CanTakeSurrender(_surrenderCop, player) ? _surrenderCop : null;
-            if (cop == null)
+            // frame started the hold over whenever two cops traded places), else the nearest who can see
+            // you, looked for every SurrenderLookMs rather than every frame
+            GTA.Math.Vector3 me = player.Position;
+            Ped cop = _surrenderCop != null && _surrenderCop.Exists() && CanTakeSurrender(_surrenderCop, player, me, out _) ? _surrenderCop : null;
+            if (cop == null && now >= _nextSurrenderLook)
             {
+                _nextSurrenderLook = now + SurrenderLookMs;
                 float best = SurrenderRange;
                 foreach (Ped ped in World.GetNearbyPeds(player, SurrenderRange))
                 {
-                    if (!CanTakeSurrender(ped, player)) continue;
-                    float d = ped.Position.DistanceTo(player.Position);
+                    if (!CanTakeSurrender(ped, player, me, out float d)) continue;
                     if (d < best) { best = d; cop = ped; }
                 }
             }
@@ -320,7 +347,7 @@ namespace ViExtras
             try
             {
                 if (_focused != null && _holdDown != null && _drawMarker != null && _drawRim != null) held = SurrenderPrompt(hud, cop);
-                else if (_holdWorldItem != null) held = (bool)_holdWorldItem.Invoke(hud, new object[] { cop.Handle, "SURRENDER" });
+                else if (_holdWorldItem != null) held = _holdWorldItem(cop.Handle, "SURRENDER");
                 else return;
             }
             catch (Exception ex)
@@ -343,10 +370,16 @@ namespace ViExtras
             _surrenderCop = null;
         }
 
-        private bool CanTakeSurrender(Ped ped, Ped player) =>
-            ped != null && ped.Exists() && !ped.IsDead && !ped.IsInVehicle() && IsCop(ped)
-            && ped.Position.DistanceTo(player.Position) <= SurrenderRange
-            && Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY, ped, player, 17);
+        // Is he a cop first: that one read turns away everyone else around. (A ped from
+        // GetNearbyPeds exists; the cop kept from last frame is asked that by the caller.)
+        private static bool CanTakeSurrender(Ped ped, Ped player, GTA.Math.Vector3 me, out float dist)
+        {
+            dist = 0f;
+            if (ped == null || !IsCop(ped)) return false;
+            dist = ped.Position.DistanceTo(me);
+            return dist <= SurrenderRange && !ped.IsDead && !ped.IsInVehicle()
+                && Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY, ped, player, 17);
+        }
 
         // GTA6Hud's hold-E prompt (its marker, E glyph and filling rim), drawn here with a hold timer of
         // its own. GTA6Hud's HoldWorldItem keeps one timer for every hold prompt, and GTA6Hud runs it every
@@ -355,13 +388,13 @@ namespace ViExtras
         private bool SurrenderPrompt(object hud, Ped cop)
         {
             GTA.Math.Vector3 at = cop.Position + new GTA.Math.Vector3(0f, 0f, 0.7f);   // the head, as GTA6Hud aims at peds
-            if (!(bool)_focused.Invoke(null, new object[] { at }))
+            if (!_focused(at))
             {
                 if (_unfocusedSince == 0) _unfocusedSince = Environment.TickCount;
                 if (Environment.TickCount - _unfocusedSince > FocusGraceMs)
                 {
                     _surrenderHold = 0f;
-                    _passiveDot?.Invoke(hud, new object[] { at });
+                    _passiveDot?.Invoke(at);
                     return false;
                 }
             }
@@ -369,9 +402,9 @@ namespace ViExtras
             var p = GTA.UI.Screen.WorldToScreen(at, true);
             if (p.X <= 0f || p.Y <= 0f) return false;
             float x = p.X * 1.5f, y = p.Y * 1.5f;   // GTA6Hud's FromSprite
-            _drawMarker.Invoke(hud, new object[] { x, y, "SURRENDER", "square", "E", true, false, true });
-            _surrenderHold = (bool)_holdDown.Invoke(null, null) ? _surrenderHold + Math.Min(Game.LastFrameTime, 0.1f) : 0f;
-            if (_surrenderHold > 0f) _drawRim.Invoke(hud, new object[] { x, y, 48.07f, _surrenderHold / SurrenderHoldSeconds });
+            _drawMarker(x, y, "SURRENDER", "square", "E", true, false, true);
+            _surrenderHold = _holdDown() ? _surrenderHold + Math.Min(Game.LastFrameTime, 0.1f) : 0f;
+            if (_surrenderHold > 0f) _drawRim(x, y, 48.07f, _surrenderHold / SurrenderHoldSeconds);
             if (_surrenderHold < SurrenderHoldSeconds) return false;
             _surrenderHold = 0f;
             return true;
@@ -455,14 +488,14 @@ namespace ViExtras
             const BindingFlags Own = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             Type t = hud.GetType();
             _deadOrArrested = t.GetField("_deadOrArrested", Own);
-            _holdWorldItem = t.GetMethod("HoldWorldItem", Own, null, new[] { typeof(int), typeof(string) }, null);
+            _holdWorldItem = HudBridge.Bind<Func<int, string, bool>>(hud, t.GetMethod("HoldWorldItem", Own, null, new[] { typeof(int), typeof(string) }, null));
             const BindingFlags Stat = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            _focused = t.GetMethod("Focused", Stat, null, new[] { typeof(GTA.Math.Vector3) }, null);
-            _holdDown = t.GetMethod("ServiceHoldDown", Stat, null, Type.EmptyTypes, null);
-            _drawMarker = t.GetMethod("DrawWorldMarker", Own, null, new[] { typeof(float), typeof(float), typeof(string), typeof(string),
-                typeof(string), typeof(bool), typeof(bool), typeof(bool) }, null);
-            _drawRim = t.GetMethod("DrawProgressRim", Own, null, new[] { typeof(float), typeof(float), typeof(float), typeof(float) }, null);
-            _passiveDot = t.GetMethod("PassiveDot", Own, null, new[] { typeof(GTA.Math.Vector3) }, null);
+            _focused = HudBridge.Bind<Func<GTA.Math.Vector3, bool>>(hud, t.GetMethod("Focused", Stat, null, new[] { typeof(GTA.Math.Vector3) }, null));
+            _holdDown = HudBridge.Bind<Func<bool>>(hud, t.GetMethod("ServiceHoldDown", Stat, null, Type.EmptyTypes, null));
+            _drawMarker = HudBridge.Bind<Action<float, float, string, string, string, bool, bool, bool>>(hud, t.GetMethod("DrawWorldMarker", Own, null,
+                new[] { typeof(float), typeof(float), typeof(string), typeof(string), typeof(string), typeof(bool), typeof(bool), typeof(bool) }, null));
+            _drawRim = HudBridge.Bind<Action<float, float, float, float>>(hud, t.GetMethod("DrawProgressRim", Own, null, new[] { typeof(float), typeof(float), typeof(float), typeof(float) }, null));
+            _passiveDot = HudBridge.Bind<Action<GTA.Math.Vector3>>(hud, t.GetMethod("PassiveDot", Own, null, new[] { typeof(GTA.Math.Vector3) }, null));
             if (_focused == null || _holdDown == null || _drawMarker == null || _drawRim == null)
                 Log.Write("PoliceForce", "GTA6Hud's prompt pieces weren't all found: the surrender uses its shared hold prompt");
             if (_deadOrArrested == null) Log.Write("PoliceForce", "GTA6Hud's arrest flag wasn't found: it may cancel arrests");
@@ -611,13 +644,26 @@ namespace ViExtras
                 }
                 catch (Exception ex) { Log.Write("PoliceForce", "police brain: " + ex.Message); }
             }
+            // A cop armed here last time and still holding the stun gun needs nothing more (he
+            // can't switch away from it); only one who isn't, or is new, gets the rest. Who
+            // that was is kept for the cops still around, so the list doesn't grow.
+            int sweep = ++_stunSweep;
             foreach (Ped ped in World.GetNearbyPeds(player, 150f))
             {
-                if (ped == null || !ped.Exists() || ped.IsDead || done.Contains(ped.Handle) || !IsCop(ped)) continue;
+                if (ped == null || done.Contains(ped.Handle)) continue;
+                if (_stunArmed.ContainsKey(ped.Handle) && Current(ped) == StunGun) { _stunArmed[ped.Handle] = sweep; continue; }
+                if (!IsCop(ped) || ped.IsDead) continue;
                 OwnWeapon(ped, 0);
                 GiveStunGun(ped);
                 if (Current(ped) != StunGun) Function.Call(Hash.SET_CURRENT_PED_WEAPON, ped, StunGun, true);
                 Function.Call(Hash.SET_PED_CAN_SWITCH_WEAPON, ped, false);
+                _stunArmed[ped.Handle] = sweep;
+            }
+            if (_stunArmed.Count > 0)
+            {
+                _stunGone.Clear();
+                foreach (KeyValuePair<int, int> kv in _stunArmed) if (kv.Value != sweep) _stunGone.Add(kv.Key);
+                foreach (int h in _stunGone) _stunArmed.Remove(h);
             }
         }
 
@@ -654,6 +700,7 @@ namespace ViExtras
                 if (!disarmed && Current(ped) == StunGun) Function.Call(Hash.SET_CURRENT_PED_WEAPON, ped, kv.Value, true);
             }
             _own.Clear();
+            _stunArmed.Clear();   // undone: the next stun-gun sweep arms each one afresh
         }
     }
 }

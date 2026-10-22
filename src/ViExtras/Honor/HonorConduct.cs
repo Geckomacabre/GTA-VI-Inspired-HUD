@@ -54,6 +54,9 @@ namespace ViExtras
         private readonly Dictionary<int, int> _aggressors = new Dictionary<int, int>();
         private HashSet<int> _damagedBy = new HashSet<int>(), _damagedNow = new HashSet<int>();
         private float _lastHurt = -1f;
+        private const int DamageCheckMs = 1000;
+        private bool _anyPedWas;
+        private int _damageAt;
         /// <summary>Whether each living ped was holding a weapon when last seen.</summary>
         private Dictionary<int, bool> _armed = new Dictionary<int, bool>(), _armedNow = new Dictionary<int, bool>();
         /// <summary>Dead peds already dealt with (kept while they are still in the pool).</summary>
@@ -201,6 +204,14 @@ namespace ViExtras
             bool hurt = _lastHurt >= 0f && hp < _lastHurt - 0.01f;
             _lastHurt = hp;
             bool anyPed = Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_ANY_PED, player);
+            // Every ped's flag is only read when it can change something: the player was
+            // hurt (each flag on counts again), the first flag since there were none (none
+            // was on last time), and once a second for a hit that took no health (god
+            // mode): a flag that turned on since then counts then. Between, the flags
+            // seen last time are kept as they were.
+            bool damage = anyPed && (hurt || !_anyPedWas || now >= _damageAt);
+            _anyPedWas = anyPed;
+            if (damage) _damageAt = now + DamageCheckMs;
 
             _damagedNow.Clear();
             _armedNow.Clear();
@@ -212,7 +223,7 @@ namespace ViExtras
                 int h = ped.Handle;
                 if (h == self) continue;
 
-                if (anyPed && Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, player, ped, true))
+                if (damage && Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, player, ped, true))
                 {
                     _damagedNow.Add(h);
                     if (!_damagedBy.Contains(h) || hurt) _aggressors[h] = now;
@@ -254,7 +265,7 @@ namespace ViExtras
             }
 
             // Only what is still in the pool is kept.
-            Swap(ref _damagedBy, ref _damagedNow);
+            if (damage || !anyPed) Swap(ref _damagedBy, ref _damagedNow);
             Swap(ref _armed, ref _armedNow);
             Swap(ref _seenDead, ref _seenNow);
             _primed = true;

@@ -6,17 +6,24 @@ using GTA;
 namespace ViExtras
 {
     /// <summary>
-    /// GTA6Hud's CRASH CAMERA setting (its settings menu, held camera button;
-    /// GTA6Hud.ini [Cinematics] CrashCamera) switches this crash cam, and
-    /// GTA6Hud's own crash camera no longer runs.
+    /// GTA6Hud's CRASH CAMERA setting (HUD OPTIONS on the held camera button,
+    /// and the HUD page of its VI pause menu; GTA6Hud.ini [Cinematics]
+    /// CrashCamera) switches this crash cam, and GTA6Hud's own crash camera no
+    /// longer runs.
     ///
     /// GTA6Hud starts its crash cinematic only while its _crashCameraEnabled is
-    /// set, and only reads that field for the setting's ON / OFF in its menu. So
-    /// the field is kept false, except while the settings menu is open, when it
+    /// set, and only reads that field for the setting's ON / OFF in its menus. So
+    /// the field is kept false, except while one of those menus is open, when it
     /// holds the player's choice for the menu to show and flip (GTA6Hud saves it
-    /// to its ini itself). For those moments GTA6Hud's last impact speed is
-    /// zeroed, which its crash check needs above 16, so no crash can start its
-    /// cinematic with the menu up. GTA6Hud.dll itself is not changed.
+    /// to its ini itself, KILL CAMERA's toggle included). For those moments
+    /// GTA6Hud's last impact speed is zeroed, which its crash check needs above
+    /// 16, so no crash can start its cinematic with a menu up. GTA6Hud.dll itself
+    /// is not changed.
+    ///
+    /// 2.1 added the pause menu's HUD page. Before it was watched too, the field
+    /// was forced back to false under it every frame: the row stayed OFF, a click
+    /// never reached this crash cam, and KILL CAMERA's toggle there saved
+    /// CrashCamera = False.
     /// </summary>
     internal static class Gta6HudCrashToggle
     {
@@ -56,7 +63,7 @@ namespace ViExtras
             }
             try
             {
-                bool open = (bool)_settingsOpen.GetValue(_hud);
+                bool open = (bool)_settingsOpen.GetValue(_hud) || HudBridge.ViPauseOpen;
                 if (open)
                 {
                     if (!_wasOpen) _enabled.SetValue(_hud, _wanted);   // the menu shows the player's choice

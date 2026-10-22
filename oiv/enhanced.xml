@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.5.5 (GTA V Enhanced)</name>
-    <version><major>2</major><minor>5</minor><tag>ENHANCED 2.5.5</tag></version>
-    <author><displayName>FBICat</displayName></author>
+    <name>GTA VI-Inspired HUD 2.6.0 (GTA V Enhanced)</name>
+    <version><major>2</major><minor>6</minor><tag>ENHANCED 2.6.0</tag></version>
+    <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
 Rockstar's official GTA VI media and belongs to Rockstar Games. No GTA VI game files are included.
@@ -14,16 +14,25 @@ FBICat's Discord is there for his original mod, so please bring questions about 
 Same mod as the Legacy package; the DLC packs are converted to the Enhanced (gen9) resource format with CodeWalker's
 gen9 writer (the same conversion as CodeWalker's Tools > Convert Assets).
 
-INSTALL - two packages, both to your mods folder
-  1. This package (the files).
-  2. GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv: registers the HUD's DLC packs in dlclist.xml and raises the gameconfig.xml pools.
-     Updating from 2.5.4 or older? Install it once more: 2.5.5 adds a pack (vihud). If it then says the install
-     FAILED ("Unable to find XML Node"), that only means the older packs are registered already.
-  3. Optional: GTA-VI-Inspired-HUD-Lucia-Enhanced.oiv, for Lucia.
+INSTALL - to your mods folder
+  1. This package. It also registers the HUD's DLC packs in dlclist.xml and raises the gameconfig.xml pools, which
+     the separate RegisterPatch did up to 2.5.5: you don't need that any more. Installing over an older version is
+     fine; no pack ends up listed twice.
+  Lucia isn't included: her model is someone else's paid work. Get her from her creator:
+  https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256
+  or MP Jason & Lucia V on gta5-mods.com: https://www.gta5-mods.com/player/mp-jason-lucia-v
+  Jason isn't included either. Get him from the same creator:
+  https://www.patreon.com/u10507693/posts/jason-duval-from-168652433
+  or Jason Duval character from GTA VI on mod-hub.net:
+  https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en
+  Game in C:\Program Files? Start the OIV Package Installer (CodeWalker.OIVInstaller.exe) with right-click >
+  Run as administrator, or the install can leave the old files in place.
   ViMinimap.asi must end up next to GTA5_Enhanced.exe; the minimap needs it to draw in fullscreen.
 
 What it installs: the HUD (scripts\GTA6Hud.dll, scripts\Hud\, GTA6Hud.ini), the 3D minimap (scripts\ViMinimap.dll,
 MiniMap.* data, ViMinimap.asi), and the packs vihud (FBICat's 2.1 HUD art and movies), vihudfonts and vihudanims - gen9.
+Registration, in update.rpf: the 3 packs in dlclist.xml; gameconfig.xml MetaDataStore 4000, ExprDictStore 400,
+TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600.
   - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's 2.1 with small fixes: the gun shop on Enhanced, a lighter
     spin-out check, the HUD OPTIONS switches for these scripts, no interaction dots in cutscenes, and more):
       scripts\ViExtras.dll + scripts\ViExtras\ + ViExtras.ini   honor, crosshair, focus, skills, NPC memory, crash cam,
@@ -31,8 +40,23 @@ MiniMap.* data, ViMinimap.asi), and the packs vihud (FBICat's 2.1 HUD art and mo
       scripts\ViWasted.dll + ViWasted.ini                        WASTED / BUSTED
       scripts\ViCustoms.dll + scripts\ViCustoms\ + ViCustoms.ini  Leonida Customs (GPL-3)
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
-      scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor and Lucia
+      scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.6.0
+  - One package to install: it registers the HUD's packs itself, so the RegisterPatch is gone. Lucia isn't included
+    any more (see INSTALL above for where to get her, and Jason).
+  - GTA VI's character switcher (hold Left Alt): a row of cards, Michael, Franklin and Trevor, then Jason and Lucia
+    side by side, each with their honor face. Jason joins the wheel when his model is in your game.
+  - Heists: rob the Fleeca banks, Pacific Standard and Vangelico. Case the place first, then pull a gun.
+  - GTA VI's police lights, rebuilt from its trailer, and its police arrow. POLICE LIGHTS in HUD OPTIONS sizes them.
+  - Carry every weapon: CARRY ALL WEAPONS in HUD OPTIONS (hold V), on by default; switch it off for FBICat's limit.
+    Mk II weapons show their pictures on the wheel.
+  - A game in Program Files gets fixed for you: Windows asks once to let the HUD save there.
+  - LSPDFR on duty: no witnesses, no wanted level and no character switching.
+  - Sniper rifles show their scope, the stun gun no longer jumps into your hands in a vehicle, and the Los Santos
+    Customs garage doors roll up and down as in GTA V.
+  - GTA VI's wanted box and its tells, smoother frame times, and many fixes (see the changelog on GitHub).
 
 Changes in 2.5.5
   - FBICat's VI HUD 2.1: GTA V-style character switching with Lucia as her own character, a new weapon wheel,
@@ -41,7 +65,7 @@ Changes in 2.5.5
   - Fixed: Lucia shown as missing, the radio opening while you pick a character in a car, interaction dots in
     cutscenes, selling the same car to the fence again and again.
   - Police memory is off, and people report you less often.
-  - New pack vihud: install GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv once more. With NaturalVision Enhanced,
+  - New pack vihud (this package switches it on; 2.5.5 needed RegisterPatch 1.7 for it). With NaturalVision Enhanced,
     copy vihud and vihudfonts into onigiri\dlcpacks and add dlcpacks:/vihud/ to NVE's dlclist.xml.
 
 Changes in 2.5.4
@@ -108,5 +132,6 @@ https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
   </colors>
   <content>
     <!-- FILES -->
+    <!-- REGISTER -->
   </content>
 </package>

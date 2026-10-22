@@ -63,7 +63,8 @@ namespace ViExtras
                 volume = Math.Max(0f, Math.Min(1f, volume));
                 Clip clip = Load(path, volume);
                 if (clip == null || clip.Data.Length == 0 || volume <= 0f) return;
-                new Thread(() => Run(clip)) { IsBackground = true, Name = "ViExtras radio sfx" }.Start();
+                // a pool thread rather than a new one a click; still one a sound, so two can overlap
+                ThreadPool.QueueUserWorkItem(_ => Run(clip));
             }
             catch (Exception ex)
             {

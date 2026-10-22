@@ -7,7 +7,7 @@ namespace ViExtras
     /// Where honor is kept between sessions: what the FiveM version kept in
     /// the character's metadata (metadata.honor and metadata.honorBroken), here
     /// one section per story character in Save\Honor.ini, keyed by the player
-    /// model. Michael, Franklin, Trevor and Lucia each have their own.
+    /// model. Michael, Franklin, Trevor, Lucia and Jason (jdfinal, ViSwitch's fifth character) each have their own.
     /// </summary>
     internal static class HonorStore
     {
@@ -23,8 +23,8 @@ namespace ViExtras
         }
 
         // The story characters' models, and what their sections are called.
-        private static readonly string[] Models = { "player_zero", "player_one", "player_two", "lucia_s" };
-        private static readonly string[] Names = { "Michael", "Franklin", "Trevor", "Lucia" };
+        private static readonly string[] Models = { "player_zero", "player_one", "player_two", "lucia_s", "jdfinal" };
+        private static readonly string[] Names = { "Michael", "Franklin", "Trevor", "Lucia", "Jason" };
         private static int[] _hashes;
 
         /// <summary>The save section for a player model.</summary>
@@ -57,7 +57,17 @@ namespace ViExtras
             {
                 File.SetValue(key, "Honor", value);
                 File.SetValue(key, "Broken", broken);
-                File.Save();
+                // The file as ScriptSettings.Save writes it, taken now and written off the
+                // script thread (SaveFile.WriteLater): a deed doesn't wait on the disk.
+                var text = new System.Text.StringBuilder();
+                foreach (string section in File.GetAllSectionNames())
+                {
+                    text.AppendLine("[" + section + "]");
+                    foreach (string name in File.GetAllKeyNames(section))
+                        text.AppendLine(name + " = " + File.GetValue(section, name, ""));
+                    text.AppendLine();
+                }
+                SaveFile.WriteLater(Paths.Save("Honor.ini"), text.ToString(), "Honor");
             }
             catch (Exception ex)
             {

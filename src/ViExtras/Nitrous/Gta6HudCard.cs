@@ -33,7 +33,18 @@ namespace ViExtras
 
         private static bool _looked;
         private static object _hud;
-        private static MethodInfo _kitReady, _stackWidth, _stackLeft, _cardBottom, _make, _brand, _tex, _text, _gauge, _gaugeColour, _fuel;
+        // GTA6Hud's methods as typed delegates, made once (HudBridge.Bind): a car's
+        // every frame calls ten or so. KitText stays a MethodInfo: its optional
+        // arguments are of GTA6Hud's own types, and it only runs while the full card shows.
+        private static Func<bool> _kitReady;
+        private static Func<float> _stackWidth, _stackLeft, _cardBottom;
+        private static Func<Vehicle, string> _make;
+        private static Func<string, string> _brand;
+        private static Action<string, float, float, float, float, Color> _tex;
+        private static Action<float, float, float, string, float, float, Color> _gauge;
+        private static Func<float, Color> _gaugeColour;
+        private static Func<Vehicle, float> _fuel;
+        private static MethodInfo _text;
         private static FieldInfo _cardTop, _fullFor, _lastHandle, _assetsReady, _fullSeconds, _idle;
         private static int _topFrame = -1;
         private static float _topThisFrame;
@@ -55,17 +66,17 @@ namespace ViExtras
                 Assembly asm = t.Assembly;
                 MethodInfo M(string name) => t.GetMethod(name, Own | BindingFlags.Static);
                 FieldInfo F(string name) => t.GetField(name, Own);
-                _kitReady = M("KitReady");
-                _stackWidth = M("KitStackWidth");
-                _stackLeft = M("KitStackLeft");
-                _cardBottom = M("KitCardBottom");
-                _make = M("VehicleMake");
-                _brand = M("BrandTexture");
-                _tex = M("PmTexAt");
+                _kitReady = HudBridge.Bind<Func<bool>>(hud, M("KitReady"));
+                _stackWidth = HudBridge.Bind<Func<float>>(hud, M("KitStackWidth"));
+                _stackLeft = HudBridge.Bind<Func<float>>(hud, M("KitStackLeft"));
+                _cardBottom = HudBridge.Bind<Func<float>>(hud, M("KitCardBottom"));
+                _make = HudBridge.Bind<Func<Vehicle, string>>(hud, M("VehicleMake"));
+                _brand = HudBridge.Bind<Func<string, string>>(hud, M("BrandTexture"));
+                _tex = HudBridge.Bind<Action<string, float, float, float, float, Color>>(hud, M("PmTexAt"));
                 _text = M("KitText");
-                _gauge = M("DrawKitGauge");
-                _gaugeColour = M("KitGaugeColour");
-                _fuel = M("FuelFraction");
+                _gauge = HudBridge.Bind<Action<float, float, float, string, float, float, Color>>(hud, M("DrawKitGauge"));
+                _gaugeColour = HudBridge.Bind<Func<float, Color>>(hud, M("KitGaugeColour"));
+                _fuel = HudBridge.Bind<Func<Vehicle, float>>(hud, M("FuelFraction"));
                 _cardTop = F("_vehCardTop");
                 _fullFor = F("_vehCardFullFor");
                 _lastHandle = F("_lastVehicleHandle");
@@ -145,16 +156,16 @@ namespace ViExtras
                 if (_fullLeft > 0f) _fullLeft -= Game.LastFrameTime;
                 bool full = _fullLeft > 0f;
                 bool gauges = !veh.Model.IsBicycle;
-                if ((!full && !gauges) || !(bool)_kitReady.Invoke(_hud, null)) return false;
+                if ((!full && !gauges) || !_kitReady()) return false;
 
-                float w = (float)_stackWidth.Invoke(_hud, null);
-                float left = (float)_stackLeft.Invoke(_hud, null);
+                float w = _stackWidth();
+                float left = _stackLeft();
                 float cx = left + w * 0.5f;
-                float bottom = (float)_cardBottom.Invoke(_hud, null);
+                float bottom = _cardBottom();
                 string text = "", text2 = "", make = "";
                 if (full)
                 {
-                    text = (string)_make.Invoke(_hud, new object[] { veh }) ?? "";
+                    text = _make(veh) ?? "";
                     make = text;
                     text2 = veh.LocalizedName;
                     if (string.IsNullOrEmpty(text2) || text2 == "NULL") text2 = veh.DisplayName;
@@ -170,7 +181,7 @@ namespace ViExtras
                 if (full)
                 {
                     Tex("hud_vehinfo_bg", left, top, w, 110f, Color.White);
-                    string brand = (string)_brand.Invoke(_hud, new object[] { make });
+                    string brand = _brand(make);
                     if (brand != null) Tex(brand, cx - 60f, top + 36.6f - 60f, 120f, 120f, Color.FromArgb(70, 255, 255, 255));
                     Text(text, 28f, left, top + 4f, w, Color.White);
                     if (text2.Length > 0) Text(text2, 27f, left, top + 33f, w, Color.FromArgb(186, 255, 255, 255));
@@ -185,7 +196,7 @@ namespace ViExtras
                 bool running = veh.IsEngineRunning;
                 Color idle = (Color)_idle.GetValue(null);
                 float engine = Num.Clamp01(veh.EngineHealth / 1000f);
-                float fuel = (float)_fuel.Invoke(_hud, new object[] { veh });
+                float fuel = _fuel(veh);
                 Gauge(x0 + Pitch * i++, cy, engine, "hud_gauge_engine", 14.4f, 9.3f, running ? GaugeColour(engine) : idle);
                 Gauge(x0 + Pitch * i++, cy, fuel, "hud_gauge_fuel", 12.4f, 13.3f, running ? GaugeColour(fuel) : idle);
                 slotX = x0 + Pitch * i;
@@ -217,8 +228,7 @@ namespace ViExtras
             return _topThisFrame;
         }
 
-        public static void Tex(string name, float x, float y, float w, float h, Color c) =>
-            _tex.Invoke(_hud, new object[] { name, x, y, w, h, c });
+        public static void Tex(string name, float x, float y, float w, float h, Color c) => _tex(name, x, y, w, h, c);
 
         private static void Text(string s, float size, float x, float boxTop, float boxW, Color c)
         {
@@ -228,9 +238,8 @@ namespace ViExtras
             _text.Invoke(_hud, args);
         }
 
-        private static void Gauge(float cx, float cy, float fraction, string icon, float iw, float ih, Color c) =>
-            _gauge.Invoke(_hud, new object[] { cx, cy, fraction, icon, iw, ih, c });
+        private static void Gauge(float cx, float cy, float fraction, string icon, float iw, float ih, Color c) => _gauge(cx, cy, fraction, icon, iw, ih, c);
 
-        private static Color GaugeColour(float fraction) => (Color)_gaugeColour.Invoke(null, new object[] { fraction });
+        private static Color GaugeColour(float fraction) => _gaugeColour(fraction);
     }
 }

@@ -87,29 +87,32 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 ## Step 5: Download the mod
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Under **Assets**, download these **2 files**:
-   - **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`** (the mod, about 100 MB)
-   - **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** (a small patch that switches the mod on)
-3. **Want to play as Lucia?** Also download **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** (about 1.7 GB).
-   She's optional: the HUD works without her.
+2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.0-Legacy.oiv`** (the mod, about 100 MB). It also switches
+   the mod on in the game, so there's no separate patch to get.
+3. **Want to play as Lucia?** She isn't included: her model is someone else's paid work. Get her from her creator,
+   **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another
+   Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net. The HUD
+   works without her.
 
-❌ Don't download `GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv`. That one is for the other version of the game.
+❌ Don't download `GTA-VI-Inspired-HUD-2.6.0-Enhanced.oiv`. That one is for the other version of the game.
 
-💡 The number in the file name is the version (2.5.5 here), so you can always tell which one you installed. Mention it when you ask for help.
+💡 The number in the file name is the version (2.6.0 here), so you can always tell which one you installed. Mention it when you ask for help.
 
 ---
 
 ## Step 6: Install the mod with OpenIV
 
+⚠️ **Game in Program Files?** If your game folder's path starts with `C:\Program Files` (the Rockstar Games
+Launcher, Epic Games and Steam put it there), right-click **OpenIV** → **Run as administrator** and click
+**Yes**. Windows lets only administrators change files there, and without it the install can leave the old files
+in place.
+
 1. In OpenIV, click **Tools** → **Package Installer**.
-2. Pick **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`**, then click **Install**.
+2. Pick **`GTA-VI-Inspired-HUD-2.6.0-Legacy.oiv`**, then click **Install**.
 3. When it asks where to install, choose **mods folder**. If it offers to create the folder, say yes.
 4. Wait until it says it's finished, then click **Close**.
-5. Do the same for **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`**.
-6. Got the Lucia file? Install **`GTA-VI-Inspired-HUD-Lucia-Legacy.oiv`** the same way, last.
 
-✅ Installing the RegisterPatch again, or over an older one, is fine: it never lists a pack twice. If it then
-says it **failed**, that only means it's already in.
+✅ Installing the mod again, or over an older version, is fine: it never lists a pack twice.
 
 ---
 
@@ -129,10 +132,33 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 
 | To... | Do this |
 | --- | --- |
-| **Play as Lucia** | Hold **Left Alt** (controller: hold **D-pad down**), tap **E** until Lucia's picture is highlighted, then let go. |
+| **Switch character** | Hold **Left Alt** (controller: hold **D-pad down**), pick with **Q / E** or **Left / Right**, then let go. Jason and Lucia need their models (not included, see Step 5). |
 | **See the minimap** | Get in a car. It only shows in vehicles, or when you're wanted. |
 | **Open the HUD settings** | Hold **V**. |
 | **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. |
+
+---
+
+## Optional: Forests of San Andreas and GTA V Remastered
+
+**Forests of San Andreas** and **GTA V Remastered** by **Larcius** (built on JRod's and le__AK's maps) fill the map
+with tens of thousands of extra trees, bushes and props, and they work with this HUD. They come as OIVs too, so they
+go in the same way:
+
+1. Install the HUD first (Steps 1 to 7).
+2. In each mod's zip, open the **`GTA V Legacy`** folder. In OpenIV, use **Tools** → **Package Installer** on the
+   ones you want, and pick **mods folder** each time, like in Step 6:
+   - **`Forests of San Andreas (North) Ultimate v….oiv`**
+   - **`Forests of San Andreas (South) Ultimate v….oiv`**
+   - **`GTA V Remastered Ultimate v….oiv`**
+
+   Each one adds its own pack to the game's pack list, next to the HUD's, so there's nothing to edit.
+3. Using **Liberty City V Remix** as well? Also install the mods' **`Compatibility Liberty City V Remix`** OIVs.
+4. **Leave `gameconfig.xml` as it is.** The maps don't need a different one, and installing another
+   `gameconfig.xml` would replace the one the HUD set up, which the HUD needs. See "Something went wrong?" if
+   the game crashes while loading with the maps in.
+
+To take them off again, install the mods' **`Uninstaller`** OIVs the same way, to the mods folder.
 
 ---
 
@@ -143,14 +169,15 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 
 | What happens | What to do |
 | --- | --- |
-| Installing the **RegisterPatch a second time** says it **failed** ("Unable to find XML Node") | It's already installed: `dlclist.xml` lists the HUD's packs, so there was nothing to add. Your game is set up, carry on. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Your Script Hook V .NET is too old. Redo Step 3 with the newest version. |
-| You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Copy the scripts in yourself: see "Updating by hand" below. |
+| You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Install it again with OpenIV run as administrator (Step 6), or copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`. Redo Step 7. |
-| The game **crashes while loading** | Make sure you installed the RegisterPatch (Step 6). If you have other big mods (extra characters, maps), try turning them off. |
-| A message says **Lucia is not registered** (and mentions a `VIHudSetup.exe`) | Her two packs are missing from `dlclist.xml`. Install `GTA-VI-Inspired-HUD-Lucia-Legacy.oiv` again, the same way as the others. Ignore the `VIHudSetup.exe` part of the message: this mod doesn't use it. |
+| The game **crashes while loading** | Install the mod again (Step 6): it raises the game limits the HUD needs. If you have other big mods (extra characters, maps), try turning them off. |
+| The game **crashes while loading** since you added **Forests of San Andreas** or **GTA V Remastered** | The maps' many trees can fill three of the game's pools. In OpenIV, switch on **Edit mode**, open `mods\update\update.rpf\common\data\gameconfig.xml` and set the `PoolSize` `value` of **`Building`** to `70000`, **`phInstGta`** to `20000` and **`StaticBounds`** to `20000` (leave a value that's already higher). Don't install a different `gameconfig.xml` instead: it would replace the one the HUD set up (if you did, install the mod again, as in Step 6). Still crashing? Add the [Heap Adjuster](https://www.gta5-mods.com/tools/heapadjuster), which the maps' own guide suggests too. |
+| A message says **Lucia is not registered** | Lucia isn't included with the HUD any more (see Step 5). Don't have her? Set `Enabled = False` under `[Lucia]` in `scripts\GTA6Hud.ini` and the message goes away. Have a Lucia model? Her pack is missing from `dlclist.xml`: add its line. If the message mentions a `VIHudSetup.exe`, ignore that part: this mod doesn't use it. |
 | **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
+| The HUD says your game **won't save in its folder**, and a **Windows prompt** asks to let **icacls** make changes | Your game is in **Program Files**, where Windows lets only administrators change files, so the HUD can't save its settings (and ReShade can't save its own). Click **Yes**: it lets your Windows user change the game folder, the same as doing it by hand in the folder's **Properties** → **Security**. Then restart the game once. Clicked **No**? You're asked again the next time you start the game. `ViExtras.ini` `[GameFolder] FixAccess = False` stops the question. |
 | **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `ViMinimap.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
 
 ---
@@ -158,11 +185,12 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 ## Updating by hand (game in Program Files)
 
 If your game is in **Program Files** (where the Rockstar Games Launcher and Steam put it), Windows guards that folder,
-and an update through OpenIV doesn't always replace the old files. You can copy the new scripts in yourself
-instead. An `.oiv` is just a zip:
+and an update through OpenIV doesn't always replace the old files unless you run it as administrator (Step 6).
+You can also copy the new scripts in yourself. (From 2.6, the HUD offers to fix the folder for you the first time it runs: see the Windows prompt
+row above. After that, updates go in normally.) An `.oiv` is just a zip:
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
+2. Copy **`GTA-VI-Inspired-HUD-2.6.0-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
 4. Paste it into the **`scripts`** folder in your game folder, for example
@@ -172,8 +200,8 @@ instead. An `.oiv` is just a zip:
    and press Enter, then delete the **`dl3`** folder. It's only a cache, and it's made again the next time you start
    the game.
 6. Coming from 2.5.4 or older? 2.5.5 adds a pack: also copy the zip's **`content`** → **`dlcpacks`** → **`vihud`**
-   folder into **`mods\update\x64\dlcpacks`** in your game folder, and install
-   **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** as in Step 6.
+   folder into **`mods\update\x64\dlcpacks`** in your game folder, and install the mod once with OpenIV as in
+   Step 6, which switches the new pack on.
 7. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line that shows the version you
    downloaded.
 

@@ -1,0 +1,34 @@
+    <archive path="update\update.rpf" createIfNotExist="True" type="RPF7">
+      <xml path="common\data\gameconfig.xml">
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']/PoolSize">
+          <PoolSize value="4000" />
+        </replace>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='ExprDictStore']/PoolSize">
+          <PoolSize value="400" />
+        </replace>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='TxdStore']/PoolSize">
+          <PoolSize value="150000" />
+        </replace>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='DwdStore']/PoolSize">
+          <PoolSize value="30000" />
+        </replace>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/ConfigModelInfo/MaxExtraPedModelInfos">
+          <MaxExtraPedModelInfos value="600" />
+        </replace>
+      </xml>
+      <xml path="common\data\dlclist.xml">
+        <add xpath="/SMandatoryPacksData" append="Last">
+          <ViHudScratch />
+        </add>
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihud/'])] | /SMandatoryPacksData/ViHudScratch" append="Last">
+          <Item>dlcpacks:/vihud/</Item>
+        </add>
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudanims/'])] | /SMandatoryPacksData/ViHudScratch" append="Last">
+          <Item>dlcpacks:/vihudanims/</Item>
+        </add>
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudfonts/'])] | /SMandatoryPacksData/ViHudScratch" append="Last">
+          <Item>dlcpacks:/vihudfonts/</Item>
+        </add>
+        <remove xpath="/SMandatoryPacksData/ViHudScratch" />
+      </xml>
+    </archive>

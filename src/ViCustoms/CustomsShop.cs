@@ -112,8 +112,15 @@ namespace ViExtras
             try { _leftSince?.SetValue(hud, false); } catch { }
         }
 
+        // Far from every shop no car can reach one within a second (FarMetres at 150 m/s),
+        // so the car is only looked at once a second then, not every frame.
+        private const float FarMetres = 200f;
+        private const int FarLookMs = 1000;
+        private long _lookAt;
+
         private void Approach()
         {
+            if (RealTime.Ms < _lookAt) return;
             Ped ped = Game.Player.Character;
             Vehicle v = ped.IsInVehicle() ? ped.CurrentVehicle : null;
             if (v == null || !v.Exists() || v.GetPedOnSeat(VehicleSeat.Driver) != ped) return;
@@ -123,13 +130,21 @@ namespace ViExtras
             // as GTA6Hud's own shop finds a car stopped in the bay
             CustomsData.Shop shop = null;
             bool inside = Function.Call<int>(Hash.GET_INTERIOR_FROM_ENTITY, v) != 0;
+            Vector3 at = v.Position;
+            float nearest = float.MaxValue;
             foreach (CustomsData.Shop s in CustomsData.Shops)
             {
                 var spot = new Vector3(s.X, s.Y, s.Z);
-                float d = v.Position.DistanceTo2D(spot);
-                if ((d < _radius || inside && d < 25f) && Math.Abs(v.Position.Z - s.Z) < 4f) { shop = s; break; }
+                float d = at.DistanceTo2D(spot);
+                nearest = Math.Min(nearest, d);
+                if ((d < _radius || inside && d < 25f) && Math.Abs(at.Z - s.Z) < 4f) { shop = s; break; }
             }
-            if (shop == null) { _armed = true; return; }
+            if (shop == null)
+            {
+                _armed = true;
+                if (nearest > FarMetres) _lookAt = RealTime.Ms + FarLookMs;
+                return;
+            }
             // GTA6Hud tells a wanted player to lose the cops first
             if (!_armed || v.Speed > 2.5f || Game.Player.WantedLevel > 0 || HudBridge.UiInTheWay) return;
             _armed = false;
@@ -859,12 +874,37 @@ namespace ViExtras
                 Off(hud?.GetType().GetField("_barsOn", Own), hud);
                 Off(hud?.GetType().GetField("_markersOn", Own), hud);
                 Off(refs?.GetField("NotificationsEnabled", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic), null);
+                TurnHintOff(hud);
             }
             else
             {
                 foreach (var h in _held) try { h.Field.SetValue(h.Target, h.Was); } catch { }
                 _held.Clear();
+                if (_turnScan != null) try { _turnScan.SetValue(_turnHud, 0); } catch { }
+                _turnScan = null;
+                _turnHud = null;
             }
+        }
+
+        // FBICat's "Turn Left / Turn Right" hint has no switch of its own: its next route scan is put off while the
+        // menu is up and the hint taken down at once; on close it scans again straight away.
+        private FieldInfo _turnScan;
+        private object _turnHud;
+
+        private void TurnHintOff(object hud)
+        {
+            Type t = hud?.GetType();
+            FieldInfo scan = t?.GetField("_turnScanAt", Own), visible = t?.GetField("_turnVisible", Own), blend = t?.GetField("_turnBlend", Own);
+            if (scan == null || scan.FieldType != typeof(int)) return;
+            try
+            {
+                scan.SetValue(hud, int.MaxValue);
+                if (visible != null && visible.FieldType == typeof(bool)) visible.SetValue(hud, false);
+                if (blend != null && blend.FieldType == typeof(float)) blend.SetValue(hud, 0f);
+                _turnScan = scan;
+                _turnHud = hud;
+            }
+            catch { }
         }
 
         private void Off(FieldInfo f, object target)

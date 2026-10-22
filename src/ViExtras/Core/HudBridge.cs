@@ -66,6 +66,7 @@ namespace ViExtras
                 }
             }
             catch { }
+            _menuKnown = false;   // HudMenuOpen reads the holds: asked afresh, even within the frame
         }
 
         /// <summary>
@@ -321,27 +322,51 @@ namespace ViExtras
         private static readonly string[] UiFlags = { "_wheelOpen", "_settingsOpen", "_trunkOpen", "_shopOpen", "_swapOpen" };
         private static FieldInfo[] _uiFields;
 
+        // What has the keys, read once a frame, the way GameReady.Now is: every
+        // script asks, most of them several times a frame, and none of it changes
+        // within one. The 2.5 panels (skills, the honor layout editor) are asked
+        // each time: scripts here open and close them mid-frame.
+        private static int _frame = -1;
+        private static bool _pausedKnown, _paused, _busyKnown, _busy, _menuKnown, _menu, _uiKnown, _ui, _phoneKnown, _phone;
+
+        private static void Fresh()
+        {
+            int frame = Game.FrameCount;
+            if (frame == _frame) return;
+            _frame = frame;
+            _pausedKnown = _busyKnown = _menuKnown = _uiKnown = _phoneKnown = false;
+        }
+
         /// <summary>One of GTA6Hud's wheel, settings, trunk or shop menus is open.</summary>
         public static bool Gta6HudUiOpen
         {
             get
             {
-                object hud = Gta6Hud();
-                if (hud == null) return false;
-                try
-                {
-                    if (_uiFields == null)
-                    {
-                        _uiFields = new FieldInfo[UiFlags.Length];
-                        for (int i = 0; i < UiFlags.Length; i++)
-                            _uiFields[i] = hud.GetType().GetField(UiFlags[i], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    }
-                    foreach (FieldInfo f in _uiFields)
-                        if (f != null && (bool)f.GetValue(hud)) return true;
-                }
-                catch { }
-                return false;
+                Fresh();
+                return UiNow();
             }
+        }
+
+        private static bool UiNow()
+        {
+            if (_uiKnown) return _ui;
+            _uiKnown = true;
+            _ui = false;
+            object hud = Gta6Hud();
+            if (hud == null) return false;
+            try
+            {
+                if (_uiFields == null)
+                {
+                    _uiFields = new FieldInfo[UiFlags.Length];
+                    for (int i = 0; i < UiFlags.Length; i++)
+                        _uiFields[i] = hud.GetType().GetField(UiFlags[i], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                }
+                foreach (FieldInfo f in _uiFields)
+                    if (f != null && (bool)f.GetValue(hud)) return _ui = true;
+            }
+            catch { }
+            return false;
         }
 
         /// <summary>
@@ -355,17 +380,23 @@ namespace ViExtras
         /// <summary>What has the keys (for the logs), or null when nothing does.</summary>
         public static string InTheWay()
         {
-            if (Paused) return "a pause menu";
-            if (Busy) return "a cutscene, character switch or black screen";
-            if (HudMenuOpen) return "a GTA6Hud shop or camera";
-            if (Gta6HudUiOpen) return "a GTA6Hud wheel or menu";
+            Fresh();
+            if (PausedNow()) return "a pause menu";
+            if (BusyNow()) return "a cutscene, character switch or black screen";
+            if (MenuNow()) return "a GTA6Hud shop or camera";
+            if (UiNow()) return "a GTA6Hud wheel or menu";
 #if !VICUSTOMS && !VICROUCH
             if (SkillsApi.PanelOpen) return "the skills panel";
             if (Honor.LayoutEditorOpen) return "the honor layout editor";
 #endif
             // The phone in the player's hand. (CAN_PHONE_BE_SEEN_ON_SCREEN reads true
             // with it put away, so it is not asked.)
-            if (Function.Call<bool>(Hash.IS_PED_RUNNING_MOBILE_PHONE_TASK, Game.Player.Character)) return "the phone";
+            if (!_phoneKnown)
+            {
+                _phoneKnown = true;
+                _phone = Function.Call<bool>(Hash.IS_PED_RUNNING_MOBILE_PHONE_TASK, Game.Player.Character);
+            }
+            if (_phone) return "the phone";
             return null;
         }
 
@@ -374,10 +405,18 @@ namespace ViExtras
         {
             get
             {
-                if (ViPauseOpen) return true;
-                try { return _menuOpen != null && _minimapHolds == 0 && (bool)_menuOpen.GetValue(null); }
-                catch { return false; }
+                Fresh();
+                return MenuNow();
             }
+        }
+
+        private static bool MenuNow()
+        {
+            if (_menuKnown) return _menu;
+            _menuKnown = true;
+            if (ViPauseOpen) return _menu = true;
+            try { return _menu = _menuOpen != null && _minimapHolds == 0 && (bool)_menuOpen.GetValue(null); }
+            catch { return _menu = false; }
         }
 
         /// <summary>The VI pause menu is open (or has handed off to one of the game's screens).</summary>
@@ -392,12 +431,57 @@ namespace ViExtras
         }
 
         /// <summary>The game's pause menu, or the VI one, is open.</summary>
-        public static bool Paused => Game.IsPaused || Function.Call<bool>(Hash.IS_PAUSE_MENU_ACTIVE) || ViPauseOpen;
+        public static bool Paused
+        {
+            get
+            {
+                Fresh();
+                return PausedNow();
+            }
+        }
+
+        private static bool PausedNow()
+        {
+            if (!_pausedKnown)
+            {
+                _pausedKnown = true;
+                _paused = Game.IsPaused || Function.Call<bool>(Hash.IS_PAUSE_MENU_ACTIVE) || ViPauseOpen;
+            }
+            return _paused;
+        }
 
         /// <summary>A cutscene, a character switch or a black screen: nothing of ours should show.</summary>
-        public static bool Busy =>
-            Function.Call<bool>(Hash.IS_CUTSCENE_PLAYING) ||
-            Function.Call<bool>(Hash.IS_PLAYER_SWITCH_IN_PROGRESS) ||
-            Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT);
+        public static bool Busy
+        {
+            get
+            {
+                Fresh();
+                return BusyNow();
+            }
+        }
+
+        private static bool BusyNow()
+        {
+            if (!_busyKnown)
+            {
+                _busyKnown = true;
+                _busy = Function.Call<bool>(Hash.IS_CUTSCENE_PLAYING) ||
+                        Function.Call<bool>(Hash.IS_PLAYER_SWITCH_IN_PROGRESS) ||
+                        Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT);
+            }
+            return _busy;
+        }
+
+        /// <summary>
+        /// A typed delegate over one of GTA6Hud's methods, made once (null when it
+        /// can't be: not there, or not the shape expected). MethodInfo.Invoke every
+        /// frame boxes every argument into a new array.
+        /// </summary>
+        internal static T Bind<T>(object target, MethodInfo m) where T : class
+        {
+            if (m == null) return null;
+            try { return (T)(object)(m.IsStatic ? Delegate.CreateDelegate(typeof(T), m) : Delegate.CreateDelegate(typeof(T), target, m)); }
+            catch { return null; }
+        }
     }
 }

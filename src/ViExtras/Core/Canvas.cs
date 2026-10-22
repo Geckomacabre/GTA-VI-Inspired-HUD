@@ -27,8 +27,28 @@ namespace ViExtras
     internal static class Canvas
     {
         public const float H = 1080f;
-        public static float W => 1080f * Screen.AspectRatio;
         private const float ToSprite = 720f / 1080f;
+
+        // The screen's shape (GET_ASPECT_RATIO) is asked about once a frame: every
+        // picture and rect drawn reads W, a few hundred a frame. Not by frame
+        // number: GET_FRAME_COUNT is a native call too, as dear as the one it would save.
+        private const long AspectMs = 8;
+        private static float _w;
+        private static long _wAt = -AspectMs;
+
+        public static float W
+        {
+            get
+            {
+                long now = RealTime.Ms;
+                if (now - _wAt >= AspectMs)
+                {
+                    _wAt = now;
+                    _w = 1080f * Screen.AspectRatio;
+                }
+                return _w;
+            }
+        }
 
         private sealed class Tex
         {
@@ -140,8 +160,8 @@ namespace ViExtras
             if (Art.Native(path, out string txd, out string tex))
             {
                 if (!DictReady(txd)) return;
-                float cx = centered ? x : x + w * 0.5f, cy = centered ? y : y + h * 0.5f;
-                Function.Call(Hash.DRAW_SPRITE, txd, tex, cx / W, cy / H, w / W, h / H, rotation,
+                float cx = centered ? x : x + w * 0.5f, cy = centered ? y : y + h * 0.5f, sw = W;
+                Function.Call(Hash.DRAW_SPRITE, txd, tex, cx / sw, cy / H, w / sw, h / H, rotation,
                     (int)color.R, (int)color.G, (int)color.B, (int)color.A, false);
                 return;
             }
@@ -180,7 +200,8 @@ namespace ViExtras
         public static void Rect(float x, float y, float w, float h, Color color)
         {
             if (w <= 0f || h <= 0f || color.A == 0) return;
-            Function.Call(Hash.DRAW_RECT, (x + w * 0.5f) / W, (y + h * 0.5f) / H, w / W, h / H,
+            float sw = W;
+            Function.Call(Hash.DRAW_RECT, (x + w * 0.5f) / sw, (y + h * 0.5f) / H, w / sw, h / H,
                 (int)color.R, (int)color.G, (int)color.B, (int)color.A, false);
         }
 
@@ -192,7 +213,20 @@ namespace ViExtras
         {
             if (w <= 0f || h <= 0f || color.A == 0 || u1 <= u0 || v1 <= v0) return;
             if (!Art.Native(path, out string txd, out string tex) || !DictReady(txd)) return;
-            Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, txd, tex, (x + w * 0.5f) / W, (y + h * 0.5f) / H, w / W, h / H,
+            float sw = W;
+            Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, txd, tex, (x + w * 0.5f) / sw, (y + h * 0.5f) / H, w / sw, h / H,
+                u0, v0, u1, v1, 0f, (int)color.R, (int)color.G, (int)color.B, (int)color.A, false);
+        }
+
+        /// <summary>
+        /// Draws part of one of the game's own textures, by dictionary and name: the rectangle u0..u1, v0..v1 of it
+        /// (0..1) into x, y, w, h. Nothing of the game's is copied: it is drawn from where the game keeps it.
+        /// </summary>
+        public static void GamePart(string txd, string tex, float x, float y, float w, float h, float u0, float v0, float u1, float v1, Color color)
+        {
+            if (w <= 0f || h <= 0f || color.A == 0 || u1 <= u0 || v1 <= v0 || !DictReady(txd)) return;
+            float sw = W;
+            Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, txd, tex, (x + w * 0.5f) / sw, (y + h * 0.5f) / H, w / sw, h / H,
                 u0, v0, u1, v1, 0f, (int)color.R, (int)color.G, (int)color.B, (int)color.A, false);
         }
 

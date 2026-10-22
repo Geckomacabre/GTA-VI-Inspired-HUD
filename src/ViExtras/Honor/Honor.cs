@@ -112,6 +112,7 @@ namespace ViExtras
                 HonorApi.Handler = null;
                 HonorApi.Ready = false;
                 _hud.Shutdown();
+                SaveFile.Flush();   // a save still waiting is written before the scripts go
             };
         }
 
