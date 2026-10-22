@@ -81,7 +81,7 @@ Made by **FBICat**. Version 2.6 adds GTA VI's character switcher, heists and pol
 the `.oiv` with your version's name (Legacy **or** Enhanced).
 
 Want to play as **Lucia**? She isn't included: her model is someone else's paid work. Get her from her creator,
-**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net.
+**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net. Your install guide's "Optional: Jason" section puts him in the game, with the **Jason kit**.
 
 **3. Follow your guide.** It's written for people who've never modded GTA. Only follow the guide for
 **your** version: mixing them up crashes the game.

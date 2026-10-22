@@ -10,6 +10,20 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Added
+
+- **The Jason kit.** Jason's download is only his model files, so there was no pack to list in `dlclist.xml`. [GTA-VI-Inspired-HUD-Jason-Kit.zip](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Jason-Kit.zip) is that pack without Jason: drop his 4 files into it, add its line to `dlclist.xml`, and he's on the character wheel. It has no model in it.
+
+### Fixed
+
+- **A Lucia or Jason under another model name keeps their own honor.** Honor looked for `lucia_s` and `jdfinal` only, so with another model (`GTA6Hud.ini` `[Lucia] Model` or `[Jason] Model`) their honor was kept under the model's code instead. It now follows those settings.
+
+### Guides
+
+- **Optional: Jason.** Both install guides have a section for putting Jason in the game with the kit: OpenIV on Legacy; on Enhanced, CodeWalker's Asset Converter first, then into `onigiri\dlcpacks` with NVE or `mods\update\x64\dlcpacks` without it. It also covers another Jason model: renaming its files, or setting its name in the kit's `peds.meta` and `GTA6Hud.ini` `[Jason] Model`, and models that come as their own pack.
+
 ## 2.6.0 (22 October 2026)
 
 ### Added
