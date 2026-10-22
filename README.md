@@ -3,7 +3,7 @@
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD and minimap for GTA V story mode on PC.**
-Made by **FBICat**. Version 2.5.5 adds features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+Made by **FBICat**. Version 2.6 adds GTA VI's character switcher, heists and police lights to the features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
@@ -18,14 +18,15 @@ Made by **FBICat**. Version 2.5.5 adds features from the [FiveM version](https:/
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
 > [!TIP]
-> ## 🔄 Updating? Two files this time
+> ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.5.5-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.5.5-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.6.0-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.6.0-Enhanced.oiv` with the OIV Package Installer.
 >
-> **New in 2.5.5:** then install **`GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`** once, the same way. 2.5.5 brings a new pack
-> (`vihud`, FBICat's 2.1 HUD art), and the RegisterPatch switches it on. If it says the install **failed**
-> ("Unable to find XML Node"), that's fine: it only means your older packs are switched on already.
+> **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
+>
+> **Game in Program Files?** Right-click OpenIV or the OIV Package Installer (`CodeWalker.OIVInstaller.exe`) →
+> **Run as administrator** before you install, or the old files can stay in place.
 >
 > The number in the file name is the version, so you can always tell which one you have.
 >
@@ -33,14 +34,35 @@ Made by **FBICat**. Version 2.5.5 adds features from the [FiveM version](https:/
 >
 > - **Your progress stays.** Saves are never touched by the package.
 > - **Your settings go back to the defaults:** the package brings fresh `.ini` files, so if you changed any settings, note them down first.
-> - **NaturalVision Enhanced users:** after updating, copy the `vihud` and `vihudfonts` folders from `mods\update\x64\dlcpacks` into `onigiri\dlcpacks` (replace the old `vihudfonts`), and add `<Item>dlcpacks:/vihud/</Item>` to NVE's `onigiri\common\data\dlclist.xml`, just above `</Paths>`.
+> - **NaturalVision Enhanced users:** after updating, copy the `vihud` and `vihudfonts` folders from `mods\update\x64\dlcpacks` into `onigiri\dlcpacks` (replace the old `vihudfonts`), and add `<Item>dlcpacks:/vihud/</Item>` to NVE's `onigiri\common\data\dlclist.xml`, just above the closing `</Paths>` at the bottom of the file (not under `<Paths>` at the top).
 >
-> Coming from **2.5.0 or older**? Install the HUD package and the RegisterPatch.
+> Coming from **2.5.0 or older**? Install the HUD package.
 
 > **Disclaimer:** fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two.
 > Some HUD art is taken from Rockstar's official GTA VI media
 > ([rockstargames.com/vi/media](https://www.rockstargames.com/VI/media)) and belongs to Rockstar Games.
 > No GTA VI game files are included.
+
+---
+
+## 🆕 New in 2.6
+
+- **GTA VI's character switcher.** Hold **Left Alt** and the characters are a row of cards, as in GTA VI: Michael,
+  Franklin and Trevor, then **Jason ♥ Lucia**, each with their honor face under the card.
+- **Jason on the character wheel**, next to Lucia. Neither model is included: see below for where to get them.
+- **Heists.** Case and rob the **Fleeca banks**, **Pacific Standard** and **Vangelico**, then lose the police
+  and stash the bag to get paid. Vangelico is open outside the story too.
+- **GTA VI's police lights and police arrow**, rebuilt frame by frame from the chase in the GTA VI trailer, and
+  **GTA VI's wanted box**, with the tells the police have on you (your outfit, face, plate, gun or a camera).
+- **Carry every weapon, as in GTA V.** It's a switch: **CARRY ALL WEAPONS** in HUD OPTIONS (hold **V**), on by default.
+  Switch it off for FBICat's limit (2 pistols, 2 long guns, 1 thrown weapon and 1 other). While it's on, **Left / Right**
+  on the weapon wheel step through the weapons of a kind.
+- **One file to install:** no more RegisterPatch.
+- **A game in Program Files gets fixed** with one Windows prompt, so the HUD can save its settings.
+- **LSPDFR:** while you're on duty, no character switching, witnesses or wanted level.
+- **Lucia is no longer included:** her model is someone else's paid work. Her switching and wardrobe stay in for
+  a Lucia model of your own.
+- **Smoother frame times**, and a long list of fixes: all of it is in the **[changelog](CHANGELOG.md)**.
 
 ---
 
@@ -55,12 +77,11 @@ Made by **FBICat**. Version 2.5.5 adds features from the [FiveM version](https:/
 | `GTA5.exe` | **Legacy** | 👉 **[Legacy guide](INSTALL-LEGACY.md)** |
 | `GTA5_Enhanced.exe` | **Enhanced** | 👉 **[Enhanced guide](INSTALL-ENHANCED.md)** |
 
-**2. Download 2 files** from the [latest release](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest):
-- the `.oiv` with your version's name (Legacy **or** Enhanced);
-- `GTA-VI-Inspired-HUD-RegisterPatch-1.7.oiv`.
+**2. Download 1 file** from the [latest release](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest):
+the `.oiv` with your version's name (Legacy **or** Enhanced).
 
-Want to play as **Lucia**? She isn't included: her model is someone else's paid work.
-Get her from her creator, **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)**, or get **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** is there too.
+Want to play as **Lucia**? She isn't included: her model is someone else's paid work. Get her from her creator,
+**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net.
 
 **3. Follow your guide.** It's written for people who've never modded GTA. Only follow the guide for
 **your** version: mixing them up crashes the game.
@@ -72,7 +93,7 @@ Get her from her creator, **[Lucia Caminos on Patreon](https://www.patreon.com/u
 | To do this | Press |
 | :--- | :--- |
 | HUD settings | Hold **V** (controller: hold the camera button). Greet / antagonize, spin-outs and the VI radio wheel switch on and off here too |
-| Play as Lucia | Hold **Left Alt**, then **E** to her picture *(needs a Lucia model, not included: see above)* |
+| Switch character | Hold **Left Alt** (controller: **D-pad Down**), pick with **Q / E** or **Left / Right**, let go to switch. Jason and Lucia need their models *(not included: see above)* |
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**; controller: **D-pad Left**). **O** mutes it (controller: click the right stick while the wheel is open) |
 | Your own music (On Demand) | In the radio wheel, press **Down** (controller: right stick down). **Left / Right** (right stick) change the song, **Up** goes back to the radio |
@@ -81,6 +102,8 @@ Get her from her creator, **[Lucia Caminos on Patreon](https://www.patreon.com/u
 | Crouch | **Left Ctrl** twice |
 | Lie down / crawl | **Right Ctrl**, then **W / S** |
 | Binoculars | Hold **Tab** (weapon wheel), let go on the binoculars |
+| Pick between weapons of a kind | With **CARRY ALL WEAPONS** on (HUD settings), **Left / Right** on the weapon wheel's **WEAPONS** page (D-pad, arrow keys or the mouse wheel) |
+| Rob a bank or Vangelico | Case it first: walk round without aiming and look at each camera and guard until its ring fills. Then pull a gun |
 | Surrender (with stars) | Look at a cop and hold **E** |
 | Skills | **K** |
 | Push-ups / sit-ups | **N** / **Shift + N** |
@@ -97,15 +120,18 @@ the radio wheel: each subfolder becomes a station of its own. Chase music goes i
 ## ✨ What's in it
 
 - A **GTA VI-style HUD** and a **3D minimap** with teal waypoint and pink mission routes
-- Character switching with room for **Lucia** as a 4th character (her model isn't included)
-- **Wanted stars and a wanted box** that tell you what the police know, plus **police lights** at the screen edge
+- **GTA VI's character switcher**, with room for **Jason** and **Lucia** next to Michael, Franklin and Trevor (their models
+  aren't included)
+- **Wanted stars** and **GTA VI's wanted box**, which tells you what the police know, plus **GTA VI's police lights** at
+  the screen edge and its **police arrow**
+- **Heists:** case and rob the Fleeca banks, Pacific Standard and Vangelico
 - **Police with stun guns:** they only shoot to kill when you're armed at 3+ stars. Otherwise they tase and arrest you,
   or arrest you when you stand still, unarmed. Hold **E** near a cop to surrender
 - A **radio wheel** with station logos, the song and artist, and **On Demand** for your own music
 - **WASTED / BUSTED** screens, a **crash cam** and **binoculars**
 - **Leonida Customs**: a full mod shop with nitrous
 - **Honor**, **skills**, a **gym**, and people who **remember you**
-- **Crouch and crawl**, a **crosshair with kill marks**, and **Focus**
+- **Crouch and crawl**, a **crosshair with kill marks**, **Focus**, and a switch to **carry every weapon**
 
 Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 
@@ -114,7 +140,7 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 ## ⚠️ Known bugs (being fixed)
 
 - The minimap's waypoint route can look shaky.
-- **NaturalVision Enhanced**, **Lively World Expansion** and **AuraV-Lite** users: follow their "Optional" sections in the [Enhanced guide](INSTALL-ENHANCED.md).
+- **NaturalVision Enhanced**, **Lively World Expansion**, **Central Real-Life Traffic / Environment** and **AuraV-Lite** users: follow their "Optional" sections in the [Enhanced guide](INSTALL-ENHANCED.md).
 
 ## 🆘 Something wrong?
 
@@ -165,10 +191,10 @@ too big for git, so they're only in the releases. Python 3.8+, no extra modules:
 ```bash
 python tools/build_oiv.py legacy --dlcpacks path/to/legacy/dlcpacks
 python tools/build_oiv.py enhanced --dlcpacks path/to/gen9/dlcpacks
-python tools/build_oiv.py patch
 ```
 
-The packages go into `build\`. The install script comes from `oiv\<edition>.xml`.
+The packages go into `build\`. The install script comes from `oiv\<edition>.xml`, and the pack registration
+(`dlclist.xml` and the `gameconfig.xml` pools) from `oiv\register.xml`.
 
 The 2.5 script files are built from `src\` (.NET Framework 4.8, `dotnet build -c Release`). Their art is
 rendered from the FiveM version's pages (`tools\render_fivem_art.py`) and packed into the `vihudfonts`

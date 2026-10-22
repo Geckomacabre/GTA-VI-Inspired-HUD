@@ -27,9 +27,10 @@ namespace ViExtras
         private bool _tagsLooked;
         private MethodInfo _tagRead;
         private FieldInfo _tagTitle, _tagArtist;
-        private long _scanAt;
-        private bool _scanned;
-        private List<Station> _list = new List<Station>();
+        private readonly object _scanGate = new object();
+        private System.Threading.Timer _rescan;
+        private string _scanError;
+        private volatile List<Station> _list = new List<Station>();
 
         public CustomMusic(string directory)
         {
@@ -49,27 +50,45 @@ namespace ViExtras
             }
         }
 
-        /// <summary>The stations there are now (the folder is looked at again every 5 s).</summary>
-        public List<Station> Stations(long now)
+        /// <summary>
+        /// The stations there are now. The folder is looked at the first time here, then
+        /// again every 5 s on a timer thread, so opening the wheel never waits on the disk.
+        /// </summary>
+        public List<Station> Stations()
         {
-            if (_scanned && now - _scanAt < RescanMs) return _list;
-            _scanned = true;
-            _scanAt = now;
-            var list = new List<Station>();
-            try
+            if (_rescan == null)
             {
-                if (Directory.Exists(_directory))
-                {
-                    if (Directory.GetFiles(_directory).Any(IsTrack)) list.Add(new Station { Folder = "", Label = "MY MUSIC" });
-                    foreach (string folder in Directory.GetDirectories(_directory).Select(Path.GetFileName)
-                                 .Where(n => !n.StartsWith(".") && Directory.GetFiles(Path.Combine(_directory, n)).Any(IsTrack))
-                                 .OrderBy(n => n, StringComparer.OrdinalIgnoreCase))
-                        list.Add(new Station { Folder = folder, Label = folder });
-                }
+                Scan();
+                _rescan = new System.Threading.Timer(_ => Scan(), null, RescanMs, RescanMs);
             }
-            catch (Exception ex) { Log.Write("Radio", "custom music: " + ex.Message); }
-            _list = list;
             return _list;
+        }
+
+        // Files only (no game calls), on whichever thread; one look at a time.
+        private void Scan()
+        {
+            lock (_scanGate)
+            {
+                var list = new List<Station>();
+                try
+                {
+                    if (Directory.Exists(_directory))
+                    {
+                        if (Directory.GetFiles(_directory).Any(IsTrack)) list.Add(new Station { Folder = "", Label = "MY MUSIC" });
+                        foreach (string folder in Directory.GetDirectories(_directory).Select(Path.GetFileName)
+                                     .Where(n => !n.StartsWith(".") && Directory.GetFiles(Path.Combine(_directory, n)).Any(IsTrack))
+                                     .OrderBy(n => n, StringComparer.OrdinalIgnoreCase))
+                            list.Add(new Station { Folder = folder, Label = folder });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // once, not every 5 s
+                    if (ex.Message != _scanError) Log.Write("Radio", "custom music: " + ex.Message);
+                    _scanError = ex.Message;
+                }
+                _list = list;
+            }
         }
 
         public void Select(string folder) => _player.Select(folder ?? "");
@@ -96,7 +115,11 @@ namespace ViExtras
             return !string.IsNullOrEmpty(title);
         }
 
-        public void Release() => _player.Release();
+        public void Release()
+        {
+            _rescan?.Dispose();
+            _player.Release();
+        }
 
         // GTA6Hud.TrackTags.Read, found once; the music thread calls this
         private (string title, string artist) Tags(string path)

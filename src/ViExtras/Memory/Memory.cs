@@ -28,6 +28,7 @@ namespace ViExtras
         private bool _standingRequested;
         private bool _suspended;
         private bool _wasDown;
+        private bool _wasOnDuty;
         private bool _preloaded;
         private int _nextSave, _nextPrune;
 
@@ -73,16 +74,13 @@ namespace ViExtras
             if (!GameReady.Now) return;
             Ped player = Game.Player.Character;
             if (player == null || !player.Exists()) return;
-            while (true)
-            {
-                string deed;
-                lock (_deeds)
-                {
-                    if (_deeds.Count == 0) break;
-                    deed = _deeds.Dequeue();
-                }
-                Safely("deed " + deed, () => MemoryApi.ReportDeed(deed));
-            }
+            UM.BeginTick(player);
+            try { Frame(player); }
+            finally { UM.EndTick(); }
+        }
+
+        private void Frame(Ped player)
+        {
             if (!_preloaded)
             {
                 _preloaded = true;
@@ -116,6 +114,16 @@ namespace ViExtras
             }
             _wasDown = down;
 
+            // An on-duty LSPDFR officer commits no crimes: a witness still running
+            // is called off and unfound bodies forgotten, as on going down.
+            bool onDuty = Lspdfr.OnDuty;
+            if (onDuty && !_wasOnDuty)
+            {
+                Witness.Cancel();
+                Crimes.Reset();
+            }
+            _wasOnDuty = onDuty;
+
             if (ShouldSuspend(player))
             {
                 if (!_suspended)
@@ -126,19 +134,34 @@ namespace ViExtras
                     Anims.Clear();
                 }
                 Interact.Hide();   // and no key press waits for afterwards
+                lock (_deeds) _deeds.Clear();   // a deed done in a story mission leaves no mark (no witness runs)
                 SaveNow();
                 return;
             }
             _suspended = false;
 
+            while (true)
+            {
+                string deed;
+                lock (_deeds)
+                {
+                    if (_deeds.Count == 0) break;
+                    deed = _deeds.Dequeue();
+                }
+                Safely("deed " + deed, () => MemoryApi.ReportDeed(deed));
+            }
+
             Safely("later", Later.Tick);
             Safely("anims", Anims.Tick);
-            Safely("crimes", () =>
+            if (!onDuty)
             {
-                Crimes.Frame(player);
-                Crimes.Tick(player);
-            });
-            Safely("witness", Witness.Tick);
+                Safely("crimes", () =>
+                {
+                    Crimes.Frame(player);
+                    Crimes.Tick(player);
+                });
+                Safely("witness", Witness.Tick);
+            }
             Safely("ambient", () => Ambient.Tick(player));
             Safely("recognition", () => Recognition.Tick(player));
             Safely("interact", () => Interact.Frame(player));

@@ -17,7 +17,7 @@ namespace ViExtras.NpcMemory
         public static bool RaiseWanted(int stars)
         {
             stars = Math.Max(0, Math.Min(5, stars));
-            if (stars <= 0 || UM.Wanted >= stars) return false;
+            if (stars <= 0 || UM.Wanted >= stars || Lspdfr.OnDuty) return false;
             if (Function.Call<int>(Hash.GET_MAX_WANTED_LEVEL) < stars) return false;
             Game.Player.Wanted.SetWantedLevel(stars, false);
             Game.Player.Wanted.ApplyWantedLevelChangeNow(false);
@@ -102,7 +102,7 @@ namespace ViExtras.NpcMemory
 
         public static void Start(Ped ped, string crimeKey, Opts o)
         {
-            if (!MemCfg.Witnesses || !MemCfg.Crimes.TryGetValue(crimeKey, out MemCfg.Crime crime)) return;
+            if (!MemCfg.Witnesses || Lspdfr.OnDuty || !MemCfg.Crimes.TryGetValue(crimeKey, out MemCfg.Crime crime)) return;
             int stars = o.Stars >= 0 ? o.Stars : crime.Stars;
 
             if (_w != null)
@@ -282,13 +282,14 @@ namespace ViExtras.NpcMemory
         private static readonly Dictionary<string, int> Throttle = new Dictionary<string, int>();
         private static readonly Dictionary<int, int> Health = new Dictionary<int, int>();
         private static readonly HashSet<int> DeadSeen = new HashSet<int>();
+        private static readonly HashSet<int> NotHuman = new HashSet<int>();                    // animals, skipped by ScanHits
         private static readonly Dictionary<int, int> Brandished = new Dictionary<int, int>();
 
         private static int _lastShotAt = int.MinValue / 2, _lastActAt = int.MinValue / 2;
         private static int _playerHp = -1;
         private static Ped _aimTarget;
         private static int _aimSince;
-        private static int _nextTick, _nextClean;
+        private static int _nextTick, _nextClean, _nextHits;
 
         private sealed class Body
         {
@@ -361,16 +362,27 @@ namespace ViExtras.NpcMemory
             bool audible = kind == "shooting" && !Function.Call<bool>(Hash.IS_PED_CURRENT_WEAPON_SILENCED, player);
             if (kind == "shooting" && !audible) range = 15f;
 
+            // One blast or spray commits a crime per ped it hits, all in one frame:
+            // who is around, and who of them can see the player, is asked once.
+            int frame = Game.FrameCount;
+            if (frame != _aroundFrame || range != _aroundRange)
+            {
+                _aroundFrame = frame;
+                _aroundRange = range;
+                _around = UM.NearbyPeople(player.Position, range);
+                SightOf.Clear();
+            }
+
             var outList = new List<Seen>();
             int checkedLos = 0;
-            foreach (UM.Near e in UM.NearbyPeople(player.Position, range))
+            foreach (UM.Near e in _around)
             {
                 if (exclude != null && e.Ped == exclude) continue;
                 bool saw = false;
                 if (checkedLos < MemCfg.MaxWitnesses * 2)
                 {
                     checkedLos++;
-                    saw = UM.HasLos(e.Ped, player);
+                    if (!SightOf.TryGetValue(e.Ped.Handle, out saw)) SightOf[e.Ped.Handle] = saw = UM.HasLos(e.Ped, player);
                 }
                 if (saw || audible) outList.Add(new Seen { Ped = e.Ped, Dist = e.Dist, Saw = saw });
                 if (outList.Count >= MemCfg.MaxWitnesses) break;
@@ -378,13 +390,24 @@ namespace ViExtras.NpcMemory
             return outList;
         }
 
+        private static int _aroundFrame = -1, _ownedCopFrame = -1;
+        private static float _aroundRange;
+        private static List<UM.Near> _around;
+        private static readonly Dictionary<int, bool> SightOf = new Dictionary<int, bool>();
+        private static bool _ownedCopSaw;
+
         /// <summary>
         /// fenix-police's IsWitnessed() stood for its own scripted officers. The
         /// officers a script owns here (GTA6Hud's patrols) are left out of the
-        /// list above, so they are looked for on their own.
+        /// list above, so they are looked for on their own. (Once a frame, as above:
+        /// it is always asked about where the player stands.)
         /// </summary>
         private static bool OwnedCopSaw(Vector3 at, float range)
         {
+            int frame = Game.FrameCount;
+            if (frame == _ownedCopFrame) return _ownedCopSaw;
+            _ownedCopFrame = frame;
+            _ownedCopSaw = false;
             Ped player = UM.Player;
             int checks = 0;
             foreach (Ped ped in World.GetNearbyPeds(at, range))
@@ -392,7 +415,7 @@ namespace ViExtras.NpcMemory
                 if (!UM.Alive(ped) || ped == player || !UM.IsCop(ped)) continue;
                 if (!Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, ped)) continue;
                 if (++checks > 4) break;
-                if (UM.HasLos(ped, player)) return true;
+                if (UM.HasLos(ped, player)) return _ownedCopSaw = true;
             }
             return false;
         }
@@ -453,7 +476,8 @@ namespace ViExtras.NpcMemory
         /// <param name="victimBody">a ped just killed, so nobody-saw-it can leave a body to find</param>
         public static void Commit(string kind, Ped victim = null, float? victimOpinion = null, Ped victimBody = null)
         {
-            if (!MemCfg.Crimes.TryGetValue(kind, out MemCfg.Crime crime)) return;
+            // An on-duty LSPDFR officer's force is police work, not a crime.
+            if (Lspdfr.OnDuty || !MemCfg.Crimes.TryGetValue(kind, out MemCfg.Crime crime)) return;
 
             Ped player = UM.Player;
             Vector3 coords = player.Position;
@@ -583,11 +607,14 @@ namespace ViExtras.NpcMemory
             // Not "in a car" on its own: GTA keeps a ped's "damaged by" record, so a ped
             // once clipped would read every later hurt as a fresh assault.
             bool acting = now - _lastActAt <= 1500;
+            // (GetNearbyPeds hands back peds that exist, and in single player the one
+            // player ped is `player`; an animal stays one, so it is asked about once.)
             foreach (Ped ped in World.GetNearbyPeds(player.Position, 80f))
             {
-                if (ped == null || !ped.Exists() || ped == player || ped.IsPlayer) continue;
-                if (!Function.Call<bool>(Hash.IS_PED_HUMAN, ped)) continue;
+                if (ped == null || ped == player) continue;
                 int h = ped.Handle;
+                if (NotHuman.Contains(h)) continue;
+                if (!Function.Call<bool>(Hash.IS_PED_HUMAN, ped)) { NotHuman.Add(h); continue; }
                 if (Function.Call<bool>(Hash.IS_PED_DEAD_OR_DYING, ped, true))
                 {
                     if (DeadSeen.Add(h) && Health.ContainsKey(h) && KilledBy(ped, player, veh)) OnHit(ped, true);
@@ -628,7 +655,14 @@ namespace ViExtras.NpcMemory
             if (now < _nextTick) return;
             _nextTick = now + 100;
 
-            ScanHits(player);
+            // Hits every tick while the player fights, shoots or drives into things;
+            // otherwise none can count as an assault, and every 250 ms finds a body
+            // (or who hurt the player) in good time.
+            if (now - _lastActAt <= 1500 || now >= _nextHits)
+            {
+                _nextHits = now + 250;
+                ScanHits(player);
+            }
 
             // Shooting in public, unless someone started it. "Public" is the towns:
             // firing at game out in the county is hunting, and neither is shooting at an animal.
@@ -703,6 +737,9 @@ namespace ViExtras.NpcMemory
                 gone.Clear();
                 foreach (int h in DeadSeen) if (!Exists(h)) gone.Add(h);
                 foreach (int h in gone) DeadSeen.Remove(h);
+                gone.Clear();
+                foreach (int h in NotHuman) if (!Exists(h)) gone.Add(h);
+                foreach (int h in gone) NotHuman.Remove(h);
             }
         }
 

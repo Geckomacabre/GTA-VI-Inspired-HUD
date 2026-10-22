@@ -46,10 +46,19 @@ namespace ViExtras
 
         // SKEL_Head's bone id, what GET_PED_LAST_DAMAGE_BONE hands back.
         private const int HeadBone = 31086;
+        // GROUP_SNIPER. A sniper rifle's scope is the game's reticle (HUD component 14), so those are left to the
+        // game, as GTA6Hud's own reticle leaves them; hiding it took the scope away (a player: "the scope of the
+        // sniper doesnt load").
+        private const uint GroupSniper = 0xB7BBD827;
         // A ped's death can land a frame or two after the hit that caused it.
         private const int DeathLagFrames = 15;
         private const int CombatWindowMs = 10000;
         private long _combatUntil;
+        // Every ped every frame from a shot or a blow until FullSweepMs after the
+        // last, so hits that land a frame or two apart are each counted; the rest of
+        // the window a quarter of them a frame (TrackKills).
+        private const int FullSweepMs = 2000;
+        private long _fullSweepUntil;
 
         private enum Mode { None, Foot, Vehicle }
 
@@ -66,6 +75,7 @@ namespace ViExtras
         private bool _wasShooting;               // crossWasShooting
         private long _lastFireMs = -100000;
         private int _lastWeapon, _lastClip = -1;
+        private readonly OutputArgument _clipOut = new OutputArgument();   // one for every frame's read
 
         private readonly CssTransition _spread = new CssTransition(0f, SpreadMs, Num.EaseOut);
         private long _spreadSettleAt;            // crossFireTimer, 0 = none
@@ -84,7 +94,8 @@ namespace ViExtras
         // ---- kill tracking -----------------------------------------------------------
         private sealed class Victim
         {
-            public int LastHp;        // health + armour last frame
+            public int LastHp;        // health + armour when last read
+            public bool Armoured;     // had armour when last read
             public int Hits;          // killHits[victim]
             public int LastHitFrame;
             public bool Done;         // dead and dealt with
@@ -117,14 +128,22 @@ namespace ViExtras
                 long now = RealTime.Ms;
                 RunTimers(now);
 
-                Ped ped = Game.Player.Character;
+                Player player = Game.Player;
+                Ped ped = player.Character;
                 if (ped == null || !ped.Exists()) return;
                 bool blocked = Blocked();
 
                 // ---- client_overlays.lua, the crosshair loop ----
                 bool armedGun = Function.Call<bool>(Hash.IS_PED_ARMED, ped, _armedWith);
                 bool shootingNow = Function.Call<bool>(Hash.IS_PED_SHOOTING, ped);
-                bool aiming = !blocked && armedGun && (Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING, Game.Player) || shootingNow);
+                // Locked on (the game's Assisted Aim and Traditional GTA targeting) isn't free aiming, but the
+                // gun is up all the same; GTA6Hud hides the game's reticle, so without this there was nothing
+                // on screen until the first shot.
+                bool freeAiming = Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING, player)
+                                  || Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, player);
+                bool scoped = armedGun && Function.Call<uint>(Hash.GET_WEAPONTYPE_GROUP,
+                    Function.Call<uint>(Hash.GET_SELECTED_PED_WEAPON, ped)) == GroupSniper;
+                bool aiming = !blocked && armedGun && !scoped && (freeAiming || shootingNow);
                 Mode mode = Function.Call<bool>(Hash.IS_PED_IN_ANY_VEHICLE, ped, false) ? Mode.Vehicle : Mode.Foot;
 
                 if (aiming)
@@ -150,9 +169,13 @@ namespace ViExtras
                 // and then only the first round would kick the ticks out; the
                 // round leaving the clip catches the rest. Each one re-arms the
                 // settle, as onCrossFire's own clearTimeout does.
-                int weapon = Function.Call<int>(Hash.GET_SELECTED_PED_WEAPON, ped);
-                var clipOut = new OutputArgument();
-                int clip = Function.Call<bool>(Hash.GET_AMMO_IN_CLIP, ped, weapon, clipOut) ? clipOut.GetResult<int>() : -1;
+                // Only with a gun in hand: without one there is no clip to watch.
+                int weapon = 0, clip = -1;
+                if (armedGun)
+                {
+                    weapon = Function.Call<int>(Hash.GET_SELECTED_PED_WEAPON, ped);
+                    if (Function.Call<bool>(Hash.GET_AMMO_IN_CLIP, ped, weapon, _clipOut)) clip = _clipOut.GetResult<int>();
+                }
                 if (aiming && mode == Mode.Foot && weapon == _lastWeapon && clip >= 0 && _lastClip >= 0 && clip < _lastClip && now - _lastFireMs > 50)
                     fired = true;
                 _lastWeapon = weapon;
@@ -160,14 +183,15 @@ namespace ViExtras
                 if (fired) OnCrossFire(now);
 
                 // ---- the kill mark: the gameEventTriggered handler ----
-                // The ped sweep below reads every ped each frame, so it only runs
+                // The ped sweep below reads the peds each frame, so it only runs
                 // while the player is fighting: shooting, aiming, in melee, or
                 // within CombatWindowMs of having been (a grenade's fuse, a body
                 // going down a moment after the last hit). Out of a fight the
                 // records are dropped and start afresh at the next one.
-                if (shootingNow || Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING, Game.Player) || Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, ped))
-                    _combatUntil = now + CombatWindowMs;
-                if (_killMarks && now < _combatUntil) TrackKills(ped, now);
+                bool fighting = shootingNow || Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, ped);
+                if (fighting) _fullSweepUntil = now + FullSweepMs;
+                if (fighting || freeAiming) _combatUntil = now + CombatWindowMs;
+                if (_killMarks && now < _combatUntil) TrackKills(ped, now, now < _fullSweepUntil);
                 else if (_victims.Count > 0) _victims.Clear();
 
                 if (_testRequested)
@@ -337,7 +361,14 @@ namespace ViExtras
         // Single player has no damage events, so a hit is a frame in which a
         // ped's health and armour went down while the player has damaged it,
         // and a kill is a ped going down with the player as its source of death.
-        private void TrackKills(Ped player, long now)
+        //
+        // `full`: every ped is read this frame. Otherwise each is read every fourth
+        // frame (its handle picks which): a death is still found within four
+        // frames, and one landing a frame or two after the hit is still inside
+        // DeathLagFrames. A ped seen for the first time is read at once. Armour is
+        // only read for peds that had some: the game and GTA6Hud give it as a ped
+        // is made, which is when a ped is first read.
+        private void TrackKills(Ped player, long now, bool full)
         {
             int me = player.Handle;
             int frame = Game.FrameCount;
@@ -347,20 +378,23 @@ namespace ViExtras
                 if (p == null) continue;
                 int h = p.Handle;
                 if (h == me) continue;
-                int health = Function.Call<int>(Hash.GET_ENTITY_HEALTH, h);
 
                 if (!_victims.TryGetValue(h, out Victim v))
                 {
                     // First sight: a body already on the floor is no kill of ours.
+                    int armour = Function.Call<int>(Hash.GET_PED_ARMOUR, h);
                     _victims[h] = new Victim
                     {
-                        LastHp = health + Function.Call<int>(Hash.GET_PED_ARMOUR, h),
+                        LastHp = Function.Call<int>(Hash.GET_ENTITY_HEALTH, h) + armour,
+                        Armoured = armour > 0,
                         Done = Function.Call<bool>(Hash.IS_PED_DEAD_OR_DYING, h, true),
                         Seen = sweep,
                     };
                     continue;
                 }
                 v.Seen = sweep;
+                if (!full && ((h ^ (h >> 8)) & 3) != (frame & 3)) continue;
+                int health = Function.Call<int>(Hash.GET_ENTITY_HEALTH, h);
 
                 if (v.Done)
                 {
@@ -368,14 +402,22 @@ namespace ViExtras
                     // as killHits does for a target that comes back.
                     if (health > 0 && !Function.Call<bool>(Hash.IS_PED_DEAD_OR_DYING, h, true))
                     {
+                        int armour = Function.Call<int>(Hash.GET_PED_ARMOUR, h);
                         v.Done = false;
                         v.Hits = 0;
-                        v.LastHp = health + Function.Call<int>(Hash.GET_PED_ARMOUR, h);
+                        v.Armoured = armour > 0;
+                        v.LastHp = health + armour;
                     }
                     continue;
                 }
 
-                int hp = health + Function.Call<int>(Hash.GET_PED_ARMOUR, h);
+                int hp = health;
+                if (v.Armoured)
+                {
+                    int armour = Function.Call<int>(Hash.GET_PED_ARMOUR, h);
+                    v.Armoured = armour > 0;
+                    hp += armour;
+                }
                 bool dropped = hp < v.LastHp;
                 v.LastHp = hp;
                 if (dropped && Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, h, me, true))

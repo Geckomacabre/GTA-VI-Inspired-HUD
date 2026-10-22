@@ -39,6 +39,8 @@ namespace ViExtras
         private Pose _now, _goal;
         private float _min, _max;
         private bool _hasGoal;
+        private bool _clipKnown;
+        private Vector3 _clipFrom, _clipTarget, _clipTo;   // the last wall check: where the camera wanted to be, and went
         public string Name { get; private set; }
 
         public CustomsCamera(Vehicle veh) { _veh = veh; }
@@ -147,10 +149,19 @@ namespace ViExtras
             double pitch = _now.Pitch * Math.PI / 180.0;
             float flat = _now.Dist * (float)Math.Cos(pitch);
             var pos = new Vector3(target.X - (float)Math.Sin(heading) * flat, target.Y + (float)Math.Cos(heading) * flat, target.Z + _now.Dist * (float)Math.Sin(pitch));
-            // keep the camera on this side of the shop walls
-            RaycastResult hit = World.Raycast(target, pos, IntersectFlags.Map, _veh);
-            if (hit.DidHit && hit.HitPosition.DistanceTo(target) > 0.8f)
-                pos = hit.HitPosition + (target - hit.HitPosition).Normalized * 0.25f;
+            // keep the camera on this side of the shop walls: asked again only when the camera
+            // has moved (the walls don't, and the car stands frozen in the bay)
+            if (!_clipKnown || pos != _clipFrom || target != _clipTarget)
+            {
+                _clipKnown = true;
+                _clipFrom = pos;
+                _clipTarget = target;
+                RaycastResult hit = World.Raycast(target, pos, IntersectFlags.Map, _veh);
+                if (hit.DidHit && hit.HitPosition.DistanceTo(target) > 0.8f)
+                    pos = hit.HitPosition + (target - hit.HitPosition).Normalized * 0.25f;
+                _clipTo = pos;
+            }
+            else pos = _clipTo;
             _cam.Position = pos;
             _cam.PointAt(target);
             Function.Call(Hash.SET_CAM_FAR_DOF, _cam, pos.DistanceTo(target) + 3.5f);

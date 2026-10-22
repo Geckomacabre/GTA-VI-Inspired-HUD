@@ -50,6 +50,7 @@ namespace ViExtras
         private static readonly Color GradTo = Color.FromArgb(0x4a, 0x42, 0x3c);
         private const float CellW = 6.4f, CellH = 3f;
         private const float Bleed = 0.5f;
+        private static float[] _colX, _colW, _colMx;   // DrawGradient's columns, this frame
 
         private readonly int _holdMs;
         private readonly Func<int, string> _tierOf;
@@ -359,6 +360,20 @@ namespace ViExtras
             float cx = x + w * 0.5f, cy = y + h * 0.5f;
             int cols = Math.Max(1, (int)Math.Ceiling(w / CellW));
             int rows = Math.Max(1, (int)Math.Ceiling(h / CellH));
+            // A few hundred rects: what is the same for a whole row or column is
+            // worked out once, by the same sums as before, so not a pixel moves.
+            float sw = Canvas.W;
+            if (_colX == null || _colX.Length < cols) { _colX = new float[cols]; _colW = new float[cols]; _colMx = new float[cols]; }
+            for (int c = 0; c < cols; c++)
+            {
+                float x0 = x + w * c / cols, x1 = x + w * (c + 1) / cols;
+                _colMx[c] = (x0 + x1) * 0.5f;
+                if (c == 0) x0 -= Bleed;
+                if (c == cols - 1) x1 += Bleed;
+                _colX[c] = (x0 + x1) * 0.5f / sw;
+                _colW[c] = (x1 - x0) / sw;
+            }
+            float fromR = GradFrom.R, fromG = GradFrom.G, fromB = GradFrom.B, toR = GradTo.R, toG = GradTo.G, toB = GradTo.B;
             for (int r = 0; r < rows; r++)
             {
                 float y0 = y + h * r / rows, y1 = y + h * (r + 1) / rows;
@@ -368,17 +383,14 @@ namespace ViExtras
                 // the world through it.
                 if (r == 0) y0 -= Bleed;
                 if (r == rows - 1) y1 += Bleed;
+                float rowY = (y0 + y1) * 0.5f / Canvas.H, rowH = (y1 - y0) / Canvas.H, rowT = (my - cy) * dy;
                 for (int c = 0; c < cols; c++)
                 {
-                    float x0 = x + w * c / cols, x1 = x + w * (c + 1) / cols;
-                    float mx = (x0 + x1) * 0.5f;
-                    float t = Num.Clamp01(((mx - cx) * dx + (my - cy) * dy) / len + 0.5f);
-                    if (c == 0) x0 -= Bleed;
-                    if (c == cols - 1) x1 += Bleed;
-                    Function.Call(Hash.DRAW_RECT, (x0 + x1) * 0.5f / Canvas.W, (y0 + y1) * 0.5f / Canvas.H, (x1 - x0) / Canvas.W, (y1 - y0) / Canvas.H,
-                        (int)Math.Round(Num.Lerp(GradFrom.R, GradTo.R, t)),
-                        (int)Math.Round(Num.Lerp(GradFrom.G, GradTo.G, t)),
-                        (int)Math.Round(Num.Lerp(GradFrom.B, GradTo.B, t)),
+                    float t = Num.Clamp01(((_colMx[c] - cx) * dx + rowT) / len + 0.5f);
+                    Function.Call(Hash.DRAW_RECT, _colX[c], rowY, _colW[c], rowH,
+                        (int)Math.Round(Num.Lerp(fromR, toR, t)),
+                        (int)Math.Round(Num.Lerp(fromG, toG, t)),
+                        (int)Math.Round(Num.Lerp(fromB, toB, t)),
                         255, false);
                 }
             }

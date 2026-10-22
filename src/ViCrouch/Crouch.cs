@@ -105,10 +105,13 @@ namespace ViExtras
                 _crawlWas = crawlKey;
 
                 // the keys are read from Windows directly, so: only with the game in front, and not
-                // while a menu, the phone or the binoculars have the keys
-                bool keysFree = GameInFront() && !HudBridge.UiInTheWay && !BinocularsUp() && !ped.IsInVehicle();
-                if (crouchPressed && keysFree) CrouchKeyPressed(ped);
-                if (crawlPressed && keysFree) CrawlKeyPressed(ped);
+                // while a menu, the phone or the binoculars have the keys (asked only on a press)
+                if (crouchPressed || crawlPressed)
+                {
+                    bool keysFree = GameInFront() && !HudBridge.UiInTheWay && !BinocularsUp() && !ped.IsInVehicle();
+                    if (crouchPressed && keysFree) CrouchKeyPressed(ped);
+                    if (crawlPressed && keysFree) CrawlKeyPressed(ped);
+                }
 
                 if (_crouched) CrouchFrame(Game.Player.Character);
                 if (_prone) CrawlFrame(Game.Player.Character);

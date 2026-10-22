@@ -215,8 +215,18 @@ namespace ViExtras
                 _nextScan = now + 3000;
                 _scanAt = me;
                 _equipment.Clear();
-                foreach (Prop p in World.GetNearbyProps(me, ScanRadius))
-                    if (p != null && p.Exists()) Gather(p.Model.Hash, p.Position, p.Heading);
+                // Only the bench and bar models come back (the pool is filtered in memory),
+                // so the reads below are a handful of props, not every one around.
+                if (_equipmentModels == null)
+                {
+                    var models = new List<Model>();
+                    foreach (int m in _benchModels) models.Add(new Model(m));
+                    foreach (int m in _chinModels) models.Add(new Model(m));
+                    _equipmentModels = models.ToArray();
+                }
+                if (_equipmentModels.Length > 0)
+                    foreach (Prop p in World.GetNearbyProps(me, ScanRadius, _equipmentModels))
+                        if (p != null) Gather(p.Model.Hash, p.Position, p.Heading);
                 foreach (Building b in World.GetNearbyBuildings(me, ScanRadius))
                     if (b != null && b.Exists()) Gather(b.Model.Hash, b.Position, b.Rotation.Z);
             }
@@ -233,6 +243,7 @@ namespace ViExtras
 
         private const float ScanRadius = 60f;
         private readonly List<Spot> _equipment = new List<Spot>();
+        private Model[] _equipmentModels;
         private long _nextScan;
         private Vector3 _scanAt;
 

@@ -1,0 +1,15 @@
+# name width height content-x content-y content-w content-h (tools/render/switcher.py)
+switch_card 256.00 256.00 0.00 0.00 256.00 256.00
+switch_face_bad 96.00 96.00 0.00 0.00 96.00 96.00
+switch_face_broken 96.00 96.00 0.00 0.00 96.00 96.00
+switch_face_good 96.00 96.00 0.00 0.00 96.00 96.00
+switch_face_neutral 96.00 96.00 0.00 0.00 96.00 96.00
+switch_face_terrible 96.00 96.00 0.00 0.00 96.00 96.00
+switch_heart 96.00 96.00 0.00 0.00 96.00 96.00
+switch_jason 256.00 256.00 0.00 0.00 256.00 256.00
+switch_lucia 256.00 256.00 0.00 0.00 256.00 256.00
+switch_name_franklin 124.00 40.00 0.00 0.00 124.00 40.00
+switch_name_jason 92.00 40.00 0.00 0.00 92.00 40.00
+switch_name_lucia 80.00 40.00 0.00 0.00 80.00 40.00
+switch_name_michael 112.00 40.00 0.00 0.00 112.00 40.00
+switch_name_trevor 104.00 40.00 0.00 0.00 104.00 40.00

@@ -85,7 +85,8 @@ namespace ViExtras
         private Vector3 _lastPos;
         private bool _hasLastPos;
         private long _lastShotAt = -10000, _lastMeleeAt = -10000;
-        private Dictionary<int, int> _pedHealth = new Dictionary<int, int>();
+        private Dictionary<int, int> _pedHealth = new Dictionary<int, int>(), _pedHealthSeen = new Dictionary<int, int>();
+        private long _nextHits;
 
         // driving handling (characters without story stats)
         private struct Traction { public float CurveMax, CurveMin, LossMult; }
@@ -147,6 +148,7 @@ namespace ViExtras
         private void Shutdown()
         {
             Save(_ch);
+            SaveFile.Flush();   // written now: the scripts are going
             if (_drivingVeh != null) RestoreHandling(_drivingVeh);
             _drivingVeh = null;
             if (_open) Close();
@@ -273,6 +275,7 @@ namespace ViExtras
             }
 
             string file = Paths.Save("skills_" + ch.Key + ".txt");
+            SaveFile.Flush();   // a save of this character still waiting to be written lands first
             bool stored = File.Exists(file);
             if (stored)
             {
@@ -331,7 +334,8 @@ namespace ViExtras
                 foreach (SkillDef def in SkillDefs.List)
                     if (ch.Xp.TryGetValue(def.Id, out double v))
                         sb.AppendLine(def.Id + "=" + Math.Floor(v).ToString("0", CultureInfo.InvariantCulture));
-                SaveFile.Write(Paths.Save("skills_" + ch.Key + ".txt"), sb.ToString());
+                // the text as it is now, written off the script thread
+                SaveFile.WriteLater(Paths.Save("skills_" + ch.Key + ".txt"), sb.ToString(), "Skills");
                 ch.Dirty = false;
             }
             catch (Exception ex) { Log.Write("Skills", "save: " + ex.Message); }
@@ -509,10 +513,15 @@ namespace ViExtras
         {
             long now = RealTime.Ms;
             bool shooting = now - _lastShotAt < 1000, fighting = now - _lastMeleeAt < 1000;
-            var seen = new Dictionary<int, int>();
+            // Out of a fight nothing can be awarded; the health a hit is measured
+            // against is only kept up, and once a second does for that.
+            if (!shooting && !fighting && now < _nextHits) return;
+            _nextHits = now + 1000;
+            Dictionary<int, int> seen = _pedHealthSeen;
+            seen.Clear();
             foreach (Ped other in World.GetNearbyPeds(ped, 60f))
             {
-                if (other == null || !other.Exists() || other == ped) continue;
+                if (other == null || other == ped) continue;
                 int h = other.Health;
                 seen[other.Handle] = h;
                 if (!_pedHealth.TryGetValue(other.Handle, out int was) || h >= was) continue;
@@ -525,6 +534,7 @@ namespace ViExtras
                 if (melee && fighting && !ped.IsInVehicle()) AwardUnits("strength", 1);
                 else if (armed && shooting) AwardUnits("shooting", 1);
             }
+            _pedHealthSeen = _pedHealth;   // the two swap, rather than a new one every look
             _pedHealth = seen;
         }
 

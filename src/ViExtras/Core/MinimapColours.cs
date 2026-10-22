@@ -37,7 +37,11 @@ namespace ViExtras
         private void OnTick(object sender, EventArgs e)
         {
             if (!GameReady.Now) return;
-            if (!_enabled || _done) return;
+            if (!_enabled || _done)
+            {
+                Tick -= OnTick;   // nothing more to do: no tick at all from here on
+                return;
+            }
             if (++_tries > 30) { _done = true; Log.Write("Minimap", "ViMinimap's MiniMap was not found; route colours left as they are"); return; }
             Type map = null;
             foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())

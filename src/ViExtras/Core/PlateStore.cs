@@ -16,14 +16,21 @@ namespace ViExtras
         private readonly string _path;
         private readonly Dictionary<string, string> _values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private DateTime _stamp = DateTime.MinValue;
+        // The nitrous script asks every frame it drives; the disk is asked once a
+        // second (a kit bought in the shop shows up within that).
+        private const int LookMs = 1000;
+        private long _lookAt;
 
         public PlateStore(string file) { _path = Paths.Save(file); }
 
         /// <summary>Customs.PlateKey: the plate trimmed and upper case.</summary>
         public static string Key(string plate) => (plate ?? "").Trim().ToUpperInvariant();
 
-        private void Refresh()
+        private void Refresh(bool now = false)
         {
+            long ms = RealTime.Ms;
+            if (!now && ms < _lookAt) return;
+            _lookAt = ms + LookMs;
             try
             {
                 DateTime stamp = File.Exists(_path) ? File.GetLastWriteTimeUtc(_path) : DateTime.MinValue;
@@ -50,7 +57,7 @@ namespace ViExtras
         /// <summary>Sets (or, with null, removes) the value for a plate and writes the file.</summary>
         public void Set(string plate, string value)
         {
-            Refresh();
+            Refresh(now: true);   // what is written is the file as it is now, plus this
             string key = Key(plate);
             if (key.Length == 0) return;
             if (value == null) _values.Remove(key); else _values[key] = value;

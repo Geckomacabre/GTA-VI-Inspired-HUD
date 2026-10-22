@@ -130,6 +130,7 @@ namespace ViExtras
         // your own music (CustomMusic): the station playing and the car it plays in
         private readonly CustomMusic _custom;
         private readonly float _customGain;
+        private float _customVolume;   // the volume it last played at (MusicPlayer only uses it while on)
         private RadioHud.Item _customOn;
         private int _customVeh;
         // On Demand: the switch, its list, the radio's list, and what the radio played before it
@@ -385,7 +386,7 @@ namespace ViExtras
             // On Demand: your own music's stations, or a tile saying how to add some
             var od = new List<RadioHud.Item>();
             if (_custom != null)
-                foreach (CustomMusic.Station st in _custom.Stations(RealTime.Ms))
+                foreach (CustomMusic.Station st in _custom.Stations())
                     od.Add(new RadioHud.Item { Name = "CUSTOM:" + st.Folder, Label = st.Label, Custom = st.Folder });
             if (od.Count == 0)
                 od.Add(new RadioHud.Item { Name = "CUSTOM:", Label = "NO MUSIC YET", Empty = true,
@@ -554,6 +555,13 @@ namespace ViExtras
         private void CustomTick(long now)
         {
             if (_custom == null) return;
+            // None of yours on and the switch on the radio (most of the time): no car to
+            // follow, nothing to play, and the volume isn't heard while it is off.
+            if (_customOn == null && !_onDemand)
+            {
+                _custom.Update(false, _customVolume);
+                return;
+            }
             int veh = CurrentVehicle();
             if ((_customOn != null || _onDemand) && veh != _customVeh)
             {
@@ -567,8 +575,8 @@ namespace ViExtras
             }
             bool on = _customOn != null && veh != 0 && !_muted && !_chaseQuiet
                 && !HudBridge.Paused && !HudBridge.Busy && !Game.Player.Character.IsDead;
-            float volume = Math.Max(0, Math.Min(10, Function.Call<int>(Hash.GET_PROFILE_SETTING, 301))) / 10f * _customGain;
-            _custom.Update(on, volume);
+            if (on) _customVolume = Math.Max(0, Math.Min(10, Function.Call<int>(Hash.GET_PROFILE_SETTING, 301))) / 10f * _customGain;
+            _custom.Update(on, _customVolume);
             if (!on || _wheelOpen) return;
             Disable(VehNextTrack);
             Disable(VehPrevTrack);
@@ -714,12 +722,16 @@ namespace ViExtras
         private static bool Pressed(int control) => Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, control);
         private static void Disable(int control) => Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, control, true);
 
-        private void MainLoop(long now)
+        // Something else has the keys, or the player can't use them.
+        private static bool KeysTaken()
         {
             Ped ped = Game.Player.Character;
-            bool blocked = HudBridge.UiInTheWay || OtherFeature.CrashCamPlaying || Binoculars.IsActive
-                           || ped == null || !ped.Exists() || ped.IsDead;
+            return HudBridge.UiInTheWay || OtherFeature.CrashCamPlaying || Binoculars.IsActive
+                   || ped == null || !ped.Exists() || ped.IsDead;
+        }
 
+        private void MainLoop(long now)
+        {
             // The game's own radio wheel control, on the keyboard and the pad
             // alike, so it follows the player's binds as GTA's radio does
             // (SuppressVanilla keeps GTA's own wheel shut). [Radio] Key adds a
@@ -727,6 +739,9 @@ namespace ViExtras
             bool usingPad = Glyphs.UsingPad;
             bool keyHeld = !usingPad && _key != Keys.None && Game.IsKeyPressed(_key);
             bool ctrlHeld = (_pad || !usingPad) && Pressed(VehRadioWheel);
+            bool muteDown = _muteKey != Keys.None && Game.IsKeyPressed(_muteKey);
+            // only asked when one of the keys is down: nothing else here needs it
+            bool blocked = (keyHeld || ctrlHeld || (muteDown && !_muteWasDown)) && KeysTaken();
             bool wantOpen = (keyHeld || ctrlHeld) && !blocked;
             // Pressed but kept shut: say why, once a press.
             if ((keyHeld || ctrlHeld) && blocked && !_wheelOpen && !_blockLogged)
@@ -748,7 +763,6 @@ namespace ViExtras
             }
 
             // vi_radio_mute (O), anywhere
-            bool muteDown = _muteKey != Keys.None && Game.IsKeyPressed(_muteKey);
             if (muteDown && !_muteWasDown && !blocked) ToggleMute();
             _muteWasDown = muteDown;
 
@@ -853,12 +867,18 @@ namespace ViExtras
             if (pad)
             {
                 // D-pad Left holds the wheel open, so it cannot also mean "previous":
-                // the right stick, D-pad Right and D-pad Up.
+                // the right stick, D-pad Right and D-pad Up. The stick steps once a throw,
+                // never again while it's held: GTA's own wheel is pointed at with the stick
+                // and held there, and held, it cycled on and on (the user: "it just keeps
+                // cycling to the left"). A held D-pad still repeats.
+                // Clicking the stick in to mute nudges it too, and a step unmutes, so the mute only flashed grey
+                // (the user: "flashing when I mute it instead of just going grey"): a click latches the stick until
+                // it comes back to the middle.
+                if (Pressed(FrontendRs) || Pressed(VehLookBehind)) _stickLatched = true;
                 float axis = Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, RightX);
                 if (Math.Abs(axis) >= _deadzone)
                 {
                     int side = axis > 0f ? 1 : -1;
-                    if (!songs) held = side;
                     if (!_stickLatched)
                     {
                         if (songs) song = side; else dir = side;
@@ -920,6 +940,7 @@ namespace ViExtras
             long dt = Math.Max(0, Math.Min(100, now - _lastEase));
             _lastEase = now;
             if (_timeScale >= 1f) return;
+            if (!_timeOwned && !_wheelOpen) return;   // nothing of ours running (as below, without asking the others)
             if (OtherFeature.CrashCamPlaying || OtherFeature.FocusActive)
             {
                 _timeOwned = false;

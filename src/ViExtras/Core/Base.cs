@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using GTA;
@@ -11,10 +12,29 @@ namespace ViExtras
         public static string Scripts { get; private set; }
         public static string Root => Path.Combine(Scripts, "ViExtras");
         public static string Art(string name) => Path.Combine(Root, "Art", name);
+        private static string _saveDir;
+        private static long _saveRetryAt;
+
         public static string Save(string name)
         {
-            string dir = Path.Combine(Root, "Save");
-            Directory.CreateDirectory(dir);
+            // made once a session (SaveFile.Write makes it again if it goes meanwhile).
+            // A game folder Windows won't let us write to (Program Files, until GameFolder
+            // fixes it) can't have it yet: the path is the same either way, and it's asked
+            // for again every few seconds rather than failing whoever wanted the path.
+            string dir = _saveDir ?? Path.Combine(Root, "Save");
+            if (_saveDir == null && RealTime.Ms >= _saveRetryAt)
+            {
+                try
+                {
+                    Directory.CreateDirectory(dir);
+                    _saveDir = dir;
+                }
+                catch (Exception ex)
+                {
+                    _saveRetryAt = RealTime.Ms + 5000;
+                    Log.Write(Name, "can't make " + dir + " yet: " + ex.Message);
+                }
+            }
             return Path.Combine(dir, name);
         }
 #if VICUSTOMS
@@ -252,7 +272,13 @@ namespace ViExtras
         public static void Write(string path, string text)
         {
             string tmp = path + ".tmp";
-            File.WriteAllText(tmp, text);
+            try { File.WriteAllText(tmp, text); }
+            catch (DirectoryNotFoundException)
+            {
+                // the Save folder, made once a session (Paths.Save), has gone since
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                File.WriteAllText(tmp, text);
+            }
             try
             {
                 if (File.Exists(path)) File.Replace(tmp, path, null);
@@ -262,6 +288,65 @@ namespace ViExtras
             {
                 File.Copy(tmp, path, true);
                 File.Delete(tmp);
+            }
+        }
+
+        // Saves made during play (skills XP, honor) are written off the script thread, so
+        // no frame waits on the disk: the text is taken on the script thread, and one
+        // writer at a time writes it (Write, above), in order. A newer save of a file
+        // replaces one of it still waiting; one that fails waits for the next save or Flush.
+        private static readonly object Queue = new object(), Writer = new object();
+        private static readonly List<string> Order = new List<string>();
+        private static readonly Dictionary<string, string[]> Waiting = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+        private static bool _draining;
+
+        /// <summary>Writes `text` to `path` soon, on a pool thread. `who` names it in the log if it fails.</summary>
+        public static void WriteLater(string path, string text, string who)
+        {
+            lock (Queue)
+            {
+                if (!Waiting.ContainsKey(path)) Order.Add(path);
+                Waiting[path] = new[] { text, who };
+                if (_draining) return;
+                _draining = true;
+            }
+            System.Threading.ThreadPool.QueueUserWorkItem(_ => { try { Drain(); } catch { } });
+        }
+
+        /// <summary>Writes whatever is still waiting, here and now: a script stopping, or a save about to be read.</summary>
+        public static void Flush() => Drain();
+
+        private static void Drain()
+        {
+            lock (Writer)
+            {
+                List<KeyValuePair<string, string[]>> failed = null;
+                while (true)
+                {
+                    string path;
+                    string[] job;
+                    lock (Queue)
+                    {
+                        if (Order.Count == 0)
+                        {
+                            if (failed != null)
+                                foreach (KeyValuePair<string, string[]> f in failed)
+                                    if (!Waiting.ContainsKey(f.Key)) { Order.Add(f.Key); Waiting[f.Key] = f.Value; }
+                            _draining = false;
+                            return;
+                        }
+                        path = Order[0];
+                        Order.RemoveAt(0);
+                        job = Waiting[path];
+                        Waiting.Remove(path);
+                    }
+                    try { Write(path, job[0]); }
+                    catch (Exception ex)
+                    {
+                        Log.Write(job[1], "save " + Path.GetFileName(path) + ": " + ex.Message);
+                        (failed ?? (failed = new List<KeyValuePair<string, string[]>>())).Add(new KeyValuePair<string, string[]>(path, job));
+                    }
+                }
             }
         }
 

@@ -73,10 +73,13 @@ namespace ViExtras
             Aborted += (s, e) => { if (_active) Exit(instant: true); };
         }
 
+        // hashed once, not three times a frame
+        private static readonly int Michael = Game.GenerateHash("player_zero"), Franklin = Game.GenerateHash("player_one"), Trevor = Game.GenerateHash("player_two");
+
         private static bool IsStoryModel(Ped ped)
         {
             int h = ped.Model.Hash;
-            return h == Game.GenerateHash("player_zero") || h == Game.GenerateHash("player_one") || h == Game.GenerateHash("player_two");
+            return h == Michael || h == Franklin || h == Trevor;
         }
 
         private void OnTick(object sender, EventArgs e)

@@ -16,7 +16,9 @@
 // GTA6Hud 2.1 and later switch to and from Lucia themselves: a Lucia ped stays in the world and the game's sky
 // switch goes between her and the host. ViSwitch then leaves both Lucia directions to GTA6Hud, still runs the
 // wheel (2.1 draws it with the game's player_switch movie) and still does the select-key hold for Michael,
-// Franklin and Trevor, including the one GTA6Hud asks for after switching from Lucia back to her host.
+// Franklin and Trevor, including the one GTA6Hud asks for after switching from Lucia back to her host. It also
+// picks where Lucia is when you switch to her: at one of the haunts below, mid-activity, as the game does for the
+// other three, unless you left her under a minute ago.
 //
 // Talks to GTA6Hud only by reflection, so it builds without it and stands aside if it is missing,
 // if [Swap] Enabled = False, or if [Lucia] Enabled = False. Natives are called by raw hash so the same
@@ -33,7 +35,7 @@ using GTA.Native;
 
 namespace ViSwitch
 {
-    public class ViSwitch : Script
+    public partial class ViSwitch : Script
     {
         // ---- natives (raw hashes) ----
         const ulong SWITCH_OUT = 0xAAB3200ED59016BC;          // SWITCH_TO_MULTI_FIRSTPART(ped, flags, type)
@@ -48,7 +50,6 @@ namespace ViSwitch
         const ulong CLEAR_TASKS = 0xE1EF3C1216AFF2CD;
         const ulong SET_COORDS = 0x06843DA7060A026B;
         const ulong SET_HEADING = 0x8E2530AA8ADA980E;
-        const ulong SAFE_COORD = 0xB61C8E878A4199CA;
         const ulong GROUND_Z = 0xC906A7DAB05C8D2B;
         const ulong FADE_OUT = 0x891B5B39AC6302AF;
         const ulong FADE_IN = 0xD4E8E24955024033;
@@ -68,6 +69,8 @@ namespace ViSwitch
         const ulong MODEL_REQUEST = 0x963D27A58DF860AC;
         const ulong MODEL_LOADED = 0x98A4EB5D89A0C952;
         const ulong GAME_TIMER = 0x9CD27B0045628463;
+        const ulong REL_GROUP = 0x7DBDD04862D95F04;           // GET_PED_RELATIONSHIP_GROUP_HASH
+        const ulong MAX_WANTED = 0x462E0DB9B137DC5F;          // GET_MAX_WANTED_LEVEL
         const ulong FREEZE = 0x428CA6DBD1094446;              // FREEZE_ENTITY_POSITION
         const ulong REQUEST_COLLISION = 0x07503F7948F491A7;   // REQUEST_COLLISION_AT_COORD
         const ulong COLLISION_LOADED = 0xE9676F61BC0B3321;    // HAS_COLLISION_LOADED_AROUND_ENTITY
@@ -86,6 +89,15 @@ namespace ViSwitch
         const ulong RAGDOLL = 0x47E4E977581C5B55;
         const ulong ARRESTED = 0x388A47C51ABDAC8E;
         const ulong CONTROL_ON = 0x49C32D60007AFA47;          // IS_PLAYER_CONTROL_ON
+        const ulong ENTITY_COORDS = 0x3FEF770D40960D5A;       // GET_ENTITY_COORDS
+        const ulong CHANGE_PLAYER_PED = 0x048189FAC643DEEE;
+        const ulong BLOCK_EVENTS = 0x90D2156198831D69;        // SET_BLOCKING_OF_NON_TEMPORARY_EVENTS
+        const ulong OFFSET_COORDS = 0x1899F328B0E12848;       // GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS
+        const ulong SET_VISIBLE = 0xEA1C610A04DB6BBB;         // SET_ENTITY_VISIBLE
+        const ulong ON_SCREEN = 0xE659E47AF827484B;           // IS_ENTITY_ON_SCREEN
+        const ulong ENTITY_HEADING = 0xE83D4F9BA2A38914;      // GET_ENTITY_HEADING
+        const ulong MISSION_ENTITY = 0x0A7B270912999B3C;      // IS_ENTITY_A_MISSION_ENTITY
+        const ulong OURS = 0xDDE6DF5AE89981D2;                // DOES_ENTITY_BELONG_TO_THIS_SCRIPT
 
         // The game's selector only switches on a character-select key that is held until its wheel is open
         // and has drawn the pick, then released (selector.c: func_134 held, func_133 released). The wheel
@@ -163,6 +175,11 @@ namespace ViSwitch
         // In a vehicle Q / LB, which step the wheel, are also the radio's (radio wheel 85, next / previous station
         // 81 / 82), so those are held off too while the wheel is open.
         static readonly int[] WheelBlocked = { 37, 44, 51, 205, 206, 174, 175, 189, 190, 85, 81, 82 };
+        // On duty in LSPDFR: the game's character wheel and its Michael / Franklin / Trevor / Online picks.
+        static readonly int[] SwitchControls = { 19, 166, 167, 168, 169 };
+        // LSPDFR's shift, as the game shows it: the player in SECURITY_GUARD, the max wanted level 0
+        // (seen 2026-10-21: 0xF50B51B7 / 0 on duty, PLAYER 0x6F0783F5 / 5 off).
+        const int SecurityGuard = unchecked((int)0xF50B51B7);
 
         struct Scene
         {
@@ -171,24 +188,25 @@ namespace ViSwitch
             { Owner = owner; Name = name; At = new Vector3(x, y, z); Heading = h; Scenario = scenario; }
         }
 
-        // Where each story character hangs out (safehouse driveways and their usual haunts).
-        // Lucia draws from all of them. Coordinates are approximate on purpose: the landing spot is
-        // corrected to the nearest safe ground once the area has streamed in.
+        // Where each story character hangs out, and Lucia draws from all of them. Every spot is one of the game's
+        // own scenario points (the regions in update.rpf's sp_manifest, read with CodeWalker), with the activity
+        // the game itself uses there: on the street (within 3 m of the points around it), outside every interior.
+        // Hand-picked spots were guesses, and one put Lucia inside a building shell on Portola Drive.
         static readonly Scene[] Scenes =
         {
-            new Scene(0, "Michael's driveway, Rockford Hills", -814.4f, 183.3f, 72.2f, 115f, "WORLD_HUMAN_SMOKING"),
-            new Scene(0, "Portola Drive shops", -711.6f, -150.5f, 37.4f, 120f, "WORLD_HUMAN_WINDOW_SHOP_BROWSE"),
-            new Scene(0, "Del Perro Pier", -1813.0f, -1194.0f, 13.0f, 145f, "WORLD_HUMAN_TOURIST_MAP"),
-            new Scene(0, "Galileo Observatory", -412.0f, 1170.0f, 325.8f, 165f, "WORLD_HUMAN_TOURIST_MOBILE"),
-            new Scene(1, "Forum Drive, Strawberry", -27.8f, -1430.7f, 30.6f, 0f, "WORLD_HUMAN_HANG_OUT_STREET"),
-            new Scene(1, "Vinewood Hills house", 24.2f, 539.2f, 176.0f, 330f, "WORLD_HUMAN_STAND_MOBILE"),
-            new Scene(1, "Grove Street", 106.0f, -1940.0f, 20.8f, 45f, "WORLD_HUMAN_DRINKING"),
-            new Scene(1, "Vespucci Beach", -1258.0f, -1515.0f, 4.4f, 35f, "WORLD_HUMAN_SMOKING"),
-            new Scene(2, "Sandy Shores trailer", 1964.2f, 3815.9f, 32.3f, 120f, "WORLD_HUMAN_DRINKING"),
-            new Scene(2, "Vespucci Canals", -1146.0f, -1542.4f, 4.4f, 35f, "WORLD_HUMAN_SMOKING_POT"),
-            new Scene(2, "Vanilla Unicorn", 142.6f, -1290.5f, 29.3f, 300f, "WORLD_HUMAN_PARTYING"),
-            new Scene(2, "Sandy Shores airfield", 1716.0f, 3287.0f, 41.2f, 200f, "WORLD_HUMAN_STAND_IMPATIENT"),
-            new Scene(2, "Paleto Bay beach", -276.0f, 6634.0f, 7.4f, 45f, "WORLD_HUMAN_SUNBATHE_BACK"),
+            new Scene(0, "Portola Drive shops", -721.328f, -150.729f, 36.036f, 299.4f, "WORLD_HUMAN_WINDOW_SHOP_BROWSE"),
+            new Scene(0, "Del Perro Pier", -1811.844f, -1193.747f, 12.018f, 283.8f, "WORLD_HUMAN_DRINKING"),
+            new Scene(0, "Galileo Observatory", -412.435f, 1168.113f, 324.854f, 166.5f, "WORLD_HUMAN_TOURIST_MAP"),
+            new Scene(0, "Vinewood Boulevard", 300.156f, 179.224f, 103.145f, 22.1f, "WORLD_HUMAN_TOURIST_MAP"),
+            new Scene(1, "Grove Street", 118.308f, -1940.438f, 19.624f, 295.5f, "WORLD_HUMAN_HANG_OUT_STREET"),
+            new Scene(1, "Strawberry", -20.742f, -1395.066f, 28.374f, 267.2f, "WORLD_HUMAN_LEANING"),
+            new Scene(1, "Vespucci Beach", -1291.941f, -1468.763f, 3.315f, 5.6f, "WORLD_HUMAN_SMOKING"),
+            new Scene(1, "Legion Square", 195.236f, -943.592f, 29.692f, 129.9f, "WORLD_HUMAN_SMOKING"),
+            new Scene(2, "Vespucci Canals", -1125.183f, -1542.142f, 3.382f, 305.6f, "WORLD_HUMAN_LEANING"),
+            new Scene(2, "Sandy Shores", 1873.822f, 3753.720f, 31.983f, 240.9f, "WORLD_HUMAN_SMOKING"),
+            new Scene(2, "Paleto Bay", -263.911f, 6289.305f, 30.485f, 178.7f, "WORLD_HUMAN_SMOKING"),
+            new Scene(2, "Mirror Park", 1123.022f, -642.135f, 55.702f, 242.6f, "WORLD_HUMAN_SMOKING"),
+            new Scene(2, "Del Perro Beach", -1481.294f, -1128.822f, 1.275f, 312.3f, "WORLD_HUMAN_HANG_OUT_STREET"),
         };
 
         readonly Random _rng = new Random();
@@ -212,28 +230,78 @@ namespace ViSwitch
         // PoliceMemory reads it too, but switching it off wipes what the police remember, so it is left alone.
         bool _policeHeld, _heatWas, _brainWas;
         int _policeHoldUntil;
-        MethodInfo _mDraw, _mWantBlur, _mInteract, _mSwapToLucia, _mSwapFromLucia;
+        MethodInfo _mDraw, _mWantBlur, _mInteract, _mSwapToLucia, _mSwapFromLucia, _mEnsureLucia, _mNotify;
+        // GTA6Hud's host ped (the story character Lucia was switched to from), its saved outfits, and how it
+        // notes an outfit and leaves a ped in the world: the instant way back to the host (BackToHostAt)
+        FieldInfo _fHostPed, _fOutfits, _fLuciaActive;
+        MethodInfo _mOutfitOf, _mLeaveInWorld, _mOutfitApply, _mLuciaSave;
+
+        // Lucia's haunts (GTA6Hud 2.1). GTA6Hud leaves her ped standing where you last left her, and clears her
+        // tasks as it hands her over in the sky (UpdateLuciaSwitch, switch state 8), so she was always found idle,
+        // and at Vespucci Beach until moved. Picked on the wheel a minute or more after you left her, she is put at
+        // a random haunt before the sky switch starts, held there until its ground has loaded (a ped put on
+        // unloaded ground drops through the map), and starts the haunt's activity once GTA6Hud has handed her
+        // over, so the camera comes down onto her mid-scene. Moving ends the scene, as for the others.
+        FieldInfo _fLuciaPed, _fLuciaPos, _fLuciaHeading;
+        const int LuciaKeepMs = 60000;      // real ms: switch back to her within a minute and she's where you left her
+        const int LuciaSettleMs = 30000;    // real ms the sky switch gets to hand her over
+        int _luciaLeftAt = -1;              // real ms she was last switched away from; -1: not this session
+        bool _wasLucia;
+        Scene _luciaScene;                  // the haunt she's held at, while _luciaHeld, until she lands there
+        bool _luciaHeld;
+        int _luciaScenePed, _luciaSceneUntil, _luciaSettleAt;
 
         // wheel state
         bool _open, _busy, _sceneActive;
         int _sel, _current, _pulseInput, _lastScene = -1;
         int _pulseUntil = -1, _pulseCheckUntil = -1, _pulseTicks, _pulseSeen, _pulseSeenDisabled, _pulseWasDisabled, _lastModel;
         int _pulseReleaseUntil = -1, _pulseWheelAt = -1;
+        bool _pulseStarted;
+        // GTA6Hud 2.1 goes from Lucia to the story character who isn't her host in two steps: its own sky switch
+        // back to the host, then the game's switch on. It asks for the second one the moment the first ends,
+        // when the game isn't ready yet: its wheel opens, but the switch starts seconds later or not at all,
+        // and a second pick in between cancels it (21 Oct 17:58: Lucia -> Michael ended on Franklin). So the
+        // second step waits until the game is ready, is tried again if it doesn't start, and keeps the wheel
+        // shut until it's done.
+        int _chainTarget = -1, _chainTries, _chainQuietSince = -1, _chainGiveUpAt;
+        bool _chainHolding, _chainUnseen;   // unseen: from Lucia, her host unseen in her place (BackToHostAt)
+        // the host while he stands unseen where Lucia was, and where he was before her; home once he's been put
+        // back there from the sky (UpdateHiddenHostFlight)
+        Ped _hiddenHost;
+        Vector3 _hiddenHostWas;
+        float _hiddenHostHeading;
+        bool _hiddenHostHome;
+        static readonly int[] UnseenHeld = { 21, 22, 24, 25, 30, 31, 37, 44 };   // sprint, jump, attack, aim, move, wheel, cover
+        const int ChainQuietMs = 1200, ChainTries = 3, ChainMaxMs = 25000;
         bool _pulseWheelBefore;
         string _pulseWho;
         float _blend;
 
         // test hook: a line "michael", "franklin", "trevor" or "lucia" in scripts\ViSwitch.cmd switches to them
         readonly string _cmd;
-        int _cmdLookAt;
+        int _cmdLookAt, _watchAt;
+
+        // LSPDFR: installed (plugins\LSPD First Response.dll beside the game), and on duty, asked twice a second
+        readonly bool _lspdfr;
+        bool _onDuty;
+        int _dutyAt;
 
         public ViSwitch()
         {
             _log = Path.Combine(BaseDirectory, "ViSwitch.log");
             _cmd = Path.Combine(BaseDirectory, "ViSwitch.cmd");
+            // the last session's log stays beside the new one: a script reload mid-game starts a new log
+            try { if (File.Exists(_log)) File.Copy(_log, Path.Combine(BaseDirectory, "ViSwitch.prev.log"), true); } catch { }
             try { File.WriteAllText(_log, ""); } catch { }
             _enabled = ReadIniBool(Path.Combine(BaseDirectory, "GTA6Hud.ini"), "Swap", "Enabled", true);
-            Log("loaded; GTA6Hud [Swap] Enabled=" + _enabled);
+            try
+            {
+                string game = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                _lspdfr = File.Exists(Path.Combine(game, "plugins", "LSPD First Response.dll"));
+            }
+            catch { }
+            InitJason();
+            Log("loaded; GTA6Hud [Swap] Enabled=" + _enabled + (_lspdfr ? "; LSPDFR installed: no switching while on duty" : ""));
             Interval = 0;
             Tick += OnTick;
             Aborted += (s, e) => ReleaseRealKey(); // never leave a pressed F key behind
@@ -375,10 +443,22 @@ namespace ViSwitch
                 _fWheelOpen = t.GetField("_wheelOpen", I);
                 _fSettingsOpen = t.GetField("_settingsOpen", I);
                 _fLuciaHost = t.GetField("_luciaHost", I);
+                _fLuciaPed = t.GetField("_luciaPed", I);
+                _fLuciaPos = t.GetField("_luciaPos", I);
+                _fLuciaHeading = t.GetField("_luciaHeading", I);
                 _mDraw = t.GetMethod("DrawCharSwap", I);
                 _mWantBlur = t.GetMethod("WantBlur", I);
                 _mInteract = t.GetMethod("InteractionPressed", I);
                 _mSwapToLucia = t.GetMethod("SwapToLucia", I);
+                _mEnsureLucia = t.GetMethod("EnsureLuciaPed", I);
+                _fHostPed = t.GetField("_hostPed", I);
+                _fOutfits = t.GetField("_outfits", I);
+                _mOutfitOf = t.GetMethod("OutfitOf", I);
+                _mLeaveInWorld = t.GetMethod("LeaveInWorld", S);
+                _mOutfitApply = t.GetMethod("OutfitApply", S);
+                _fLuciaActive = t.GetField("_luciaActive", I);
+                _mLuciaSave = t.GetMethod("LuciaSave", I);
+                _mNotify = t.GetMethod("Notify", S, null, new[] { typeof(string) }, null);
                 _mSwapFromLucia = t.GetMethod("SwapFromLucia", I);
                 _fRefSwapEnabled = refType.GetField("SwapEnabled", S);
                 _fRefLuciaEnabled = refType.GetField("LuciaEnabled", S);
@@ -456,22 +536,51 @@ namespace ViSwitch
             return false;
         }
 
+        bool OnDuty()
+        {
+            if (!_lspdfr) return false;
+            int now = Now();
+            if (now < _dutyAt) return _onDuty;
+            _dutyAt = now + 500;
+            bool duty = Call<int>(REL_GROUP, Me()) == SecurityGuard && Call<int>(MAX_WANTED) == 0;
+            if (duty != _onDuty) Log(duty ? "LSPDFR: on duty, character switching off" : "LSPDFR: off duty, character switching back");
+            _onDuty = duty;
+            return duty;
+        }
+
         int CurrentIndex(int ped)
         {
             int model = Call<int>(ENTITY_MODEL, ped);
             if (model == _lucia) return 3;
+            if (_jason != 0 && model == _jason) return 4;
             return Array.IndexOf(StoryModels, (uint)model);
         }
 
         // ---------------- tick ----------------
         void OnTick(object sender, EventArgs e)
         {
+            // On duty in LSPDFR there's no character switching of any kind (the user's call): switching away
+            // from the cop mid-shift pulls LSPDFR's character out from under it. Our wheel and GTA6Hud's stay
+            // shut and the game's own switch keys are held, whatever [Swap] says.
+            if (OnDuty())
+            {
+                if (_open) { _open = false; WantBlur(false); }
+                _blend = 0f;
+                if (_enabled && FindHud())
+                {
+                    try { _fRefSwapEnabled.SetValue(null, false); } catch { }
+                    try { if (_hudSwitches) { _fSwapOpen.SetValue(_hud, false); _fSwapBlend.SetValue(_hud, 0f); } } catch { }
+                }
+                foreach (int c in SwitchControls) Call(DISABLE_CONTROL, 0, c, true);
+                return;
+            }
             if (!_enabled || !FindHud()) return;
             bool luciaOn;
             try { luciaOn = (bool)_fRefLuciaEnabled.GetValue(null); } catch { return; }
-            if (!luciaOn)
+            CheckJason();
+            if (!luciaOn && !_jasonOn)
             {
-                // Without Lucia, GTA6Hud's own 3-character wheel is exactly the game's switch: leave it alone.
+                // Without Lucia or Jason, GTA6Hud's own 3-character wheel is exactly the game's switch: leave it alone.
                 try { _fRefSwapEnabled.SetValue(null, true); } catch { }
                 if (_policeHeld)
                 {
@@ -484,22 +593,40 @@ namespace ViSwitch
 
             UpdatePoliceHold();
             if (_hudSwitches) TakeHudSwitchPulse();
+            UpdateChain(Me());
             UpdateGameSwitchPulse();
+            UpdateHiddenHostFlight();
+            UpdateHiddenHost();
+            UpdateFlight();
+            LookForCardsDrawer();
 
             int ped = Me();
-            WatchOutsideSwaps(ped);
+            int now = Now();
+            if (now >= _watchAt)
+            {
+                _watchAt = now + 500;   // a log line only: twice a second will do
+                WatchOutsideSwaps(ped);
+                bool lucia = Call<int>(ENTITY_MODEL, ped) == _lucia;
+                if (_wasLucia && !lucia) _luciaLeftAt = RealNow();   // her minute starts
+                _wasLucia = lucia;
+            }
+            if (_luciaHeld) SettleLucia(ped);
+            SettleJason(ped);
+            JasonMission(ped);
             if (_sceneActive) EndSceneOnInput(ped);
             CheckTestCommand(ped);
 
-            bool blocked = _busy || !Call<bool>(ENTITY_EXISTS, ped) || Call<bool>(ENTITY_DEAD, ped, false)
-                           || HudBool(_fWheelOpen) || HudBool(_fSettingsOpen) || Call<bool>(SWITCH_IN_PROGRESS) || Game.IsPaused
-                           || NitrousHoldsKey();
             // The game's own wheel must not open on Left Alt, but INPUT_CHARACTER_WHEEL is only disabled while Alt
             // is down: disabled every frame (as GTA6Hud's wheel did) it also disables a physically held F5-F8
             // (11:28 test: the real F5 read disabled on all 19 frames), so the game never switched to Michael or
             // Trevor, not even from the player's own F keys. The game's wheel needs 300 ms of hold to open, so the
             // first frame of an Alt press getting through does nothing.
             bool altDown = Call<bool>(DIS_PRESSED, 0, 19);
+            // what can keep the wheel shut, asked only with Alt down or the wheel open (nothing else uses it)
+            bool blocked = (altDown || _open)
+                           && (_busy || !Call<bool>(ENTITY_EXISTS, ped) || Call<bool>(ENTITY_DEAD, ped, false)
+                               || HudBool(_fWheelOpen) || HudBool(_fSettingsOpen) || Call<bool>(SWITCH_IN_PROGRESS) || Game.IsPaused
+                               || NitrousHoldsKey() || _chainTarget >= 0 || _flyTo != null);
             if (altDown || _open) Call(DISABLE_CONTROL, 0, 19, true);
             bool held = !blocked && altDown;
             if (held && !_open)
@@ -521,11 +648,18 @@ namespace ViSwitch
                 foreach (int c in WheelBlocked) Call(DISABLE_CONTROL, 0, c, true);
                 bool next = Pressed(206, Keys.E) | Pressed(190, Keys.Right);
                 bool prev = Pressed(205, Keys.Q) | Pressed(189, Keys.Left);
-                if (next) _sel = (_sel + 1) % 4;
-                if (prev) _sel = (_sel + 3) % 4;
+                // along GTA VI's row: Michael, Franklin, Trevor, Jason, Lucia (whoever's in the game)
+                if (next) _sel = RowStep(_sel, 1, luciaOn);
+                if (prev) _sel = RowStep(_sel, -1, luciaOn);
             }
             _blend = Math.Max(0f, Math.Min(1f, _blend + (_open ? 1f : -1f) * Game.LastFrameTime / 0.18f));
-            if (_hudSwitches)
+            if (_cardsDrawer)
+            {
+                // ViExtras' Switcher draws GTA VI's row of cards from SwitchState; GTA6Hud's wheel stays shut
+                PublishWheel(luciaOn);
+                if (_hudSwitches) { try { _fSwapOpen.SetValue(_hud, false); } catch { } }
+            }
+            else if (_hudSwitches)
             {
                 // 2.1 shows and hides its movie from _swapOpen and keeps drawing it for the close (_swapHideAt)
                 try
@@ -556,7 +690,8 @@ namespace ViSwitch
             _pulseInput = SelectInputs[target];
             _pulseWho = StoryNames[target];
             _pulseUntil = RealNow() + SelectHoldMs;
-            _pulseCheckUntil = _pulseUntil + 4000;
+            _pulseCheckUntil = _pulseUntil + (_chainTarget >= 0 ? 6000 : 8000);   // the game can take a while after a switch
+            _pulseStarted = false;
             _pulseTicks = _pulseSeen = _pulseSeenDisabled = _pulseWasDisabled = 0;
             _pulseWheelAt = -1;
             _pulseWheelBefore = GameWheelOpen(); // an effect left running can't signal this hold
@@ -614,6 +749,7 @@ namespace ViSwitch
             if (Call<bool>(SWITCH_IN_PROGRESS))
             {
                 Log("  game switch to " + _pulseWho + " started");
+                _pulseStarted = true;
                 _pulseCheckUntil = -1;
             }
             else if (now > _pulseCheckUntil)
@@ -621,6 +757,8 @@ namespace ViSwitch
                 Log("  game switch to " + _pulseWho + " did NOT start; blockers now: " + Blockers()
                     + " (the game also refuses while on a mission or before that character is unlocked)");
                 _pulseCheckUntil = -1;
+                // the game's own wheel says nothing; a switch on from Lucia's host tries again first (UpdateChain)
+                if (_chainTarget < 0) Tell("The game won't switch to " + _pulseWho + " right now. It refuses during missions, and before the story unlocks a character.");
             }
         }
 
@@ -683,7 +821,7 @@ namespace ViSwitch
             if (!File.Exists(_cmd)) return;
             string text;
             try { text = File.ReadAllText(_cmd).Trim().ToLowerInvariant(); File.Delete(_cmd); } catch { return; }
-            int target = text.StartsWith("mic") ? 0 : text.StartsWith("fra") ? 1 : text.StartsWith("tre") ? 2 : text.StartsWith("luc") ? 3 : -1;
+            int target = text.StartsWith("mic") ? 0 : text.StartsWith("fra") ? 1 : text.StartsWith("tre") ? 2 : text.StartsWith("luc") ? 3 : text.StartsWith("jas") ? 4 : -1;
             Log("test command \"" + text + "\"");
             if (target < 0 || _busy || _open || Call<bool>(SWITCH_IN_PROGRESS) || _pulseUntil >= 0) { Log("  ignored"); return; }
             if (target == CurrentIndex(ped)) { Log("  already " + Who(target)); return; }
@@ -707,6 +845,11 @@ namespace ViSwitch
             _sceneActive = false;
             try
             {
+                if (target == 4 || cur == 4)
+                {
+                    JasonSwitch(ped, cur, target);
+                    return;
+                }
                 if (_hudSwitches && (target == 3 || cur == 3))
                 {
                     HudLuciaSwitch(ped, cur, target);
@@ -743,9 +886,11 @@ namespace ViSwitch
                 {
                     if (cur < 0 || cur > 2) { Log("  not on a story character, nothing to do"); return; }
                     Log("  GTA6Hud's switch to Lucia");
+                    PlaceLucia(ped);   // before the switch: the sky camera goes to wherever her ped is when it starts
                     _mSwapToLucia.Invoke(_hud, new object[] { p });
                     return;
                 }
+                if (target != HostIndex() && BackToHostAt(p, target, HudHostPed(), HostIndex())) return;
                 Log("  GTA6Hud's switch back from Lucia");
                 if ((bool)_mSwapFromLucia.Invoke(_hud, new object[] { p, target })) StartGameSwitch(target);
             }
@@ -762,10 +907,205 @@ namespace ViSwitch
                 int target = Array.IndexOf(SelectInputs, (int)_fSwapPulseInput.GetValue(_hud));
                 _fSwapPulse.SetValue(_hud, 0);
                 if (target < 0 || _pulseUntil >= 0) return;
-                Log("GTA6Hud asked for the game's switch to " + StoryNames[target]);
-                StartGameSwitch(target);
+                Log("GTA6Hud asked for the game's switch to " + StoryNames[target] + "; waiting until the game is ready");
+                _chainTarget = target;
+                _chainTries = 0;
+                _chainHolding = false;
+                _chainQuietSince = -1;
+                _chainGiveUpAt = RealNow() + ChainMaxMs;
             }
             catch (Exception ex) { Log("switch request error: " + ex.Message); _hudSwitches = false; }
+        }
+
+        // The second step of a switch from Lucia: once the game is ready (no switch running, safe to start one,
+        // the player in control, no switch scene still playing) and has stayed so for ChainQuietMs, the
+        // select-key hold; if the switch doesn't start, again, up to ChainTries times.
+        // From Lucia (BackToHostAt) there's no waiting for a quiet game: the switch is asked for at once, as from
+        // the wheel, and the unseen host can't be walked about meanwhile.
+        void UpdateChain(int ped)
+        {
+            if (_chainTarget < 0) return;
+            int now = RealNow();
+            if (_chainUnseen && !Call<bool>(SWITCH_IN_PROGRESS))
+                foreach (int c in UnseenHeld) Call(DISABLE_CONTROL, 0, c, true);
+            if (_chainHolding)
+            {
+                if (_pulseUntil >= 0 || _pulseCheckUntil >= 0) return;   // holding, or waiting to see it start
+                _chainHolding = false;
+                if (_pulseStarted)
+                {
+                    _chainTarget = -1;
+                    _chainUnseen = false;
+                    return;
+                }
+                _chainQuietSince = -1;
+                if (_chainTries >= ChainTries) { GiveUpChain(); return; }
+            }
+            if (now > _chainGiveUpAt) { GiveUpChain(); return; }
+            bool ready = !Call<bool>(SWITCH_IN_PROGRESS) && !Game.IsPaused && !Call<bool>(ENTITY_DEAD, ped, false)
+                         && (_chainUnseen || (Call<bool>(SAFE_TO_SWITCH) && Call<bool>(CONTROL_ON, Call<int>(PLAYER_ID))
+                                              && Threads("player_timetable_scene") == 0));
+            if (!ready) { _chainQuietSince = -1; return; }
+            if (!_chainUnseen)
+            {
+                if (_chainQuietSince < 0) { _chainQuietSince = now; return; }
+                if (now - _chainQuietSince < ChainQuietMs) return;
+            }
+            _chainTries++;
+            Log("  the game is ready: switching on to " + StoryNames[_chainTarget] + (_chainTries > 1 ? " (try " + _chainTries + ")" : ""));
+            _chainHolding = true;
+            StartGameSwitch(_chainTarget);
+        }
+
+        // From Lucia to the story character who isn't her host, in one flight, the game's own. GTA6Hud's way is two
+        // (its sky switch back to the host, then the game's switch on: "switched to michael and i still got switched
+        // to franklin but like 2 seconds later it did another switch"), and a fade with the host brought in under it
+        // left the game refusing its switch in the dark for 25 s, then the host where Lucia stood ("I switched to
+        // trevor and got fucking franklin"). The game's switch (its sky camera, the character's own scene, outfit
+        // and weapons) only starts from a story character, so: the host goes unseen just behind Lucia and the player
+        // is handed to him (what GTA6Hud does at the top of its switch: her outfit noted, the host's events back on,
+        // Lucia left in the world; it notices the player isn't Lucia any more and saves her spot itself), and the
+        // game's switch is asked for at once. Its camera rises from her spot with her standing in it. The host comes
+        // back where he was before her once he's off screen (UpdateHiddenHost). Jason leaves the same way, from his
+        // host. A host who isn't in the world any more (GTA6Hud keeps one only for the session it made him in: after a
+        // restart as Lucia it swapped you into him first, then switched) is a stand-in in his saved clothes, sent to
+        // one of his own spots from the sky and given back to the game after. False when it can't: GTA6Hud's way then.
+        bool BackToHostAt(Ped from, int target, Ped host, int hostIndex)
+        {
+            if (_mLeaveInWorld == null || from == null || !from.Exists()) return false;
+            bool standIn = false;
+            Vector3 hostWas = Vector3.Zero;
+            float hostHeading = 0f;
+            if (host == null || !host.Exists() || host.IsDead)
+            {
+                if (hostIndex < 0 || hostIndex > 2) return false;
+                Scene home = PickScene(hostIndex);
+                Vector3 behind = Call<Vector3>(OFFSET_COORDS, from.Handle, 0f, -0.8f, 0f);
+                host = StandIn(hostIndex, behind, Call<float>(ENTITY_HEADING, from.Handle));
+                if (host == null) return false;
+                standIn = true;
+                hostWas = home.At;
+                hostHeading = home.Heading;
+            }
+            Log("  " + Who(hostIndex) + (standIn ? " (a stand-in)" : "") + " unseen behind " + ModelName(Call<int>(ENTITY_MODEL, from.Handle))
+                + ", then the game's own switch to " + StoryNames[target] + " from there");
+            Ped lucia = from;
+            _busy = true;
+            try
+            {
+                try
+                {
+                    if (_mOutfitOf != null && _fOutfits != null && _fOutfits.GetValue(_hud) is System.Collections.IDictionary outfits)
+                        outfits[Call<int>(ENTITY_MODEL, lucia.Handle)] = _mOutfitOf.Invoke(_hud, new object[] { lucia });
+                }
+                catch (Exception ex) { Log("  her outfit wasn't noted: " + (ex.InnerException ?? ex).Message); }
+                _hiddenHostWas = standIn ? hostWas : Call<Vector3>(ENTITY_COORDS, host.Handle, false);
+                _hiddenHostHeading = standIn ? hostHeading : Call<float>(ENTITY_HEADING, host.Handle);
+                Vector3 at = Call<Vector3>(OFFSET_COORDS, lucia.Handle, 0f, -0.8f, 0f);
+                Call(SET_VISIBLE, host.Handle, false, false);
+                _hiddenHost = host;
+                Call(SET_COORDS, host.Handle, at.X, at.Y, at.Z, false, false, false, false);
+                Call(SET_HEADING, host.Handle, Call<float>(ENTITY_HEADING, lucia.Handle));
+                Call(CHANGE_PLAYER_PED, Call<int>(PLAYER_ID), host.Handle, false, false);
+                Call(BLOCK_EVENTS, host.Handle, false);
+                Call(CLEAR_TASKS, host.Handle);
+                _mLeaveInWorld.Invoke(null, new object[] { lucia });
+                _chainTarget = target;
+                _chainTries = 0;
+                _chainHolding = false;
+                _chainQuietSince = -1;
+                _chainGiveUpAt = RealNow() + ChainMaxMs;
+                _chainUnseen = true;
+                _hiddenHostHome = false;
+                _lastModel = Call<int>(ENTITY_MODEL, host.Handle);   // ViSwitch's own swap, not an outside one
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log("  the way from " + ModelName(Call<int>(ENTITY_MODEL, lucia.Handle)) + " failed (" + (ex.InnerException ?? ex).Message + ")");
+                ShowHiddenHost(false);
+                _chainTarget = -1;
+                _chainUnseen = false;
+                return true;
+            }
+            finally { _busy = false; }
+        }
+
+        // The unseen host back where he stood before Lucia while the game's switch is up in the sky and he's still
+        // the player: the game takes where the player stands as where that character is, and puts him there when
+        // you switch back to him. Moved after the switch, he came back in front of Lucia instead of at Michael's
+        // house, and the game held that switch for 16 s first (22 Oct 13:20).
+        void UpdateHiddenHostFlight()
+        {
+            if (_hiddenHost == null || _hiddenHostHome || !Call<bool>(SWITCH_IN_PROGRESS)) return;
+            if (!_hiddenHost.Exists()) return;
+            int h = _hiddenHost.Handle, state = Call<int>(SWITCH_STATE);
+            if (Me() != h || state < 5) return;
+            Call(SET_COORDS, h, _hiddenHostWas.X, _hiddenHostWas.Y, _hiddenHostWas.Z, false, false, false, false);
+            Call(SET_HEADING, h, _hiddenHostHeading);
+            _hiddenHostHome = true;
+            Log("  " + Who(Array.IndexOf(StoryModels, (uint)Call<int>(ENTITY_MODEL, h))) + " back where he was before Lucia, from the sky (switch state " + state + ")");
+        }
+
+        // The unseen host, once the player is someone else and he's off screen (or 40 m off): back where he stood
+        // before Lucia, and seen again. While he's still the player (the game's switch hasn't taken), he stays.
+        void UpdateHiddenHost()
+        {
+            if (_hiddenHost == null || _chainTarget >= 0) return;
+            if (!_hiddenHost.Exists()) { _hiddenHost = null; return; }
+            int h = _hiddenHost.Handle;
+            if (Call<bool>(SWITCH_IN_PROGRESS)) return;          // he's the player until the camera comes down
+            if (Me() == h) { ShowHiddenHost(false); return; }   // no switch after all: he's who you are
+            Vector3 me = Call<Vector3>(ENTITY_COORDS, Me(), false), him = Call<Vector3>(ENTITY_COORDS, h, false);
+            if (Call<bool>(ON_SCREEN, h) && me.DistanceTo(him) < 40f) return;
+            ShowHiddenHost(true);
+        }
+
+        void ShowHiddenHost(bool sendBack)
+        {
+            if (_hiddenHost == null) return;
+            try
+            {
+                if (_hiddenHost.Exists())
+                {
+                    int h = _hiddenHost.Handle;
+                    if (sendBack && !_hiddenHostHome)
+                    {
+                        Call(SET_COORDS, h, _hiddenHostWas.X, _hiddenHostWas.Y, _hiddenHostWas.Z, false, false, false, false);
+                        Call(SET_HEADING, h, _hiddenHostHeading);
+                    }
+                    Call(SET_VISIBLE, h, true, false);
+                    // He's no longer the player: given back to the game, which looks after the story characters
+                    // you've left. GTA6Hud kept him as its own while you were Lucia, and the game can't use a
+                    // character a script still holds.
+                    bool given = false;
+                    if (sendBack)
+                    {
+                        Call(BLOCK_EVENTS, h, false);
+                        if (Call<bool>(MISSION_ENTITY, h) && Call<bool>(OURS, h, false)) { _hiddenHost.MarkAsNoLongerNeeded(); given = true; }
+                    }
+                    Log("  " + Who(Array.IndexOf(StoryModels, (uint)Call<int>(ENTITY_MODEL, h)))
+                        + (sendBack ? (_hiddenHostHome ? " seen again at home" : " back where he was before Lucia") + (given ? ", given back to the game" : "")
+                                    : " seen again where he stands"));
+                }
+            }
+            catch (Exception ex) { Log("  the host couldn't be shown: " + ex.Message); }
+            _hiddenHost = null;
+        }
+
+        void GiveUpChain()
+        {
+            Log("  gave up switching on to " + StoryNames[_chainTarget] + " after " + _chainTries + " tries; blockers now: " + Blockers());
+            _chainUnseen = false;
+            if (_hiddenHost != null && _hiddenHost.Exists() && Me() == _hiddenHost.Handle) ShowHiddenHost(false);
+            Tell("The game won't switch to " + StoryNames[_chainTarget] + " right now. It refuses during missions, and before the story unlocks a character.");
+            _chainTarget = -1;
+            _chainHolding = false;
+        }
+
+        Ped HudHostPed()
+        {
+            try { return _fHostPed?.GetValue(_hud) as Ped; } catch { return null; }
         }
 
         int HostIndex()
@@ -773,13 +1113,24 @@ namespace ViSwitch
             try { return (int)_fLuciaHost.GetValue(_hud); } catch { return -1; }
         }
 
-        static string Who(int i) { return i == 3 ? "Lucia" : (i >= 0 && i < 3 ? StoryNames[i] : "?"); }
+        void Tell(string text)
+        {
+            try { if (_mNotify != null) { _mNotify.Invoke(null, new object[] { text }); return; } } catch { }
+#pragma warning disable CS0618   // PostTicker isn't in Script Hook V .NET Enhanced
+            GTA.UI.Notification.Show(text);
+#pragma warning restore CS0618
+        }
 
-        Scene PickScene(int owner)
+        static string Who(int i) { return i == 3 ? "Lucia" : i == 4 ? "Jason" : (i >= 0 && i < 3 ? StoryNames[i] : "?"); }
+
+        // A random scene of the owner's (all of them for -1), not the last one, nor one within minDistance of
+        // awayFrom while there are others.
+        Scene PickScene(int owner, Vector3 awayFrom = default(Vector3), float minDistance = 0f)
         {
             var pool = new List<int>();
             for (int i = 0; i < Scenes.Length; i++)
-                if ((owner < 0 || Scenes[i].Owner == owner) && i != _lastScene) pool.Add(i);
+                if ((owner < 0 || Scenes[i].Owner == owner) && i != _lastScene
+                    && (minDistance <= 0f || Scenes[i].At.DistanceTo(awayFrom) >= minDistance)) pool.Add(i);
             if (pool.Count == 0) for (int i = 0; i < Scenes.Length; i++) if (owner < 0 || Scenes[i].Owner == owner) pool.Add(i);
             int pick = pool[_rng.Next(pool.Count)];
             _lastScene = pick;
@@ -861,18 +1212,86 @@ namespace ViSwitch
             }
         }
 
-        // Nearest safe spot on the ground near the scene, once the area has streamed in.
+        // Before GTA6Hud's switch to Lucia: unless she was left under a minute ago, her ped goes to a random haunt
+        // away from the player, so the sky camera flies straight there. Her ped is made first if there isn't one
+        // (GTA6Hud's EnsureLuciaPed, the one SwapToLucia uses), because a new one starts wherever GTA6Hud picks
+        // (Vespucci Beach for a spot it thinks is indoors) and the camera would fly there instead.
+        void PlaceLucia(int player)
+        {
+            _luciaHeld = false;
+            if (_fLuciaPed == null || _fLuciaPos == null || _fLuciaHeading == null || _mEnsureLucia == null) return;
+            if (_luciaLeftAt >= 0 && RealNow() - _luciaLeftAt < LuciaKeepMs)
+            {
+                Log("  Lucia was left " + (RealNow() - _luciaLeftAt) / 1000 + " s ago: she's where you left her");
+                return;
+            }
+            Scene scene = PickScene(-1, Call<Vector3>(ENTITY_COORDS, player, true), 200f);
+            try
+            {
+                _fLuciaPos.SetValue(_hud, scene.At);
+                _fLuciaHeading.SetValue(_hud, scene.Heading);
+            }
+            catch (Exception ex) { Log("  couldn't place Lucia: " + ex.Message); return; }
+            int lucia = 0;
+            try { if (_mEnsureLucia.Invoke(_hud, null) is Ped p && p.Exists() && !p.IsDead) lucia = p.Handle; }
+            catch (Exception ex) { Log("  couldn't make Lucia's ped: " + (ex.InnerException ?? ex).Message); }
+            if (lucia == 0) { Log("  no Lucia ped: GTA6Hud's own spot"); return; }
+            Log("  Lucia at " + scene.Name + " (" + scene.Scenario + ")");
+            _luciaScene = scene;
+            _luciaHeld = true;
+            Vector3 at = scene.At;
+            Call(CLEAR_TASKS, lucia);
+            Call(FREEZE, lucia, true);   // until her ground has loaded: a ped on unloaded ground drops through the map
+            Call(SET_COORDS, lucia, at.X, at.Y, at.Z, false, false, false, false);
+            Call(SET_HEADING, lucia, scene.Heading);
+            _luciaScenePed = lucia;
+            _luciaSceneUntil = RealNow() + LuciaSettleMs;
+        }
+
+        // Every frame while she's held: once GTA6Hud has handed her over (she is the player) and the haunt's
+        // collision is in, she's let go on the ground right where she stands and starts the activity. If the
+        // switch never gets that far (it didn't start, or went elsewhere), she stays frozen until the player
+        // comes near enough for her ground to load, so she can't fall through the map meanwhile.
+        void SettleLucia(int player)
+        {
+            int lucia = _luciaScenePed;
+            if (lucia == 0 || !Call<bool>(ENTITY_EXISTS, lucia) || Call<bool>(ENTITY_DEAD, lucia, false))
+            {
+                if (lucia != 0) _luciaHeld = false;   // gone: GTA6Hud makes a new one at _luciaPos next time
+                return;
+            }
+            Scene s = _luciaScene;
+            bool handedOver = player == lucia;
+            bool waiting = RealNow() < _luciaSceneUntil;
+            if (waiting) Call(REQUEST_COLLISION, s.At.X, s.At.Y, s.At.Z);
+            else
+            {
+                if (RealNow() < _luciaSettleAt) return;
+                _luciaSettleAt = RealNow() + 500;   // given up on the switch: a look twice a second
+            }
+            if (!Call<bool>(COLLISION_LOADED, lucia)) return;
+            if (waiting && !handedOver && Call<bool>(SWITCH_IN_PROGRESS)) return;   // GTA6Hud would clear her tasks
+            Vector3 at = Land(s.At);
+            Call(SET_COORDS, lucia, at.X, at.Y, at.Z, false, false, false, false);
+            Call(SET_HEADING, lucia, s.Heading);
+            Call(FREEZE, lucia, false);
+            Call(SCENARIO_IN_PLACE, lucia, s.Scenario, 0, true);
+            if (handedOver) _sceneActive = true;
+            Log("Lucia landed at " + s.Name + (handedOver ? "" : " (not the player: the switch didn't get to her)"));
+            _luciaHeld = false;
+        }
+
+        // The ground right under the scene's spot, once the area has streamed in. The spots are the game's own
+        // scenario points, already at ground height, so the probe starts only half a metre up (from higher it
+        // finds awnings and roofs first) and only a small correction is taken; anything else keeps the point.
         static Vector3 Land(Vector3 at)
         {
-            var safe = new OutputArgument();
-            if (Call<bool>(SAFE_COORD, at.X, at.Y, at.Z, true, safe, 16))
-            {
-                Vector3 s = safe.GetResult<Vector3>();
-                if (s.DistanceTo(at) < 25f) return s;
-            }
             var z = new OutputArgument();
-            if (Call<bool>(GROUND_Z, at.X, at.Y, at.Z + 50f, z, false, false))
-                return new Vector3(at.X, at.Y, z.GetResult<float>());
+            if (Call<bool>(GROUND_Z, at.X, at.Y, at.Z + 0.5f, z, false, false))
+            {
+                float g = z.GetResult<float>();
+                if (Math.Abs(g - at.Z) < 1.5f) return new Vector3(at.X, at.Y, g);
+            }
             return at;
         }
 
@@ -943,6 +1362,7 @@ namespace ViSwitch
         string ModelName(int model)
         {
             if (model == _lucia) return "Lucia";
+            if (_jason != 0 && model == _jason) return "Jason";
             int i = Array.IndexOf(StoryModels, (uint)model);
             return i >= 0 ? StoryNames[i] : "model 0x" + ((uint)model).ToString("X8");
         }

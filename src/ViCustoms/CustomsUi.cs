@@ -36,6 +36,12 @@ namespace ViExtras
 
         private static void Rect(float x, float y, float w, float h, Color c) => Canvas.Rect(x, y, w, h, c);
 
+        // Screen pixels per canvas px, across and down. Strips that meet on whole pixels neither overlap nor leave a
+        // gap: see-through strips that overlapped by half a canvas px drew a darker line wherever two met.
+        private static float PixelsX() => GTA.UI.Screen.Resolution.Width / Math.Max(1f, W);
+        private static float PixelsY() => GTA.UI.Screen.Resolution.Height / H;
+        private static float Snap(float v, float px) => (float)Math.Round(v * px) / px;
+
         private static void Art(string name, float x, float y, Color c, float scale = 1f)
         {
             ViExtras.Art.Entry e = ViExtras.Art.Get(name);
@@ -64,14 +70,15 @@ namespace ViExtras
 
         private static string Up(string s) => (s ?? "").ToUpperInvariant();
 
-        /// <summary>A horizontal gradient as strips: stops are (position 0..1, colour).</summary>
+        /// <summary>A horizontal gradient as strips: stops are (position 0..1, colour). The strips meet on whole screen pixels.</summary>
         private static void Gradient(float x, float y, float w, float h, (float At, Color C)[] stops, int strips)
         {
-            float step = w / strips;
+            float px = PixelsX(), left = Snap(x, px);
             for (int i = 0; i < strips; i++)
             {
-                float t = (i + 0.5f) / strips;
-                Rect(x + i * step, y, step + 0.5f, h, Sample(stops, t));
+                float right = Snap(x + w * (i + 1) / strips, px);
+                if (right > left) Rect(left, y, right - left, h, Sample(stops, (i + 0.5f) / strips));
+                left = right;
             }
         }
 
@@ -156,16 +163,34 @@ namespace ViExtras
             (0f, Rgba(30, 31, 44, .9f)), (.16f, Rgba(30, 31, 44, .74f)), (.32f, Rgba(30, 31, 44, .3f)), (.46f, Rgba(30, 31, 44, 0f)),
         };
 
+        // Both worked out once rather than every frame the menu is up: the left one
+        // over the 46% of the width it spans, and the bottom one a colour a strip.
+        private static readonly (float, Color)[] ShadeLeftSpan = Rescale(ShadeLeft, 0.46f);
+        private const int ShadeStrips = 48;
+        private static readonly Color[] ShadeBottom = ShadeBand();
+
+        // linear-gradient(0deg, rgba(22,22,32,.5) 0%, transparent 20%): bottom up
+        private static Color[] ShadeBand()
+        {
+            var band = new Color[ShadeStrips];
+            for (int i = 0; i < ShadeStrips; i++)
+            {
+                float t = 1f - (i + 0.5f) / ShadeStrips;    // 1 at the top of the band, 0 at the bottom
+                band[i] = Rgba(22, 22, 32, 0.5f * (1f - t));
+            }
+            return band;
+        }
+
         private static void Shade()
         {
-            Gradient(0f, 0f, W * 0.46f, H, Rescale(ShadeLeft, 0.46f), 96);
-            // linear-gradient(0deg, rgba(22,22,32,.5) 0%, transparent 20%): bottom up
-            int strips = 48;
-            float top = H * 0.8f, step = (H - top) / strips;
-            for (int i = 0; i < strips; i++)
+            float w = W;
+            Gradient(0f, 0f, w * 0.46f, H, ShadeLeftSpan, 96);
+            float py = PixelsY(), top = H * 0.8f, step = (H - top) / ShadeStrips, from = Snap(top, py);
+            for (int i = 0; i < ShadeStrips; i++)
             {
-                float t = 1f - (i + 0.5f) / strips;    // 1 at the top of the band, 0 at the bottom
-                Rect(0f, top + i * step, W, step + 0.5f, Rgba(22, 22, 32, 0.5f * (1f - t)));
+                float to = Snap(top + (i + 1) * step, py);
+                if (to > from) Rect(0f, from, w, to - from, ShadeBottom[i]);
+                from = to;
             }
         }
 
@@ -250,6 +275,7 @@ namespace ViExtras
         // =============================================================================
 
         private const int ListRows = 8;
+        private static readonly (float, Color)[] RowOn = { (0f, Rgba(233, 233, 236, .95f)), (.45f, Rgba(233, 233, 236, .93f)), (1f, Rgba(240, 240, 243, .38f)) };
 
         private static void DrawList(CustomsMenu m, MenuView view)
         {
@@ -268,7 +294,7 @@ namespace ViExtras
                 float top = y + n * rh;
                 bool on = i == sel;
                 if (on)
-                    Gradient(x, top, w, rh, new[] { (0f, Rgba(233, 233, 236, .95f)), (.45f, Rgba(233, 233, 236, .93f)), (1f, Rgba(240, 240, 243, .38f)) }, 32);
+                    Gradient(x, top, w, rh, RowOn, 32);
                 else
                     Rect(x, top + rh - 1f, w, 1f, Rgba(255, 255, 255, .13f));
                 Color ink = on ? Hex(0x1d1d22) : Hex(0xdcdce0);
@@ -363,8 +389,9 @@ namespace ViExtras
             Text(count.ToString(CultureInfo.InvariantCulture), TextFace.Body, s, x, ty, c, TextAlign.Left, true);
         }
 
-        private static void Line(float x, float y) =>
-            Gradient(x, y, V(60f), 1f, new[] { (0f, Rgba(255, 255, 255, .34f)), (.65f, Rgba(255, 255, 255, .22f)), (1f, Rgba(255, 255, 255, 0f)) }, 40);
+        private static readonly (float, Color)[] LineStops = { (0f, Rgba(255, 255, 255, .34f)), (.65f, Rgba(255, 255, 255, .22f)), (1f, Rgba(255, 255, 255, 0f)) };
+
+        private static void Line(float x, float y) => Gradient(x, y, V(60f), 1f, LineStops, 40);
 
         // statusHtml: "Applied" with its check, or "Not owned" and the price
         private static void Status(float x, float y, string status, int price)
@@ -695,13 +722,15 @@ namespace ViExtras
             Text("Purchased", TextFace.Body, s, right - V(2.7f) - V(1f), cy - s * 0.5f, c, TextAlign.Right, true);
         }
 
+        private static readonly (float, Color)[] DialogRule = { (0f, Rgba(196, 190, 200, .78f)), (.55f, Rgba(205, 160, 215, .7f)), (1f, Rgba(120, 110, 150, .08f)) };
+
         private static void DrawDialog(CustomsMenu m)
         {
             CustomsMenu.DialogState d = m.Dialog;
             float top = H - V(29.4f);
             Rect(0f, top, W, V(29.4f), Hex(0x272831));
             Text(Up(d.Title), TextFace.Display, V(4.75f), V(5.7f), top + V(7.2f), Hex(0xe3e1e4));
-            Gradient(V(5.7f), top + V(14.4f), V(58f), V(.2f), new[] { (0f, Rgba(196, 190, 200, .78f)), (.55f, Rgba(205, 160, 215, .7f)), (1f, Rgba(120, 110, 150, .08f)) }, 48);
+            Gradient(V(5.7f), top + V(14.4f), V(58f), V(.2f), DialogRule, 48);
             float s = V(2.25f), lh = V(3.75f);
             for (int i = 0; i < d.Lines.Count; i++)
                 Text(d.Lines[i], TextFace.Body, s, V(5.7f), top + V(17.1f) + i * lh + (lh - s) * 0.5f, Hex(0xd6d6db));

@@ -341,9 +341,7 @@ namespace ViExtras
             if (now - _lastScanAt >= ScanMs)
             {
                 _lastScanAt = now;
-                Vehicle[] traffic = World.GetNearbyVehicles(_veh.Position, 60f);
-                if (InOncomingTraffic(traffic)) _oncomingUntil = now + ScanMs + 50;
-                amount += NearMissRecharge(traffic, now);
+                amount += ScanTraffic(now);
             }
             if (amount > 0f) _fuel = Math.Min(_tier.Capacity, _fuel + amount);
         }
@@ -357,45 +355,46 @@ namespace ViExtras
             return _driftRefill * dt;
         }
 
+        // GetNearbyVehicles hands back cars that exist; GET_PED_IN_VEHICLE_SEAT names
+        // only a ped that does (GetPedOnSeat is null for an empty seat).
         private bool IsTraffic(Vehicle other)
         {
-            if (other == null || other.Handle == _veh.Handle || !other.Exists()) return false;
+            if (other == null || other.Handle == _veh.Handle) return false;
             Ped driver = other.GetPedOnSeat(VehicleSeat.Driver);
-            return driver != null && driver.Exists() && !driver.IsPlayer;
+            return driver != null && !driver.IsPlayer;
         }
 
-        private bool Ahead(Vehicle other)
-        {
-            Vector3 local = _veh.GetPositionOffset(other.Position);
-            return local.Y > -2f && local.Y < 22f;
-        }
-
-        private bool InOncomingTraffic(Vehicle[] traffic)
-        {
-            if (_veh.Speed < 16f) return false;
-            Vector3 fwd = _veh.ForwardVector;
-            foreach (Vehicle other in traffic)
-            {
-                if (!IsTraffic(other) || !Ahead(other)) continue;
-                if (Vector3.Dot(fwd, other.ForwardVector) < -0.55f) return true;
-            }
-            return false;
-        }
-
-        private float NearMissRecharge(Vehicle[] traffic, long now)
+        /// <summary>
+        /// Driving into oncoming traffic (at 16 m/s and up) and near misses (18 m/s and
+        /// up), in one walk of the cars around: each car's position read once, and
+        /// "ahead" worked out here as GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS's Y is
+        /// (the distance along the car's forward vector, its matrix's second row).
+        /// Below 16 m/s nothing is walked. Returns the near-miss refill.
+        /// </summary>
+        private float ScanTraffic(long now)
         {
             float speed = _veh.Speed;
-            if (speed < 18f) return 0f;
-            Vector3 pos = _veh.Position;
-            foreach (Vehicle other in traffic)
+            if (speed < 16f) return 0f;
+            bool nearMisses = speed >= 18f, oncoming = false, missed = false;
+            Vector3 pos = _veh.Position, fwd = Function.Call<Vector3>(Hash.GET_ENTITY_FORWARD_VECTOR, _veh);
+            foreach (Vehicle other in World.GetNearbyVehicles(pos, 60f))
             {
-                if (!IsTraffic(other) || !Ahead(other)) continue;
-                if (pos.DistanceTo(other.Position) > 4.2f || Math.Abs(speed - other.Speed) < 8f) continue;
-                if (_nearMissCooldowns.TryGetValue(other.Handle, out long until) && now < until) continue;
-                _nearMissCooldowns[other.Handle] = now + NearMissCooldownMs;
-                return _nearMissRefill;
+                if (!IsTraffic(other)) continue;
+                Vector3 at = other.Position;
+                float ahead = Vector3.Dot(at - pos, fwd);
+                if (ahead <= -2f || ahead >= 22f) continue;
+                if (!oncoming && Vector3.Dot(fwd, other.ForwardVector) < -0.55f) oncoming = true;
+                // the first one close and fast enough, not one just counted, refills once
+                if (nearMisses && !missed && pos.DistanceTo(at) <= 4.2f && Math.Abs(speed - other.Speed) >= 8f
+                    && !(_nearMissCooldowns.TryGetValue(other.Handle, out long until) && now < until))
+                {
+                    _nearMissCooldowns[other.Handle] = now + NearMissCooldownMs;
+                    missed = true;
+                }
+                if (oncoming && (missed || !nearMisses)) break;
             }
-            return 0f;
+            if (oncoming) _oncomingUntil = now + ScanMs + 50;
+            return missed ? _nearMissRefill : 0f;
         }
 
         // =============================================================================
