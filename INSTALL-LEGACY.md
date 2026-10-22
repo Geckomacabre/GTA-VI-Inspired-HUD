@@ -87,16 +87,16 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 ## Step 5: Download the mod
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.1-Legacy.oiv`** (the mod, about 100 MB). It also switches
+2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.2-Legacy.oiv`** (the mod, about 100 MB). It also switches
    the mod on in the game, so there's no separate patch to get.
 3. **Want to play as Lucia?** She isn't included: her model is someone else's paid work. Get her from her creator,
    **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another
    Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net (see "Optional: Jason" below to put him in the game). The HUD
    works without her.
 
-❌ Don't download `GTA-VI-Inspired-HUD-2.6.1-Enhanced.oiv`. That one is for the other version of the game.
+❌ Don't download `GTA-VI-Inspired-HUD-2.6.2-Enhanced.oiv`. That one is for the other version of the game.
 
-💡 The number in the file name is the version (2.6.1 here), so you can always tell which one you installed. Mention it when you ask for help.
+💡 The number in the file name is the version (2.6.2 here), so you can always tell which one you installed. Mention it when you ask for help.
 
 ---
 
@@ -108,7 +108,7 @@ Launcher, Epic Games and Steam put it there), right-click **OpenIV** → **Run a
 in place.
 
 1. In OpenIV, click **Tools** → **Package Installer**.
-2. Pick **`GTA-VI-Inspired-HUD-2.6.1-Legacy.oiv`**, then click **Install**.
+2. Pick **`GTA-VI-Inspired-HUD-2.6.2-Legacy.oiv`**, then click **Install**.
 3. When it asks where to install, choose **mods folder**. If it offers to create the folder, say yes.
 4. Wait until it says it's finished, then click **Close**.
 
@@ -226,7 +226,7 @@ You can also copy the new scripts in yourself. (From 2.6, the HUD offers to fix 
 row above. After that, updates go in normally.) An `.oiv` is just a zip:
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.6.1-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
+2. Copy **`GTA-VI-Inspired-HUD-2.6.2-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
 4. Paste it into the **`scripts`** folder in your game folder, for example

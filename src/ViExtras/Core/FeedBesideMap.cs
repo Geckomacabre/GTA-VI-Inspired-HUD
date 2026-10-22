@@ -1,45 +1,43 @@
 using System;
 using System.IO;
 using GTA;
-using GTA.Math;
 using GTA.Native;
 
 namespace ViExtras
 {
     /// <summary>
-    /// GTA's notification feed to the right of the 3D minimap. ViMinimap switches GTA's own radar off (it draws its
-    /// map in a window of its own, in the bottom-left corner), and without a radar GTA puts the feed down in that same
-    /// corner, so the map covered it whenever it showed (a player: "this notifications and stuff like that appear
-    /// behind the map when we are inside of cars"). While the map is on screen the feed moves right by the map's width
-    /// (HUD component 18, the game stream); when the map goes, the feed goes back. Wider than 16:9, GTA's HUD corner
-    /// is already clear of the map, so the feed stays ([Minimap] FeedBesideMapWide = True moves it there too).
-    /// [Minimap] FeedBesideMap = False leaves it where GTA puts it.
+    /// GTA's notification feed clear of the 3D minimap. ViMinimap switches GTA's own radar off (it draws its map in a
+    /// window of its own, in the bottom-left corner), and without a radar GTA puts the feed down in that same corner,
+    /// so the map covered it whenever it showed (a player: "this notifications and stuff like that appear behind the
+    /// map when we are inside of cars"). Lifting the feed over the map depended on the screen's shape and the vehicle
+    /// card, so the feed hangs from a fixed place instead, newest on top: where GTA VI's wanted box goes (WantedBox,
+    /// vice_hud's #wanted), and while the box is up, under it.
+    ///
+    /// GTA won't move its feed for a script (SET_HUD_COMPONENT_POSITION on it is ignored), and only draws it in a
+    /// narrow column at the left, so the HUD's own feed movie (vihud's game_stream.gfx) does it: it takes numbers no
+    /// colour uses from THEFEED_SET_BACKGROUND_COLOR_FOR_NEXT_POST, 7000 + t for the feed's top t (of 720) down, and
+    /// keeps it 190 clear of the screen's bottom (the map and the vehicle card). GTA hands that number over with the
+    /// next post only, so it's sent all the time, and the move under the wanted box, which can't wait for a post, goes
+    /// through THEFEED_SET_SCRIPTED_MENU_HEIGHT: GTA keeps the feed under a script's menu at once, and the movie keeps
+    /// its top under that line. [Minimap] FeedBesideMap = False leaves it where GTA puts it.
     /// </summary>
     public sealed class FeedBesideMap : Script
     {
-        private const int GameStream = 18;     // HUD_GAME_STREAM: GTA's notification feed
-        // ViMinimap's map (its Renderer.Layout, in 720ths of the screen height): 208 wide; and the gap after it
-        private const float MapW = 208f, Gap = 8f;
-        private const float WideAspect = 1.9f;
+        // From the 1080 tall canvas to the feed movie's 720; how far over the movie's line a post's box starts, and the
+        // gap between the wanted box and the feed under it, on the canvas (measured in game, 2026-10-22)
+        private const float ToMovie = 720f / Canvas.H, PostEdge = 17f, Gap = 12f;
+        private const int TopSignal = 7000;
+        private const int ResendMs = 500;
 
-        /// <summary>Also wider than 16:9 ([Minimap] FeedBesideMapWide).</summary>
-        internal static bool Wide;
-
-        private readonly bool _enabled;
-        private readonly string _settings;
-        private readonly bool _miniMap;
-        private bool _mapEnabled = true, _onlyInVehicle = true, _whenWanted = true;
-        private int _readAt;
-        private bool _moved, _logged;
+        private int _sentAt;
+        private bool _logged, _under;
 
         public FeedBesideMap()
         {
             Paths.Init(BaseDirectory);
-            _enabled = Config.Get("Minimap", "FeedBesideMap", true);
-            Wide = Config.Get("Minimap", "FeedBesideMapWide", false);
-            _settings = Path.Combine(Paths.Scripts ?? ".", "MiniMap.settings");
-            _miniMap = File.Exists(Path.Combine(Paths.Scripts ?? ".", "ViMinimap.dll"));
-            if (!_enabled || !_miniMap) return;
+            bool enabled = Config.Get("Minimap", "FeedBesideMap", true);
+            bool miniMap = File.Exists(Path.Combine(Paths.Scripts ?? ".", "ViMinimap.dll"));
+            if (!enabled || !miniMap) return;
             Tick += OnTick;
         }
 
@@ -48,77 +46,32 @@ namespace ViExtras
             if (!GameReady.Now) return;
             try
             {
-                ReadSettings();
-                float aspect = Function.Call<float>(Hash.GET_ASPECT_RATIO, false);
-                if (MapShowing() && aspect > 0.5f && (Wide || aspect < WideAspect))
+                // where the feed hangs from, for the next post to carry (and again after a loading screen)
+                int now = Environment.TickCount;
+                if (now - _sentAt > ResendMs)
                 {
-                    float x = (MapW + Gap) / 720f / aspect;
-                    if (!_logged)
-                    {
-                        Vector3 before = Function.Call<Vector3>(Hash.GET_HUD_COMPONENT_POSITION, GameStream);
-                        Log.Write("Feed", "moving GTA's feed beside the 3D map: by " + x.ToString("0.0000") + " of the screen width (it was at "
-                            + before.X.ToString("0.0000") + ", " + before.Y.ToString("0.0000") + ")");
-                    }
-                    // every frame: GTA may put it back while the radar is off
-                    Function.Call(Hash.SET_HUD_COMPONENT_POSITION, GameStream, x, 0f);
-                    if (!_logged)
-                    {
-                        _logged = true;
-                        Vector3 after = Function.Call<Vector3>(Hash.GET_HUD_COMPONENT_POSITION, GameStream);
-                        Log.Write("Feed", "GTA's feed is now at " + after.X.ToString("0.0000") + ", " + after.Y.ToString("0.0000"));
-                    }
-                    _moved = true;
+                    if (!_logged) Log.Write("Feed", "GTA's feed hangs where the wanted box goes");
+                    _logged = true;
+                    Function.Call(Hash.THEFEED_SET_BACKGROUND_COLOR_FOR_NEXT_POST, TopSignal + (int)Math.Round((WantedBox.Top + PostEdge) * ToMovie));
+                    _sentAt = now;
                 }
-                else if (_moved)
+                // under the wanted box while it's up: the menu's line, from the top of the safe zone
+                if (WantedBox.Up)
                 {
-                    Function.Call(Hash.RESET_HUD_COMPONENT_VALUES, GameStream);
-                    _moved = false;
+                    float safeTop = (1f - Function.Call<float>(Hash.GET_SAFE_ZONE_SIZE)) * Canvas.H;
+                    float line = (WantedBox.Bottom + Gap + PostEdge - safeTop) / Canvas.H;
+                    Function.Call(Hash.THEFEED_SET_SCRIPTED_MENU_HEIGHT, line);
+                    _under = true;
+                }
+                else if (_under)
+                {
+                    Function.Call(Hash.THEFEED_SET_SCRIPTED_MENU_HEIGHT, 0f);
+                    _under = false;
                 }
             }
             catch (Exception ex)
             {
-                Log.Write("Feed", "beside the map: " + ex.Message);
-            }
-        }
-
-        // ViMinimap's own rule: on, and on foot too, or wanted, or in anything but a helicopter or a plane
-        private bool MapShowing()
-        {
-            if (!_mapEnabled) return false;
-            if (Function.Call<bool>(Hash.IS_PAUSE_MENU_ACTIVE)) return false;
-            if (!_onlyInVehicle) return true;
-            if (_whenWanted && Game.Player.Wanted.WantedLevel > 0) return true;
-            Ped ped = Game.Player.Character;
-            if (ped == null || !ped.Exists() || !ped.IsInVehicle()) return false;
-            Vehicle v = ped.CurrentVehicle;
-            if (v == null || !v.Exists()) return false;
-            VehicleClass c = v.ClassType;
-            return c != VehicleClass.Helicopters && c != VehicleClass.Planes;
-        }
-
-        // MiniMap.settings, as ViMinimap writes it (its menu can change it while the game runs)
-        private void ReadSettings()
-        {
-            int now = Environment.TickCount;
-            if (_readAt != 0 && now - _readAt < 2000) return;
-            _readAt = now;
-            try
-            {
-                if (!File.Exists(_settings)) return;
-                foreach (string raw in File.ReadAllLines(_settings))
-                {
-                    int eq = raw.IndexOf('=');
-                    if (eq <= 0) continue;
-                    string key = raw.Substring(0, eq).Trim();
-                    bool on = raw.Substring(eq + 1).Trim() != "0";
-                    if (key == "Enabled") _mapEnabled = on;
-                    else if (key == "OnlyInVehicle") _onlyInVehicle = on;
-                    else if (key == "ShowWhenWanted") _whenWanted = on;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Write("Feed", "MiniMap.settings: " + ex.Message);
+                Log.Write("Feed", "where the wanted box goes: " + ex.Message);
             }
         }
     }

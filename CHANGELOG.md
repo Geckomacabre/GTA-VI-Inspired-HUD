@@ -10,6 +10,13 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## 2.6.2 (22 October 2026)
+
+### Fixed
+
+- **Notifications where the wanted box goes.** 2.6.1's move beside the minimap didn't take: GTA ignores a script moving its notifications, so in a car they stayed under the 3D map. The HUD's own notification movie (in the `vihud` pack) now hangs them at the left, a quarter of the way down, where GTA VI's wanted box goes, newest on top, and moves them under the box while it's up. They stop short of the map and the vehicle card, on any screen shape, so `FeedBesideMapWide` is gone. `ViExtras.ini` `[Minimap] FeedBesideMap = False` leaves them where GTA puts them. With NVE, copy the new `vihud` into `onigiri\dlcpacks` too.
+- **World badges stay off the notifications.** The house over a safehouse and your car's badge are drawn over the whole picture, GTA's notifications included, so one could sit on a notification. They're no longer drawn in the notifications' column.
+
 ## 2.6.1 (22 October 2026)
 
 ### Added
@@ -19,7 +26,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 ### Fixed
 
 - **GTA's tips show again.** FBICat's HUD hid every one of GTA's help boxes (the tips and tutorials at the top left, like "You can now buy properties") and redrew only the ones it has a label for, so the rest only played their sound. A box it can't redraw is now left to the game, and GTA's own box shows. With `GTA6Hud.ini` `[HelpText] Enabled = False`, every box is GTA's own.
-- **Notifications beside the minimap.** The 3D minimap switches GTA's radar off, so GTA put its notifications in the minimap's corner, where the map covered them in a car. While the map is on screen they now sit to its right. Wider than 16:9, GTA's notifications are already clear of the map; `ViExtras.ini` `[Minimap] FeedBesideMapWide = True` moves them there too, and `FeedBesideMap = False` leaves them where GTA puts them.
+- **Notifications beside the minimap.** The 3D minimap switches GTA's radar off, so GTA put its notifications in the minimap's corner, where the map covered them in a car. While the map is on screen they now sit to its right. Wider than 16:9, GTA's notifications are already clear of the map; `ViExtras.ini` `[Minimap] FeedBesideMapWide = True` moves them there too, and `FeedBesideMap = False` leaves them where GTA puts them. *This didn't take: GTA ignores the move. Fixed in 2.6.2.*
 - **The minimap's mission circle stays put.** In a mission, the yellow circle of the mission's blip flickered, sometimes jumped far from the mission, and sat on the pink circle at the end of the mission route. The minimap now checks each blip is still the one it found, keeps a dot through the moment between its blip scans, counts a flashing blip as shown, and leaves the route's end to the pink circle.
 - **A Lucia or Jason under another model name keeps their own honor.** Honor looked for `lucia_s` and `jdfinal` only, so with another model (`GTA6Hud.ini` `[Lucia] Model` or `[Jason] Model`) their honor was kept under the model's code instead. It now follows those settings.
 
