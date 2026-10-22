@@ -91,7 +91,7 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
    the mod on in the game, so there's no separate patch to get.
 3. **Want to play as Lucia?** She isn't included: her model is someone else's paid work. Get her from her creator,
    **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another
-   Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net. The HUD
+   Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net (see "Optional: Jason" below to put him in the game). The HUD
    works without her.
 
 ❌ Don't download `GTA-VI-Inspired-HUD-2.6.0-Enhanced.oiv`. That one is for the other version of the game.
@@ -136,6 +136,42 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 | **See the minimap** | Get in a car. It only shows in vehicles, or when you're wanted. |
 | **Open the HUD settings** | Hold **V**. |
 | **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. |
+
+---
+
+## Optional: Jason
+
+The HUD puts **Jason** on the character wheel, next to Lucia, once his ped is in your game. He isn't included: get
+**[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from Lucia's creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net. That
+download is only his model files (`jdfinal.ydd`, `jdfinal.yft`, `jdfinal.ymt` and `jdfinal.ytd`), so the **Jason kit**
+is the pack to put them in. There's no model in the kit, just the pack around him.
+
+1. Download **[GTA-VI-Inspired-HUD-Jason-Kit.zip](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Jason-Kit.zip)** and unzip it.
+2. Copy its **`jasonped`** folder into **`mods\update\x64\dlcpacks`** in your game folder.
+3. In OpenIV, switch on **Edit mode** and open **`mods\update\x64\dlcpacks\jasonped\dlc.rpf`** → `x64` →
+   `models` → `cdimages` → **`jasonped.rpf`**. Drag in the 4 files from the download's **`No Cap Version`** folder
+   (or **`Cap Version`**, for Jason in his cap).
+4. Open **`mods\update\update.rpf`** → `common` → `data` → **`dlclist.xml`** (right-click → **Edit**), add this line
+   just above the closing `</Paths>` at the bottom of the file, and save:
+   ```xml
+   <Item>dlcpacks:/jasonped/</Item>
+   ```
+5. Start the game and hold **Left Alt**: Jason's card is next to Lucia's.
+
+**A different Jason model?** The HUD looks for the ped named under `[Jason]` in `scripts\GTA6Hud.ini`
+(`Model = jdfinal`), so another Jason works too:
+- **Its files have another name** (say `jason.ydd`)? Rename them all to `jdfinal`, keeping their endings, and nothing
+  else changes. Or keep the names and change `jdfinal` to that name in two places: in the kit's `setup\peds.meta`
+  (`<Name>jdfinal</Name>`, in Notepad), which you then drag into the pack's `common\data` in OpenIV to replace the
+  one there, and in `Model =` under `[Jason]` in `scripts\GTA6Hud.ini`.
+- **It's made of many files** (`jason^head_000_r.ydd`, `jason^uppr_000_u.ydd` and so on)? Put them all in
+  `jasonped.rpf`, and use the name before the `^` (here `jason`) in those two places.
+- **It comes as a pack of its own** (it has its own `dlc.rpf`)? You don't need the kit: install that pack the way its
+  readme says, then set `Model =` under `[Jason]` in `scripts\GTA6Hud.ini` to its ped's name (the `<Name>` in its
+  `peds.meta`, or its `.ydd` file's name).
+
+**Jason not on the wheel?** `scripts\ViSwitch.log` says **"Jason's model is in the game"** once the HUD has found him,
+or **"no Jason model in the game"** when it hasn't: the pack isn't in `dlclist.xml`, or the names don't match.
 
 ---
 

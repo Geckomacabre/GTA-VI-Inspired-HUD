@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SSetupData>
+  <deviceName>dlc_jasonped</deviceName>
+  <datFile>content.xml</datFile>
+  <timeStamp>10/22/2026 12:00:00</timeStamp>
+  <nameHash>jasonped</nameHash>
+  <contentChangeSets />
+  <contentChangeSetGroups>
+    <Item>
+      <NameHash>GROUP_STARTUP</NameHash>
+      <ContentChangeSets>
+        <Item>JASONPED_STARTUP</Item>
+      </ContentChangeSets>
+    </Item>
+  </contentChangeSetGroups>
+  <startupScript />
+  <scriptCallstackSize value="0" />
+  <type>EXTRACONTENT_COMPAT_PACK</type>
+  <order value="99" />
+  <minorOrder value="0" />
+  <isLevelPack value="false" />
+  <dependencyPackHash />
+  <requiredVersion />
+  <subPackCount value="0" />
+</SSetupData>
