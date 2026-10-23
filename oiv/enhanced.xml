@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.6.2 (GTA V Enhanced)</name>
-    <version><major>2</major><minor>6</minor><tag>ENHANCED 2.6.2</tag></version>
+    <name>GTA VI-Inspired HUD 2.6.3 (GTA V Enhanced)</name>
+    <version><major>2</major><minor>6</minor><tag>ENHANCED 2.6.3</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -33,6 +33,8 @@ What it installs: the HUD (scripts\GTA6Hud.dll, scripts\Hud\, GTA6Hud.ini), the 
 MiniMap.* data, ViMinimap.asi), and the packs vihud (FBICat's 2.1 HUD art and movies), vihudfonts and vihudanims - gen9.
 Registration, in update.rpf: the 3 packs in dlclist.xml; gameconfig.xml MetaDataStore 4000, ExprDictStore 400,
 TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600.
+Loading screens, in update.rpf\x64\data\cdimages\scaleform_frontend.rpf: FBICat's, with Rockstar's whole Vice City
+pictures (not his landing page; Enhanced keeps its own).
   - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's 2.1 with small fixes: the gun shop on Enhanced, a lighter
     spin-out check, the HUD OPTIONS switches for these scripts, no interaction dots in cutscenes, and more):
       scripts\ViExtras.dll + scripts\ViExtras\ + ViExtras.ini   honor, crosshair, focus, skills, NPC memory, crash cam,
@@ -42,6 +44,23 @@ TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600.
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.6.3
+  - Switching characters works without Lucia: on 2.6.2 the keyboard and the controller switched nobody without her.
+  - Switching characters works on a controller: letting go of the card you picked switches to them.
+  - Cops let you go when your stars do: no more walking up to arrest you, or hanging around you, with no stars.
+  - Fewer street fights: arguments come at least 30 to 60 s apart, 15% of them end in a fight, and one person in five
+    carries a melee weapon (GTA6Hud.ini [World] ArgumentMinSeconds / AmbienceFightChance, [Interactions] MeleeChance).
+  - More prompts in the world, and sooner: THREATEN and ROB on the person, the shops' prompts at the clerk, the game's
+    own "Press E to ..." prompts in the world in place of the top-left box, a car door's from 3.5 m.
+  - The driving camera has weight: it dips with your car or bike when you land a jump, hit a bump hard or crash.
+  - The 3D minimap shows in helicopters and planes, and zooms out the higher you fly.
+  - Greet and Antagonize have voices: Michael, Franklin and Trevor say hello or insult people, and they answer.
+  - On Demand: Left / Right switch between your own stations, the mouse wheel changes the song.
+  - Jason can walk into the clothes stores and Ammu-Nation.
+  - FBICat's loading screens on Enhanced too, with Rockstar's whole Vice City pictures. NaturalVision Enhanced: copy
+    update.rpf's scaleform_frontend.rpf into onigiri (see the Enhanced guide).
+  - Installing the HUD never lowers another mod's gameconfig.xml limits.
 
 Changes in 2.6.2
   - Notifications now really clear the 3D minimap (2.6.1's move didn't take): they hang at the left, where GTA VI's
@@ -131,7 +150,8 @@ Requirements (not included)
 Known issues on Enhanced
   - 2.2's random crashes (a wrong memory read in Script Hook V .NET Enhanced) are fixed; if it still crashes, send the logs below.
   - With NaturalVision Enhanced: add the 4 packs to NVE's onigiri\common\data\dlclist.xml and keep NVE's gameconfig.xml
-    (see INSTALL-ENHANCED.md).
+    (see INSTALL-ENHANCED.md). For the loading screens, copy scaleform_frontend.rpf out of mods\update\update.rpf
+    (x64\data\cdimages) into onigiri\platform\data\cdimages with CodeWalker RPF Explorer (Extract Raw).
   - Problems: send scripts\GTA6Hud.perf.log, scripts\GTA6Hud.error.log, scripts\ViExtras.log and ScriptHookVDotNet.log.
 
 https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
@@ -144,6 +164,7 @@ https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
   </colors>
   <content>
     <!-- FILES -->
+    <!-- STARTSCREEN -->
     <!-- REGISTER -->
   </content>
 </package>

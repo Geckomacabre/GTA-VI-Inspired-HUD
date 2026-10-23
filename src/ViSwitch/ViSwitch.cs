@@ -20,8 +20,8 @@
 // picks where Lucia is when you switch to her: at one of the haunts below, mid-activity, as the game does for the
 // other three, unless you left her under a minute ago.
 //
-// Talks to GTA6Hud only by reflection, so it builds without it and stands aside if it is missing,
-// if [Swap] Enabled = False, or if [Lucia] Enabled = False. Natives are called by raw hash so the same
+// Talks to GTA6Hud only by reflection, so it builds without it and stands aside if it is missing or if
+// [Swap] Enabled = False. Without Lucia (or Jason) in the game it runs the wheel just the same, with three cards. Natives are called by raw hash so the same
 // build runs on ScriptHookVDotNet 3.7 (Legacy) and ScriptHookVDotNet Enhanced.
 using System;
 using System.Collections.Generic;
@@ -583,17 +583,10 @@ namespace ViSwitch
             bool luciaOn;
             try { luciaOn = (bool)_fRefLuciaEnabled.GetValue(null); } catch { return; }
             CheckJason();
-            if (!luciaOn && !_jasonOn)
-            {
-                // Without Lucia or Jason, GTA6Hud's own 3-character wheel is exactly the game's switch: leave it alone.
-                try { _fRefSwapEnabled.SetValue(null, true); } catch { }
-                if (_policeHeld)
-                {
-                    try { _fRefHeat.SetValue(null, _heatWas); _fRefBrain.SetValue(null, _brainWas); } catch { }
-                    _policeHeld = false;
-                }
-                return;
-            }
+            // Without Lucia or Jason this used to leave the wheel to GTA6Hud's own, for Michael, Franklin and Trevor only.
+            // That wheel switches with a few frames of the select input, which the game ignores, and holds Alt's input
+            // down every frame, which also kills a real F5-F7: on 2.6.2, which ships without Lucia, nobody without her
+            // could switch at all (two players' reports). Ours runs with whoever's in the game, and switches with the key.
             try { _fRefSwapEnabled.SetValue(null, false); } catch { } // stand GTA6Hud's wheel down every tick
 
             UpdatePoliceHold();

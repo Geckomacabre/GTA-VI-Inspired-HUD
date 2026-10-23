@@ -296,6 +296,7 @@ namespace ViExtras.NpcMemory
             float priorOpinion = r.Opinion;
             int flags = r.Flags;
             HonorStreak("greet", ped, r);
+            UM.SayPlayer(MemCfg.PlayerLinesGreet);
 
             // Someone who likes you, close up and not busy, takes your hand.
             int paired = 0;
@@ -475,6 +476,7 @@ namespace ViExtras.NpcMemory
             else Gesture(player, ped, MemCfg.PlayerAntagonize[stage == 1 ? 2 : stage]);
 
             HonorStreak("antagonize", ped, r);
+            UM.SayPlayer(MemCfg.PlayerLinesAntagonize[stage], stage == 3 ? "SPEECH_PARAMS_FORCE_SHOUTED" : "SPEECH_PARAMS_FORCE");
             Mem.Touch(ped, MemCfg.OpinionAntagonize);
             Mem.AddZoneVia(ped, "antagonize");
             Ambient.WatchLeave(ped);

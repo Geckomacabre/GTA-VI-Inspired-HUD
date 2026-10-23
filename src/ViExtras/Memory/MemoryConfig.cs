@@ -17,7 +17,7 @@ namespace ViExtras.NpcMemory
         private const string S = "Memory";
 
         // ---- general --------------------------------------------------------------
-        public static bool Enabled, Debug, DuringMissions, NpcSpeech;
+        public static bool Enabled, Debug, DuringMissions, NpcSpeech, PlayerSpeech;
         public static Keys StandingKey;
 
         // ---- Config.Interact --------------------------------------------------------
@@ -58,7 +58,8 @@ namespace ViExtras.NpcMemory
             Enabled = Config.Get(S, "Enabled", true);
             Debug = Config.Get(S, "Debug", false);
             DuringMissions = Config.Get(S, "DuringMissions", false);
-            NpcSpeech = Config.Get(S, "NpcSpeech", false);
+            NpcSpeech = Config.Get(S, "NpcSpeech", true);
+            PlayerSpeech = Config.Get(S, "PlayerSpeech", true);
             StandingKey = Config.Get(S, "StandingKey", Keys.None);
 
             Interact = Config.Get(S, "Interact", true);
@@ -315,7 +316,18 @@ namespace ViExtras.NpcMemory
             ["maskSeen"] = new[] { "startle", "nope", "what" },
         };
 
-        // NPC speech on top of the animations, off unless NpcSpeech (Config.Lines).
+        // What you say greeting or antagonizing someone, unless PlayerSpeech is off: Michael, Franklin and Trevor's own
+        // voice lines (a ped with no voice says nothing). Antagonizing gets harsher with each stage, the last shouted.
+        public static readonly string[] PlayerLinesGreet = { "GENERIC_HI", "GENERIC_HOWS_IT_GOING" };
+        public static readonly string[][] PlayerLinesAntagonize =
+        {
+            null,
+            new[] { "GENERIC_INSULT_MED", "GENERIC_CURSE_MED" },
+            new[] { "GENERIC_INSULT_HIGH", "GENERIC_CURSE_HIGH" },
+            new[] { "GENERIC_FUCK_YOU", "GENERIC_INSULT_HIGH" },
+        };
+
+        // NPC speech on top of the animations, unless NpcSpeech is off (Config.Lines).
         public static readonly string[] LinesWarm = { "GENERIC_HOWS_IT_GOING", "GENERIC_HI", "GENERIC_THANKS" };
         public static readonly string[] LinesPolite = { "GENERIC_HI" };
         public static readonly string[] LinesCold = { "GENERIC_WHATEVER", "GENERIC_NO" };

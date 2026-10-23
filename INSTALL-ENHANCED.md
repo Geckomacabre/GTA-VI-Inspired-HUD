@@ -101,7 +101,7 @@ never changed.
 ## Step 5: Download the mod and the installer
 
 **The mod.** Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.2-Enhanced.oiv`** (the mod, about 100 MB). It also switches
+Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.3-Enhanced.oiv`** (the mod, about 100 MB). It also switches
 the mod on in the game, so there's no separate patch to get.
 
 **Want to play as Lucia?** She isn't included: her model is someone else's paid work. Get her from her creator,
@@ -109,9 +109,9 @@ the mod on in the game, so there's no separate patch to get.
 model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net (see "Optional: Jason" below to put him in the game). The HUD works
 without her.
 
-❌ Don't download `GTA-VI-Inspired-HUD-2.6.2-Legacy.oiv`. It's for the other version and will crash Enhanced.
+❌ Don't download `GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`. It's for the other version and will crash Enhanced.
 
-💡 The number in the file name is the version (2.6.2 here), so you can always tell which one you installed. Mention it when you ask for help.
+💡 The number in the file name is the version (2.6.3 here), so you can always tell which one you installed. Mention it when you ask for help.
 
 **The installer.** OpenIV doesn't install mods on Enhanced, so you'll use the **OIV Package Installer**
 instead. Download it from [its gta5-mods page](https://www.gta5-mods.com/tools/oiv-package-installer)
@@ -127,7 +127,7 @@ Launcher, Epic Games and Steam put it there), right-click **`CodeWalker.OIVInsta
 in place.
 
 1. Open the OIV Package Installer folder and run **`CodeWalker.OIVInstaller.exe`**.
-2. Drag **`GTA-VI-Inspired-HUD-2.6.2-Enhanced.oiv`** onto its window (or click **Browse** and pick it).
+2. Drag **`GTA-VI-Inspired-HUD-2.6.3-Enhanced.oiv`** onto its window (or click **Browse** and pick it).
 3. When it asks for your game folder, pick the folder with **`GTA5_Enhanced.exe`**.
 4. Click **Install** and wait until it's finished.
 
@@ -159,43 +159,82 @@ Load **Story Mode**. The new HUD appears on its own.
 
 ## Optional: Jason
 
-The HUD puts **Jason** on the character wheel, next to Lucia, once his ped is in your game. He isn't included: get
-**[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from Lucia's creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net. That
-download is only his model files (`jdfinal.ydd`, `jdfinal.yft`, `jdfinal.ymt` and `jdfinal.ytd`), so the **Jason kit**
-is the pack to put them in. There's no model in the kit, just the pack around him.
+**What you get:** Jason on the character wheel, after Trevor.
+**What you need:** his model (it isn't included) and the free **Jason kit**. Follow the parts in order.
+
+### Part 1: Get Jason
+
+1. Download Jason from **one** of these:
+   - **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from Lucia's creator
+   - **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net
+2. Unzip it.
+3. Open the folder **`No Cap Version`** (or **`Cap Version`** if you want him in his cap).
+4. Inside are **4 files**. Their names end in **`.ydd`**, **`.yft`**, **`.ymt`** and **`.ytd`**.
+
+> Can't see the endings (`.ydd` and so on)? In File Explorer, click **View** → **Show** → **File name extensions**.
+
+### Part 2: Check the 4 file names
+
+Look at the part of each name **before the dot**:
+
+| Your 4 files are called | What to do |
+| --- | --- |
+| `jdfinal.ydd`, `jdfinal.yft`, `jdfinal.ymt`, `jdfinal.ytd` | **Nothing.** Go to Part 3. |
+| Anything else, for example `Jason.ydd`, `Jason.yft`, `Jason.ymt`, `Jason.ytd` | **Rename each file to `jdfinal`**, keeping the ending: `Jason.ydd` becomes **`jdfinal.ydd`**, `Jason.yft` becomes **`jdfinal.yft`**, `Jason.ymt` becomes **`jdfinal.ymt`**, `Jason.ytd` becomes **`jdfinal.ytd`**. Change nothing else. |
+
+That's it: the HUD looks for **`jdfinal`**, so once your files are called that, he's found. You don't need to edit
+any settings.
+
+### Part 3: Make his files work on Enhanced
+
+Enhanced can't use the files as they come, so convert them first.
+
+1. Get **CodeWalker RPF Explorer** (version **30_dev48** or newer) from the releases channel of
+   [dexyfex's Discord](https://discord.gg/BxfKHkk).
+2. Make a new, empty folder on your Desktop called **`Jason converted`**.
+3. In CodeWalker RPF Explorer, click **Tools** → **Asset Converter**.
+4. For the **input** folder, pick the folder with your 4 **`jdfinal`** files. For the **output** folder, pick
+   **`Jason converted`**. Click **Process**.
+5. Open **`Jason converted`**. If **`jdfinal.ymt`** isn't in it, copy it in from the input folder yourself.
+
+### Part 4: Put him in the game
 
 1. Download **[GTA-VI-Inspired-HUD-Jason-Kit.zip](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Jason-Kit.zip)** and unzip it.
-2. **Convert his files for Enhanced.** You need **CodeWalker RPF Explorer** (version 30_dev48 or newer, from the
-   releases channel of [dexyfex's Discord](https://discord.gg/BxfKHkk)). Open **Tools** → **Asset Converter** ("Convert
-   files from GTAV Legacy formats to GTAV Enhanced formats"), pick the download's **`No Cap Version`** folder (or
-   **`Cap Version`**, for Jason in his cap) and a new, empty folder for the converted files, then click **Process**.
-   If `jdfinal.ymt` isn't in the new folder, copy it over as it is.
-3. Copy the kit's **`jasonped`** folder into your game folder: into **`onigiri\dlcpacks`** with NaturalVision Enhanced,
-   or into **`mods\update\x64\dlcpacks`** without it.
-4. In CodeWalker RPF Explorer, switch on **Edit mode** (**Edit** → **Edit mode**), open **`jasonped\dlc.rpf`** → `x64` →
-   `models` → `cdimages` → **`jasonped.rpf`**, and drag in the 4 converted files.
-5. Add this line just above the closing `</Paths>` at the bottom of your `dlclist.xml`, and save:
+2. Copy the kit's **`jasonped`** folder into your game folder:
+   - **With NaturalVision Enhanced:** into **`onigiri\dlcpacks`**
+   - **Without it:** into **`mods\update\x64\dlcpacks`**
+3. In CodeWalker RPF Explorer, click **Edit** → **Edit mode**, so it's on.
+4. Open the **`jasonped`** folder you just copied, then: **`dlc.rpf`** → `x64` → `models` → `cdimages` →
+   **`jasonped.rpf`**.
+5. Drag the 4 files from **`Jason converted`** into that window.
+6. Open your **`dlclist.xml`**:
+   - **With NaturalVision Enhanced:** open **`onigiri\common\data\dlclist.xml`** with **Notepad**.
+   - **Without it:** in CodeWalker RPF Explorer, open `mods` → `update` → **`update.rpf`** → `common` → `data` →
+     **`dlclist.xml`**.
+7. Scroll to the **very bottom**. Put your cursor at the start of the line that says **`</Paths>`**, press **Enter**,
+   and paste this into the new empty line above it:
    ```xml
    <Item>dlcpacks:/jasonped/</Item>
    ```
-   With NaturalVision Enhanced that's **`onigiri\common\data\dlclist.xml`** (Notepad is fine). Without it, it's
-   `mods\update\update.rpf` → `common` → `data` → `dlclist.xml`, which you edit in CodeWalker RPF Explorer.
-6. Start the game and hold **Left Alt**: Jason's card is next to Lucia's.
+8. Press **Ctrl + S** to save, and close it.
+9. Start the game and hold **Left Alt** (controller: hold **D-pad Down**). Jason's card is after Trevor's.
 
-**A different Jason model?** The HUD looks for the ped named under `[Jason]` in `scripts\GTA6Hud.ini`
-(`Model = jdfinal`), so another Jason works too:
-- **Its files have another name** (say `jason.ydd`)? Rename them all to `jdfinal`, keeping their endings, and nothing
-  else changes. Or keep the names and change `jdfinal` to that name in two places: in the kit's `setup\peds.meta`
-  (`<Name>jdfinal</Name>`, in Notepad), which you then drag into the pack's `common\data` in CodeWalker RPF Explorer to replace the
-  one there, and in `Model =` under `[Jason]` in `scripts\GTA6Hud.ini`.
-- **It's made of many files** (`jason^head_000_r.ydd`, `jason^uppr_000_u.ydd` and so on)? Put them all in
-  `jasonped.rpf`, and use the name before the `^` (here `jason`) in those two places.
-- **It comes as a pack of its own** (it has its own `dlc.rpf`)? You don't need the kit: install that pack the way its
-  readme says, then set `Model =` under `[Jason]` in `scripts\GTA6Hud.ini` to its ped's name (the `<Name>` in its
-  `peds.meta`, or its `.ydd` file's name).
+### Not working?
 
-**Jason not on the wheel?** `scripts\ViSwitch.log` says **"Jason's model is in the game"** once the HUD has found him,
-or **"no Jason model in the game"** when it hasn't: the pack isn't in `dlclist.xml`, or the names don't match.
+| What you see | What to do |
+| --- | --- |
+| Jason isn't on the wheel | Open **`scripts\ViSwitch.log`** in your game folder with Notepad. If it says **"no Jason model in the game"**, one of these is wrong: your 4 files aren't called `jdfinal` (Part 2), they aren't inside **`jasonped.rpf`**, or `dlclist.xml` is missing the line **`<Item>dlcpacks:/jasonped/</Item>`**. Fix it and start the game again. |
+
+### Other Jason models (advanced)
+
+You only need this if your Jason download isn't the 4 files above.
+
+- **Lots of files** with a `^` in their names (like `Jason^head_000_r.ydd`, `Jason^uppr_000_u.ydd`): rename the part
+  **before the `^`** to `jdfinal` in **every** file (`Jason^head_000_r.ydd` becomes `jdfinal^head_000_r.ydd`), and
+  the files without a `^` too (`Jason.ymt` becomes `jdfinal.ymt`). Put them all in `jasonped.rpf`.
+- **It comes as a pack of its own** (it has its own `dlc.rpf`): you don't need the kit. Install that pack the way its
+  readme says. Then open **`scripts\GTA6Hud.ini`** with Notepad, find **`[Jason]`**, and change **`Model = jdfinal`**
+  to its ped's name (the name of its `.ydd` file, before the dot).
 
 ---
 
@@ -221,7 +260,19 @@ so a few steps go differently:
    <Item>dlcpacks:/vihudanims/</Item>
    ```
    Got a Lucia model? Add her pack's lines too. Leave NVE's `gameconfig.xml` as it is.
-6. Do Step 7 (Windowed Borderless), and play.
+6. **The loading screens** (you can skip this: you'll get the game's own loading screens). The installer put the
+   HUD's loading screens in **`mods\update\update.rpf`**, which NVE's loader doesn't read either, so copy them out:
+   1. Get **CodeWalker RPF Explorer** (version **30_dev48** or newer) from the releases channel of
+      [dexyfex's Discord](https://discord.gg/BxfKHkk).
+   2. In your game folder, open **`onigiri\platform\data`** and make a new folder there called **`cdimages`**.
+   3. Open **CodeWalker RPF Explorer** and go into: `mods` → `update` → **`update.rpf`** → `x64` → `data` →
+      `cdimages`.
+   4. Right-click **`scaleform_frontend.rpf`** → **Extract Raw...**. Pick the **`onigiri\platform\data\cdimages`**
+      folder you just made, and click **Save**.
+
+   💡 That file is a copy of the game's menu screens with the HUD's loading screens in it. **After a game update,**
+   delete it, install the HUD again, and do this step again, so you get the updated game's menu screens.
+7. Do Step 7 (Windowed Borderless), and play.
 
 ---
 
@@ -410,6 +461,8 @@ Good to know:
 | A **"Debug Assertion Failed!"** box from Microsoft Visual C++ names **`renodx-dlssfix.addon64`** | That's RenoDX's DLSS fix add-on, not the HUD, and it's a debug build of it. If you don't use DLSS 5, you don't need it: delete `renodx-dlssfix.addon64` from your game folder (`renodx-gtav-enhanced.addon64` can stay). You don't need to reinstall Visual C++ for this one. |
 | You use **AuraV-Lite** with **NaturalVision Enhanced**, and the game **crashes at start-up** | Set `skip_legal`, `cut_logos`, `skip_menu` and `story` to `0` under `[boot]` in `AuraV\AuraV.ini` (see "Optional: AuraV-Lite with NaturalVision Enhanced" above), then start the game again. |
 | You use **NaturalVision Enhanced**, and the game **crashes while loading Story Mode** or **the HUD doesn't show** | Follow "Optional: NaturalVision Enhanced" above: no OpenRPF, the HUD's packs copied into `onigiri\dlcpacks`, and NVE's `dlclist.xml` listing them. NVE brings its own `dlclist.xml` and `gameconfig.xml` (in `onigiri\common\data`), and the game uses those instead of the ones the HUD's package set up. Open NVE's `dlclist.xml` and add these lines just above `</Paths>`, each on its own line:<br>`<Item>dlcpacks:/vihud/</Item>`<br>`<Item>dlcpacks:/vihudfonts/</Item>`<br>`<Item>dlcpacks:/vihudanims/</Item>`<br> Leave NVE's `gameconfig.xml` as NVE ships it: raising its pool sizes any further makes the game run out of memory while loading. |
+| You use **NaturalVision Enhanced** and the **loading screens are the game's own**, not the HUD's GTA VI ones | Do step 6 of "Optional: NaturalVision Enhanced" above: NVE's loader doesn't read the `mods` folder, so the loading screens have to be copied into `onigiri\platform\data\cdimages`. |
+| You use **NaturalVision Enhanced**, and **since a game update** the game's menus or loading screens look wrong | Delete `onigiri\platform\data\cdimages\scaleform_frontend.rpf`: it's a copy of the game's menu screens from before the update. Install the HUD again, then do step 6 of "Optional: NaturalVision Enhanced" again. |
 | You installed **Lively World Expansion** (LWE), and now **parts of the HUD are missing** | LWE's `dlclist.xml` replaced NVE's, and it doesn't list the HUD's packs (or some of NVE's own). Put NVE's `dlclist.xml` back and add LWE's lines and the HUD's lines to it: see "Optional: Lively World Expansion" above. |
 | You installed **Central Real-Life Traffic** or **Environment**, and now **parts of the HUD are missing** | Central's `dlclist.xml` replaced yours, and it doesn't list the HUD's packs. Add the HUD's lines back to it: see "Optional: Central Real-Life Traffic and Environment" above. |
 | The game **crashes right after the loading screen** since you added **Central Real-Life Traffic** | Install **ResourceExtensions** (Central needs it), and keep the stock `gameconfig.xml` Central put in `onigiri\common\data`. ResourceExtensions doesn't support a modded one, NVE's included. |
@@ -434,7 +487,7 @@ and an update through the OIV Package Installer doesn't always replace the old f
 row above. After that, updates go in normally.) An `.oiv` is just a zip:
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.6.2-Enhanced.oiv`** to your Desktop and rename the copy to **`.zip`**.
+2. Copy **`GTA-VI-Inspired-HUD-2.6.3-Enhanced.oiv`** to your Desktop and rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
 4. Paste it into the **`scripts`** folder in your game folder, for example
@@ -461,6 +514,8 @@ Or by hand:
 2. Open the **`scripts`** folder and delete `GTA6Hud.dll`, `GTA6Hud.ini`, `ViMinimap.dll`, `LemonUI.SHVDN3.dll`,
    the `MiniMap.*` files and the `Hud` folder.
 3. Delete the **`mods`** folder. ⚠️ This also removes any other mods in it.
+4. With NaturalVision Enhanced, also delete **`onigiri\platform\data\cdimages\scaleform_frontend.rpf`** (the HUD's
+   loading screens) and the HUD's packs in `onigiri\dlcpacks`.
 
 Your game is back to normal. Script Hook V, SHVDNE and OpenRPF can stay; they don't change anything on
 their own.

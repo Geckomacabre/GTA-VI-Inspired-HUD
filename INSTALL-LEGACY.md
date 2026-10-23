@@ -88,16 +88,16 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 ## Step 5: Download the mod
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.2-Legacy.oiv`** (the mod, about 100 MB). It also switches
+2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`** (the mod, about 100 MB). It also switches
    the mod on in the game, so there's no separate patch to get.
 3. **Want to play as Lucia?** She isn't included: her model is someone else's paid work. Get her from her creator,
    **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another
    Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net (see "Optional: Jason" below to put him in the game). The HUD
    works without her.
 
-❌ Don't download `GTA-VI-Inspired-HUD-2.6.2-Enhanced.oiv`. That one is for the other version of the game.
+❌ Don't download `GTA-VI-Inspired-HUD-2.6.3-Enhanced.oiv`. That one is for the other version of the game.
 
-💡 The number in the file name is the version (2.6.2 here), so you can always tell which one you installed. Mention it when you ask for help.
+💡 The number in the file name is the version (2.6.3 here), so you can always tell which one you installed. Mention it when you ask for help.
 
 ---
 
@@ -109,7 +109,7 @@ Launcher, Epic Games and Steam put it there), right-click **OpenIV** → **Run a
 in place.
 
 1. In OpenIV, click **Tools** → **Package Installer**.
-2. Pick **`GTA-VI-Inspired-HUD-2.6.2-Legacy.oiv`**, then click **Install**.
+2. Pick **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`**, then click **Install**.
 3. When it asks where to install, choose **mods folder**. If it offers to create the folder, say yes.
 4. Wait until it says it's finished, then click **Close**.
 
@@ -142,37 +142,65 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 
 ## Optional: Jason
 
-The HUD puts **Jason** on the character wheel, next to Lucia, once his ped is in your game. He isn't included: get
-**[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from Lucia's creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net. That
-download is only his model files (`jdfinal.ydd`, `jdfinal.yft`, `jdfinal.ymt` and `jdfinal.ytd`), so the **Jason kit**
-is the pack to put them in. There's no model in the kit, just the pack around him.
+**What you get:** Jason on the character wheel, after Trevor.
+**What you need:** his model (it isn't included) and the free **Jason kit**. Follow the parts in order.
+
+### Part 1: Get Jason
+
+1. Download Jason from **one** of these:
+   - **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from Lucia's creator
+   - **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net
+2. Unzip it.
+3. Open the folder **`No Cap Version`** (or **`Cap Version`** if you want him in his cap).
+4. Inside are **4 files**. Their names end in **`.ydd`**, **`.yft`**, **`.ymt`** and **`.ytd`**.
+
+> Can't see the endings (`.ydd` and so on)? In File Explorer, click **View** → **Show** → **File name extensions**.
+
+### Part 2: Check the 4 file names
+
+Look at the part of each name **before the dot**:
+
+| Your 4 files are called | What to do |
+| --- | --- |
+| `jdfinal.ydd`, `jdfinal.yft`, `jdfinal.ymt`, `jdfinal.ytd` | **Nothing.** Go to Part 3. |
+| Anything else, for example `Jason.ydd`, `Jason.yft`, `Jason.ymt`, `Jason.ytd` | **Rename each file to `jdfinal`**, keeping the ending: `Jason.ydd` becomes **`jdfinal.ydd`**, `Jason.yft` becomes **`jdfinal.yft`**, `Jason.ymt` becomes **`jdfinal.ymt`**, `Jason.ytd` becomes **`jdfinal.ytd`**. Change nothing else. |
+
+That's it: the HUD looks for **`jdfinal`**, so once your files are called that, he's found. You don't need to edit
+any settings.
+
+### Part 3: Put him in the game
 
 1. Download **[GTA-VI-Inspired-HUD-Jason-Kit.zip](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Jason-Kit.zip)** and unzip it.
-2. Copy its **`jasonped`** folder into **`mods\update\x64\dlcpacks`** in your game folder.
-3. In OpenIV, switch on **Edit mode** and open **`mods\update\x64\dlcpacks\jasonped\dlc.rpf`** → `x64` →
-   `models` → `cdimages` → **`jasonped.rpf`**. Drag in the 4 files from the download's **`No Cap Version`** folder
-   (or **`Cap Version`**, for Jason in his cap).
-4. Open **`mods\update\update.rpf`** → `common` → `data` → **`dlclist.xml`** (right-click → **Edit**), add this line
-   just above the closing `</Paths>` at the bottom of the file, and save:
+2. Copy the kit's **`jasonped`** folder into **`mods\update\x64\dlcpacks`** in your game folder.
+3. Open **OpenIV** and click **Edit mode** at the top, so it's on.
+4. In OpenIV, open these one after another: `mods` → `update` → `x64` → `dlcpacks` → `jasonped` → **`dlc.rpf`** → `x64`
+   → `models` → `cdimages` → **`jasonped.rpf`**.
+5. Drag your 4 **`jdfinal`** files into that window.
+6. In OpenIV, open: `mods` → `update` → **`update.rpf`** → `common` → `data`. Right-click **`dlclist.xml`** → **Edit**.
+7. Scroll to the **very bottom**. Put your cursor at the start of the line that says **`</Paths>`**, press **Enter**,
+   and paste this into the new empty line above it:
    ```xml
    <Item>dlcpacks:/jasonped/</Item>
    ```
-5. Start the game and hold **Left Alt**: Jason's card is next to Lucia's.
+8. Press **Ctrl + S** to save, and close the window.
+9. Start the game and hold **Left Alt** (controller: hold **D-pad Down**). Jason's card is after Trevor's.
 
-**A different Jason model?** The HUD looks for the ped named under `[Jason]` in `scripts\GTA6Hud.ini`
-(`Model = jdfinal`), so another Jason works too:
-- **Its files have another name** (say `jason.ydd`)? Rename them all to `jdfinal`, keeping their endings, and nothing
-  else changes. Or keep the names and change `jdfinal` to that name in two places: in the kit's `setup\peds.meta`
-  (`<Name>jdfinal</Name>`, in Notepad), which you then drag into the pack's `common\data` in OpenIV to replace the
-  one there, and in `Model =` under `[Jason]` in `scripts\GTA6Hud.ini`.
-- **It's made of many files** (`jason^head_000_r.ydd`, `jason^uppr_000_u.ydd` and so on)? Put them all in
-  `jasonped.rpf`, and use the name before the `^` (here `jason`) in those two places.
-- **It comes as a pack of its own** (it has its own `dlc.rpf`)? You don't need the kit: install that pack the way its
-  readme says, then set `Model =` under `[Jason]` in `scripts\GTA6Hud.ini` to its ped's name (the `<Name>` in its
-  `peds.meta`, or its `.ydd` file's name).
+### Not working?
 
-**Jason not on the wheel?** `scripts\ViSwitch.log` says **"Jason's model is in the game"** once the HUD has found him,
-or **"no Jason model in the game"** when it hasn't: the pack isn't in `dlclist.xml`, or the names don't match.
+| What you see | What to do |
+| --- | --- |
+| Jason isn't on the wheel | Open **`scripts\ViSwitch.log`** in your game folder with Notepad. If it says **"no Jason model in the game"**, one of these is wrong: your 4 files aren't called `jdfinal` (Part 2), they aren't inside **`jasonped.rpf`**, or `dlclist.xml` is missing the line **`<Item>dlcpacks:/jasonped/</Item>`**. Fix it and start the game again. |
+
+### Other Jason models (advanced)
+
+You only need this if your Jason download isn't the 4 files above.
+
+- **Lots of files** with a `^` in their names (like `Jason^head_000_r.ydd`, `Jason^uppr_000_u.ydd`): rename the part
+  **before the `^`** to `jdfinal` in **every** file (`Jason^head_000_r.ydd` becomes `jdfinal^head_000_r.ydd`), and
+  the files without a `^` too (`Jason.ymt` becomes `jdfinal.ymt`). Put them all in `jasonped.rpf`.
+- **It comes as a pack of its own** (it has its own `dlc.rpf`): you don't need the kit. Install that pack the way its
+  readme says. Then open **`scripts\GTA6Hud.ini`** with Notepad, find **`[Jason]`**, and change **`Model = jdfinal`**
+  to its ped's name (the name of its `.ydd` file, before the dot).
 
 ---
 
@@ -202,7 +230,13 @@ To take them off again, install the mods' **`Uninstaller`** OIVs the same way, t
 ## Optional: Rebalanced Dispatch Enhanced
 
 **Rebalanced Dispatch Enhanced** (RDE) by **the RDE Team** replaces GTA's police response: new agencies, roadblocks,
-helicopters, and up to **10 stars**. It works with this HUD:
+helicopters, and up to **10 stars**. The HUD steps out of its way.
+
+> [!NOTE]
+> New in 2.6.3, and only tested briefly in game. If something's off with RDE and the HUD together, tell us on Discord
+> or in a GitHub issue.
+
+To use both:
 
 1. Install the HUD first (Steps 1 to 7). Step 3's Script Hook V .NET is the nightly RDE asks for.
 2. In OpenIV, use **Tools** → **Package Installer** on **`RDE 4.1.5.oiv`** from RDE's download, and pick
@@ -224,7 +258,12 @@ limits and packs are back.
 ## Optional: Los Santos RED
 
 **Los Santos RED** (LSR) by **Greskrendtregk** turns the game into a crime sandbox with its own police, crimes,
-wanted level and much more. It runs in **RAGE Plugin Hook**, not Script Hook V .NET, and works next to this HUD.
+wanted level and much more. It runs in **RAGE Plugin Hook**, not Script Hook V .NET, and the HUD steps out of its way.
+
+> [!NOTE]
+> New in 2.6.3, and only tested briefly in game. If something's off with LSR and the HUD together, tell us on Discord
+> or in a GitHub issue.
+
 Use it on its own: not together with LSPDFR or Rebalanced Dispatch Enhanced, which run the police too.
 
 1. Install the HUD first (Steps 1 to 7).
@@ -292,7 +331,7 @@ You can also copy the new scripts in yourself. (From 2.6, the HUD offers to fix 
 row above. After that, updates go in normally.) An `.oiv` is just a zip:
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.6.2-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
+2. Copy **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
 4. Paste it into the **`scripts`** folder in your game folder, for example
