@@ -228,6 +228,14 @@ namespace ViExtras.NpcMemory
             Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_NATIVE, ped, Pick(lines), param);
         }
 
+        /// <summary>The player's own line, unless PlayerSpeech is off.</summary>
+        public static void SayPlayer(string[] lines, string param = "SPEECH_PARAMS_FORCE")
+        {
+            Ped player = Player;
+            if (!MemCfg.PlayerSpeech || player == null || !player.Exists()) return;
+            Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_NATIVE, player, Pick(lines), param);
+        }
+
         public static bool Fleeing(Ped ped) => Function.Call<bool>(Hash.IS_PED_FLEEING, ped);
         public static bool InCombatWith(Ped ped, Ped target) => Function.Call<bool>(Hash.IS_PED_IN_COMBAT, ped, target);
         public static bool InScenario(Ped ped) => Function.Call<bool>(Hash.IS_PED_USING_ANY_SCENARIO, ped);

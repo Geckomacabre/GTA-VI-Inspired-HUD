@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{9a4c2e61-7b3f-4d08-8e15-2c6b0f9a7d43}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.6.2 (GTA V Legacy)</name>
-    <version><major>2</major><minor>6</minor><tag>LEGACY 2.6.2</tag></version>
+    <name>GTA VI-Inspired HUD 2.6.3 (GTA V Legacy)</name>
+    <version><major>2</major><minor>6</minor><tag>LEGACY 2.6.3</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V LEGACY (the original PC version, GTA5.exe). By FBICat.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -45,6 +45,24 @@ What it installs
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
   - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
+
+Changes in 2.6.3
+  - Switching characters works without Lucia: on 2.6.2 the keyboard and the controller switched nobody without her.
+  - Switching characters works on a controller: letting go of the card you picked switches to them.
+  - Cops let you go when your stars do: no more walking up to arrest you, or hanging around you, with no stars.
+  - Fewer street fights: arguments come at least 30 to 60 s apart, 15% of them end in a fight, and one person in five
+    carries a melee weapon (GTA6Hud.ini [World] ArgumentMinSeconds / AmbienceFightChance, [Interactions] MeleeChance).
+  - More prompts in the world, and sooner: THREATEN and ROB on the person, the shops' prompts at the clerk, the game's
+    own "Press E to ..." prompts in the world in place of the top-left box, a car door's from 3.5 m.
+  - The driving camera has weight: it dips with your car or bike when you land a jump, hit a bump hard or crash.
+  - The 3D minimap shows in helicopters and planes, and zooms out the higher you fly.
+  - Greet and Antagonize have voices: Michael, Franklin and Trevor say hello or insult people, and they answer.
+  - Rebalanced Dispatch Enhanced and Los Santos RED: the HUD steps out of their way (new, only tested briefly;
+    see the Legacy guide, and tell us how it goes).
+  - On Demand: Left / Right switch between your own stations, the mouse wheel changes the song.
+  - Jason can walk into the clothes stores and Ammu-Nation.
+  - The loading screens show Rockstar's whole Vice City pictures, and the landing page has a whole one behind it.
+  - Installing the HUD never lowers another mod's gameconfig.xml limits.
 
 Changes in 2.6.2
   - Notifications now really clear the 3D minimap (2.6.1's move didn't take): they hang at the left, where GTA VI's

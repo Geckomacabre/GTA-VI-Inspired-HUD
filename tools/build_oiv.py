@@ -1,7 +1,7 @@
 """Build the GTA VI-Inspired HUD OIV packages.
 
     python tools/build_oiv.py legacy         --dlcpacks <folder> [--startscreen <folder>] [--out build]
-    python tools/build_oiv.py enhanced       --dlcpacks <folder> [--out build]
+    python tools/build_oiv.py enhanced       --dlcpacks <folder> [--startscreen <folder>] [--out build]
 
 <folder> holds one sub-folder per pack, each with its dlc.rpf: vihud, vihudfonts
 and vihudanims. Legacy and Enhanced need different dlcpacks: the Enhanced ones
@@ -14,7 +14,12 @@ every release on 2026-10-22).
 
 The HUD packages also register their packs, which the separate RegisterPatch
 did up to 2.5.5: oiv/register.xml goes in place of <!-- REGISTER -->, after
-every file. It sets the gameconfig.xml pools and adds each pack to dlclist.xml
+every file. It raises four gameconfig.xml pools and MaxExtraPedModelInfos to
+what the HUD needs, never lowering one a bigger mod set higher (Rebalanced
+Dispatch Enhanced's are far higher): each value's element gets a scratch child,
+the <replace> finds the value when it's lower and the scratch when it isn't,
+and the <remove> takes whichever is left over (the scratch, or the second copy
+the replace put in its place). It adds each pack to dlclist.xml
 once. Each pack's <add> targets Paths when the pack isn't listed yet and an
 empty <ViHudScratch /> when it is, and the scratch element is removed at the
 end. That way every step finds its node: OpenIV calls the install FAILED when
@@ -22,11 +27,17 @@ one doesn't ("Unable to find XML Node"), which a plain guarded add did on
 every update. The OIV installer for Enhanced runs all adds before the removes,
 which this order needs too.
 
---startscreen (Legacy): every file in that folder goes into the game's
+--startscreen: every file in that folder goes into the game's
 update\\update.rpf\\x64\\data\\cdimages\\scaleform_frontend.rpf (FBICat's VI start
 screen and our edits to Rockstar's movies). That archive is NG-encrypted, so
-the package asks the installer (OpenIV) to do it, as FBICat's own package does:
-a nested <archive> in place of <!-- STARTSCREEN --> in oiv/legacy.xml.
+the package asks the installer (OpenIV, or the OIV Package Installer on
+Enhanced) to do it, as FBICat's own package does: a nested <archive> in place
+of <!-- STARTSCREEN --> in oiv/<edition>.xml. Legacy gets his landing page and
+loading screens; Enhanced only the loading screens (its landing page is a
+different movie), with the .ytd files in the gen9 format. A .ytd in the other
+edition's format stops the build. With NaturalVision Enhanced the game doesn't
+read the mods folder, so its players copy that scaleform_frontend.rpf into
+onigiri\\platform\\data\\cdimages (INSTALL-ENHANCED.md).
 
 The package is a zip laid out like FBICat's originals: assembly.xml and
 icon.png at the top, the files under content/. assembly.xml comes from
@@ -107,11 +118,22 @@ def add_packs(files, dlcpacks, packs):
                       f"update\\x64\\dlcpacks\\{pack}\\dlc.rpf"))
 
 
-def collect_startscreen(folder):
+# resource version in a .ytd's RSC7 header: Legacy's format, and Enhanced's gen9 one
+YTD_VERSION = {"legacy": 13, "enhanced": 5}
+
+
+def collect_startscreen(edition, folder):
     """(source path, path inside content/, name inside scaleform_frontend.rpf) for every start screen file."""
     names = sorted(n for n in os.listdir(folder) if os.path.isfile(os.path.join(folder, n)))
     if not names:
         sys.exit(f"no files in {folder}")
+    for n in names:
+        if n.lower().endswith(".ytd"):
+            with open(os.path.join(folder, n), "rb") as f:
+                head = f.read(8)
+            version = int.from_bytes(head[4:8], "little") if head[:4] == b"RSC7" else None
+            if version != YTD_VERSION[edition]:
+                sys.exit(f"{n} is resource version {version}; {edition} needs {YTD_VERSION[edition]}")
     return [(os.path.join(folder, n), f"startscreen/{n}", n) for n in names]
 
 
@@ -167,7 +189,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("edition", choices=EDITIONS)
     ap.add_argument("--dlcpacks", help="folder with vihud/, vihudfonts/ and vihudanims/")
-    ap.add_argument("--startscreen", help="Legacy: folder of files for update.rpf's scaleform_frontend.rpf")
+    ap.add_argument("--startscreen", help="folder of files for update.rpf's scaleform_frontend.rpf")
     ap.add_argument("--out", default=os.path.join(ROOT, "build"))
     args = ap.parse_args()
 
@@ -176,9 +198,7 @@ def main():
         ap.error(f"{args.edition} needs --dlcpacks")
     files = collect_files(args.dlcpacks)
     if args.startscreen:
-        if args.edition != "legacy":
-            ap.error("--startscreen is for the Legacy package")
-        startscreen = collect_startscreen(args.startscreen)
+        startscreen = collect_startscreen(args.edition, args.startscreen)
 
     os.makedirs(args.out, exist_ok=True)
     out = os.path.join(args.out, output_name(args.edition))

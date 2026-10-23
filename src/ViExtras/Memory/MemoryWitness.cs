@@ -17,7 +17,7 @@ namespace ViExtras.NpcMemory
         public static bool RaiseWanted(int stars)
         {
             stars = Math.Max(0, Math.Min(5, stars));
-            if (stars <= 0 || UM.Wanted >= stars || Lspdfr.OnDuty) return false;
+            if (stars <= 0 || UM.Wanted >= stars || Lspdfr.OnDuty || PoliceMods.Lsr) return false;
             if (Function.Call<int>(Hash.GET_MAX_WANTED_LEVEL) < stars) return false;
             Game.Player.Wanted.SetWantedLevel(stars, false);
             Game.Player.Wanted.ApplyWantedLevelChangeNow(false);
@@ -102,7 +102,7 @@ namespace ViExtras.NpcMemory
 
         public static void Start(Ped ped, string crimeKey, Opts o)
         {
-            if (!MemCfg.Witnesses || Lspdfr.OnDuty || !MemCfg.Crimes.TryGetValue(crimeKey, out MemCfg.Crime crime)) return;
+            if (!MemCfg.Witnesses || Lspdfr.OnDuty || PoliceMods.Lsr || !MemCfg.Crimes.TryGetValue(crimeKey, out MemCfg.Crime crime)) return;
             int stars = o.Stars >= 0 ? o.Stars : crime.Stars;
 
             if (_w != null)
@@ -476,8 +476,8 @@ namespace ViExtras.NpcMemory
         /// <param name="victimBody">a ped just killed, so nobody-saw-it can leave a body to find</param>
         public static void Commit(string kind, Ped victim = null, float? victimOpinion = null, Ped victimBody = null)
         {
-            // An on-duty LSPDFR officer's force is police work, not a crime.
-            if (Lspdfr.OnDuty || !MemCfg.Crimes.TryGetValue(kind, out MemCfg.Crime crime)) return;
+            // An on-duty LSPDFR officer's force is police work, not a crime; Los Santos RED keeps its own crimes.
+            if (Lspdfr.OnDuty || PoliceMods.Lsr || !MemCfg.Crimes.TryGetValue(kind, out MemCfg.Crime crime)) return;
 
             Ped player = UM.Player;
             Vector3 coords = player.Position;

@@ -148,11 +148,13 @@ namespace ViExtras
                 return;
             }
             _wasDead = false;
-            // Story missions run their own police, as they run their own crowds for Memory: stun guns,
-            // giving up and arrests stand down, and the cops get their own guns back.
-            if (Game.IsMissionActive)
+            // Story missions run their own police, as they run their own crowds for Memory, and so do the
+            // police mods (PoliceMods: Rebalanced Dispatch Enhanced, Los Santos RED): stun guns, giving up
+            // and arrests stand down, and the cops get their own guns back.
+            bool mission = Game.IsMissionActive;
+            if (mission || PoliceMods.TakesPolice)
             {
-                if (_arresting) EndArrest("a story mission", true);
+                if (_arresting) EndArrest(mission ? "a story mission" : "another police mod", true);
                 if (_own.Count > 0) RestoreAll();
                 _modeKnown = _stunned = false;
                 _armedUntil = _stillSince = 0;
@@ -232,7 +234,9 @@ namespace ViExtras
             _arresting = true;
             _arrestStarted = false;
             _arrestUntil = now + _arrestWindowMs;
-            _nextArrestOrder = 0;
+            // the brain lets go of its cops on its next tick, and cancels what it had them doing; the first order
+            // comes after that, so it isn't the one cancelled
+            _nextArrestOrder = now + 300;
             _notArrestedSince = 0;
             _arrestCop = null;
             _heldWanted = wanted;
@@ -305,6 +309,8 @@ namespace ViExtras
             }
             Log.Write("PoliceForce", why + (restoreWanted && _heldWanted > 1 ? ": back to " + _heldWanted + " stars" : ""));
             if (restoreWanted) _complyAfter = Game.GameTime + ComplyRetryMs;
+            // his order ends with the arrest: left to it, he went on trying to arrest you with no stars
+            if (_arrestCop != null && _arrestCop.Exists() && !_arrestCop.IsDead) Function.Call(Hash.CLEAR_PED_TASKS, _arrestCop);
             _arresting = _arrestStarted = _bustedShown = false;
             _arrestCop = null;
             HoldBrain(false);

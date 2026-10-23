@@ -8,7 +8,7 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>ViExtras</AssemblyName>
     <RootNamespace>ViExtras</RootNamespace>
-    <Version>2.6.2</Version>
+    <Version>2.6.3</Version>
     <!-- the build time rides along in the log's first line (Paths.Banner), so two builds of one version can be told apart -->
     <InformationalVersion>$(Version)+$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmm"))</InformationalVersion>
     <Nullable>disable</Nullable>

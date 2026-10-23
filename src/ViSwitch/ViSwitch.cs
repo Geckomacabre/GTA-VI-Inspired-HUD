@@ -20,8 +20,8 @@
 // picks where Lucia is when you switch to her: at one of the haunts below, mid-activity, as the game does for the
 // other three, unless you left her under a minute ago.
 //
-// Talks to GTA6Hud only by reflection, so it builds without it and stands aside if it is missing,
-// if [Swap] Enabled = False, or if [Lucia] Enabled = False. Natives are called by raw hash so the same
+// Talks to GTA6Hud only by reflection, so it builds without it and stands aside if it is missing or if
+// [Swap] Enabled = False. Without Lucia (or Jason) in the game it runs the wheel just the same, with three cards. Natives are called by raw hash so the same
 // build runs on ScriptHookVDotNet 3.7 (Legacy) and ScriptHookVDotNet Enhanced.
 using System;
 using System.Collections.Generic;
@@ -78,6 +78,7 @@ namespace ViSwitch
         const ulong IS_ENABLED = 0x1CEA6BFDF248E5D9;          // IS_CONTROL_ENABLED
         const ulong ENABLE_CONTROL = 0x351220255D64C155;      // ENABLE_CONTROL_ACTION
         const ulong BUTTON_STRING = 0x0499D7B09FC9B407;       // GET_CONTROL_INSTRUCTIONAL_BUTTONS_STRING
+        const ulong USING_KEYBOARD = 0xA571D46727E2B718;      // IS_USING_KEYBOARD_AND_MOUSE
         const ulong SAFE_TO_SWITCH = 0x71E7B2E657449AAD;      // IS_SAFE_TO_START_PLAYER_SWITCH
         const ulong WANTED_LEVEL = 0xE28E54788CE8F12D;
         const ulong MISSION_FLAG = 0xA33CDCCDA663159E;
@@ -136,6 +137,10 @@ namespace ViSwitch
         static readonly string[] DefaultBindings = { "b_174", "b_175", "b_176" };
         static readonly ushort[] FKeyScans = { 0x3F, 0x40, 0x41 };                  // F5, F6, F7
         ushort _realKeyDown;
+        // The button string names the key on the device used last: on a pad it is the pad's (these keys have none
+        // there), not F5 / F6 / F7, so a pad player's switch read as "rebound", was only simulated and never happened
+        // (a player: "tf it dosent", the cards up and Franklin picked, no switch). The keyboard's own, last seen.
+        readonly string[] _keyboardBinding = new string[3];
 
         [StructLayout(LayoutKind.Sequential)]
         struct KEYBDINPUT { public ushort wVk; public ushort wScan; public uint dwFlags; public uint time; public IntPtr dwExtraInfo; }
@@ -578,17 +583,10 @@ namespace ViSwitch
             bool luciaOn;
             try { luciaOn = (bool)_fRefLuciaEnabled.GetValue(null); } catch { return; }
             CheckJason();
-            if (!luciaOn && !_jasonOn)
-            {
-                // Without Lucia or Jason, GTA6Hud's own 3-character wheel is exactly the game's switch: leave it alone.
-                try { _fRefSwapEnabled.SetValue(null, true); } catch { }
-                if (_policeHeld)
-                {
-                    try { _fRefHeat.SetValue(null, _heatWas); _fRefBrain.SetValue(null, _brainWas); } catch { }
-                    _policeHeld = false;
-                }
-                return;
-            }
+            // Without Lucia or Jason this used to leave the wheel to GTA6Hud's own, for Michael, Franklin and Trevor only.
+            // That wheel switches with a few frames of the select input, which the game ignores, and holds Alt's input
+            // down every frame, which also kills a real F5-F7: on 2.6.2, which ships without Lucia, nobody without her
+            // could switch at all (two players' reports). Ours runs with whoever's in the game, and switches with the key.
             try { _fRefSwapEnabled.SetValue(null, false); } catch { } // stand GTA6Hud's wheel down every tick
 
             UpdatePoliceHold();
@@ -613,6 +611,7 @@ namespace ViSwitch
             if (_luciaHeld) SettleLucia(ped);
             SettleJason(ped);
             JasonMission(ped);
+            JasonStoreDoors(ped);
             if (_sceneActive) EndSceneOnInput(ped);
             CheckTestCommand(ped);
 
@@ -697,9 +696,14 @@ namespace ViSwitch
             _pulseWheelBefore = GameWheelOpen(); // an effect left running can't signal this hold
             string key = "?";
             try { key = Call<string>(BUTTON_STRING, 0, _pulseInput, true); } catch { }
+            bool keyboard = true;
+            try { keyboard = Call<bool>(USING_KEYBOARD, 2); } catch { }
+            if (keyboard) _keyboardBinding[target] = key;
+            string binding = _keyboardBinding[target] ?? DefaultBindings[target];
+            if (!keyboard) key = binding + " on the keyboard, a pad in use";
             ReleaseRealKey();
             string how;
-            if (key != DefaultBindings[target]) how = "simulated only: the key is rebound";
+            if (binding != DefaultBindings[target]) how = "simulated only: the key is rebound";
             else if (!GameHasFocus()) how = "simulated only: GTA does not have focus";
             else
             {

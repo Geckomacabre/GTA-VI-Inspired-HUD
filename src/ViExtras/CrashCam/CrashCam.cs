@@ -272,7 +272,9 @@ namespace ViExtras
             if (_playing || veh == null || !veh.Exists()) return;
             if (GTA.UI.Screen.IsFadedOut || GTA.UI.Screen.IsFadingOut || HudBridge.Paused || HudBridge.Busy) return;
             // Another script is already filming (a GTA6Hud shop or kill camera).
-            if (World.RenderingCamera != null && World.RenderingCamera.Exists()) return;
+            // WeightedCam's dip is the player's own view, nodded: cut away from that.
+            Camera filming = World.RenderingCamera;
+            if (filming != null && filming.Exists() && !WeightedCam.Owns(filming)) return;
             _playing = true;
             IsPlaying = true;
 
@@ -326,17 +328,28 @@ namespace ViExtras
                 // Time runs back up rather than snapping, and the camera is put
                 // back once more on the next frame: the first frame after a
                 // scripted camera is the one the game is most likely to override.
-                bool resetAgain = true;
+                // (Hold's first pass is still this frame, so that's its second.)
+                // In a vehicle the pitch also lands a couple of degrees under
+                // what was set (2 on a Sultan, 3.5 on a Sanchez, measured): what
+                // it reads by then says how far, and it's set that much higher.
+                // More than a few degrees off is the game moving it, not that.
+                int frame = 0;
+                float off = 0f;
                 Hold(Math.Max(_easeOutMs, 1), t =>
                 {
                     Game.TimeScale = _timeScale + (1f - _timeScale) * Math.Min(t, 1f);
                     Function.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME);
-                    if (resetAgain)
+                    frame++;
+                    if (frame == 2)
                     {
-                        resetAgain = false;
+                        off = pitch - GameplayCamera.RelativePitch;
+                        if (Math.Abs(off) > 6f) off = 0f;
                         GameplayCamera.RelativeHeading = heading;
-                        Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, pitch, 1f);
+                        Function.Call(Hash.SET_GAMEPLAY_CAM_RELATIVE_PITCH, pitch + off, 1f);
                     }
+                    else if (frame == 3)
+                        Log.Write("CrashCam", "view handed back: pitch " + GameplayCamera.RelativePitch.ToString("0.0") + " (was " + pitch.ToString("0.0")
+                            + (Math.Abs(off) >= 0.1f ? ", landed " + off.ToString("0.0") + " under it and was set again" : "") + ")");
                     return true;
                 });
                 Game.TimeScale = 1f;
