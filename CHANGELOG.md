@@ -17,6 +17,8 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Rebalanced Dispatch Enhanced works with the HUD.** While RDE's police run, GTA6Hud's police brain, GTA6Hud's own six stars (and the military they call in) and the stun-gun arrests stay out of their way, and the stars show RDE's level up to six: levels 6 to 10 all light the sixth star. `ViExtras.ini` `[Compat] Rde = False` leaves the HUD as it is.
 - **Los Santos RED works with the HUD.** While LSR runs (in RAGE Plugin Hook), it has the police, the crimes and the wanted level, and the HUD adds none of its own: no witnesses, police brain, police memory, heat, six stars or stun-gun arrests. `extras/lsr-stars` has LSR's star pictures redrawn as the HUD's GTA VI stars. `ViExtras.ini` `[Compat] Lsr = False` leaves the HUD as it is.
 
+- **The minimap in helicopters and planes.** The 3D minimap left aircraft out, and since it switches GTA's radar off, flying had no map at all. It now shows in every vehicle, and in the air it zooms out the higher you fly (from about 2x at 50 m to most of the city at 1200 m), whether or not `AltitudeZoom` is on in `MiniMap.settings`. Cars and on foot are as before.
+
 ### Fixed
 
 - **Jason can walk into the clothes stores and Ammu-Nation.** GTA keeps its stores locked for anyone but Michael, Franklin and Trevor, and the HUD only opened them for Lucia. Their doors now open for Jason too (there are no clothes to buy for him there).
