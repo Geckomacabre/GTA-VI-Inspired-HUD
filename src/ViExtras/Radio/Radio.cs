@@ -46,10 +46,10 @@ namespace ViExtras
     /// pushed down in the wheel, Up back to the radio. Its list is the tracks in
     /// scripts\Hud\Radio\CustomMusic as MY MUSIC and each subfolder with tracks
     /// as a station of its own (CustomMusic, played by MusicPlayer). In the
-    /// wheel, Left / Right (the right stick on a pad) change the song while it
-    /// plays, and the mouse wheel (D-pad Right / Up) steps through its stations;
-    /// the game's next / previous track keys skip too, and it stops when you leave
-    /// the car. Nothing opens or mutes
+    /// wheel, Left / Right (the right stick on a pad) step through its stations as
+    /// they do the radio's, and the mouse wheel (D-pad Right / Up) or the game's
+    /// next / previous track keys change the song; the track keys skip with the
+    /// wheel shut too, and it stops when you leave the car. Nothing opens or mutes
     /// while something else has the keys (HudBridge.UiInTheWay): a GTA6Hud
     /// menu or wheel, the phone, the on-screen keyboard, a 2.5 panel.
     ///
@@ -859,9 +859,10 @@ namespace ViExtras
                 else if (JustPressed(Handbrake)) ToggleMute();
             }
 
-            // navigation. While your own music plays, Left / Right (the right stick on a
-            // pad) change the song, one a press or a throw; the mouse wheel (D-pad Right
-            // / Up) still steps through your music's stations.
+            // navigation. Left / Right (the right stick on a pad) step through the stations, the radio's and your
+            // own music's alike, as the row of cards shows them; while your own music plays, the mouse wheel (D-pad
+            // Right / Up on a pad) and GTA's next / previous track keys change the song (a player: "the track restarts
+            // and gets stuck on the same radio", Left / Right having changed the song).
             bool songs = _onDemand && _customOn != null;
             int dir = 0, held = 0, song = 0;
             if (pad)
@@ -878,33 +879,38 @@ namespace ViExtras
                 float axis = Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, RightX);
                 if (Math.Abs(axis) >= _deadzone)
                 {
-                    int side = axis > 0f ? 1 : -1;
                     if (!_stickLatched)
                     {
-                        if (songs) song = side; else dir = side;
+                        dir = axis > 0f ? 1 : -1;
                         _stickLatched = true;
                     }
                 }
                 else
                 {
                     _stickLatched = false;
-                    if (JustPressed(CellRight)) dir = 1;
-                    else if (JustPressed(CellUp)) dir = -1;
-                    if (Pressed(CellRight)) held = 1;
-                    else if (Pressed(CellUp)) held = -1;
+                    int dpad = JustPressed(CellRight) ? 1 : JustPressed(CellUp) ? -1 : 0;
+                    if (songs) song = dpad;
+                    else
+                    {
+                        dir = dpad;
+                        if (Pressed(CellRight)) held = 1;
+                        else if (Pressed(CellUp)) held = -1;
+                    }
                 }
             }
             else
             {
                 _stickLatched = false;
-                if (JustPressed(CellRight)) { if (songs) song = 1; else dir = 1; }
-                else if (JustPressed(CellLeft)) { if (songs) song = -1; else dir = -1; }
-                else if (_scrollRadio && JustPressed(WheelNext)) dir = 1;
-                else if (_scrollRadio && JustPressed(WheelPrev)) dir = -1;
+                int wheel = !_scrollRadio ? 0 : JustPressed(WheelNext) ? 1 : JustPressed(WheelPrev) ? -1 : 0;
+                if (JustPressed(CellRight)) dir = 1;
+                else if (JustPressed(CellLeft)) dir = -1;
+                else if (songs) song = wheel;
+                else dir = wheel;
 
-                if (!songs && Pressed(CellRight)) held = 1;
-                else if (!songs && Pressed(CellLeft)) held = -1;
+                if (Pressed(CellRight)) held = 1;
+                else if (Pressed(CellLeft)) held = -1;
             }
+            if (songs && song == 0) song = JustPressed(VehNextTrack) ? 1 : JustPressed(VehPrevTrack) ? -1 : 0;
 
             if (song > 0) _custom.Next();
             else if (song < 0) _custom.Previous();

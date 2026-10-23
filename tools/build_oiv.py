@@ -14,7 +14,12 @@ every release on 2026-10-22).
 
 The HUD packages also register their packs, which the separate RegisterPatch
 did up to 2.5.5: oiv/register.xml goes in place of <!-- REGISTER -->, after
-every file. It sets the gameconfig.xml pools and adds each pack to dlclist.xml
+every file. It raises four gameconfig.xml pools and MaxExtraPedModelInfos to
+what the HUD needs, never lowering one a bigger mod set higher (Rebalanced
+Dispatch Enhanced's are far higher): each value's element gets a scratch child,
+the <replace> finds the value when it's lower and the scratch when it isn't,
+and the <remove> takes whichever is left over (the scratch, or the second copy
+the replace put in its place). It adds each pack to dlclist.xml
 once. Each pack's <add> targets Paths when the pack isn't listed yet and an
 empty <ViHudScratch /> when it is, and the scratch element is removed at the
 end. That way every step finds its node: OpenIV calls the install FAILED when

@@ -78,6 +78,7 @@ namespace ViSwitch
         const ulong IS_ENABLED = 0x1CEA6BFDF248E5D9;          // IS_CONTROL_ENABLED
         const ulong ENABLE_CONTROL = 0x351220255D64C155;      // ENABLE_CONTROL_ACTION
         const ulong BUTTON_STRING = 0x0499D7B09FC9B407;       // GET_CONTROL_INSTRUCTIONAL_BUTTONS_STRING
+        const ulong USING_KEYBOARD = 0xA571D46727E2B718;      // IS_USING_KEYBOARD_AND_MOUSE
         const ulong SAFE_TO_SWITCH = 0x71E7B2E657449AAD;      // IS_SAFE_TO_START_PLAYER_SWITCH
         const ulong WANTED_LEVEL = 0xE28E54788CE8F12D;
         const ulong MISSION_FLAG = 0xA33CDCCDA663159E;
@@ -136,6 +137,10 @@ namespace ViSwitch
         static readonly string[] DefaultBindings = { "b_174", "b_175", "b_176" };
         static readonly ushort[] FKeyScans = { 0x3F, 0x40, 0x41 };                  // F5, F6, F7
         ushort _realKeyDown;
+        // The button string names the key on the device used last: on a pad it is the pad's (these keys have none
+        // there), not F5 / F6 / F7, so a pad player's switch read as "rebound", was only simulated and never happened
+        // (a player: "tf it dosent", the cards up and Franklin picked, no switch). The keyboard's own, last seen.
+        readonly string[] _keyboardBinding = new string[3];
 
         [StructLayout(LayoutKind.Sequential)]
         struct KEYBDINPUT { public ushort wVk; public ushort wScan; public uint dwFlags; public uint time; public IntPtr dwExtraInfo; }
@@ -613,6 +618,7 @@ namespace ViSwitch
             if (_luciaHeld) SettleLucia(ped);
             SettleJason(ped);
             JasonMission(ped);
+            JasonStoreDoors(ped);
             if (_sceneActive) EndSceneOnInput(ped);
             CheckTestCommand(ped);
 
@@ -697,9 +703,14 @@ namespace ViSwitch
             _pulseWheelBefore = GameWheelOpen(); // an effect left running can't signal this hold
             string key = "?";
             try { key = Call<string>(BUTTON_STRING, 0, _pulseInput, true); } catch { }
+            bool keyboard = true;
+            try { keyboard = Call<bool>(USING_KEYBOARD, 2); } catch { }
+            if (keyboard) _keyboardBinding[target] = key;
+            string binding = _keyboardBinding[target] ?? DefaultBindings[target];
+            if (!keyboard) key = binding + " on the keyboard, a pad in use";
             ReleaseRealKey();
             string how;
-            if (key != DefaultBindings[target]) how = "simulated only: the key is rebound";
+            if (binding != DefaultBindings[target]) how = "simulated only: the key is rebound";
             else if (!GameHasFocus()) how = "simulated only: GTA does not have focus";
             else
             {

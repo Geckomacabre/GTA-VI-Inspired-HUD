@@ -14,6 +14,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using System.Reflection;
 using GTA;
 using GTA.Math;
 
@@ -267,6 +268,79 @@ namespace ViSwitch
             if (handedOver) _sceneActive = true;
             Log("Jason landed at " + s.Name + (handedOver ? "" : " (not the player: the flight didn't get to him)"));
             _jasonHeld = false;
+        }
+
+        // ---- stores ----
+        // GTA keeps its stores locked for anyone but Michael, Franklin and Trevor, and GTA6Hud unlocks the clothes
+        // stores and Ammu-Nation for Lucia only (UpdateLuciaShopDoors), so as Jason every one was shut (the user: "all
+        // the clothes stores are locked i cant walk in them"). The same doors open for him, as GTA6Hud opens them:
+        // within 35 m of a clothes rack or an Ammu-Nation door, the closest door of each of its door models, four times
+        // a second. Its own lists (ShopStands' racks, AmmuCounters' doors, StoreDoorModels, AmmuDoorModels).
+        const ulong DOOR_OF_TYPE = 0xF82D8F1926A02C3D;   // SET_STATE_OF_CLOSEST_DOOR_OF_TYPE
+        const float StoreReach = 35f;
+        Vector3[] _storeRacks, _ammuDoors;
+        int[] _storeDoorModels, _ammuDoorModels;
+        bool _storesLooked;
+        int _jasonDoorsAt;
+
+        void JasonStoreDoors(int player)
+        {
+            if (!_jasonOn || player == 0 || Call<int>(ENTITY_MODEL, player) != _jason) return;
+            int now = RealNow();
+            if (now < _jasonDoorsAt) return;
+            _jasonDoorsAt = now + 250;
+            if (!LookStores()) return;
+            Vector3 at = Call<Vector3>(ENTITY_COORDS, player, true);
+            UnlockNear(at, _storeRacks, _storeDoorModels);
+            UnlockNear(at, _ammuDoors, _ammuDoorModels);
+        }
+
+        static void UnlockNear(Vector3 at, Vector3[] places, int[] models)
+        {
+            foreach (Vector3 p in places)
+            {
+                float dx = p.X - at.X, dy = p.Y - at.Y;
+                if (dx * dx + dy * dy >= StoreReach * StoreReach) continue;
+                foreach (int m in models) Call(DOOR_OF_TYPE, m, at.X, at.Y, at.Z, false, 0f, false);
+                return;
+            }
+        }
+
+        bool LookStores()
+        {
+            if (_storesLooked) return _storeRacks != null;
+            if (_hud == null) return false;
+            _storesLooked = true;
+            try
+            {
+                const BindingFlags Static = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+                Type t = _hud.GetType();
+                var stands = (Array)t.GetField("ShopStands", Static).GetValue(null);
+                var counters = (Array)t.GetField("AmmuCounters", Static).GetValue(null);
+                var racks = new Vector3[stands.Length];
+                for (int i = 0; i < racks.Length; i++)
+                {
+                    object s = stands.GetValue(i);
+                    racks[i] = (Vector3)s.GetType().GetField("Rack").GetValue(s);
+                }
+                var doors = new Vector3[counters.Length];
+                for (int i = 0; i < doors.Length; i++)
+                {
+                    object c = counters.GetValue(i);
+                    doors[i] = (Vector3)c.GetType().GetField("Item4").GetValue(c);
+                }
+                _storeDoorModels = (int[])t.GetField("StoreDoorModels", Static).GetValue(null);
+                _ammuDoorModels = (int[])t.GetField("AmmuDoorModels", Static).GetValue(null);
+                _storeRacks = racks;
+                _ammuDoors = doors;
+                Log("stores: " + racks.Length + " clothes racks and " + doors.Length + " Ammu-Nation doors to open for Jason");
+            }
+            catch (Exception ex)
+            {
+                _storeRacks = null;
+                Log("stores: GTA6Hud's store lists were not found (" + ex.Message + "); stores stay locked for Jason");
+            }
+            return _storeRacks != null;
         }
 
         // As GTA6Hud does for Lucia: a mission starting while you're Jason takes you back to his host.

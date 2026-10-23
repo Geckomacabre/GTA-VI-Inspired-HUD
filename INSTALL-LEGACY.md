@@ -135,7 +135,7 @@ Start GTA V and choose **Story Mode**. The new HUD appears on its own.
 | **Switch character** | Hold **Left Alt** (controller: hold **D-pad down**), pick with **Q / E** or **Left / Right** (controller: **LB / RB**), then let go. Jason and Lucia need their models (not included, see Step 5). |
 | **See the minimap** | Get in a car. It only shows in vehicles, or when you're wanted. |
 | **Open the HUD settings** | Hold **V**. |
-| **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. |
+| **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. A folder in `CustomMusic` is a station of its own: **Left / Right** (right stick) switch stations, the **mouse wheel** (D-pad Right / Up) changes the song. |
 
 ---
 
@@ -195,6 +195,69 @@ go in the same way:
    the game crashes while loading with the maps in.
 
 To take them off again, install the mods' **`Uninstaller`** OIVs the same way, to the mods folder.
+
+---
+
+## Optional: Rebalanced Dispatch Enhanced
+
+**Rebalanced Dispatch Enhanced** (RDE) by **the RDE Team** replaces GTA's police response: new agencies, roadblocks,
+helicopters, and up to **10 stars**. It works with this HUD:
+
+1. Install the HUD first (Steps 1 to 7). Step 3's Script Hook V .NET is the nightly RDE asks for.
+2. In OpenIV, use **Tools** → **Package Installer** on **`RDE 4.1.5.oiv`** from RDE's download, and pick
+   **mods folder**, like in Step 6.
+3. Skip RDE's **`Compatibility - Community HUD`** files: they're for another HUD mod.
+
+RDE brings its own `gameconfig.xml` with much bigger limits than the HUD needs, and that's fine. Installing or
+updating the HUD afterwards only raises a limit that's too low, so it never undoes RDE's.
+
+While RDE runs, its police take over: GTA6Hud's police brain, GTA6Hud's own six stars (and the military they call
+in) and the HUD's stun-gun arrests stay out. The HUD's stars show RDE's level up to **six**: levels 6 to 10 all light
+the sixth star. `ViExtras.ini` `[Compat] Rde = False` leaves the HUD as it is.
+
+To take RDE off again, install its **`Uninstaller.oiv`** the same way, then install the HUD again (Step 6), so its
+limits and packs are back.
+
+---
+
+## Optional: Los Santos RED
+
+**Los Santos RED** (LSR) by **Greskrendtregk** turns the game into a crime sandbox with its own police, crimes,
+wanted level and much more. It runs in **RAGE Plugin Hook**, not Script Hook V .NET, and works next to this HUD.
+Use it on its own: not together with LSPDFR or Rebalanced Dispatch Enhanced, which run the police too.
+
+1. Install the HUD first (Steps 1 to 7).
+2. Install **[RAGE Plugin Hook](https://ragepluginhook.net/)** and **[RAGENativeUI](https://github.com/alexguirre/RAGENativeUI/releases)**
+   (LSR's menus need it), then LSR itself, as LSR's own page says.
+3. Start the game with **`RAGEPluginHook.exe`**. LSR loads once Story Mode has loaded.
+
+While LSR runs, it has the police, the crimes and the wanted level, so the HUD adds none of its own: no witnesses,
+police brain, police memory, heat, six stars or stun-gun arrests. `ViExtras.ini` `[Compat] Lsr = False` leaves the
+HUD as it is.
+
+**Stars.** LSR keeps GTA's own wanted level at zero and draws stars of its own, so the HUD's stars and wanted box
+don't come up with LSR. For GTA VI stars in LSR's place, copy the 4 pictures from the HUD's
+[`extras/lsr-stars/wantedlevel`](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/tree/main/extras/lsr-stars/wantedlevel)
+into **`Plugins\LosSantosRED\images\wantedlevel`** and replace LSR's.
+
+**LSR's settings.** LSR writes `Plugins\LosSantosRED\Settings.xml` the first time it runs. Close the game, open that
+file in Notepad and change these values:
+
+| Setting | Set to | Why |
+| --- | --- | --- |
+| `AlwaysShowRadar` | `false` | The HUD's 3D minimap replaces GTA's radar. LSR switching the radar on puts it back under the map. |
+| `NeverShowRadar` | `true` | The same. |
+| `TopDisplayShowWeapon` | `false` | The HUD shows your weapon at the top right already. |
+| `ShowStreetDisplay` | `false` | The HUD shows the street under the minimap already. |
+
+**Keys.** LSR uses some of the HUD's keys. Change one side of each pair you use:
+
+| Key | HUD | LSR |
+| --- | --- | --- |
+| **Left Ctrl** | Crouch (`ViCrouch.ini` `[Crouch] Key`) | Crouch (`CrouchKey` in LSR's settings) |
+| **K** | Skills panel (`ViExtras.ini` `[Skills] Key`) | No, in conversations |
+| **O** | Radio mute (`ViExtras.ini` `[Radio] MuteKey`) | Start an interaction |
+| **Shift + N** | Sit-ups (`ViExtras.ini` `[Gym] SitUpsKey`) | Group mode |
 
 ---
 

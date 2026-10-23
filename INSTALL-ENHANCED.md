@@ -153,7 +153,7 @@ Load **Story Mode**. The new HUD appears on its own.
 | **Switch character** | Hold **Left Alt** (controller: hold **D-pad down**), pick with **Q / E** or **Left / Right** (controller: **LB / RB**), then let go. Jason and Lucia need their models (not included, see Step 5). |
 | **See the minimap** | Get in a car. It only shows in vehicles, or when you're wanted. |
 | **Open the HUD settings** | Hold **V**. |
-| **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. |
+| **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. A folder in `CustomMusic` is a station of its own: **Left / Right** (right stick) switch stations, the **mouse wheel** (D-pad Right / Up) changes the song. |
 
 ---
 

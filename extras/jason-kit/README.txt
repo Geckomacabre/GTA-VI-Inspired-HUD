@@ -48,6 +48,14 @@ or newer (from the releases channel of dexyfex's Discord, https://discord.gg/Bxf
 5. Start the game and hold Left Alt: Jason's card is next to Lucia's.
 
 
+PLAYING AS JASON: STORES
+------------------------
+GTA keeps its stores locked for anyone but Michael, Franklin and Trevor. From the HUD's next update (after 2.6.2),
+the clothes stores' and Ammu-Nation's doors open for Jason too, so he can walk in. He can't buy clothes there, though:
+the game's own clothes menu only serves Michael, Franklin and Trevor, and the HUD's wardrobe has a clothes list for
+Lucia only. To buy clothes, switch to Michael, Franklin or Trevor.
+
+
 A DIFFERENT JASON MODEL
 -----------------------
 The HUD looks for the ped named in scripts\GTA6Hud.ini, under [Jason]: Model = jdfinal. Another Jason works too:

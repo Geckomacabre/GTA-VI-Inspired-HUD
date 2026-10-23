@@ -1,20 +1,40 @@
     <archive path="update\update.rpf" createIfNotExist="True" type="RPF7">
       <xml path="common\data\gameconfig.xml">
-        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']/PoolSize">
+        <add xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']" append="Last">
+          <ViHudScratch />
+        </add>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']/PoolSize[@value &lt; 4000] | /fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']/ViHudScratch">
           <PoolSize value="4000" />
         </replace>
-        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='ExprDictStore']/PoolSize">
+        <remove xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']/ViHudScratch | /fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']/PoolSize[2]" />
+        <add xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='ExprDictStore']" append="Last">
+          <ViHudScratch />
+        </add>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='ExprDictStore']/PoolSize[@value &lt; 400] | /fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='ExprDictStore']/ViHudScratch">
           <PoolSize value="400" />
         </replace>
-        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='TxdStore']/PoolSize">
+        <remove xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='ExprDictStore']/ViHudScratch | /fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='ExprDictStore']/PoolSize[2]" />
+        <add xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='TxdStore']" append="Last">
+          <ViHudScratch />
+        </add>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='TxdStore']/PoolSize[@value &lt; 150000] | /fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='TxdStore']/ViHudScratch">
           <PoolSize value="150000" />
         </replace>
-        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='DwdStore']/PoolSize">
+        <remove xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='TxdStore']/ViHudScratch | /fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='TxdStore']/PoolSize[2]" />
+        <add xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='DwdStore']" append="Last">
+          <ViHudScratch />
+        </add>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='DwdStore']/PoolSize[@value &lt; 30000] | /fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='DwdStore']/ViHudScratch">
           <PoolSize value="30000" />
         </replace>
-        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/ConfigModelInfo/MaxExtraPedModelInfos">
+        <remove xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='DwdStore']/ViHudScratch | /fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='DwdStore']/PoolSize[2]" />
+        <add xpath="/fwAllConfigs/ConfigArray/Item/Config/ConfigModelInfo" append="Last">
+          <ViHudScratch />
+        </add>
+        <replace xpath="/fwAllConfigs/ConfigArray/Item/Config/ConfigModelInfo/MaxExtraPedModelInfos[@value &lt; 600] | /fwAllConfigs/ConfigArray/Item/Config/ConfigModelInfo/ViHudScratch">
           <MaxExtraPedModelInfos value="600" />
         </replace>
+        <remove xpath="/fwAllConfigs/ConfigArray/Item/Config/ConfigModelInfo/ViHudScratch | /fwAllConfigs/ConfigArray/Item/Config/ConfigModelInfo/MaxExtraPedModelInfos[2]" />
       </xml>
       <xml path="common\data\dlclist.xml">
         <add xpath="/SMandatoryPacksData" append="Last">

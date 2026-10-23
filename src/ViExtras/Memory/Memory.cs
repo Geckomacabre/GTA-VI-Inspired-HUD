@@ -114,9 +114,10 @@ namespace ViExtras
             }
             _wasDown = down;
 
-            // An on-duty LSPDFR officer commits no crimes: a witness still running
-            // is called off and unfound bodies forgotten, as on going down.
-            bool onDuty = Lspdfr.OnDuty;
+            // An on-duty LSPDFR officer commits no crimes, and Los Santos RED has its own
+            // (PoliceMods): a witness still running is called off and unfound bodies
+            // forgotten, as on going down.
+            bool onDuty = Lspdfr.OnDuty || PoliceMods.Lsr;
             if (onDuty && !_wasOnDuty)
             {
                 Witness.Cancel();

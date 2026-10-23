@@ -12,8 +12,21 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ## Unreleased
 
+### Added
+
+- **Rebalanced Dispatch Enhanced works with the HUD.** While RDE's police run, GTA6Hud's police brain, GTA6Hud's own six stars (and the military they call in) and the stun-gun arrests stay out of their way, and the stars show RDE's level up to six: levels 6 to 10 all light the sixth star. `ViExtras.ini` `[Compat] Rde = False` leaves the HUD as it is.
+- **Los Santos RED works with the HUD.** While LSR runs (in RAGE Plugin Hook), it has the police, the crimes and the wanted level, and the HUD adds none of its own: no witnesses, police brain, police memory, heat, six stars or stun-gun arrests. `extras/lsr-stars` has LSR's star pictures redrawn as the HUD's GTA VI stars. `ViExtras.ini` `[Compat] Lsr = False` leaves the HUD as it is.
+
+### Fixed
+
+- **Jason can walk into the clothes stores and Ammu-Nation.** GTA keeps its stores locked for anyone but Michael, Franklin and Trevor, and the HUD only opened them for Lucia. Their doors now open for Jason too (there are no clothes to buy for him there).
+- **Switching characters works on a controller.** With a controller the row of cards came up and a character could be picked, but letting go never switched: the check for a rebound F5 / F6 / F7 key read the controller's buttons instead of the keyboard's, so the switch was only simulated, which the game ignores. It now reads the keyboard's key.
+- **On Demand switches stations with Left / Right.** In the radio wheel your own stations (each folder in `CustomMusic`) now step with **Left / Right** (the right stick on a controller), as the radio's do, and the **mouse wheel** (D-pad Right / Up) or GTA's next / previous track keys change the song. Left / Right used to change the song, so trying to reach another station only restarted the one playing.
+- **Installing the HUD never lowers another mod's limits.** The package set five of `gameconfig.xml`'s limits to the HUD's values, so installing or updating it after a mod with bigger ones (Rebalanced Dispatch Enhanced's are far bigger) cut them down, and the game could crash while loading. It now only raises a limit that's lower than the HUD needs.
+
 ### Guides
 
+- **Optional: Rebalanced Dispatch Enhanced** and **Optional: Los Santos RED** in the Legacy guide: the install order, what the HUD leaves to them, and for LSR the settings and keys to change next to the HUD.
 - **An old 3D minimap's files.** Both install guides' troubleshooting tables now say to delete `MiniMap.asi` or `MiniMapHudPresent.asi` (and `scripts\MiniMap.dll`) left by another 3D minimap mod or an older install. The HUD brings its own copy as `ViMinimap.asi`, and two copies at once get in each other's way.
 - **Switching characters on a controller.** The README, quick start and both install guides now say a controller picks a card with **LB / RB** (D-pad Left / Right is under the thumb that holds D-pad Down).
 

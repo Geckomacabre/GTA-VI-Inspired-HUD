@@ -148,11 +148,13 @@ namespace ViExtras
                 return;
             }
             _wasDead = false;
-            // Story missions run their own police, as they run their own crowds for Memory: stun guns,
-            // giving up and arrests stand down, and the cops get their own guns back.
-            if (Game.IsMissionActive)
+            // Story missions run their own police, as they run their own crowds for Memory, and so do the
+            // police mods (PoliceMods: Rebalanced Dispatch Enhanced, Los Santos RED): stun guns, giving up
+            // and arrests stand down, and the cops get their own guns back.
+            bool mission = Game.IsMissionActive;
+            if (mission || PoliceMods.TakesPolice)
             {
-                if (_arresting) EndArrest("a story mission", true);
+                if (_arresting) EndArrest(mission ? "a story mission" : "another police mod", true);
                 if (_own.Count > 0) RestoreAll();
                 _modeKnown = _stunned = false;
                 _armedUntil = _stillSince = 0;
