@@ -31,6 +31,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Optional: Rebalanced Dispatch Enhanced** and **Optional: Los Santos RED** in the Legacy guide: the install order, what the HUD leaves to them, and for LSR the settings and keys to change next to the HUD.
 - **An old 3D minimap's files.** Both install guides' troubleshooting tables now say to delete `MiniMap.asi` or `MiniMapHudPresent.asi` (and `scripts\MiniMap.dll`) left by another 3D minimap mod or an older install. The HUD brings its own copy as `ViMinimap.asi`, and two copies at once get in each other's way.
 - **Switching characters on a controller.** The README, quick start and both install guides now say a controller picks a card with **LB / RB** (D-pad Left / Right is under the thumb that holds D-pad Down).
+- **Script Hook V .NET's minimum.** The Legacy guide now says 3.7.0 nightly 193 or newer (it said 3.7 or newer), with a troubleshooting row for the "Unhandled exception in script" / FileNotFoundException an older one gives.
 
 ## 2.6.2 (22 October 2026)
 

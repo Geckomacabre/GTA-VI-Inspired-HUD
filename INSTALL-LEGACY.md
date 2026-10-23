@@ -57,7 +57,8 @@ This is the folder with **`GTA5.exe`** inside. We'll call it your **game folder*
 
 ## Step 3: Install Script Hook V .NET (lets this HUD run)
 
-The HUD needs **version 3.7 or newer**. Older versions won't work.
+The HUD needs **3.7.0 nightly 193 or newer** (the top release on the nightly page always is). With an older one,
+the HUD's scripts don't start, or one stops with an error (see "Something went wrong?").
 
 1. Go to the [Script Hook V .NET nightly page](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases).
 2. Under the **top** release, open **Assets** and download the **`.zip`** file.
@@ -270,6 +271,7 @@ file in Notepad and change these values:
 | --- | --- |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Your Script Hook V .NET is too old. Redo Step 3 with the newest version. |
+| A message says **Unhandled exception in script** (for example **"MiniMap"**) with a **FileNotFoundException** | Your Script Hook V .NET is older than the HUD needs (3.7.0 nightly 193). Redo Step 3 with the **top** release on the nightly page, then close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly` and delete the **`dl3`** folder (it's only a cache). `ScriptHookVDotNet.log` in your game folder says **"Unable to resolve API version"** when this is it. |
 | You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Install it again with OpenIV run as administrator (Step 6), or copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`. Redo Step 7. |
 | Your game folder has **`MiniMap.asi`** or **`MiniMapHudPresent.asi`** (from another 3D minimap mod or an older install) | Delete it. It's an older copy of the minimap plugin the HUD brings itself as `ViMinimap.asi`, and two copies loaded at once get in each other's way. Delete `scripts\MiniMap.dll` too if it's there (the HUD's is `scripts\ViMinimap.dll`). Keep `ViMinimap.asi` next to `GTA5.exe`. |
