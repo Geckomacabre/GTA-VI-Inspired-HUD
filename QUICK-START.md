@@ -63,6 +63,6 @@ Start **Story Mode**. The HUD shows up on its own.
 - **Hold V:** HUD settings
 - **Hold Q in a car:** radio. Press **Down** (or right stick down) for **On Demand**: your own music. Put
   `.mp3` files in `scripts\Hud\Radio\CustomMusic` first.
-- **Hold Left Alt:** characters, GTA VI's row of cards (Jason and Lucia too, if you have their models)
+- **Hold Left Alt** (controller: **D-pad Down**): characters, GTA VI's row of cards (Jason and Lucia too, if you have their models). **Q / E** (controller: **LB / RB**) picks, letting go switches
 
 All the controls are in the **[README](README.md#-controls)**.
