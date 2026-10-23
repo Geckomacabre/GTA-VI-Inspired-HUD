@@ -93,7 +93,7 @@ Want to play as **Lucia**? She isn't included: her model is someone else's paid 
 | To do this | Press |
 | :--- | :--- |
 | HUD settings | Hold **V** (controller: hold the camera button). Greet / antagonize, spin-outs and the VI radio wheel switch on and off here too |
-| Switch character | Hold **Left Alt** (controller: **D-pad Down**), pick with **Q / E** or **Left / Right**, let go to switch. Jason and Lucia need their models *(not included: see above)* |
+| Switch character | Hold **Left Alt** (controller: **D-pad Down**), pick with **Q / E** or **Left / Right** (controller: **LB / RB**), let go to switch. Jason and Lucia need their models *(not included: see above)* |
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**; controller: **D-pad Left**). **O** mutes it (controller: click the right stick while the wheel is open) |
 | Your own music (On Demand) | In the radio wheel, press **Down** (controller: right stick down). **Left / Right** (right stick) change the song, **Up** goes back to the radio |
