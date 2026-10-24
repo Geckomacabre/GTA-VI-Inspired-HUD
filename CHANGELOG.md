@@ -10,6 +10,16 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## 2.6.4 (23 October 2026)
+
+### Added
+
+- **Empty balances show grey.** In the money row at the top right, BuckMe's purple icon and the wallet's green one turn grey while that balance is $0, and take their colour back as soon as there's money in it.
+
+### Fixed
+
+- **BuckMe no longer pays out the same money again.** The HUD keeps your cash at $20,000 and moves the rest into BuckMe, which it saves straight away, while the game only keeps your lower cash when it saves. So switching to a character with more than $20,000 put that money into BuckMe again in every session that ended without saving: a character at GTA's maximum cash added $2.1 billion each time. The HUD now notes what it moved (`scripts\Hud\Save\buckme_moved.txt`) and, when it meets the same cash again, only puts your wallet back to $20,000. Money you pick up while playing goes into BuckMe as before. Already have a huge balance? Close the game and set the number in `scripts\Hud\Save\buckme.txt` to what you want.
+
 ## 2.6.3 (23 October 2026)
 
 ### Added

@@ -3,7 +3,7 @@
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD and minimap for GTA V story mode on PC.**
-Made by **FBICat**. Version 2.6 adds GTA VI's character switcher, heists and police lights to the features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, heists and police lights to the features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
@@ -20,8 +20,8 @@ Made by **FBICat**. Version 2.6 adds GTA VI's character switcher, heists and pol
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.6.3-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.6.4-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.6.4-Enhanced.oiv` with the OIV Package Installer.
 >
 > **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
 >
@@ -42,6 +42,31 @@ Made by **FBICat**. Version 2.6 adds GTA VI's character switcher, heists and pol
 > Some HUD art is taken from Rockstar's official GTA VI media
 > ([rockstargames.com/vi/media](https://www.rockstargames.com/VI/media)) and belongs to Rockstar Games.
 > No GTA VI game files are included.
+
+---
+
+## 📸 Screenshots
+
+![A night chase with the GTA VI police lights](screenshots/police-lights.jpg)
+<sub>A night chase: the GTA VI police lights, the stars at the top right and the 3D minimap gone red.</sub>
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/day-drive.jpg" alt="Driving downtown"><br><sub>Downtown, with the 3D minimap at the bottom left.</sub></td>
+<td width="50%"><img src="screenshots/sunset-drive.jpg" alt="Vespucci Beach at sunset"><br><sub>Vespucci Beach at golden hour.</sub></td>
+</tr>
+<tr>
+<td><img src="screenshots/wanted.jpg" alt="Wanted"><br><sub>Wanted: GTA VI's stars and "the cops are searching for you".</sub></td>
+<td><img src="screenshots/minimap.jpg" alt="The 3D minimap"><br><sub>The 3D minimap up close, and red while you're wanted.</sub></td>
+</tr>
+<tr>
+<td><img src="screenshots/loading-screen.jpg" alt="Loading screen"><br><sub>FBICat's loading screens with Rockstar's Vice City pictures.</sub></td>
+<td><img src="screenshots/landing-page.jpg" alt="Landing page"><br><sub>FBICat's start screen on GTA V Legacy.</sub></td>
+</tr>
+</table>
+
+![BuckMe and the wallet](screenshots/money-row.jpg)
+<sub>BuckMe (your bank) and your wallet at the top right. An empty one turns grey.</sub>
 
 ---
 
