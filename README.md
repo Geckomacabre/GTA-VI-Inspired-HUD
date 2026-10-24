@@ -3,7 +3,7 @@
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD and minimap for GTA V story mode on PC.**
-Made by **FBICat**. Version 2.6 adds GTA VI's character switcher, heists and police lights to the features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, heists and police lights to the features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
