@@ -45,6 +45,31 @@ Made by **FBICat**. Version 2.6 adds GTA VI's character switcher, heists and pol
 
 ---
 
+## 📸 Screenshots
+
+![A night chase with the GTA VI police lights](screenshots/police-lights.jpg)
+<sub>A night chase: the GTA VI police lights, the stars at the top right and the 3D minimap gone red.</sub>
+
+<table>
+<tr>
+<td width="50%"><img src="screenshots/day-drive.jpg" alt="Driving downtown"><br><sub>Downtown, with the 3D minimap at the bottom left.</sub></td>
+<td width="50%"><img src="screenshots/sunset-drive.jpg" alt="Vespucci Beach at sunset"><br><sub>Vespucci Beach at golden hour.</sub></td>
+</tr>
+<tr>
+<td><img src="screenshots/wanted.jpg" alt="Wanted"><br><sub>Wanted: GTA VI's stars and "the cops are searching for you".</sub></td>
+<td><img src="screenshots/minimap.jpg" alt="The 3D minimap"><br><sub>The 3D minimap up close, and red while you're wanted.</sub></td>
+</tr>
+<tr>
+<td><img src="screenshots/loading-screen.jpg" alt="Loading screen"><br><sub>FBICat's loading screens with Rockstar's Vice City pictures.</sub></td>
+<td><img src="screenshots/landing-page.jpg" alt="Landing page"><br><sub>FBICat's start screen on GTA V Legacy.</sub></td>
+</tr>
+</table>
+
+![BuckMe and the wallet](screenshots/money-row.jpg)
+<sub>BuckMe (your bank) and your wallet at the top right. An empty one turns grey.</sub>
+
+---
+
 ## 🆕 New in 2.6
 
 - **GTA VI's character switcher.** Hold **Left Alt** and the characters are a row of cards, as in GTA VI: Michael,
