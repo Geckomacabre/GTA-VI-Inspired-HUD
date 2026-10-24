@@ -1,40 +1,58 @@
 # How to install: GTA V **Legacy**
 
-This guide is for the **original PC version** of GTA V. If your game folder has a file called
-**`GTA5_Enhanced.exe`**, you have Enhanced. Use the **[Enhanced guide](INSTALL-ENHANCED.md)** instead.
+This guide is for the **original PC version** of GTA V.
 
-Never modded GTA before? No problem. Follow the steps in order and don't skip any. It takes about 20 minutes.
+Does your game folder have a file called **`GTA5_Enhanced.exe`**? Then you have Enhanced.
+Use the **[Enhanced guide](INSTALL-ENHANCED.md)** instead.
+
+**Never modded GTA before?** No problem. Follow the steps in order. Don't skip any. It takes about 20 minutes.
 
 > [!IMPORTANT]
 > ### 💬 Need help? Join our support Discord
-> This version is a **fork of FBICat's VI HUD** with extra features, so it has its own support:
-> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
-> FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
+> This version is a **fork of FBICat's VI HUD** with extra features. So it has its own support:
+> - **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**
+> - or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues)
+>
+> FBICat's Discord is there for his original mod. Please bring questions about this version to ours. Thank you!
 
-> ⚠️ **Mods are for Story Mode only.** Never go into GTA Online with mods installed: you can get banned.
+> ⚠️ **Mods are for Story Mode only.** Never go into GTA Online with mods installed. You can get banned.
 > (Script Hook V, one of the tools below, closes the game if you try.)
 
 ---
 
 ## Before you start: two quick Windows settings
 
-**1. Show file extensions.** Some files in this guide end in `.asi` or `.dll`, and Windows hides those
-endings by default. Open any folder, click **View** at the top, then **Show** → **File name extensions**.
+### 1. Show file extensions
 
-**2. Know how to unzip.** Most downloads are `.zip` files (a folder squeezed into one file). To open
-one, right-click it, choose **Extract All…**, then click **Extract**. A normal folder appears next to it.
+Some files in this guide end in `.asi` or `.dll`. Windows hides those endings by default.
+
+1. Open any folder.
+2. Click **View** at the top.
+3. Click **Show** → **File name extensions**.
+
+### 2. Know how to unzip
+
+Most downloads are `.zip` files (a folder squeezed into one file). To open one:
+
+1. Right-click it.
+2. Choose **Extract All…**.
+3. Click **Extract**.
+
+✅ A normal folder appears next to it.
 
 ---
 
 ## Step 1: Find your GTA V folder
 
-This is the folder with **`GTA5.exe`** inside. We'll call it your **game folder**. How to open it:
+This is the folder with **`GTA5.exe`** inside. We'll call it your **game folder**.
 
-- **Rockstar Games Launcher:** open **Settings**, click **Grand Theft Auto V** on the left, then
-  **Open Folder** (or **View Installation Folder**).
-- **Steam:** in your **Library**, right-click **Grand Theft Auto V**, then **Manage** → **Browse local files**.
-- **Epic Games:** in your **Library**, click the **⋯** under GTA V, then **Manage**, then the
-  **folder icon** next to "Installation".
+How to open it:
+
+| Your launcher | What to do |
+| --- | --- |
+| **Rockstar Games Launcher** | 1. Open **Settings**.<br>2. Click **Grand Theft Auto V** on the left.<br>3. Click **Open Folder** (or **View Installation Folder**). |
+| **Steam** | 1. Go to your **Library**.<br>2. Right-click **Grand Theft Auto V**.<br>3. Click **Manage** → **Browse local files**. |
+| **Epic Games** | 1. Go to your **Library**.<br>2. Click the **⋯** under GTA V.<br>3. Click **Manage**.<br>4. Click the **folder icon** next to "Installation". |
 
 ✅ Keep this folder open. You'll copy files into it a few times.
 
@@ -42,14 +60,17 @@ This is the folder with **`GTA5.exe`** inside. We'll call it your **game folder*
 
 ## Step 2: Install Script Hook V (lets mods run)
 
-1. Go to the [Script Hook V page](http://www.dev-c.com/gtav/scripthookv/) and click **Download**.
-2. Unzip it and open the **`bin`** folder inside.
-3. Copy these files into your **game folder**:
-   - `ScriptHookV.dll`
-   - `dinput8.dll` (loads mods ending in `.asi`)
-   - `args.txt` (turns off BattlEye, Rockstar's anti-cheat, which blocks mods)
-   - `xinput1_4.dll`, if it's there
-4. **Don't** copy `NativeTrainer.asi` (a cheat menu you don't need).
+1. Go to the [Script Hook V page](http://www.dev-c.com/gtav/scripthookv/).
+2. Click **Download**.
+3. Unzip it.
+4. Open the **`bin`** folder inside.
+5. Copy these files into your **game folder**:
+   - **`ScriptHookV.dll`**
+   - **`dinput8.dll`** (loads mods ending in `.asi`)
+   - **`args.txt`** (turns off BattlEye, Rockstar's anti-cheat, which blocks mods)
+   - **`xinput1_4.dll`**, if it's there
+
+⚠️ **Don't** copy `NativeTrainer.asi`. It's a cheat menu you don't need.
 
 ✅ Your game folder now has `ScriptHookV.dll` and `dinput8.dll` next to `GTA5.exe`.
 
@@ -57,16 +78,19 @@ This is the folder with **`GTA5.exe`** inside. We'll call it your **game folder*
 
 ## Step 3: Install Script Hook V .NET (lets this HUD run)
 
-The HUD needs **3.7.0 nightly 193 or newer** (the top release on the nightly page always is). With an older one,
-the HUD's scripts don't start, or one stops with an error (see "Something went wrong?").
+The HUD needs **3.7.0 nightly 193 or newer**. The **top** release on the nightly page always is.
+With an older one, the HUD's scripts don't start, or one stops with an error (see "Something went wrong?").
 
 1. Go to the [Script Hook V .NET nightly page](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases).
-2. Under the **top** release, open **Assets** and download the **`.zip`** file.
-3. Unzip it and copy these into your **game folder**:
-   - `ScriptHookVDotNet.asi`
-   - `ScriptHookVDotNet2.dll`
-   - `ScriptHookVDotNet3.dll`
-   - `ScriptHookVDotNet.ini`
+2. Find the **top** release.
+3. Open **Assets**.
+4. Download the **`.zip`** file.
+5. Unzip it.
+6. Copy these into your **game folder**:
+   - **`ScriptHookVDotNet.asi`**
+   - **`ScriptHookVDotNet2.dll`**
+   - **`ScriptHookVDotNet3.dll`**
+   - **`ScriptHookVDotNet.ini`**
 
 ✅ Those 4 files are now next to `GTA5.exe`.
 
@@ -74,12 +98,17 @@ the HUD's scripts don't start, or one stops with an error (see "Something went w
 
 ## Step 4: Install OpenIV (installs the mod safely)
 
-OpenIV puts mods in a separate **`mods` folder**, so your original game files are never changed.
+OpenIV puts mods in a separate **`mods` folder**. Your original game files are never changed.
 
-1. Download OpenIV from [openiv.com](https://openiv.com/) and install it.
-2. Open OpenIV. Choose **GTA V** → **Windows**, and point it to your **game folder** if it asks.
-3. At the top, click **Tools** → **ASI Manager**.
-4. Click **Install** next to **ASI Loader** and next to **OpenIV.asi**. Close the window.
+1. Download OpenIV from [openiv.com](https://openiv.com/).
+2. Install it.
+3. Open OpenIV.
+4. Choose **GTA V** → **Windows**.
+5. If it asks, point it to your **game folder**.
+6. At the top, click **Tools** → **ASI Manager**.
+7. Click **Install** next to **ASI Loader**.
+8. Click **Install** next to **OpenIV.asi**.
+9. Close the window.
 
 ✅ OpenIV is ready.
 
@@ -88,55 +117,69 @@ OpenIV puts mods in a separate **`mods` folder**, so your original game files ar
 ## Step 5: Download the mod
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`** (the mod, about 100 MB). It also switches
-   the mod on in the game, so there's no separate patch to get.
-3. **Want to play as Lucia?** She isn't included: her model is someone else's paid work. Get her from her creator,
-   **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another
-   Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net (see "Optional: Jason" below to put him in the game). The HUD
-   works without her.
+2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`** (the mod, about 100 MB).
+   It also switches the mod on in the game. There's no separate patch to get.
 
 ❌ Don't download `GTA-VI-Inspired-HUD-2.6.3-Enhanced.oiv`. That one is for the other version of the game.
 
-💡 The number in the file name is the version (2.6.3 here), so you can always tell which one you installed. Mention it when you ask for help.
+**Want to play as Lucia or Jason?** Their models aren't included.
+
+| Character | Where to get the model |
+| --- | --- |
+| **Lucia** | Her model is someone else's paid work. Get her from her creator:<br>**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com.<br>Or use another Lucia model.<br>The HUD works without her. |
+| **Jason** | **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net.<br>To put him in the game, see "Optional: Jason" below. |
+
+💡 The number in the file name is the version (2.6.3 here). So you can always tell which one you installed.
+Mention it when you ask for help.
 
 ---
 
 ## Step 6: Install the mod with OpenIV
 
-⚠️ **Game in Program Files?** If your game folder's path starts with `C:\Program Files` (the Rockstar Games
-Launcher, Epic Games and Steam put it there), right-click **OpenIV** → **Run as administrator** and click
-**Yes**. Windows lets only administrators change files there, and without it the install can leave the old files
-in place.
+⚠️ **Game in Program Files?** Does your game folder's path start with `C:\Program Files`?
+(The Rockstar Games Launcher, Epic Games and Steam put it there.)
+Then right-click **OpenIV** → **Run as administrator**, and click **Yes**.
+
+💡 Windows lets only administrators change files there. Without it, the install can leave the old files in place.
 
 1. In OpenIV, click **Tools** → **Package Installer**.
-2. Pick **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`**, then click **Install**.
-3. When it asks where to install, choose **mods folder**. If it offers to create the folder, say yes.
-4. Wait until it says it's finished, then click **Close**.
+2. Pick **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`**.
+3. Click **Install**.
+4. When it asks where to install, choose **mods folder**.
+5. If it offers to create the folder, say yes.
+6. Wait until it says it's finished.
+7. Click **Close**.
 
-✅ Installing the mod again, or over an older version, is fine: it never lists a pack twice.
+✅ Installing the mod again, or over an older version, is fine. It never lists a pack twice.
 
 ---
 
 ## Step 7: Check one file
 
-Look in your **game folder** for **`ViMinimap.asi`**, right next to `GTA5.exe`.
+Look in your **game folder** for **`ViMinimap.asi`**. It should be right next to `GTA5.exe`.
 
-- **It's there?** Great, go to Step 8.
-- **It's not there?** Open the **`mods`** folder in your game folder, find `ViMinimap.asi`, and move it
-  next to `GTA5.exe`. Without it, the minimap won't show.
+| Is it there? | What to do |
+| --- | --- |
+| **Yes** | Great, go to Step 8. |
+| **No** | 1. Open the **`mods`** folder in your game folder.<br>2. Find **`ViMinimap.asi`**.<br>3. Move it next to **`GTA5.exe`**. |
+
+💡 Without it, the minimap won't show.
 
 ---
 
 ## Step 8: Play! 🎉
 
-Start GTA V and choose **Story Mode**. The new HUD appears on its own.
+1. Start GTA V.
+2. Choose **Story Mode**.
+
+✅ The new HUD appears on its own.
 
 | To... | Do this |
 | --- | --- |
-| **Switch character** | Hold **Left Alt** (controller: hold **D-pad down**), pick with **Q / E** or **Left / Right** (controller: **LB / RB**), then let go. Jason and Lucia need their models (not included, see Step 5). |
+| **Switch character** | Hold **Left Alt** (controller: hold **D-pad down**).<br>Pick with **Q / E** or **Left / Right** (controller: **LB / RB**).<br>Then let go.<br>Jason and Lucia need their models (not included, see Step 5). |
 | **See the minimap** | Get in a car. It only shows in vehicles, or when you're wanted. |
 | **Open the HUD settings** | Hold **V**. |
-| **Play your own music** | Put `.mp3` files in `scripts\Hud\Radio\CustomMusic` in your game folder. In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**. A folder in `CustomMusic` is a station of its own: **Left / Right** (right stick) switch stations, the **mouse wheel** (D-pad Right / Up) changes the song. |
+| **Play your own music** | Put `.mp3` files in **`scripts\Hud\Radio\CustomMusic`** in your game folder.<br>In a car, hold the radio button (**Q**) and press **Down** (controller: right stick down) for **On Demand**.<br>A folder in `CustomMusic` is a station of its own.<br>**Left / Right** (right stick) switch stations.<br>The **mouse wheel** (D-pad Right / Up) changes the song. |
 
 ---
 
@@ -206,82 +249,123 @@ You only need this if your Jason download isn't the 4 files above.
 
 ## Optional: Forests of San Andreas and GTA V Remastered
 
-**Forests of San Andreas** and **GTA V Remastered** by **Larcius** (built on JRod's and le__AK's maps) fill the map
-with tens of thousands of extra trees, bushes and props, and they work with this HUD. They come as OIVs too, so they
-go in the same way:
+**What you get:** tens of thousands of extra trees, bushes and props on the map.
+**What you need:** **Forests of San Andreas**, **GTA V Remastered**, or both, by **Larcius** (built on JRod's and le__AK's maps). They work with this HUD.
+They come as OIVs too, so they go in the same way as the HUD.
 
 1. Install the HUD first (Steps 1 to 7).
-2. In each mod's zip, open the **`GTA V Legacy`** folder. In OpenIV, use **Tools** → **Package Installer** on the
-   ones you want, and pick **mods folder** each time, like in Step 6:
+2. In each mod's zip, open the **`GTA V Legacy`** folder.
+3. In OpenIV, click **Tools** → **Package Installer**.
+4. Pick one you want:
    - **`Forests of San Andreas (North) Ultimate v….oiv`**
    - **`Forests of San Andreas (South) Ultimate v….oiv`**
    - **`GTA V Remastered Ultimate v….oiv`**
+5. Pick **mods folder**, like in Step 6.
+6. Do steps 3 to 5 again for each one you want.
 
-   Each one adds its own pack to the game's pack list, next to the HUD's, so there's nothing to edit.
-3. Using **Liberty City V Remix** as well? Also install the mods' **`Compatibility Liberty City V Remix`** OIVs.
-4. **Leave `gameconfig.xml` as it is.** The maps don't need a different one, and installing another
-   `gameconfig.xml` would replace the one the HUD set up, which the HUD needs. See "Something went wrong?" if
-   the game crashes while loading with the maps in.
+   💡 Each one adds its own pack to the game's pack list, next to the HUD's. So there's nothing to edit.
+7. Using **Liberty City V Remix** as well? Also install the mods' **`Compatibility Liberty City V Remix`** OIVs.
+8. ⚠️ **Leave `gameconfig.xml` as it is.** The maps don't need a different one.
+   Installing another `gameconfig.xml` would replace the one the HUD set up, which the HUD needs.
+   Crashes while loading with the maps in? See "Something went wrong?" below.
 
-To take them off again, install the mods' **`Uninstaller`** OIVs the same way, to the mods folder.
+**To take them off again:** install the mods' **`Uninstaller`** OIVs the same way, to the mods folder.
 
 ---
 
 ## Optional: Rebalanced Dispatch Enhanced
 
-**Rebalanced Dispatch Enhanced** (RDE) by **the RDE Team** replaces GTA's police response: new agencies, roadblocks,
-helicopters, and up to **10 stars**. The HUD steps out of its way.
+**What you get:** **Rebalanced Dispatch Enhanced** (RDE) by **the RDE Team**. It replaces GTA's police response:
+new agencies, roadblocks, helicopters, and up to **10 stars**. The HUD steps out of its way.
+**What you need:** the HUD installed first, and **`RDE 4.1.5.oiv`** from RDE's download.
 
 > [!NOTE]
-> New in 2.6.3, and only tested briefly in game. If something's off with RDE and the HUD together, tell us on Discord
-> or in a GitHub issue.
+> New in 2.6.3, and only tested briefly in game.
+> Something off with RDE and the HUD together? Tell us on Discord or in a GitHub issue.
 
-To use both:
+### Part 1: Install RDE
 
-1. Install the HUD first (Steps 1 to 7). Step 3's Script Hook V .NET is the nightly RDE asks for.
-2. In OpenIV, use **Tools** → **Package Installer** on **`RDE 4.1.5.oiv`** from RDE's download, and pick
-   **mods folder**, like in Step 6.
-3. Skip RDE's **`Compatibility - Community HUD`** files: they're for another HUD mod.
+1. Install the HUD first (Steps 1 to 7).
 
-RDE brings its own `gameconfig.xml` with much bigger limits than the HUD needs, and that's fine. Installing or
-updating the HUD afterwards only raises a limit that's too low, so it never undoes RDE's.
+   💡 Step 3's Script Hook V .NET is the nightly RDE asks for.
+2. In OpenIV, click **Tools** → **Package Installer**.
+3. Pick **`RDE 4.1.5.oiv`** from RDE's download.
+4. Pick **mods folder**, like in Step 6.
 
-While RDE runs, its police take over: GTA6Hud's police brain, GTA6Hud's own six stars (and the military they call
-in) and the HUD's stun-gun arrests stay out. The HUD's stars show RDE's level up to **six**: levels 6 to 10 all light
-the sixth star. `ViExtras.ini` `[Compat] Rde = False` leaves the HUD as it is.
+⚠️ Skip RDE's **`Compatibility - Community HUD`** files. They're for another HUD mod.
 
-To take RDE off again, install its **`Uninstaller.oiv`** the same way, then install the HUD again (Step 6), so its
-limits and packs are back.
+💡 RDE brings its own `gameconfig.xml` with much bigger limits than the HUD needs. That's fine.
+Installing or updating the HUD afterwards only raises a limit that's too low. So it never undoes RDE's.
+
+### Part 2: What changes while RDE runs
+
+- RDE's police take over.
+- These stay out:
+  - GTA6Hud's police brain
+  - GTA6Hud's own six stars (and the military they call in)
+  - the HUD's stun-gun arrests
+- The HUD's stars show RDE's level up to **six**. Levels 6 to 10 all light the sixth star.
+- To leave the HUD as it is, set `[Compat] Rde = False` in `ViExtras.ini`.
+
+### Part 3: Take RDE off again
+
+1. Install RDE's **`Uninstaller.oiv`** the same way.
+2. Install the HUD again (Step 6), so its limits and packs are back.
 
 ---
 
 ## Optional: Los Santos RED
 
-**Los Santos RED** (LSR) by **Greskrendtregk** turns the game into a crime sandbox with its own police, crimes,
-wanted level and much more. It runs in **RAGE Plugin Hook**, not Script Hook V .NET, and the HUD steps out of its way.
+**What you get:** **Los Santos RED** (LSR) by **Greskrendtregk**. It turns the game into a crime sandbox.
+It has its own police, crimes, wanted level and much more. The HUD steps out of its way.
+**What you need:** **RAGE Plugin Hook** and **RAGENativeUI**. LSR runs in RAGE Plugin Hook, not Script Hook V .NET.
 
 > [!NOTE]
-> New in 2.6.3, and only tested briefly in game. If something's off with LSR and the HUD together, tell us on Discord
-> or in a GitHub issue.
+> New in 2.6.3, and only tested briefly in game.
+> Something off with LSR and the HUD together? Tell us on Discord or in a GitHub issue.
 
-Use it on its own: not together with LSPDFR or Rebalanced Dispatch Enhanced, which run the police too.
+⚠️ Use LSR on its own. Not together with LSPDFR or Rebalanced Dispatch Enhanced: they run the police too.
+
+### Part 1: Install LSR
 
 1. Install the HUD first (Steps 1 to 7).
-2. Install **[RAGE Plugin Hook](https://ragepluginhook.net/)** and **[RAGENativeUI](https://github.com/alexguirre/RAGENativeUI/releases)**
-   (LSR's menus need it), then LSR itself, as LSR's own page says.
-3. Start the game with **`RAGEPluginHook.exe`**. LSR loads once Story Mode has loaded.
+2. Install **[RAGE Plugin Hook](https://ragepluginhook.net/)**.
+3. Install **[RAGENativeUI](https://github.com/alexguirre/RAGENativeUI/releases)**. LSR's menus need it.
+4. Install LSR itself, as LSR's own page says.
+5. Start the game with **`RAGEPluginHook.exe`**.
 
-While LSR runs, it has the police, the crimes and the wanted level, so the HUD adds none of its own: no witnesses,
-police brain, police memory, heat, six stars or stun-gun arrests. `ViExtras.ini` `[Compat] Lsr = False` leaves the
-HUD as it is.
+✅ LSR loads once Story Mode has loaded.
 
-**Stars.** LSR keeps GTA's own wanted level at zero and draws stars of its own, so the HUD's stars and wanted box
-don't come up with LSR. For GTA VI stars in LSR's place, copy the 4 pictures from the HUD's
-[`extras/lsr-stars/wantedlevel`](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/tree/main/extras/lsr-stars/wantedlevel)
-into **`Plugins\LosSantosRED\images\wantedlevel`** and replace LSR's.
+### Part 2: What changes while LSR runs
 
-**LSR's settings.** LSR writes `Plugins\LosSantosRED\Settings.xml` the first time it runs. Close the game, open that
-file in Notepad and change these values:
+LSR has the police, the crimes and the wanted level. So the HUD adds none of its own:
+
+- no witnesses
+- no police brain or police memory
+- no heat
+- no six stars
+- no stun-gun arrests
+
+To leave the HUD as it is, set `[Compat] Lsr = False` in `ViExtras.ini`.
+
+### Part 3: Stars
+
+LSR keeps GTA's own wanted level at zero and draws stars of its own.
+So the HUD's stars and wanted box don't come up with LSR.
+
+Want GTA VI stars in LSR's place?
+
+1. Find the 4 pictures in the HUD's [`extras/lsr-stars/wantedlevel`](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/tree/main/extras/lsr-stars/wantedlevel) folder.
+2. Copy them into **`Plugins\LosSantosRED\images\wantedlevel`**.
+3. Replace LSR's pictures with them.
+
+### Part 4: LSR's settings
+
+LSR writes `Plugins\LosSantosRED\Settings.xml` the first time it runs.
+
+1. Close the game.
+2. Open **`Plugins\LosSantosRED\Settings.xml`** in Notepad.
+3. Change these values:
 
 | Setting | Set to | Why |
 | --- | --- | --- |
@@ -290,7 +374,9 @@ file in Notepad and change these values:
 | `TopDisplayShowWeapon` | `false` | The HUD shows your weapon at the top right already. |
 | `ShowStreetDisplay` | `false` | The HUD shows the street under the minimap already. |
 
-**Keys.** LSR uses some of the HUD's keys. Change one side of each pair you use:
+### Part 5: Keys
+
+LSR uses some of the HUD's keys. Change one side of each pair you use:
 
 | Key | HUD | LSR |
 | --- | --- | --- |
@@ -301,59 +387,138 @@ file in Notepad and change these values:
 
 ---
 
+## Optional: LSPDFR
+
+**What you get:** **LSPDFR** (LSPD First Response) by **G17 Media**. You play as a police officer.
+Go on duty, take callouts and pull people over. The HUD keeps working, and it knows when you're on duty.
+**What you need:** the HUD installed first, and LSPDFR from **[lcpdfr.com](https://www.lcpdfr.com/)**.
+LSPDFR runs in RAGE Plugin Hook, not Script Hook V .NET.
+
+> [!NOTE]
+> Tested on **Legacy** only.
+
+⚠️ Don't use LSPDFR with **Los Santos RED**. Both run the police.
+
+💡 **Rebalanced Dispatch Enhanced** comes with its own LSPDFR files, so those two can go together.
+We haven't tested the HUD with both at once.
+
+### Part 1: Install LSPDFR
+
+1. Install the HUD first (Steps 1 to 7).
+2. Install LSPDFR, as LSPDFR's own page says.
+3. Start the game with **`RAGEPluginHook.exe`**.
+
+✅ LSPDFR loads once Story Mode has loaded.
+
+💡 Playing without LSPDFR? Start the game the normal way. LSPDFR only loads through `RAGEPluginHook.exe`.
+
+### Part 2: What the HUD does on duty
+
+**You don't need to change anything.** The HUD finds LSPDFR on its own. While you're on duty:
+
+- **No character switching.** The character wheel stays shut, and the switch keys do nothing.
+  Switching away would take LSPDFR's officer away from it.
+- **No witnesses.** Nobody runs or phones to report you. You're the police.
+- **No wanted level.** If one comes up anyway, it's cleared at once.
+
+Go off duty, and it all works as before.
+
+💡 Want to switch characters? Go off duty first.
+
+### Part 3: Keys
+
+Three keys do two things at once. Change one side of each pair you use:
+
+| Key | HUD side | LSPDFR side |
+| --- | --- | --- |
+| **Y** | Greet someone (`ViExtras.ini` `[Memory] GreetKey`) | Accept a callout (`ACCEPT_CALLOUT_Key` in `lspdfr\keys.ini`) |
+| **N** | Push-ups (`ViExtras.ini` `[Gym] PushUpsKey`) | Pursuit menu (`PURSUIT_MENU_Key` in `lspdfr\keys.ini`) |
+| **F4** | Script Hook V .NET's console (`ConsoleKeyBinding` in `ScriptHookVDotNet.ini`) | RAGE Plugin Hook's console (`ConsoleKey` in `RagePluginHook.ini`) |
+
+To change a key:
+
+1. Close the game.
+2. Open the file in Notepad.
+   - `ViExtras.ini` is in your **`scripts`** folder.
+   - The other files are in your **game folder**.
+3. Change the letter after the `=`. Pick a key nothing else uses.
+4. Save the file.
+
+---
+
 ## Something went wrong?
 
-**Still stuck?** Ask in **[our support Discord](https://discord.gg/C7gE5SHEzH)**, the one for this version, or
-[open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+**Still stuck?** Ask in **[our support Discord](https://discord.gg/C7gE5SHEzH)**, the one for this version.
+Or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 
 | What happens | What to do |
 | --- | --- |
-| A Script Hook V message says **"unknown game version"** | GTA V just updated and Script Hook V hasn't caught up yet. Wait for a new Script Hook V, then redo Step 2. |
-| The game starts but **the new HUD doesn't show** | Your Script Hook V .NET is too old. Redo Step 3 with the newest version. |
-| A message says **Unhandled exception in script** (for example **"MiniMap"**) with a **FileNotFoundException** | Your Script Hook V .NET is older than the HUD needs (3.7.0 nightly 193). Redo Step 3 with the **top** release on the nightly page, then close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly` and delete the **`dl3`** folder (it's only a cache). `ScriptHookVDotNet.log` in your game folder says **"Unable to resolve API version"** when this is it. |
-| You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts. Close the game, press **Win + R**, type `%LOCALAPPDATA%\assembly`, press Enter and delete the **`dl3`** folder (it's only a cache). Still the old version? Install it again with OpenIV run as administrator (Step 6), or copy the scripts in yourself: see "Updating by hand" below. |
-| **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`. Redo Step 7. |
-| Your game folder has **`MiniMap.asi`** or **`MiniMapHudPresent.asi`** (from another 3D minimap mod or an older install) | Delete it. It's an older copy of the minimap plugin the HUD brings itself as `ViMinimap.asi`, and two copies loaded at once get in each other's way. Delete `scripts\MiniMap.dll` too if it's there (the HUD's is `scripts\ViMinimap.dll`). Keep `ViMinimap.asi` next to `GTA5.exe`. |
-| The game **crashes while loading** | Install the mod again (Step 6): it raises the game limits the HUD needs. If you have other big mods (extra characters, maps), try turning them off. |
-| The game **crashes while loading** since you added **Forests of San Andreas** or **GTA V Remastered** | The maps' many trees can fill three of the game's pools. In OpenIV, switch on **Edit mode**, open `mods\update\update.rpf\common\data\gameconfig.xml` and set the `PoolSize` `value` of **`Building`** to `70000`, **`phInstGta`** to `20000` and **`StaticBounds`** to `20000` (leave a value that's already higher). Don't install a different `gameconfig.xml` instead: it would replace the one the HUD set up (if you did, install the mod again, as in Step 6). Still crashing? Add the [Heap Adjuster](https://www.gta5-mods.com/tools/heapadjuster), which the maps' own guide suggests too. |
-| A message says **Lucia is not registered** | Lucia isn't included with the HUD any more (see Step 5). Don't have her? Set `Enabled = False` under `[Lucia]` in `scripts\GTA6Hud.ini` and the message goes away. Have a Lucia model? Her pack is missing from `dlclist.xml`: add its line. If the message mentions a `VIHudSetup.exe`, ignore that part: this mod doesn't use it. |
-| **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language. Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
-| The HUD says your game **won't save in its folder**, and a **Windows prompt** asks to let **icacls** make changes | Your game is in **Program Files**, where Windows lets only administrators change files, so the HUD can't save its settings (and ReShade can't save its own). Click **Yes**: it lets your Windows user change the game folder, the same as doing it by hand in the folder's **Properties** → **Security**. Then restart the game once. Clicked **No**? You're asked again the next time you start the game. `ViExtras.ini` `[GameFolder] FixAccess = False` stops the question. |
-| **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder: `ScriptHookVDotNet.log`, `ViMinimap.log`, `scripts\GTA6Hud.perf.log` and `scripts\GTA6Hud.error.log`. |
+| A Script Hook V message says **"unknown game version"** | GTA V just updated. Script Hook V hasn't caught up yet.<br>1. Wait for a new Script Hook V.<br>2. Redo Step 2. |
+| The game starts but **the new HUD doesn't show** | Your Script Hook V .NET is too old.<br>Redo Step 3 with the newest version. |
+| A message says **Unhandled exception in script** (for example **"MiniMap"**) with a **FileNotFoundException** | Your Script Hook V .NET is older than the HUD needs (3.7.0 nightly 193).<br>1. Redo Step 3 with the **top** release on the nightly page.<br>2. Close the game.<br>3. Press **Win + R**.<br>4. Type `%LOCALAPPDATA%\assembly` and press **Enter**.<br>5. Delete the **`dl3`** folder (it's only a cache).<br>💡 `ScriptHookVDotNet.log` in your game folder says **"Unable to resolve API version"** when this is it. |
+| You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts.<br>1. Close the game.<br>2. Press **Win + R**.<br>3. Type `%LOCALAPPDATA%\assembly` and press **Enter**.<br>4. Delete the **`dl3`** folder (it's only a cache).<br>Still the old version? Install it again with OpenIV run as administrator (Step 6).<br>Or copy the scripts in yourself: see "Updating by hand" below. |
+| **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`.<br>Redo Step 7. |
+| Your game folder has **`MiniMap.asi`** or **`MiniMapHudPresent.asi`** (from another 3D minimap mod or an older install) | 1. Delete it.<br>2. Delete **`scripts\MiniMap.dll`** too, if it's there. (The HUD's is `scripts\ViMinimap.dll`.)<br>3. Keep **`ViMinimap.asi`** next to `GTA5.exe`.<br>💡 It's an older copy of the minimap plugin. The HUD brings its own copy as `ViMinimap.asi`. Two copies loaded at once get in each other's way. |
+| The game **crashes while loading** | 1. Install the mod again (Step 6). It raises the game limits the HUD needs.<br>2. Have other big mods (extra characters, maps)? Try turning them off. |
+| The game **crashes while loading** since you added **Forests of San Andreas** or **GTA V Remastered** | The maps' many trees can fill three of the game's pools.<br>1. In OpenIV, switch on **Edit mode**.<br>2. Open: `mods` → `update` → `update.rpf` → `common` → `data` → **`gameconfig.xml`**.<br>3. Set the `PoolSize` `value` of **`Building`** to `70000`.<br>4. Set **`phInstGta`** to `20000`.<br>5. Set **`StaticBounds`** to `20000`.<br>Leave a value that's already higher.<br>⚠️ Don't install a different `gameconfig.xml` instead. It would replace the one the HUD set up. (If you did, install the mod again, as in Step 6.)<br>Still crashing? Add the [Heap Adjuster](https://www.gta5-mods.com/tools/heapadjuster), which the maps' own guide suggests too. |
+| A message says **Lucia is not registered** | Lucia isn't included with the HUD any more (see Step 5).<br>**Don't have her?** Set `Enabled = False` under `[Lucia]` in `scripts\GTA6Hud.ini`. The message goes away.<br>**Have a Lucia model?** Her pack is missing from `dlclist.xml`. Add its line.<br>💡 If the message mentions a `VIHudSetup.exe`, ignore that part. This mod doesn't use it. |
+| **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language.<br>Until it's fixed, set GTA V's language to **English** in your game launcher's settings for GTA V. |
+| The HUD says your game **won't save in its folder**, and a **Windows prompt** asks to let **icacls** make changes | Your game is in **Program Files**. Windows lets only administrators change files there. So the HUD can't save its settings (and ReShade can't save its own).<br>1. Click **Yes**. It lets your Windows user change the game folder.<br>(The same as doing it by hand in the folder's **Properties** → **Security**.)<br>2. Restart the game once.<br>**Clicked No?** You're asked again the next time you start the game.<br>To stop the question, set `[GameFolder] FixAccess = False` in `ViExtras.ini`. |
+| **Something else** | Ask in the **[support Discord](https://discord.gg/C7gE5SHEzH)**.<br>Or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files from your game folder:<br>`ScriptHookVDotNet.log`<br>`ViMinimap.log`<br>`scripts\GTA6Hud.perf.log`<br>`scripts\GTA6Hud.error.log` |
 
 ---
 
 ## Updating by hand (game in Program Files)
 
-If your game is in **Program Files** (where the Rockstar Games Launcher and Steam put it), Windows guards that folder,
-and an update through OpenIV doesn't always replace the old files unless you run it as administrator (Step 6).
-You can also copy the new scripts in yourself. (From 2.6, the HUD offers to fix the folder for you the first time it runs: see the Windows prompt
-row above. After that, updates go in normally.) An `.oiv` is just a zip:
+Is your game in **Program Files**? (The Rockstar Games Launcher and Steam put it there.)
+Windows guards that folder. An update through OpenIV doesn't always replace the old files there.
+Run OpenIV as administrator (Step 6), or copy the new scripts in yourself.
+
+💡 From 2.6, the HUD offers to fix the folder for you the first time it runs: see the Windows prompt row above.
+After that, updates go in normally.
+
+An `.oiv` is just a zip:
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`** to your Desktop and rename the copy to **`.zip`**.
-   Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
-3. Open the zip → **`content`** → **`scripts`**, select everything in there and copy it.
-4. Paste it into the **`scripts`** folder in your game folder, for example
-   `C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts`. Pick **Replace the files in the destination**, then
-   **Continue** when Windows asks for admin permission.
-5. Clear Script Hook V .NET's cache, so it loads the new files: press **Win + R**, type `%LOCALAPPDATA%\assembly`
-   and press Enter, then delete the **`dl3`** folder. It's only a cache, and it's made again the next time you start
-   the game.
-6. Coming from 2.5.4 or older? 2.5.5 adds a pack: also copy the zip's **`content`** → **`dlcpacks`** → **`vihud`**
-   folder into **`mods\update\x64\dlcpacks`** in your game folder, and install the mod once with OpenIV as in
-   Step 6, which switches the new pack on.
-7. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line that shows the version you
-   downloaded.
+2. Copy **`GTA-VI-Inspired-HUD-2.6.3-Legacy.oiv`** to your Desktop.
+3. Rename the copy to **`.zip`**.
+
+   💡 Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
+4. Open the zip → **`content`** → **`scripts`**.
+5. Select everything in there and copy it.
+6. Paste it into the **`scripts`** folder in your game folder.
+   For example: `C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts`.
+7. Pick **Replace the files in the destination**.
+8. Click **Continue** when Windows asks for admin permission.
+9. Clear Script Hook V .NET's cache, so it loads the new files:
+   - Press **Win + R**.
+   - Type `%LOCALAPPDATA%\assembly` and press Enter.
+   - Delete the **`dl3`** folder.
+
+   💡 It's only a cache. It's made again the next time you start the game.
+10. **Coming from 2.5.4 or older?** 2.5.5 adds a pack. Also do this:
+    - Copy the zip's **`content`** → **`dlcpacks`** → **`vihud`** folder into **`mods\update\x64\dlcpacks`** in your game folder.
+    - Install the mod once with OpenIV, as in Step 6. This switches the new pack on.
+11. Start the game.
+
+✅ `scripts\ViExtras.log` now begins with a `==== ViExtras …` line. It shows the version you downloaded.
 
 ---
 
 ## How to remove the mod
 
-1. In your **game folder**, delete `ViMinimap.asi`.
-2. Open the **`scripts`** folder and delete `GTA6Hud.dll`, `GTA6Hud.ini`, `ViMinimap.dll`, `LemonUI.SHVDN3.dll`,
-   the `MiniMap.*` files and the `Hud` folder.
-3. Delete the **`mods`** folder. ⚠️ This also removes any other mods you installed with OpenIV.
+1. In your **game folder**, delete **`ViMinimap.asi`**.
+2. Open the **`scripts`** folder.
+3. Delete these:
+   - **`GTA6Hud.dll`**
+   - **`GTA6Hud.ini`**
+   - **`ViMinimap.dll`**
+   - **`LemonUI.SHVDN3.dll`**
+   - the **`MiniMap.*`** files
+   - the **`Hud`** folder
+4. Delete the **`mods`** folder.
 
-Your game is back to normal. Script Hook V and Script Hook V .NET can stay; they don't change anything
+   ⚠️ This also removes any other mods you installed with OpenIV.
+
+✅ Your game is back to normal. Script Hook V and Script Hook V .NET can stay. They don't change anything
 on their own.
