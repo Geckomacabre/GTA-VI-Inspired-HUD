@@ -89,8 +89,8 @@ namespace ViSwitch
         static void RemoveBlip(ShopSpot s)
         {
             if (s.Blip == 0) return;
-            var arg = new OutputArgument(s.Blip);
-            if (Function.Call<bool>(Hash.DOES_BLIP_EXIST, s.Blip)) Function.Call(Hash.REMOVE_BLIP, arg);
+            // REMOVE_BLIP takes a pointer to the handle; SHVDN can't pass an int that way, its Blip can
+            if (Function.Call<bool>(Hash.DOES_BLIP_EXIST, s.Blip)) new Blip(s.Blip).Delete();
             s.Blip = 0;
         }
 
