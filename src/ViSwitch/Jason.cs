@@ -228,6 +228,7 @@ namespace ViSwitch
                 model.MarkAsNoLongerNeeded();
                 if (_jasonPed == null) { Log("  Jason's ped wasn't made"); return null; }
                 Call(DEFAULT_LOOK, _jasonPed.Handle);
+                if (ApplyLook(_jasonPed)) Log("  Jason in his saved look");
                 _mLeaveInWorld?.Invoke(null, new object[] { _jasonPed });
             }
             int j = _jasonPed.Handle;

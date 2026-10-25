@@ -612,6 +612,7 @@ namespace ViSwitch
             SettleJason(ped);
             JasonMission(ped);
             JasonStoreDoors(ped);
+            JasonWardrobe(ped);
             if (_sceneActive) EndSceneOnInput(ped);
             CheckTestCommand(ped);
 
@@ -625,7 +626,7 @@ namespace ViSwitch
             bool blocked = (altDown || _open)
                            && (_busy || !Call<bool>(ENTITY_EXISTS, ped) || Call<bool>(ENTITY_DEAD, ped, false)
                                || HudBool(_fWheelOpen) || HudBool(_fSettingsOpen) || Call<bool>(SWITCH_IN_PROGRESS) || Game.IsPaused
-                               || NitrousHoldsKey() || _chainTarget >= 0 || _flyTo != null);
+                               || NitrousHoldsKey() || _chainTarget >= 0 || _flyTo != null || _lookOpen);
             if (altDown || _open) Call(DISABLE_CONTROL, 0, 19, true);
             bool held = !blocked && altDown;
             if (held && !_open)
