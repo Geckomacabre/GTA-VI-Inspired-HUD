@@ -24,7 +24,8 @@ namespace ViExtras
     /// </summary>
     public sealed class WantedStars : Script
     {
-        private readonly bool _enabled;
+        // HUD OPTIONS (HudMenu) changes this at once; read from ViExtras.ini at start
+        internal static bool On;
         private readonly int _flashMs;
 
         private bool _looked;
@@ -50,7 +51,7 @@ namespace ViExtras
         public WantedStars()
         {
             Paths.Init(BaseDirectory);
-            _enabled = Config.Get("WantedStars", "Enabled", true);
+            On = Config.Get("WantedStars", "Enabled", true);
             _flashMs = Math.Max(100, Config.Get("WantedStars", "FlashMs", 900));
             _debug = Config.Get("WantedStars", "Debug", false);
             Tick += OnTick;
@@ -90,7 +91,7 @@ namespace ViExtras
         private void OnTick(object sender, EventArgs e)
         {
             if (!GameReady.Now) { State = null; return; }
-            if (!_enabled || _broken || Game.Player.WantedLevel <= 0 || !Look()) { State = null; return; }
+            if (!On || _broken || Game.Player.WantedLevel <= 0 || !Look()) { State = null; return; }
             try
             {
                 long now = RealTime.Ms;

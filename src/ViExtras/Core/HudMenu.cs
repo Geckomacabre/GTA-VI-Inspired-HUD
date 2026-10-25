@@ -7,11 +7,15 @@ namespace ViExtras
     /// <summary>
     /// GTA6Hud's HUD OPTIONS menu (hold V, or the camera button; and the pause
     /// menu's HUD page) has the fork's rows under FBICat's: GREET / ANTAGONIZE,
-    /// SPIN-OUTS, VI RADIO WHEEL and POLICE LIGHTS. Spin-outs is GTA6Hud's own
-    /// setting; the others are ViExtras', so GTA6Hud asks here, by reflection,
-    /// what they are (Value) and to change them (Toggle: flip, or for POLICE
-    /// LIGHTS the next size). A change takes at once, and goes into ViExtras.ini
-    /// with the file's comments kept (Config.SetLine).
+    /// SPIN-OUTS, VI RADIO WHEEL, CARRY ALL WEAPONS and POLICE LIGHTS, then the
+    /// ViExtras switches a player flips most: CROSSHAIR, KILL MARKS, VI WANTED
+    /// STARS, WANTED BOX, CAMERA WEIGHT, BINOCULARS, CALMER POLICE and MONEY IN
+    /// STORES. Spin-outs and all weapons are GTA6Hud's own settings; the others
+    /// are ViExtras', so GTA6Hud asks here, by reflection, what they are (Value)
+    /// and to change them (Toggle: flip, or for POLICE LIGHTS the next size). A
+    /// change takes at once (each feature reads its switch every tick) and goes
+    /// into ViExtras.ini, on its [Switches] line, with the file's comments kept
+    /// (Config.SetLine).
     /// </summary>
     public static class HudMenu
     {
@@ -25,12 +29,42 @@ namespace ViExtras
                 case "GREET": return MemCfg.Interact ? "ON" : "OFF";
                 case "RADIO": return RadioWheel.On ? "ON" : "OFF";
                 case "POLICE": return (int)Math.Round(PoliceLights.SizeScale * 100f) + "%";
+                case "CROSSHAIR": return OnOff(Crosshair.On);
+                case "KILLMARKS": return OnOff(Crosshair.KillMarksOn);
+                case "STARS": return OnOff(WantedStars.On);
+                case "WANTEDBOX": return OnOff(WantedBox.On);
+                case "CAMWEIGHT": return OnOff(WeightedCam.On);
+                case "BINOCULARS": return OnOff(Binoculars.On);
+                case "CALMER": return OnOff(CalmerPolice.On);
+                case "STOREMONEY": return OnOff(StoreMoney.On);
                 default: return "N/A";
             }
         }
 
+        private static string OnOff(bool on) => on ? "ON" : "OFF";
+
+        // A switch flipped from the menu: on its [Switches] line in ViExtras.ini, and in the log
+        private static bool Flip(bool now, string section, string key, string what)
+        {
+            bool on = !now;
+            Config.SetLine(section, key, on ? "True" : "False");
+            Log.Write("HudMenu", what + " " + (on ? "on" : "off") + " (HUD OPTIONS)");
+            return on;
+        }
+
         public static void Toggle(string key)
         {
+            switch (key)
+            {
+                case "CROSSHAIR": Crosshair.On = Flip(Crosshair.On, "Crosshair", "Enabled", "crosshair"); return;
+                case "KILLMARKS": Crosshair.KillMarksOn = Flip(Crosshair.KillMarksOn, "Crosshair", "KillMarks", "kill marks"); return;
+                case "STARS": WantedStars.On = Flip(WantedStars.On, "WantedStars", "Enabled", "VI wanted stars"); return;
+                case "WANTEDBOX": WantedBox.On = Flip(WantedBox.On, "WantedBox", "Enabled", "wanted box"); return;
+                case "CAMWEIGHT": WeightedCam.On = Flip(WeightedCam.On, "WeightedCam", "Enabled", "camera weight"); return;
+                case "BINOCULARS": Binoculars.On = Flip(Binoculars.On, "Binoculars", "Enabled", "binoculars"); return;
+                case "CALMER": CalmerPolice.On = Flip(CalmerPolice.On, Config.Switches, "CalmerPolice", "calmer police"); return;
+                case "STOREMONEY": StoreMoney.On = Flip(StoreMoney.On, Config.Switches, "MoneyInStores", "money in stores"); return;
+            }
             switch (key)
             {
                 case "GREET":

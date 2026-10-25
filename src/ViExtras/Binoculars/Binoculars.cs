@@ -37,7 +37,8 @@ namespace ViExtras
         private const int CharacterWheel = 19;                   // d-pad down / Left Alt
         private const string SwapHold = "binoculars";
 
-        private readonly bool _enabled;
+        // HUD OPTIONS (HudMenu) changes this at once; read from ViExtras.ini at start
+        internal static bool On;
         private readonly Keys _key;
         private readonly bool _wheel;
         private readonly int _wheelRing;
@@ -69,7 +70,7 @@ namespace ViExtras
         public Binoculars()
         {
             Paths.Init(BaseDirectory);
-            _enabled = Config.Get("Binoculars", "Enabled", true);
+            On = Config.Get("Binoculars", "Enabled", true);
             _key = Config.Get("Binoculars", "Key", Keys.None);
             _wheel = Config.Get("Binoculars", "WheelSlot", true);
             _wheelRing = Config.Get("Binoculars", "WheelRing", 3);
@@ -103,7 +104,7 @@ namespace ViExtras
         private void OnTick(object sender, EventArgs e)
         {
             // Every frame, ready or not, so the wheel shutting is seen when it happens.
-            bool picked = _enabled && _wheel && BinocularsWheel.Picked(_wheelRing);
+            bool picked = On && _wheel && BinocularsWheel.Picked(_wheelRing);
             if (_swapHeld && !_active)
             {
                 // Lowered with d-pad down still held: the swap wheel would open on it.
@@ -118,7 +119,7 @@ namespace ViExtras
             // Polled, not heard through KeyDown: SHVDN queues key events until a
             // tick ends, and the loop in Run() is one long tick, so a press made
             // to lower them would otherwise raise them again straight after.
-            bool keyDown = _enabled && _key != Keys.None && Game.IsKeyPressed(_key);
+            bool keyDown = On && _key != Keys.None && Game.IsKeyPressed(_key);
             bool pressed = keyDown && !_keyWasDown;
             _keyWasDown = keyDown;
             if (!(pressed || picked) || _active) return;

@@ -63,7 +63,9 @@ namespace ViExtras
         private enum Mode { None, Foot, Vehicle }
 
         // ---- settings, [Crosshair] in ViExtras.ini ---------------------------------
-        private readonly bool _enabled, _killMarks, _debug;
+        private readonly bool _debug;
+        // HUD OPTIONS (HudMenu) changes these at once; read from ViExtras.ini at start
+        internal static bool On, KillMarksOn;
         private readonly int _armedWith, _reticleComponent;
         private readonly Keys _testKey;
 
@@ -108,8 +110,8 @@ namespace ViExtras
         public Crosshair()
         {
             Paths.Init(BaseDirectory);
-            _enabled = Config.Get("Crosshair", "Enabled", true);
-            _killMarks = Config.Get("Crosshair", "KillMarks", true);
+            On = Config.Get("Crosshair", "Enabled", true);
+            KillMarksOn = Config.Get("Crosshair", "KillMarks", true);
             _armedWith = Config.Get("Crosshair", "ArmedWith", 4);
             _reticleComponent = Config.Get("Crosshair", "ReticleComponent", 14);
             _debug = Config.Get("Crosshair", "Debug", false);
@@ -122,7 +124,7 @@ namespace ViExtras
         private void OnTick(object sender, EventArgs e)
         {
             if (!GameReady.Now) return;
-            if (!_enabled) return;
+            if (!On) return;
             try
             {
                 long now = RealTime.Ms;
@@ -191,7 +193,7 @@ namespace ViExtras
                 bool fighting = shootingNow || Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, ped);
                 if (fighting) _fullSweepUntil = now + FullSweepMs;
                 if (fighting || freeAiming) _combatUntil = now + CombatWindowMs;
-                if (_killMarks && now < _combatUntil) TrackKills(ped, now, now < _fullSweepUntil);
+                if (KillMarksOn && now < _combatUntil) TrackKills(ped, now, now < _fullSweepUntil);
                 else if (_victims.Count > 0) _victims.Clear();
 
                 if (_testRequested)

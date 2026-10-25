@@ -24,16 +24,18 @@ namespace ViExtras
         private Vector3[] _spots;
         private bool _looked, _inStore, _logged;
         private int _checkAt;
+        // HUD OPTIONS (HudMenu) changes this at once; read from ViExtras.ini at start
+        internal static bool On;
 
         public StoreMoney()
         {
-            if (!Config.Get(Config.Switches, "MoneyInStores", true)) return;
+            On = Config.Get(Config.Switches, "MoneyInStores", true);
             Tick += OnTick;
         }
 
         private void OnTick(object sender, EventArgs e)
         {
-            if (!GameReady.Now) return;
+            if (!On || !GameReady.Now) return;
             try
             {
                 int now = Environment.TickCount;

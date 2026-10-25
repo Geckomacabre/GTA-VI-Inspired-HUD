@@ -52,7 +52,10 @@ namespace ViExtras
         }
 
         // ---- settings, [WeightedCam] in ViExtras.ini ------------------------------
-        private readonly bool _enabled, _debug;
+        private readonly bool _debug;
+        // HUD OPTIONS (HudMenu) changes this at once; read from ViExtras.ini at start
+        internal static bool On;
+        private bool _wasOn;
         private readonly float _strength;
         private readonly float _landMin, _landFull, _landDip, _landMs;
         private readonly float _crashMin, _crashFull, _crashDip, _crashMs;
@@ -79,7 +82,7 @@ namespace ViExtras
         public WeightedCam()
         {
             Paths.Init(BaseDirectory);
-            _enabled = Config.Get("WeightedCam", "Enabled", true);
+            On = Config.Get("WeightedCam", "Enabled", true);
             _strength = Config.Get("WeightedCam", "Strength", 1f);
             _landMin = Config.Get("WeightedCam", "LandMin", 9f);
             _landFull = Config.Get("WeightedCam", "LandFull", 45f);
@@ -98,7 +101,18 @@ namespace ViExtras
 
         private void OnTick(object sender, EventArgs e)
         {
-            if (!_enabled || _strength <= 0f) return;
+            if (!On || _strength <= 0f)
+            {
+                // switched off in HUD OPTIONS: the view back as it was
+                if (_wasOn)
+                {
+                    Drop();
+                    Forget();
+                }
+                _wasOn = false;
+                return;
+            }
+            _wasOn = true;
             if (!GameReady.Now)
             {
                 Drop();

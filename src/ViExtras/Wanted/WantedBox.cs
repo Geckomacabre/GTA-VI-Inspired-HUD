@@ -37,7 +37,8 @@ namespace ViExtras
         private const float TellX = 20.0037f, TellY = 74f, TellStep = 34f;
         private static readonly string[] TellNames = { "camera", "weapon", "hanger", "person", "people", "vehicle" };
 
-        private readonly bool _enabled;
+        // HUD OPTIONS (HudMenu) changes this at once; read from ViExtras.ini at start
+        internal static bool On;
         private readonly bool _indoorCameras;
         private bool _looked, _failed;
         private object _hud;
@@ -60,7 +61,7 @@ namespace ViExtras
         public WantedBox()
         {
             Paths.Init(BaseDirectory);
-            _enabled = Config.Get("WantedBox", "Enabled", true);
+            On = Config.Get("WantedBox", "Enabled", true);
             _indoorCameras = Config.Get("WantedBox", "IndoorCameras", true);
             Tick += OnTick;
         }
@@ -108,7 +109,7 @@ namespace ViExtras
                     WantedTells.Set(Tells(state, now, _lastShot));
                 }
 
-                if (!_enabled || !Look()) return;
+                if (!On || !Look()) return;
                 // GTA6Hud's own box stays shut: never a rising edge, never time left
                 _tipActive?.SetValue(_hud, true);
                 _tipTime?.SetValue(_hud, 0f);

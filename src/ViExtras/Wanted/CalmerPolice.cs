@@ -30,6 +30,8 @@ namespace ViExtras
         private readonly float _delayMul, _spawnDistance;
         private readonly int _escapeMs, _escapePerStarMs;
         private bool _applied;
+        // HUD OPTIONS (HudMenu) changes this at once; read from ViExtras.ini at start
+        internal static bool On;
         private int _escapeFor = -1, _hiddenSince = -1;
 
         private static bool Busted() =>
@@ -37,7 +39,7 @@ namespace ViExtras
 
         public CalmerPolice()
         {
-            if (!Config.Get(Config.Switches, "CalmerPolice", true)) return;
+            On = Config.Get(Config.Switches, "CalmerPolice", true);
             _delayMul = Math.Max(1f, Config.Get("CalmerPolice", "SpawnDelayMultiplier", 2f));
             _spawnDistance = Config.Get("CalmerPolice", "SpawnDistance", 300f);
             _escapeMs = Math.Max(0, Config.Get("CalmerPolice", "EscapeSeconds", 10)) * 1000;
@@ -52,7 +54,7 @@ namespace ViExtras
             try
             {
                 if (!GameReady.Now) return;
-                if (Game.IsMissionActive || Lspdfr.OnDuty || PoliceMods.TakesPolice)
+                if (!On || Game.IsMissionActive || Lspdfr.OnDuty || PoliceMods.TakesPolice)
                 {
                     Reset();
                     return;
