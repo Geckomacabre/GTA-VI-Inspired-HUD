@@ -122,12 +122,12 @@ OpenRPF lets the game load mods from a separate **`mods` folder**. Your original
 ### Part 1: Get the mod
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.4-Enhanced.oiv`**. It's the mod, about 100 MB.
+2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.5-Enhanced.oiv`**. It's the mod, about 100 MB.
    It also switches the mod on in the game, so there's no separate patch to get.
 
-❌ Don't download `GTA-VI-Inspired-HUD-2.6.4-Legacy.oiv`. It's for the other version and will crash Enhanced.
+❌ Don't download `GTA-VI-Inspired-HUD-2.6.5-Legacy.oiv`. It's for the other version and will crash Enhanced.
 
-💡 The number in the file name is the version (2.6.4 here). That way you can always tell which one you installed.
+💡 The number in the file name is the version (2.6.5 here). That way you can always tell which one you installed.
 Mention it when you ask for help.
 
 ### Want to play as Lucia?
@@ -170,7 +170,7 @@ the install can leave the old files in place.
 
 1. Open the OIV Package Installer folder.
 2. Run **`CodeWalker.OIVInstaller.exe`** the way the table says.
-3. Drag **`GTA-VI-Inspired-HUD-2.6.4-Enhanced.oiv`** onto its window. (Or click **Browse** and pick it.)
+3. Drag **`GTA-VI-Inspired-HUD-2.6.5-Enhanced.oiv`** onto its window. (Or click **Browse** and pick it.)
 4. It asks for your game folder. Pick the folder with **`GTA5_Enhanced.exe`**.
 5. Click **Install**.
 6. Wait until it's finished.
@@ -730,7 +730,7 @@ You can also copy the new scripts in yourself. An `.oiv` is just a zip.
 After that, updates go in normally.
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.6.4-Enhanced.oiv`** to your Desktop.
+2. Copy **`GTA-VI-Inspired-HUD-2.6.5-Enhanced.oiv`** to your Desktop.
 3. Rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 4. Open the zip → **`content`** → **`scripts`**.

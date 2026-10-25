@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.6.4 (GTA V Enhanced)</name>
-    <version><major>2</major><minor>6</minor><tag>ENHANCED 2.6.4</tag></version>
+    <name>GTA VI-Inspired HUD 2.6.5 (GTA V Enhanced)</name>
+    <version><major>2</major><minor>6</minor><tag>ENHANCED 2.6.5</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). Maintained by Geckomacabre.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -44,6 +44,22 @@ pictures (not his landing page; Enhanced keeps its own).
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.6.5
+  - The loading screens are their own, optional download: GTA-VI-Inspired-HUD-2.6.5-LoadingScreens-<edition>.oiv.
+  - Easy switches: ViExtras.ini and GTA6Hud.ini open with plain True / False lines; the numbers are further down.
+  - HUD OPTIONS (hold V) has eight more switches that take effect at once (crosshair, kill marks, VI wanted stars,
+    wanted box, camera weight, binoculars, calmer police, money in stores), and scrolls.
+  - Calmer police, bounty patrols only after fresh trouble, and people forget what they saw you do after a while.
+  - Honor: clean escapes, laying low, standing up for a bystander and petting dogs earn it back; a cop seeing it
+    costs more; people back off from a Psycho.
+  - The wanted minimap as in GTA VI: blue when the police are told, red and blue while they chase you, red while you
+    shoot, the 3D buildings still there under the colour.
+  - The money greys in a store when you can't afford the item, and stays up while you're in a store.
+  - A quieter minimap (no shop icons), and your gun at the top right only while it's out.
+  - Jason can change his look at any clothes rack; shops are on the map as Lucia and Jason.
+  - Legacy: notifications you can read again (they came out pale).
+  - HUD OPTIONS keeps GTA6Hud.ini's and MiniMap.settings' layout; no Chop on the character cards.
 
 Changes in 2.6.4
   - BuckMe no longer pays out the same money again: switching to a character with more than $20,000 put that money
