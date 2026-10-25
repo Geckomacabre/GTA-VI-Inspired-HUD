@@ -15,3 +15,7 @@ SearchStartRadius=180
 SearchMinRadius=60
 SearchShrinkPerSec=4
 ShowWhenWanted=1
+WantedTint=1
+ChaseFlash=1
+; HiddenBlips: GTA blip numbers left off the minimap (shops, barbers, bars, gas stations). The pause map still shows them. Leave it empty to show them all.
+HiddenBlips=52,71,72,73,75,93,100,110,121,135,361

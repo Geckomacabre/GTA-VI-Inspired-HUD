@@ -31,10 +31,15 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 - **HUD OPTIONS no longer scrambles `GTA6Hud.ini`.** Flipping one of FBICat's switches (STATUS BARS, KILL CAMERA and the rest) saved the file through Script Hook V .NET, which writes it again from scratch: every comment went, and the easy switches at the top were merged back into their sections. Now only the lines that changed are written (a key the file doesn't have yet goes under its section), and the rest of the file stays as it was. A small change to how `GTA6Hud.dll` saves, and nothing else.
 - **No more Chop on the character cards.** Michael's and Franklin's portraits come from the game's switch-wheel picture, which has Chop (upside down) between them, and an edge of him showed on both cards. That part of the picture is no longer drawn at all; the card's backdrop shows there.
+- **The minimap's HUD OPTIONS switches no longer wipe the rest of `MiniMap.settings`.** Saving them wrote the file again from those switches alone, so `ShowWhenWanted`, the search circle's sizes and anything else you'd set went back to the defaults. Now only those lines change.
 
 ### Changed
 
 - **People don't remember you for ever.** Anyone who saw you commit a crime kept it on record for good, and opinions only faded when a character loaded, over days. Memories are now short, as people's are: what someone saw you do is forgotten 10 minutes after they last saw you, opinions lose half every 20 minutes and a neighbourhood's every 30, while you play and while you don't. So people react to you while you're out causing trouble, and stop once you've laid off. `ViExtras.ini` `[Memory] CrimeForgetMinutes`, `FaceHalfLifeMinutes` and `ZoneHalfLifeMinutes` (they replace `FaceHalfLifeDays` and `ZoneHalfLifeDays`).
+- **A quieter minimap, like GTA VI's.** The shop, barber, bar, car wash and gas station icons are left off the minimap (the pause map still has them all). `MiniMap.settings` `HiddenBlips` is the list; empty it to have them all back.
+- **The minimap flashes red and blue while you're wanted.** It only ever went red, and only with `WantedTint`, which was off. Both are on now; `MiniMap.settings` `ChaseFlash = 0` keeps it red, `WantedTint = 0` turns it off.
+- **Your gun's only at the top right while it's out.** GTA V keeps your last gun as your weapon while you drive, so its picture and ammo stayed up the whole drive. In a car they now show only while you aim or shoot from it (`GTA6Hud.ini` `[TopRight] GunInVehicle = True`, at the top of the file, keeps them up). The gun's picture is a little smaller too (`GunRowH`, `GunMaxW`).
+- **Thinner money.** The money at the top right is in the thinner Art Deco lettering and a touch smaller, as in GTA VI (`[TopRight] MoneyFont = 100` and `MoneyCapHeight = 13.7` bring back the old one).
 
 ## 2.6.4 (23 October 2026)
 
