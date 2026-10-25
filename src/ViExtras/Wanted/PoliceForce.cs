@@ -30,6 +30,9 @@ namespace ViExtras
     /// of ours is under way its "already handled" flag is held up, and let go once the BUSTED
     /// screen shows, so its clean-up still runs then.
     ///
+    /// [PoliceForce] StunGuns = False ([Switches] StunGuns) leaves the cops their own guns, as in GTA V; giving up,
+    /// surrender and the arrest stay.
+    ///
     /// Surrender: GTA6Hud's own SURRENDER prompt can never come up (its UpdateSurrender returns
     /// unless a surrender is already accepted). Near a cop who can see you, with stars, the
     /// prompt is shown here through its HoldWorldItem (hold E, or X / Square). Holding it puts
@@ -57,7 +60,7 @@ namespace ViExtras
         private static readonly int[] PoseBlocked = { 21, 22, 23, 24, 25, 30, 31, 32, 33, 34, 35, 37, 44, 140, 141, 142, 143 };
         private int _pose, _poseNext;   // 0 none; 1-6 the steps in; 7 kneeling, hands on the head
 
-        private readonly bool _enabled;
+        private readonly bool _enabled, _stunGuns;
         private readonly int _lethalFrom;
         private readonly int _armedGraceMs, _arrestWindowMs;
 
@@ -104,6 +107,7 @@ namespace ViExtras
             Paths.Init(BaseDirectory);
             const string S = "PoliceForce";
             _enabled = Config.Get(S, "Enabled", true);
+            _stunGuns = Config.Get(S, "StunGuns", true);   // False: their own guns, as in GTA V; surrender and arrests stay
             _lethalFrom = Math.Max(1, Config.Get(S, "LethalFromStars", 3));
             _armedGraceMs = (int)(Math.Max(0f, Config.Get(S, "ArmedGraceSeconds", 5f)) * 1000f);
             _arrestWindowMs = (int)(Math.Max(3f, Config.Get(S, "ArrestWindowSeconds", 15f)) * 1000f);
@@ -178,7 +182,7 @@ namespace ViExtras
                 _lethal = lethal;
                 _modeKnown = true;
                 _nextScan = 0;
-                Log.Write("PoliceForce", (lethal ? "guns" : "stun guns") + " (" + wanted + " stars, " + (armedNow ? "armed" : "unarmed") + ")");
+                Log.Write("PoliceForce", (lethal || !_stunGuns ? "guns" : "stun guns") + " (" + wanted + " stars, " + (armedNow ? "armed" : "unarmed") + ")");
             }
 
             // a stun-gun hit: the weapon goes away and the arrest starts
@@ -216,7 +220,7 @@ namespace ViExtras
 
             if (now < _nextScan) return;
             _nextScan = now + ScanMs;
-            if (lethal) RestoreAll();
+            if (lethal || !_stunGuns) RestoreAll();
             else ArmWithStunGuns(player);
         }
 
