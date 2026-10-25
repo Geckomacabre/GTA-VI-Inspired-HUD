@@ -183,6 +183,26 @@ Look in your **game folder** for **`ViMinimap.asi`**. It should be right next to
 
 ---
 
+## Optional: VI loading screens
+
+**What you get:** FBICat's GTA VI start screen and loading screens, with Rockstar's Vice City pictures.
+**What you need:** **`GTA-VI-Inspired-HUD-<version>-LoadingScreens-Legacy.oiv`** from the same release as the HUD.
+The HUD works without it: install it only if you want them.
+
+In OpenIV: **Tools** → **Package Installer**, pick it, **Install**, and choose the **mods folder**, as for the HUD.
+
+### Already have them, and want the game's own back?
+
+Up to 2.6.4 the loading screens came inside the HUD package. To take them off:
+
+1. Open **OpenIV** and click **Edit mode** at the top.
+2. Open your game's own **`update`** → **`update.rpf`** → `x64` → `data` → `cdimages` (not the one in `mods`).
+3. Right-click **`scaleform_frontend.rpf`** → **Extract** (in CodeWalker: **Extract Raw...**) to your Desktop.
+4. Open **`mods`** → `update` → **`update.rpf`** → `x64` → `data` → `cdimages`.
+5. Drag the **`scaleform_frontend.rpf`** from your Desktop into that window, and replace the one there.
+
+---
+
 ## Optional: Jason
 
 **What you get:** Jason on the character wheel, after Trevor.

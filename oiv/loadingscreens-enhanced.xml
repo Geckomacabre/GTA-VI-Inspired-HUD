@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.1" id="{8fcc3920-7758-4810-ab12-164db839e805}" target="Five">
+  <metadata>
+    <name>GTA VI-Inspired HUD 2.6.4 Loading Screens (GTA V Enhanced)</name>
+    <version><major>2</major><minor>6</minor><tag>ENHANCED LOADING SCREENS 2.6.4</tag></version>
+    <author><displayName>Geckomacabre x FBICat</displayName></author>
+    <description><![CDATA[OPTIONAL: FBICat's GTA VI loading screens for the GTA VI-Inspired HUD, GTA V ENHANCED (GTA5_Enhanced.exe).
+The HUD works without them: install this only if you want them. Install it with the OIV Package Installer (CodeWalker.OIVInstaller.exe).
+
+What it installs: FBICat's VI loading screens, with Rockstar's Vice City pictures, in
+update.rpf\x64\data\cdimages\scaleform_frontend.rpf (your mods folder's copy).
+To take them off again, put the game's own scaleform_frontend.rpf back (your install guide, "Optional: VI loading screens").
+
+Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. The pictures are from Rockstar's official
+GTA VI media and belong to Rockstar Games. No GTA VI game files are included.
+https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
+]]></description>
+    <licence><![CDATA[Personal use. By FBICat. Contains art from Rockstar's official GTA VI media (property of Rockstar Games).]]></licence>
+  </metadata>
+  <colors>
+    <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>
+    <iconBackground>$FFE06AA8</iconBackground>
+  </colors>
+  <content>
+    <!-- STARTSCREEN -->
+  </content>
+</package>

@@ -2,6 +2,14 @@
 
     python tools/build_oiv.py legacy         --dlcpacks <folder> [--startscreen <folder>] [--out build]
     python tools/build_oiv.py enhanced       --dlcpacks <folder> [--startscreen <folder>] [--out build]
+    python tools/build_oiv.py <edition> --loadingscreens --startscreen <folder> [--out build]
+
+--loadingscreens: the start screen on its own, as an optional package
+(GTA-VI-Inspired-HUD-<version>-LoadingScreens-<Edition>.oiv, from
+oiv/loadingscreens-<edition>.xml): no scripts, packs or registration. Neither
+installer has a tick-box for one part of a package, so players who don't want
+FBICat's loading screens leave this one out; the HUD package is then built
+without --startscreen.
 
 <folder> holds one sub-folder per pack, each with its dlc.rpf: vihud, vihudfonts
 and vihudanims. Legacy and Enhanced need different dlcpacks: the Enhanced ones
@@ -75,17 +83,17 @@ EDITIONS = ("legacy", "enhanced")
 STARTSCREEN_ARCHIVE = r"x64\data\cdimages\scaleform_frontend.rpf"
 
 
-def template(edition):
-    with open(os.path.join(ROOT, "oiv", f"{edition}.xml"), encoding="utf-8") as f:
+def template(name):
+    with open(os.path.join(ROOT, "oiv", f"{name}.xml"), encoding="utf-8") as f:
         return f.read()
 
 
-def output_name(edition):
+def output_name(edition, part=""):
     xml = template(edition)
     m = re.search(r"<tag>[A-Z ]*?(\d+\.\d+\.\d+)</tag>", xml)
     if not m:
         sys.exit(f"oiv/{edition}.xml: no version in <tag>")
-    return f"GTA-VI-Inspired-HUD-{m.group(1)}-{edition.capitalize()}.oiv"
+    return f"GTA-VI-Inspired-HUD-{m.group(1)}-{part}{edition.capitalize()}.oiv"
 
 
 def collect_files(dlcpacks):
@@ -137,8 +145,8 @@ def collect_startscreen(edition, folder):
     return [(os.path.join(folder, n), f"startscreen/{n}", n) for n in names]
 
 
-def assembly_xml(edition, files, startscreen):
-    xml = template(edition)
+def assembly_xml(edition, files, startscreen, name=None):
+    xml = template(name or edition)
     if "<!-- FILES -->" in xml:
         lines = [f'    <add source="{escape(content.replace("/", chr(92)))}">{escape(install)}</add>'
                  for _, content, install in files]
@@ -158,7 +166,7 @@ def assembly_xml(edition, files, startscreen):
     if "<!-- REGISTER -->" in xml:
         with open(os.path.join(ROOT, "oiv", "register.xml"), encoding="utf-8") as f:
             xml = xml.replace("    <!-- REGISTER -->", f.read().rstrip("\n"))
-    elif edition in ("legacy", "enhanced"):
+    elif name is None:
         sys.exit(f"oiv/{edition}.xml has no <!-- REGISTER --> place for the pack registration")
     return xml
 
@@ -190,21 +198,29 @@ def main():
     ap.add_argument("edition", choices=EDITIONS)
     ap.add_argument("--dlcpacks", help="folder with vihud/, vihudfonts/ and vihudanims/")
     ap.add_argument("--startscreen", help="folder of files for update.rpf's scaleform_frontend.rpf")
+    ap.add_argument("--loadingscreens", action="store_true", help="build the optional loading screens package only")
     ap.add_argument("--out", default=os.path.join(ROOT, "build"))
     args = ap.parse_args()
 
     startscreen = []
-    if not args.dlcpacks:
-        ap.error(f"{args.edition} needs --dlcpacks")
-    files = collect_files(args.dlcpacks)
+    if args.loadingscreens:
+        if not args.startscreen:
+            ap.error("--loadingscreens needs --startscreen")
+        files = []
+        name = f"loadingscreens-{args.edition}"
+    else:
+        if not args.dlcpacks:
+            ap.error(f"{args.edition} needs --dlcpacks")
+        files = collect_files(args.dlcpacks)
+        name = None
     if args.startscreen:
         startscreen = collect_startscreen(args.edition, args.startscreen)
 
     os.makedirs(args.out, exist_ok=True)
-    out = os.path.join(args.out, output_name(args.edition))
+    out = os.path.join(args.out, output_name(args.edition, "LoadingScreens-" if args.loadingscreens else ""))
     tmp = out + ".part"
     with zipfile.ZipFile(tmp, "w", allowZip64=True) as zf:
-        write_entry(zf, "assembly.xml", data=assembly_xml(args.edition, files, startscreen).encode("utf-8"))
+        write_entry(zf, "assembly.xml", data=assembly_xml(args.edition, files, startscreen, name).encode("utf-8"))
         write_entry(zf, "icon.png", src=os.path.join(ROOT, "oiv", "icon.png"))
         for src, content, _ in files + startscreen:
             write_entry(zf, "content/" + content, src=src)
