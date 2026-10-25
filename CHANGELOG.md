@@ -10,13 +10,6 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
-## Unreleased
-
-### Added
-
-- **The Lucia kit.** Like Jason's, a Lucia download is only her model files, with no pack to list in `dlclist.xml`. [GTA-VI-Inspired-HUD-Lucia-Kit.zip](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Lucia-Kit.zip) is that pack without Lucia, in two kinds: **A** for a Lucia that comes as 4 files, **B** for one with a folder of parts (the same pack as the HUD's old Lucia, without her). Rename her files to `lucia_s`, drop them in, add `<Item>dlcpacks:/luciaped/</Item>` to `dlclist.xml`, and she's on the character wheel. It has no model in it.
-- **Optional: Lucia.** Both install guides have a section for putting Lucia in the game with the kit, as for Jason: OpenIV on Legacy; on Enhanced, CodeWalker's Asset Converter first, then into `onigiri\dlcpacks` with NVE or `mods\update\x64\dlcpacks` without it. It also covers FiveM-style files (with a `^`), models that come as their own pack, and keeping her own model name.
-
 ## 2.6.4 (23 October 2026)
 
 ### Added
@@ -71,6 +64,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 ### Added
 
 - **The Jason kit.** Jason's download is only his model files, so there was no pack to list in `dlclist.xml`. [GTA-VI-Inspired-HUD-Jason-Kit.zip](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Jason-Kit.zip) is that pack without Jason: drop his 4 files into it, add its line to `dlclist.xml`, and he's on the character wheel. It has no model in it.
+- **The Lucia kit.** Like Jason's, a Lucia download is only her model files, with no pack to list in `dlclist.xml`. [GTA-VI-Inspired-HUD-Lucia-Kit.zip](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Lucia-Kit.zip) is that pack without Lucia, in two kinds: **A** for a Lucia that comes as 4 files, **B** for one with a folder of parts (the same pack as the HUD's old Lucia, without her). Rename her files to `lucia_s`, drop them in, add `<Item>dlcpacks:/luciaped/</Item>` to `dlclist.xml`, and she's on the character wheel. It has no model in it.
 
 ### Fixed
 
@@ -82,6 +76,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 ### Guides
 
 - **Optional: Jason.** Both install guides have a section for putting Jason in the game with the kit: OpenIV on Legacy; on Enhanced, CodeWalker's Asset Converter first, then into `onigiri\dlcpacks` with NVE or `mods\update\x64\dlcpacks` without it. It also covers another Jason model: renaming its files, or setting its name in the kit's `peds.meta` and `GTA6Hud.ini` `[Jason] Model`, and models that come as their own pack.
+- **Optional: Lucia.** Both install guides have a section for putting Lucia in the game with the kit, as for Jason: OpenIV on Legacy; on Enhanced, CodeWalker's Asset Converter first, then into `onigiri\dlcpacks` with NVE or `mods\update\x64\dlcpacks` without it. It also covers FiveM-style files (with a `^`), models that come as their own pack, and keeping her own model name.
 
 ## 2.6.0 (22 October 2026)
 
