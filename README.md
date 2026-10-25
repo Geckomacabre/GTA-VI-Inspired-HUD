@@ -106,7 +106,7 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 the `.oiv` with your version's name (Legacy **or** Enhanced).
 
 Want to play as **Lucia**? She isn't included: her model is someone else's paid work. Get her from her creator,
-**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net. Your install guide's "Optional: Jason" section puts him in the game, with the **Jason kit**.
+**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com, or use another Lucia model: your install guide's "Optional: Lucia" section puts her in the game, with the **Lucia kit**. For Jason, get **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net. Your install guide's "Optional: Jason" section puts him in the game, with the **Jason kit**.
 
 **3. Follow your guide.** It's written for people who've never modded GTA. Only follow the guide for
 **your** version: mixing them up crashes the game.
@@ -134,8 +134,9 @@ Want to play as **Lucia**? She isn't included: her model is someone else's paid 
 | Push-ups / sit-ups | **N** / **Shift + N** |
 | Greet / antagonize someone | **Y** / **U** |
 
-🙋 **Rather not greet people?** Set `Interact = False` under `[Memory]` in `scripts\ViExtras.ini` and the
-Greet / Antagonize prompt stays off.
+🙋 **Rather not greet people?** Set `GreetAndAntagonize = False` under `[Switches]`, at the top of
+`scripts\ViExtras.ini`, and the Greet / Antagonize prompt stays off. Every feature has a plain True / False switch
+there, and `GTA6Hud.ini` opens with FBICat's.
 
 🎵 **Music:** none is included. Put your own `.mp3` files in `scripts\Hud\Radio\CustomMusic` and pick **On Demand** in
 the radio wheel: each subfolder becomes a station of its own. Chase music goes in `scripts\Hud\Music`.

@@ -218,7 +218,9 @@ def load_modules():
             spec = importlib.util.spec_from_file_location("render_" + name[:-3], os.path.join(RENDER_DIR, name))
             mod = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(mod)
-            mods[mod.GROUP] = mod.render
+            # switcher.py is a script of its own (no browser): it has no render().
+            if hasattr(mod, "render"):
+                mods[mod.GROUP] = mod.render
     return mods
 
 
