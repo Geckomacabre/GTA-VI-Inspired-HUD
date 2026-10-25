@@ -195,6 +195,7 @@ Look in your **game folder** for **`ViMinimap.asi`**. It should be right next to
    - **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net
 2. Unzip it.
 3. Open the folder **`No Cap Version`** (or **`Cap Version`** if you want him in his cap).
+   A **`legacy`** and an **`enhanced`** folder instead (like Jason Duval Extended Look)? Open **`legacy`**.
 4. Inside are **4 files**. Their names end in **`.ydd`**, **`.yft`**, **`.ymt`** and **`.ytd`**.
 
 > Can't see the endings (`.ydd` and so on)? In File Explorer, click **View** → **Show** → **File name extensions**.

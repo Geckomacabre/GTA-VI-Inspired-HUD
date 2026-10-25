@@ -16,6 +16,8 @@ PART 1: GET JASON
      - mod-hub.net:      https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en
 2. Unzip it.
 3. Open the folder "No Cap Version" (or "Cap Version" if you want him in his cap).
+   A "legacy" and an "enhanced" folder instead (like Jason Duval Extended Look)? Open the one for your game:
+   "legacy" for GTA5.exe, "enhanced" for GTA5_Enhanced.exe.
 4. Inside are 4 files. Their names end in .ydd, .yft, .ymt and .ytd.
 
    Can't see the endings (.ydd and so on)? In File Explorer: View > Show > File name extensions.
@@ -57,6 +59,7 @@ PART 3 (LEGACY: your game has GTA5.exe): PUT HIM IN THE GAME WITH OPENIV
 PART 3 (ENHANCED: your game has GTA5_Enhanced.exe): CONVERT HIS FILES
 --------------------------------------------------------------------
 Enhanced can't use the files as they come, so convert them first.
+Took them from an "enhanced" folder (Part 1)? They're converted already: skip to Part 4.
 
 1. Get CodeWalker RPF Explorer, version 30_dev48 or newer, from the releases channel of dexyfex's Discord
    (https://discord.gg/BxfKHkk).

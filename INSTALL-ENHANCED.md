@@ -215,6 +215,7 @@ Load **Story Mode**. The new HUD appears on its own.
    - **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net
 2. Unzip it.
 3. Open the folder **`No Cap Version`** (or **`Cap Version`** if you want him in his cap).
+   A **`legacy`** and an **`enhanced`** folder instead (like Jason Duval Extended Look)? Open **`enhanced`**.
 4. Inside are **4 files**. Their names end in **`.ydd`**, **`.yft`**, **`.ymt`** and **`.ytd`**.
 
 > Can't see the endings (`.ydd` and so on)? In File Explorer, click **View** → **Show** → **File name extensions**.
@@ -234,6 +235,7 @@ any settings.
 ### Part 3: Make his files work on Enhanced
 
 Enhanced can't use the files as they come, so convert them first.
+Took them from an **`enhanced`** folder (Part 1)? They're converted already: skip to Part 4.
 
 1. Get **CodeWalker RPF Explorer** (version **30_dev48** or newer) from the releases channel of
    [dexyfex's Discord](https://discord.gg/BxfKHkk).
@@ -317,6 +319,7 @@ Below, **her archive** is **`luciaped.rpf`** for pack A, and **`luciaped_streame
 ### Part 3: Make her files work on Enhanced
 
 Enhanced can't use the files as they come, so convert them first.
+Her download has an **`enhanced`** folder? Those files are converted already: use them and skip to Part 4.
 
 1. Get **CodeWalker RPF Explorer** (version **30_dev48** or newer) from the releases channel of
    [dexyfex's Discord](https://discord.gg/BxfKHkk).

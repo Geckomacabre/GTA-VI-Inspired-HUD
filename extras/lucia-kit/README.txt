@@ -80,6 +80,7 @@ PART 3 (LEGACY: your game has GTA5.exe): PUT HER IN THE GAME WITH OPENIV
 PART 3 (ENHANCED: your game has GTA5_Enhanced.exe): CONVERT HER FILES
 --------------------------------------------------------------------
 Enhanced can't use the files as they come, so convert them first.
+Her download has an "enhanced" folder? Those files are converted already: use them and skip to Part 4.
 
 1. Get CodeWalker RPF Explorer, version 30_dev48 or newer, from the releases channel of dexyfex's Discord
    (https://discord.gg/BxfKHkk).
