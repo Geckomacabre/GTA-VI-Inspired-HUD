@@ -20,6 +20,11 @@ namespace ViExtras
     /// next post only, so it's sent all the time, and the move under the wanted box, which can't wait for a post, goes
     /// through THEFEED_SET_SCRIPTED_MENU_HEIGHT: GTA keeps the feed under a script's menu at once, and the movie keeps
     /// its top under that line. [Minimap] FeedBesideMap = False leaves it where GTA puts it.
+    ///
+    /// Not on Legacy: there GTA's own feed movie is the one on screen (it's loaded for the loading screen, before the
+    /// vihud pack is), so nothing reads these numbers as a place, and GTA's movie takes each one as the next post's
+    /// background colour, which no colour has, and washes the post out to a pale card the white text can't be read
+    /// on (tested 2026-10-25: pale cards in GTA's own place with this on, GTA's dark cards with it off).
     /// </summary>
     public sealed class FeedBesideMap : Script
     {
@@ -38,6 +43,11 @@ namespace ViExtras
             bool enabled = Config.Get("Minimap", "FeedBesideMap", true);
             bool miniMap = File.Exists(Path.Combine(Paths.Scripts ?? ".", "ViMinimap.dll"));
             if (!enabled || !miniMap) return;
+            if (!Canvas.Enhanced)
+            {
+                Log.Write("Feed", "Legacy: GTA's feed stays where GTA puts it (the HUD's feed movie can't replace GTA's here)");
+                return;
+            }
             Tick += OnTick;
         }
 
