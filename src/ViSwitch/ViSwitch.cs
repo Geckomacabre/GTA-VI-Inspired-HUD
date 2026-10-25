@@ -309,7 +309,7 @@ namespace ViSwitch
             Log("loaded; GTA6Hud [Swap] Enabled=" + _enabled + (_lspdfr ? "; LSPDFR installed: no switching while on duty" : ""));
             Interval = 0;
             Tick += OnTick;
-            Aborted += (s, e) => ReleaseRealKey(); // never leave a pressed F key behind
+            Aborted += (s, e) => { ReleaseRealKey(); RemoveShopBlips(); }; // never leave a pressed F key, or our shop icons, behind
             DisarmIgnoredByPoliceRead();
         }
 
@@ -613,6 +613,7 @@ namespace ViSwitch
             JasonMission(ped);
             JasonStoreDoors(ped);
             JasonWardrobe(ped);
+            ShopBlips(ped);
             if (_sceneActive) EndSceneOnInput(ped);
             CheckTestCommand(ped);
 

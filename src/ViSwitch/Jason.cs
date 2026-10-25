@@ -280,6 +280,7 @@ namespace ViSwitch
         const ulong DOOR_OF_TYPE = 0xF82D8F1926A02C3D;   // SET_STATE_OF_CLOSEST_DOOR_OF_TYPE
         const float StoreReach = 35f;
         Vector3[] _storeRacks, _ammuDoors;
+        string[] _storeKeys;     // each rack's key in GTA6Hud's list (HIGH:0, BARBER:2...)
         int[] _storeDoorModels, _ammuDoorModels;
         bool _storesLooked;
         int _jasonDoorsAt;
@@ -319,11 +320,14 @@ namespace ViSwitch
                 var stands = (Array)t.GetField("ShopStands", Static).GetValue(null);
                 var counters = (Array)t.GetField("AmmuCounters", Static).GetValue(null);
                 var racks = new Vector3[stands.Length];
+                var keys = new string[stands.Length];
                 for (int i = 0; i < racks.Length; i++)
                 {
                     object s = stands.GetValue(i);
                     racks[i] = (Vector3)s.GetType().GetField("Rack").GetValue(s);
+                    keys[i] = s.GetType().GetField("Key")?.GetValue(s) as string;
                 }
+                _storeKeys = keys;
                 var doors = new Vector3[counters.Length];
                 for (int i = 0; i < doors.Length; i++)
                 {
