@@ -23,6 +23,10 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **Calmer police.** GTA V's police were on top of you in seconds, and seemed to know where you were even when none of them could see you. Now they take twice as long between sending units and send them from about 300 m away; once they've lost sight of you (the stars grey out), the search stays where they last saw you instead of following you; and staying out of sight for 10 seconds plus 5 a star loses them (25 seconds at 3 stars). Not on story missions, or while RDE or LSR runs the police. `[Switches] CalmerPolice = False` brings back GTA V's police; the numbers are in `[CalmerPolice]`.
 - **Bounty patrols only follow fresh trouble.** FBICat's bounty is saved and only drops $500 a game day, and while there's any, his Heat sends police patrols cruising round you, so a game loaded with an old bounty had patrols closing in from the first minute, for hours. Now they only come while you're wanted and for 10 minutes after (`[BountyPatrols] FreshMinutes`). `[Switches] OldBountyPatrols = True` brings back the old way.
 
+### Fixed
+
+- **No more Chop on the character cards.** Michael's and Franklin's portraits come from the game's switch-wheel picture, which has Chop (upside down) between them, and an edge of him showed on both cards. That part of the picture is no longer drawn at all; the card's backdrop shows there.
+
 ### Changed
 
 - **People don't remember you for ever.** Anyone who saw you commit a crime kept it on record for good, and opinions only faded when a character loaded, over days. Memories are now short, as people's are: what someone saw you do is forgotten 10 minutes after they last saw you, opinions lose half every 20 minutes and a neighbourhood's every 30, while you play and while you don't. So people react to you while you're out causing trouble, and stop once you've laid off. `ViExtras.ini` `[Memory] CrimeForgetMinutes`, `FaceHalfLifeMinutes` and `ZoneHalfLifeMinutes` (they replace `FaceHalfLifeDays` and `ZoneHalfLifeDays`).

@@ -38,8 +38,9 @@ namespace ViExtras
         private static readonly string[] HonorKeys = { "Michael", "Franklin", "Trevor", "Lucia", "Jason" };
 
         // The game's switch wheel portraits: allcharacters (512 x 256) in player_switch.ytd holds Franklin, Chop
-        // (upside down), Michael and Trevor. A 140-pixel square of each round the head; where Chop shows in it, the
-        // card's own backdrop goes over him.
+        // (upside down), Michael and Trevor. A 140-pixel square of each round the head. Chop is an island of his own
+        // (x 140-238, y 0-136); that rectangle, 4 pixels wider all round for the texture filtering and DXT blocks,
+        // is never drawn, and the card's backdrop shows there instead.
         private const string WheelTxd = "player_switch", WheelTex = "allcharacters";
         private const float SheetW = 512f, SheetH = 256f;
         private static readonly RectangleF[] Crops =
@@ -48,12 +49,7 @@ namespace ViExtras
             new RectangleF(30f, 26f, 140f, 140f),    // Franklin
             new RectangleF(357f, 29f, 140f, 140f),   // Trevor
         };
-        private static readonly RectangleF[] ChopOver =
-        {
-            new RectangleF(210f, 34f, 30f, 102f),
-            new RectangleF(145f, 26f, 25f, 110f),
-            RectangleF.Empty,
-        };
+        private static readonly RectangleF Chop = RectangleF.FromLTRB(136f, 0f, 243f, 141f);
 
         /// <summary>True while this draws the wheel ([Switcher] Enabled): ViSwitch reads it to leave GTA6Hud's wheel shut.</summary>
         public static bool Drawing;
@@ -150,21 +146,30 @@ namespace ViExtras
 
         private static float Spacing(int left, int right) => left == 4 && right == 3 ? PairGap : Gap;
 
+        // `part` of the sheet (inside the card's crop `crop`), where it falls on the card at x, y.
+        private static void Portrait(RectangleF crop, RectangleF part, float x, float y, Color white)
+        {
+            if (part.Width <= 0f || part.Height <= 0f) return;
+            float k = Card / crop.Width;
+            Canvas.GamePart(WheelTxd, WheelTex, x + (part.Left - crop.Left) * k, y + (part.Top - crop.Top) * k, part.Width * k, part.Height * k,
+                part.Left / SheetW, part.Top / SheetH, part.Right / SheetW, part.Bottom / SheetH, white);
+        }
+
         private void DrawCard(int c, float x, float y, Color white, float a, bool selected)
         {
             Image("switch_card", x + Card * 0.5f, y + Card * 0.5f, Card, Card, white);
             if (c < 3)
             {
                 RectangleF r = Crops[c];
-                Canvas.GamePart(WheelTxd, WheelTex, x, y, Card, Card, r.Left / SheetW, r.Top / SheetH, r.Right / SheetW, r.Bottom / SheetH, white);
-                RectangleF chop = ChopOver[c];
-                if (!chop.IsEmpty)
+                RectangleF chop = RectangleF.Intersect(r, Chop);
+                if (chop.IsEmpty) Portrait(r, r, x, y, white);
+                else
                 {
-                    // the backdrop's own pixels over Chop, where he falls in the square
-                    float fx = (chop.Left - r.Left) / r.Width, fy = (chop.Top - r.Top) / r.Height;
-                    float fw = chop.Width / r.Width, fh = chop.Height / r.Height;
-                    Art.Entry bg = Art.Get("switch_card");
-                    if (bg != null) Canvas.ImagePart(bg.Path, x + fx * Card, y + fy * Card, fw * Card, fh * Card, fx, fy, fx + fw, fy + fh, white);
+                    // around Chop: the columns left and right of him, then above and below him in his columns
+                    Portrait(r, RectangleF.FromLTRB(r.Left, r.Top, chop.Left, r.Bottom), x, y, white);
+                    Portrait(r, RectangleF.FromLTRB(chop.Right, r.Top, r.Right, r.Bottom), x, y, white);
+                    Portrait(r, RectangleF.FromLTRB(chop.Left, r.Top, chop.Right, chop.Top), x, y, white);
+                    Portrait(r, RectangleF.FromLTRB(chop.Left, chop.Bottom, chop.Right, r.Bottom), x, y, white);
                 }
             }
             else Image(c == 3 ? "switch_lucia" : "switch_jason", x + Card * 0.5f, y + Card * 0.5f, Card, Card, white);
