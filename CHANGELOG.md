@@ -39,7 +39,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 - **A quieter minimap, like GTA VI's.** The shop, barber, bar, car wash and gas station icons are left off the minimap (the pause map still has them all). `MiniMap.settings` `HiddenBlips` is the list; empty it to have them all back.
 - **The minimap flashes red and blue while you're wanted.** Its red / blue flash was never switched on (and `WantedTint`, which it needs, was off), and the police search circle that fills the map faded slowly between red and blue, so it mostly looked purple. Now the whole map snaps between red and blue every half second. `MiniMap.settings` `ChaseFlash = 0` keeps the tint red, `WantedTint = 0` turns it off.
 - **Your gun's only at the top right while it's out.** GTA V keeps your last gun as your weapon while you drive, so its picture and ammo stayed up the whole drive. In a car they now show only while you aim or shoot from it (`GTA6Hud.ini` `[TopRight] GunInVehicle = True`, at the top of the file, keeps them up). The gun's picture is a little smaller too (`GunRowH`, `GunMaxW`).
-- **Thinner money.** The money at the top right is in the thinner Art Deco lettering and a touch smaller, as in GTA VI (`[TopRight] MoneyFont = 100` and `MoneyCapHeight = 13.7` bring back the old one).
+- **Thinner money.** The money at the top right is in the thinner Art Deco lettering and a touch smaller, as in GTA VI. `[TopRight] MoneyFont` and `MoneyCapHeight` now really set it (the money row had its font and size built in, whatever they said); `MoneyFont = 7` and `MoneyCapHeight = 13.7` bring back the old look.
 
 ## 2.6.4 (23 October 2026)
 
