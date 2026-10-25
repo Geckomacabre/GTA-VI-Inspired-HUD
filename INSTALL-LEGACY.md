@@ -126,7 +126,7 @@ OpenIV puts mods in a separate **`mods` folder**. Your original game files are n
 
 | Character | Where to get the model |
 | --- | --- |
-| **Lucia** | Her model is someone else's paid work. Get her from her creator:<br>**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com.<br>Or use another Lucia model.<br>The HUD works without her. |
+| **Lucia** | Her model is someone else's paid work. Get her from her creator:<br>**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com.<br>Or use another Lucia model.<br>To put her in the game, see "Optional: Lucia" below.<br>The HUD works without her. |
 | **Jason** | **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net.<br>To put him in the game, see "Optional: Jason" below. |
 
 💡 The number in the file name is the version (2.6.4 here). So you can always tell which one you installed.
@@ -244,6 +244,79 @@ You only need this if your Jason download isn't the 4 files above.
 - **It comes as a pack of its own** (it has its own `dlc.rpf`): you don't need the kit. Install that pack the way its
   readme says. Then open **`scripts\GTA6Hud.ini`** with Notepad, find **`[Jason]`**, and change **`Model = jdfinal`**
   to its ped's name (the name of its `.ydd` file, before the dot).
+
+---
+
+## Optional: Lucia
+
+**What you get:** Lucia on the character wheel, the last card.
+**What you need:** her model (it isn't included) and the free **Lucia kit**. Follow the parts in order.
+
+💡 Already have a **`luciaped`** folder in your dlcpacks folder? Then a Lucia is already installed: skip this part.
+
+### Part 1: Get Lucia
+
+1. Download Lucia from **one** of these, or use another Lucia model:
+   - **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** from her creator
+   - **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com
+2. Unzip it, and find the folder with her files in it. Their names end in `.yft`, `.ymt` and so on.
+
+> Can't see the endings (`.yft` and so on)? In File Explorer, click **View** → **Show** → **File name extensions**.
+
+### Part 2: Which pack, and her file names
+
+The kit has two packs, **A** and **B**. Look at what's in her folder:
+
+| Her folder has | Pack | What to do |
+| --- | --- | --- |
+| **4 files**, ending in `.ydd`, `.yft`, `.ymt` and `.ytd` | **A** (`A - 4 files`) | Called `lucia_s` already? **Nothing.** Called anything else, for example `Lucia.ydd`? **Rename each file to `lucia_s`**, keeping the ending: `Lucia.ydd` becomes **`lucia_s.ydd`**, and the same for `.yft`, `.ymt` and `.ytd`. Change nothing else. |
+| A **`.yft`**, a **`.ymt`** and a **folder** with the same name (full of files like `head_000_r.ydd`) | **B** (`B - with a folder`) | Called `lucia_s` already? **Nothing.** Called anything else, for example `Lucia`? **Rename all three to `lucia_s`**: `Lucia.yft` becomes **`lucia_s.yft`**, `Lucia.ymt` becomes **`lucia_s.ymt`** and the folder `Lucia` becomes **`lucia_s`**. Don't rename the files inside the folder. A second folder ending in `_p` (her hats and glasses)? Rename it to **`lucia_s_p`**. |
+
+That's it: the HUD looks for **`lucia_s`**, so once her files are called that, she's found. You don't need to edit
+any settings.
+
+Below, **her archive** is **`luciaped.rpf`** for pack A, and **`luciaped_streamed.rpf`** for pack B.
+
+### Part 3: Put her in the game
+
+1. Download **[GTA-VI-Inspired-HUD-Lucia-Kit.zip](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Lucia-Kit.zip)** and unzip it.
+2. Copy the **`luciaped`** folder from your pack (**`A - 4 files`** or **`B - with a folder`**) into
+   **`mods\update\x64\dlcpacks`** in your game folder.
+3. Open **OpenIV** and click **Edit mode** at the top, so it's on.
+4. In OpenIV, open these one after another: `mods` → `update` → `x64` → `dlcpacks` → `luciaped` → **`dlc.rpf`** → `x64`
+   → `models` → `cdimages` → **her archive**.
+5. Drag her **`lucia_s`** files into that window (pack B: the **`lucia_s`** folder too, and **`lucia_s_p`** if you
+   have it).
+6. In OpenIV, open: `mods` → `update` → **`update.rpf`** → `common` → `data`. Right-click **`dlclist.xml`** → **Edit**.
+7. Scroll to the **very bottom**. Put your cursor at the start of the line that says **`</Paths>`**, press **Enter**,
+   and paste this into the new empty line above it:
+   ```xml
+   <Item>dlcpacks:/luciaped/</Item>
+   ```
+8. Press **Ctrl + S** to save, and close the window.
+9. Start the game and hold **Left Alt** (controller: hold **D-pad Down**). Lucia's card is the last one.
+
+### Not working?
+
+| What you see | What to do |
+| --- | --- |
+| A message says **Lucia is not registered** | `dlclist.xml` is missing the line **`<Item>dlcpacks:/luciaped/</Item>`**. Add it and start the game again. |
+| Lucia isn't on the wheel | Open **`scripts\GTA6Hud.perf.log`** in your game folder with Notepad. If it says **"lucia: no Lucia model in the game"**, one of these is wrong: her files aren't called `lucia_s` (Part 2), they aren't inside **her archive**, you used the other pack (4 files need **A**, files with a folder need **B**), or `dlclist.xml` is missing the line **`<Item>dlcpacks:/luciaped/</Item>`**. Fix it and start the game again. |
+| Lucia is invisible, or only partly there | It's the wrong pack for her files (Part 2). Delete the `luciaped` folder you copied and start again with the other one. |
+
+### Other Lucia models (advanced)
+
+You only need this if your Lucia download isn't one of the two kinds in Part 2.
+
+- **Lots of files** with a `^` in their names (like `Lucia^head_000_r.ydd`): they're the parts of a pack **B** Lucia,
+  laid out for FiveM. Make a folder called **`lucia_s`**, move every file with a `^` into it, and rename each to the
+  part **after** the `^` (`Lucia^head_000_r.ydd` becomes `head_000_r.ydd`). Rename the files without a `^` to
+  `lucia_s` (`Lucia.yft` becomes `lucia_s.yft`), then use pack B. Files with `_p^` (her hats and glasses) go the same
+  way into a folder called **`lucia_s_p`**.
+- **It comes as a pack of its own** (it has its own `dlc.rpf`): you don't need the kit. Install that pack the way its
+  readme says. Then open **`scripts\GTA6Hud.ini`** with Notepad, find **`[Lucia]`**, and change **`Model = lucia_s`**
+  to its ped's name (the name of its `.yft` file, before the dot).
+- **Keep her own name** instead of renaming her files: the kit's `README.txt` shows how, with the pack's `peds.meta`.
 
 ---
 
