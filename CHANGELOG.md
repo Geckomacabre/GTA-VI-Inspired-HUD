@@ -25,6 +25,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ### Fixed
 
+- **HUD OPTIONS no longer scrambles `GTA6Hud.ini`.** Flipping one of FBICat's switches (STATUS BARS, KILL CAMERA and the rest) saved the file through Script Hook V .NET, which writes it again from scratch: every comment went, and the easy switches at the top were merged back into their sections. Now only the lines that changed are written (a key the file doesn't have yet goes under its section), and the rest of the file stays as it was. A 4-line change to `GTA6Hud.dll`'s saving, and nothing else.
 - **No more Chop on the character cards.** Michael's and Franklin's portraits come from the game's switch-wheel picture, which has Chop (upside down) between them, and an edge of him showed on both cards. That part of the picture is no longer drawn at all; the card's backdrop shows there.
 
 ### Changed
