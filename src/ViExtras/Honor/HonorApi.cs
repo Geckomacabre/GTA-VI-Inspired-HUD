@@ -27,6 +27,9 @@ namespace ViExtras
         public static string TierOf(int value) => TierFor != null ? TierFor(value) : null;
         public static string Tier => TierOf(Value);
 
+        /// <summary>The named rank: Honor.Professional, Aggressive, Violent, Psycho or Shattered (null until Ready).</summary>
+        public static string Rank { get; internal set; }
+
         /// <summary>
         /// A deed happened: apply the named hook (a key of Config.Hooks, e.g.
         /// "greet_npc", "antagonize_npc", "kill_civilian"). Returns false when the

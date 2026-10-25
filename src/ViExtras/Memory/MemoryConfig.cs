@@ -42,7 +42,7 @@ namespace ViExtras.NpcMemory
 
         // ---- Config.Memory ----------------------------------------------------------
         public static int MaxFaces, MemoryScanMs, RecogniseChance, ReactCooldownMs, SaveMs;
-        public static float ScanRadius, RecogniseRange, FaceHalfLifeDays, ZoneHalfLifeDays;
+        public static float ScanRadius, RecogniseRange, FaceHalfLifeMinutes, ZoneHalfLifeMinutes, CrimeForgetMinutes;
         public static bool ZoneReactions;
         public static int ZoneReactionChance, ZoneReactionCooldownMs;
         public static float ZoneLiked, ZoneDisliked;
@@ -129,8 +129,9 @@ namespace ViExtras.NpcMemory
             RecogniseRange = Config.Get(S, "RecogniseRange", 18f);
             RecogniseChance = Config.Get(S, "RecogniseChance", 70);
             ReactCooldownMs = Config.Get(S, "ReactCooldownMs", 60000);
-            FaceHalfLifeDays = Config.Get(S, "FaceHalfLifeDays", 6f);
-            ZoneHalfLifeDays = Config.Get(S, "ZoneHalfLifeDays", 10f);
+            FaceHalfLifeMinutes = Config.Get(S, "FaceHalfLifeMinutes", 20f);
+            ZoneHalfLifeMinutes = Config.Get(S, "ZoneHalfLifeMinutes", 30f);
+            CrimeForgetMinutes = Config.Get(S, "CrimeForgetMinutes", 10f);
             SaveMs = Config.Get(S, "SaveMs", 15000);
             ZoneReactions = Config.Get(S, "ZoneReactions", true);
             ZoneReactionChance = Config.Get(S, "ZoneReactionChance", 10);

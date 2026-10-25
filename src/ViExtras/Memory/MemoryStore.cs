@@ -38,8 +38,12 @@ namespace ViExtras.NpcMemory
     /// The FiveM server kept one record per character and decayed it in real
     /// time when the character loaded. Here each story character (by player
     /// model: Michael, Franklin, Trevor, Lucia) has a file in Save\, decayed
-    /// the same way when it loads. Nothing is saved before the record is read,
-    /// so an early save can never wipe it.
+    /// the same way when it loads, and again as you play (Fade). Nothing is
+    /// saved before the record is read, so an early save can never wipe it.
+    ///
+    /// Nothing is remembered for ever: on FiveM a face that saw a crime was
+    /// kept for good. Here what they saw is forgotten CrimeForgetMinutes after
+    /// they last saw you, and then they fade out like anyone else.
     ///
     /// Police notoriety (the third table on FiveM) is gone: GTA6Hud keeps its
     /// own police memory in single player.
@@ -50,9 +54,11 @@ namespace ViExtras.NpcMemory
         {
             public float O;
             public int C, N, S;
+            public long T;      // when they last saw you (unix seconds)
         }
 
-        private const double Day = 86400.0;
+        private const double Minute = 60.0;
+        private static long _fadedAt;
 
         public static bool Loaded { get; private set; }
         public static string Character { get; private set; }
@@ -130,6 +136,7 @@ namespace ViExtras.NpcMemory
             face.C = r.Flags;
             face.N++;
             face.S = _seq;
+            face.T = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             r.Remembered = true;
             r.Met = face.N;
             _dirty = true;
@@ -220,7 +227,8 @@ namespace ViExtras.NpcMemory
                     {
                         string[] p = line.Split(' ');
                         if (p.Length == 2 && p[0] == "t") long.TryParse(p[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out last);
-                        else if (p.Length == 6 && p[0] == "f" && p[1].Length <= 96 && Faces.Count < MemCfg.MaxFaces)
+                        // A record from before 2.6.5 has no 7th field: they last saw you when it was saved.
+                        else if ((p.Length == 6 || p.Length == 7) && p[0] == "f" && p[1].Length <= 96 && Faces.Count < MemCfg.MaxFaces)
                         {
                             var f = new Face
                             {
@@ -228,6 +236,7 @@ namespace ViExtras.NpcMemory
                                 C = (int)Num.Clamp(F(p[3]), 0f, 65535f),
                                 N = Math.Max(1, (int)F(p[4])),
                                 S = Math.Max(0, (int)F(p[5])),
+                                T = p.Length == 7 && long.TryParse(p[6], NumberStyles.Integer, CultureInfo.InvariantCulture, out long seen) ? seen : last,
                             };
                             Faces[p[1]] = f;
                             if (f.S > _seq) _seq = f.S;
@@ -245,7 +254,8 @@ namespace ViExtras.NpcMemory
                 if (File.Exists(path)) SaveFile.SetAside(path, "Memory");   // the next flush mustn't overwrite it
             }
 
-            Decay(Math.Max(0.0, (now - last) / Day));
+            Decay(Math.Max(0.0, (now - last) / Minute), now);
+            _fadedAt = now;
             Loaded = true;
             _dirty = true; // writes the decayed record back, as the server did
             UM.Debug("memory loaded for " + character + ": " + Faces.Count + " faces");
@@ -254,27 +264,58 @@ namespace ViExtras.NpcMemory
         private static float F(string s) =>
             float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out float v) && !float.IsNaN(v) ? v : 0f;
 
-        /// <summary>server/main.lua decay(): opinions fade; a face only leaves memory if they never saw you do anything.</summary>
-        private static void Decay(double days)
+        /// <summary>
+        /// While playing, every save: the time since the last fade, faded. The record is
+        /// only marked for saving when someone or somewhere is forgotten; the opinions'
+        /// small drift goes out with the next save anyway, stamped with its own time.
+        /// </summary>
+        public static void Fade()
         {
-            if (days <= 0) return;
-            float faceMul = (float)Math.Pow(0.5, days / MemCfg.FaceHalfLifeDays);
+            if (!Loaded) return;
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            double minutes = (now - _fadedAt) / Minute;
+            _fadedAt = now;
+            if (Decay(minutes, now)) _dirty = true;
+        }
+
+        /// <summary>
+        /// server/main.lua decay(): opinions fade. What a face saw you do is forgotten
+        /// CrimeForgetMinutes after they last saw you (single player's own: on FiveM it
+        /// was kept for good), and then a face leaves memory once its opinion has faded.
+        /// True when anyone or anywhere was forgotten.
+        /// </summary>
+        private static bool Decay(double minutes, long now)
+        {
+            if (minutes <= 0) return false;
+            bool forgot = false;
+            float faceMul = (float)Math.Pow(0.5, minutes / MemCfg.FaceHalfLifeMinutes);
             var drop = new List<string>();
             foreach (KeyValuePair<string, Face> f in Faces)
             {
                 f.Value.O *= faceMul;
+                if (f.Value.C != 0 && MemCfg.CrimeForgetMinutes > 0f && now - f.Value.T >= MemCfg.CrimeForgetMinutes * Minute)
+                {
+                    f.Value.C = 0;
+                    forgot = true;
+                }
                 if (Math.Abs(f.Value.O) < 3f && f.Value.C == 0) drop.Add(f.Key);
             }
             foreach (string k in drop) Faces.Remove(k);
+            if (drop.Count > 0) UM.Debug("memory: forgot " + drop.Count + " face(s)");
 
-            float zoneMul = (float)Math.Pow(0.5, days / MemCfg.ZoneHalfLifeDays);
+            float zoneMul = (float)Math.Pow(0.5, minutes / MemCfg.ZoneHalfLifeMinutes);
             var codes = new List<string>(Zones.Keys);
             foreach (string code in codes)
             {
                 float rep = Zones[code] * zoneMul;
                 if (Math.Abs(rep) >= 1f) Zones[code] = rep;
-                else Zones.Remove(code);
+                else
+                {
+                    Zones.Remove(code);
+                    forgot = true;
+                }
             }
+            return forgot || drop.Count > 0;
         }
 
         public static void Flush()
@@ -289,7 +330,8 @@ namespace ViExtras.NpcMemory
                   .Append(Math.Floor(f.Value.O + 0.5).ToString(CultureInfo.InvariantCulture)).Append(' ')
                   .Append(f.Value.C.ToString(CultureInfo.InvariantCulture)).Append(' ')
                   .Append(f.Value.N.ToString(CultureInfo.InvariantCulture)).Append(' ')
-                  .Append(f.Value.S.ToString(CultureInfo.InvariantCulture)).Append('\n');
+                  .Append(f.Value.S.ToString(CultureInfo.InvariantCulture)).Append(' ')
+                  .Append(f.Value.T.ToString(CultureInfo.InvariantCulture)).Append('\n');
             foreach (KeyValuePair<string, float> z in Zones)
                 sb.Append("z ").Append(z.Key).Append(' ').Append(z.Value.ToString("0.###", CultureInfo.InvariantCulture)).Append('\n');
             try { SaveFile.Write(FileFor(Character), sb.ToString()); }

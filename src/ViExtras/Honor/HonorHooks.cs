@@ -100,6 +100,16 @@ namespace ViExtras
             ["odd_job"] = H(1, "Did an odd job", "good", cooldownMs: 300000, sessionCap: 6),
             ["honest_work"] = H(1, "An honest day's work", "good", cooldownMs: 600000, sessionCap: 8),
             ["barn_find"] = H(2, "Restored a derelict", "good"),
+
+            // ---------- Single player's own (not in the FiveM config) ----------
+            // Honor.cs: the stars went without an innocent or a cop killed while they were up.
+            ["clean_escape"] = H(4, "Lost the police cleanly", "good", cooldownMs: 60000),
+            // Honor.cs: LayLowMinutes with no stars and no bad deed.
+            ["lay_low"] = H(2, "Laid low", "good", sessionCap: 12),
+            // HonorConduct.cs: a kill of someone who was attacking a bystander.
+            ["defend_bystander"] = H(3, "Stood up for a stranger", "good", cooldownMs: 4000),
+            // HonorDogs.cs.
+            ["pet_dog"] = H(1, "Petted a dog", "good", cooldownMs: 20000, sessionCap: 6),
             ["vending_robbery"] = H(-3, "Broke into a vending machine", "bad", cooldownMs: 90000),
             ["meter_theft"] = H(-1, "Broke into a parking meter", "bad", cooldownMs: 60000, sessionCap: 10),
         };

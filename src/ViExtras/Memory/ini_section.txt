@@ -107,15 +107,21 @@ BandCold = -35
 ; ---- Memory -------------------------------------------------------------------
 ; Anyone you deal with is kept as a face: model, face, hair, clothes and the
 ; neighbourhood you met in. Anyone who spawns there looking exactly like that
-; is the same person. Opinions fade in real time.
+; is the same person. Memories are short, as people's are: they matter while
+; you're out causing trouble, and fade once you stop. Opinions fade in real
+; time, while you play and while you don't (half gone every
+; FaceHalfLifeMinutes, a neighbourhood's every ZoneHalfLifeMinutes), and what
+; someone saw you do is forgotten CrimeForgetMinutes after they last saw you
+; (0: never). A face whose opinion has faded is forgotten.
 MaxFaces = 250
 MemoryScanMs = 2500
 ScanRadius = 30
 RecogniseRange = 18
 RecogniseChance = 70
 ReactCooldownMs = 60000
-FaceHalfLifeDays = 6
-ZoneHalfLifeDays = 10
+FaceHalfLifeMinutes = 20
+ZoneHalfLifeMinutes = 30
+CrimeForgetMinutes = 10
 SaveMs = 15000
 ; Now and then a local greets you first, or the other thing, by how the
 ; neighbourhood feels about you.

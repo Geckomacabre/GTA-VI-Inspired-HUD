@@ -135,9 +135,55 @@ namespace ViExtras
         public static long Ms => Clock.ElapsedMilliseconds;
     }
 
-    /// <summary>scripts\ViExtras.ini, read once and shared by every script.</summary>
+    /// <summary>
+    /// scripts\ViExtras.ini, read once and shared by every script.
+    ///
+    /// The file opens with [Switches]: one plain True / False line per feature, for
+    /// players who only want to turn things on and off. Each switch stands in for
+    /// the setting it names in the sections below (Crosshair for [Crosshair]
+    /// Enabled), which is only read when the switch isn't there, so an older file
+    /// without [Switches] reads as it always did. Writing one of those settings
+    /// (HUD OPTIONS) writes its switch.
+    /// </summary>
     internal static class Config
     {
+        public const string Switches = "Switches";
+
+        // [section/key] -> its switch in [Switches]
+        private static readonly System.Collections.Generic.Dictionary<string, string> SwitchFor =
+            new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Crosshair/Enabled"] = "Crosshair",
+            ["Crosshair/KillMarks"] = "KillMarks",
+            ["WantedStars/Enabled"] = "WantedStars",
+            ["WantedBox/Enabled"] = "WantedBox",
+            ["Minimap/FeedBesideMap"] = "NotificationsBesideMap",
+            ["Switcher/Enabled"] = "CharacterCards",
+            ["CrashCam/Enabled"] = "CrashCamera",
+            ["WeightedCam/Enabled"] = "CameraWeight",
+            ["PoliceLights/Enabled"] = "PoliceLights",
+            ["PoliceLights/Arrow"] = "PoliceArrow",
+            ["PoliceForce/Enabled"] = "StunGunArrests",
+            ["CarWeapon/Enabled"] = "KeepYourGunInCars",
+            ["Memory/Witnesses"] = "Witnesses",
+            ["WantedBox/IndoorCameras"] = "IndoorCameras",
+            ["Memory/Enabled"] = "PeopleRemember",
+            ["Memory/Interact"] = "GreetAndAntagonize",
+            ["Memory/NpcSpeech"] = "PeopleTalk",
+            ["Memory/PlayerSpeech"] = "YouTalk",
+            ["Honor/Enabled"] = "Honor",
+            ["Honor/NpcReactions"] = "PeopleFearPsychos",
+            ["Honor/PetDogs"] = "PetDogs",
+            ["Skills/Enabled"] = "Skills",
+            ["Gym/Enabled"] = "Gym",
+            ["Focus/Enabled"] = "Focus",
+            ["Nitrous/Enabled"] = "Nitrous",
+            ["Binoculars/Enabled"] = "Binoculars",
+            ["Radio/Enabled"] = "RadioWheel",
+            ["Radio/CustomMusic"] = "YourOwnMusic",
+            ["Vangelico/Enabled"] = "VangelicoOpen",
+        };
+
         private static ScriptSettings _ini;
 
         private static ScriptSettings Ini
@@ -149,9 +195,23 @@ namespace ViExtras
             }
         }
 
+        private static bool Has(string section, string key)
+        {
+            try { return Ini.ContainsKey(section, key); }
+            catch { return false; }
+        }
+
+        // The [Switches] line standing in for section/key, when the file has it.
+        private static string SwitchOf(string section, string key) =>
+            SwitchFor.TryGetValue(section + "/" + key, out string name) && Has(Switches, name) ? name : null;
+
         public static T Get<T>(string section, string key, T fallback)
         {
-            try { return Ini.GetValue(section, key, fallback); }
+            try
+            {
+                string sw = SwitchOf(section, key);
+                return sw != null ? Ini.GetValue(Switches, sw, fallback) : Ini.GetValue(section, key, fallback);
+            }
             catch { return fallback; }
         }
 
@@ -169,6 +229,8 @@ namespace ViExtras
         /// </summary>
         public static void SetLine(string section, string key, string value)
         {
+            string sw = SwitchOf(section, key);
+            if (sw != null) { section = Switches; key = sw; }
             try
             {
                 var lines = new System.Collections.Generic.List<string>(File.Exists(Paths.Ini) ? File.ReadAllLines(Paths.Ini) : new string[0]);

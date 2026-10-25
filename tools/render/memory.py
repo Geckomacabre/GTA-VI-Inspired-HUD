@@ -21,7 +21,8 @@ the boxes recorded in manifest_memory.txt.
 from render_fivem_art import KBM_TOKENS, PAD_TOKENS, token_file
 
 GROUP = "memory"
-LABELS = ["Greet", "Defuse", "Antagonize", "Intimidate"]
+# "Pet" is single player's own (HonorDogs.cs), drawn on the same prompt.
+LABELS = ["Greet", "Defuse", "Antagonize", "Intimidate", "Pet"]
 
 PROBE = """
 () => {

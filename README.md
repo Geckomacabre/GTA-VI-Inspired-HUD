@@ -134,8 +134,9 @@ Want to play as **Lucia**? She isn't included: her model is someone else's paid 
 | Push-ups / sit-ups | **N** / **Shift + N** |
 | Greet / antagonize someone | **Y** / **U** |
 
-🙋 **Rather not greet people?** Set `Interact = False` under `[Memory]` in `scripts\ViExtras.ini` and the
-Greet / Antagonize prompt stays off.
+🙋 **Rather not greet people?** Set `GreetAndAntagonize = False` under `[Switches]`, at the top of
+`scripts\ViExtras.ini`, and the Greet / Antagonize prompt stays off. Every feature has a plain True / False switch
+there, and `GTA6Hud.ini` opens with FBICat's.
 
 🎵 **Music:** none is included. Put your own `.mp3` files in `scripts\Hud\Radio\CustomMusic` and pick **On Demand** in
 the radio wheel: each subfolder becomes a station of its own. Chase music goes in `scripts\Hud\Music`.

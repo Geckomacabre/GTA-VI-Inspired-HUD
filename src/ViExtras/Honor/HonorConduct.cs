@@ -16,6 +16,8 @@ namespace ViExtras
     ///     holding a weapon, is free (the cop is not: kill_cop has no exemptions).
     ///   * Pulling a driver out of a car (IS_PED_JACKING) costs honor.
     ///   * Optionally, aiming at a civilian does (off by default).
+    ///   * Killing someone who was attacking a bystander earns some
+    ///     (defend_bystander; single player's own, DefendBystanders).
     ///
     /// FiveM hears of kills through CEventNetworkEntityDamage. Single player has
     /// no such event, so the ped pool is polled: a ped seen dead for the first
@@ -49,9 +51,21 @@ namespace ViExtras
         private readonly int _graceMs;
         private readonly bool _armedFair, _penaliseAiming, _penaliseCarjacking, _penalisePlayerKills;
         private readonly bool _huntingIsLegal;
+        private readonly bool _defend;
+
+        /// <summary>
+        /// Every kill of ours that costs honor (kill_civilian, kill_cop, kill_player), told
+        /// even when `quiet` or a cooldown keeps the hook from applying: a chase with one in
+        /// it was not a clean escape.
+        /// </summary>
+        public Action<string> Killed;
 
         /// <summary>[ped] = game time of the last hit the player took from it.</summary>
         private readonly Dictionary<int, int> _aggressors = new Dictionary<int, int>();
+        /// <summary>[ped] = game time it was last seen fighting a bystander (DefendBystanders).</summary>
+        private readonly Dictionary<int, int> _bullies = new Dictionary<int, int>();
+        // How long after the fight a kill still counts as stepping in.
+        private const int BullyMs = 15000;
         private HashSet<int> _damagedBy = new HashSet<int>(), _damagedNow = new HashSet<int>();
         private float _lastHurt = -1f;
         private const int DamageCheckMs = 1000;
@@ -77,6 +91,7 @@ namespace ViExtras
             _penaliseCarjacking = Config.Get("Honor", "PenaliseCarjacking", true);
             _penalisePlayerKills = Config.Get("Honor", "PenalisePlayerKills", true);
             _huntingIsLegal = Config.Get("Honor", "HuntingIsLegal", true);
+            _defend = Config.Get("Honor", "DefendBystanders", true);
         }
 
         /// <summary>
@@ -100,6 +115,10 @@ namespace ViExtras
                 foreach (KeyValuePair<int, int> a in _aggressors)
                     if (now - a.Value >= _graceMs) old.Add(a.Key);
                 foreach (int h in old) _aggressors.Remove(h);
+                old.Clear();
+                foreach (KeyValuePair<int, int> b in _bullies)
+                    if (now - b.Value >= BullyMs) old.Add(b.Key);
+                foreach (int h in old) _bullies.Remove(h);
             }
 
             // Carjacking: polled every 500 ms; one report per jack, then 8 s off.
@@ -170,6 +189,10 @@ namespace ViExtras
             // doing the job, not an innocent victim.
             if (CopTypes.Contains(type)) return "kill_cop";
 
+            // Whoever was laying into a bystander, a gang member included, earns the
+            // player something for stopping them.
+            if (_defend && _bullies.TryGetValue(handle, out int fought) && now - fought < BullyMs) return "defend_bystander";
+
             if (!CivilianTypes.Contains(type)) return null;   // gangs, criminals: free
             if (IsAggressor(handle, now) || IsArmed(ped, handle)) return null;
             return "kill_civilian";
@@ -234,6 +257,7 @@ namespace ViExtras
                 {
                     _deadSince.Remove(h);
                     if (_armedFair) _armedNow[h] = Function.Call<int>(Hash.GET_SELECTED_PED_WEAPON, ped) != Unarmed;
+                    if (_defend) WatchFight(ped, h, self, now);
                     continue;
                 }
 
@@ -259,9 +283,11 @@ namespace ViExtras
                     int type = Function.Call<int>(Hash.GET_PED_TYPE, ped);
                     string hook = Classify(ped, h, type, now);
                     _trace("fatal hit by us on ped " + h + " (type " + type + ") -> " + (hook ?? "no honor cost"));
+                    if (hook != null && HonorHooks.Violent.Contains(hook)) Killed?.Invoke(hook);
                     if (hook != null && !quiet) _report(hook);
                 }
                 _aggressors.Remove(h);
+                _bullies.Remove(h);
             }
 
             // Only what is still in the pool is kept.
@@ -269,6 +295,20 @@ namespace ViExtras
             Swap(ref _armed, ref _armedNow);
             Swap(ref _seenDead, ref _seenNow);
             _primed = true;
+        }
+
+        // DefendBystanders: a ped in a fight whose target is a bystander, someone
+        // other than the player, a cop or an animal, is remembered for BullyMs.
+        private void WatchFight(Ped ped, int handle, int self, int now)
+        {
+            if (!Function.Call<bool>(Hash.IS_PED_IN_COMBAT, ped, 0)) return;
+            int victim = Function.Call<int>(Hash.GET_PED_TARGET_FROM_COMBAT_PED, ped, 0);
+            if (victim == 0 || victim == self || victim == handle) return;
+            if (Function.Call<bool>(Hash.IS_PED_A_PLAYER, victim)) return;
+            int type = Function.Call<int>(Hash.GET_PED_TYPE, victim);
+            if (!CivilianTypes.Contains(type) || CopTypes.Contains(type) || type == 27) return;   // 27: SWAT
+            if (!_bullies.ContainsKey(handle)) _trace("ped " + handle + " is attacking bystander " + victim);
+            _bullies[handle] = now;
         }
 
         private static void Swap<T>(ref T a, ref T b)

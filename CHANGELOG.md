@@ -10,6 +10,23 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Added
+
+- **More ways to earn honor back.** Losing the police without killing an innocent or a cop is a clean escape (+4; a chase of at least 20 seconds, and not if you're arrested or die). A few minutes with no stars and no bad deeds counts as laying low (+2, a few times a session). Killing someone who was attacking a bystander is standing up for them (+3), and they no longer cost honor. `[Honor] CleanEscape`, `LayLowMinutes` and `DefendBystanders`.
+- **The police seeing it makes it worse.** A bad deed a cop can see (a kill, a carjacking, a threat) costs 3 more. `[Honor] WitnessedExtra = 0` turns it off.
+- **People back off from a Psycho.** Once your honor is -40 or below (`[Honor] RankPsycho`), or broken, people nearby who see you now and then keep their distance with a word, and some run, more often once you're Shattered. Never on a mission, in a car or while you're wanted. `[Honor] NpcReactions = False` turns it off.
+- **Pet dogs.** Walk up to a dog and **PET** comes up on it (**E**, controller **D-pad Right**): your character kneels and pets it with Franklin's petting of Chop, for a little honor (each dog pays once every 5 minutes). A dog a script owns, such as one in a mission, is left alone. `[Honor] PetDogs = False` turns it off.
+
+- **Easy switches at the top of the ini files.** `ViExtras.ini` now opens with `[Switches]`: one plain `True` / `False` line per feature, in groups (on screen, cameras, police, people, honor, skills, cars and gear, radio), each with a one-line note. Everything else (amounts, distances, timings, keys) is below an ADVANCED line you don't need to touch. `GTA6Hud.ini` opens the same way with FBICat's switches people change most (status bars, the pause menu, smarter police, heat, the bounty, the sixth star, street life, carry all weapons, fuel, hunger, the character wheel and more). Every setting reads as before; an older `ViExtras.ini` without `[Switches]` still works.
+- **Calmer police.** GTA V's police were on top of you in seconds, and seemed to know where you were even when none of them could see you. Now they take twice as long between sending units and send them from about 300 m away; once they've lost sight of you (the stars grey out), the search stays where they last saw you instead of following you; and staying out of sight for 10 seconds plus 5 a star loses them (25 seconds at 3 stars). Not on story missions, or while RDE or LSR runs the police. `[Switches] CalmerPolice = False` brings back GTA V's police; the numbers are in `[CalmerPolice]`.
+- **Bounty patrols only follow fresh trouble.** FBICat's bounty is saved and only drops $500 a game day, and while there's any, his Heat sends police patrols cruising round you, so a game loaded with an old bounty had patrols closing in from the first minute, for hours. Now they only come while you're wanted and for 10 minutes after (`[BountyPatrols] FreshMinutes`). `[Switches] OldBountyPatrols = True` brings back the old way.
+
+### Changed
+
+- **People don't remember you for ever.** Anyone who saw you commit a crime kept it on record for good, and opinions only faded when a character loaded, over days. Memories are now short, as people's are: what someone saw you do is forgotten 10 minutes after they last saw you, opinions lose half every 20 minutes and a neighbourhood's every 30, while you play and while you don't. So people react to you while you're out causing trouble, and stop once you've laid off. `ViExtras.ini` `[Memory] CrimeForgetMinutes`, `FaceHalfLifeMinutes` and `ZoneHalfLifeMinutes` (they replace `FaceHalfLifeDays` and `ZoneHalfLifeDays`).
+
 ## 2.6.4 (23 October 2026)
 
 ### Added

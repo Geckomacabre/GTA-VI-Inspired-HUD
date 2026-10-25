@@ -6,7 +6,7 @@
 ; shows when the standing changes tier (angel / neutral / devil), or when
 ; honor has just broken. Hitting the bottom breaks honor for good: the badge
 ; stays grey and cracked whatever the number does afterwards.
-Enabled = True
+; On / off: Honor in [Switches] at the top.
 MinHonor = -100
 MaxHonor = 100
 DefaultHonor = 0
@@ -39,12 +39,49 @@ HuntingIsLegal = True
 SkipInMissions = False
 ; Also post every change in the game's feed, top left.
 NotifyOnChange = False
+; A bad deed a cop can see costs this much more (a kill, a carjacking, an
+; animal...): a cop facing you within WitnessRange metres, or anywhere round
+; you up close. 0: no extra.
+WitnessedExtra = 3
+WitnessRange = 60
+; Losing the police without killing an innocent or a cop pays (+4). The chase
+; has to last CleanEscapeMinSeconds; getting arrested or dying doesn't count.
+CleanEscape = True
+CleanEscapeMinSeconds = 20
+; Every LayLowMinutes with no stars and no bad deed pays (+2), a few times a
+; session. 0: off.
+LayLowMinutes = 5
+; Killing someone who was attacking a bystander pays (+3), whoever they are.
+DefendBystanders = True
+; Walk up to a dog and PET comes up on it (E / d-pad right). +1, the same dog
+; once every PetSameDogMs (game ms).
+; On / off: PetDogs in [Switches] at the top.
+PetSameDogMs = 300000
+; At or below RankPsycho honor (or once it has broken), people nearby who see
+; you now and then back off with a word, and some run: about one every
+; ReactEveryMs (game ms).
+RankPsycho = -40
+; On / off: PeopleFearPsychos in [Switches] at the top.
+ReactEveryMsPsycho = 9000
+ReactEveryMsShattered = 4500
 ; Write each step (deed seen, hook applied or refused, panel shown) to
 ; scripts\ViExtras.log.
-Debug = True
+Debug = False
 ; A key that shows what TestHook would do from where you stand, the pop and
 ; the panel both, WITHOUT changing your honor. TestBroken shows the broken
 ; look. None for none.
 TestKey = None
 TestHook = kill_civilian
 TestBroken = False
+; The layout editor: press EditKey to show the centre popup and the corner
+; panel, move them with the arrow keys (Shift: faster), Tab to switch between
+; them, R to put one back, Enter to save here, Backspace to cancel. None for none.
+EditKey = None
+; Where they have been moved to, in pixels at 1080p from their usual place
+; (the popup in the middle of the screen, the panel bottom right). The
+; popup's X is measured on a 1920 x 1080 screen and stretches with a wider or
+; narrower one, so 912 keeps it at the right edge, under "Crime reported".
+PopOffsetX = 912
+PopOffsetY = 18
+PanelOffsetX = 0
+PanelOffsetY = 0

@@ -187,6 +187,7 @@ namespace ViExtras
             int now = UM.Now;
             if (now < _nextSave) return;
             _nextSave = now + MemCfg.SaveMs;
+            Safely("fade", Mem.Fade);
             Safely("save", Mem.Flush);
         }
 
