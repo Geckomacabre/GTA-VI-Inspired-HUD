@@ -225,8 +225,9 @@ namespace ViExtras
         /// <summary>
         /// Writes "key = value" into [section] of ViExtras.ini, changing that one
         /// line (or adding it under the section) and leaving the rest of the file,
-        /// comments included, as it was. ScriptSettings.Save would rewrite the
-        /// whole file without its comments.
+        /// comments included, as it was: its line breaks too (Unix or Windows, and
+        /// whether it ends with one). ScriptSettings.Save would rewrite the whole
+        /// file without its comments.
         /// </summary>
         public static void SetLine(string section, string key, string value)
         {
@@ -234,7 +235,11 @@ namespace ViExtras
             if (sw != null) { section = Switches; key = sw; }
             try
             {
-                var lines = new System.Collections.Generic.List<string>(File.Exists(Paths.Ini) ? File.ReadAllLines(Paths.Ini) : new string[0]);
+                string text = File.Exists(Paths.Ini) ? File.ReadAllText(Paths.Ini) : "";
+                string nl = text.Contains("\r\n") || text.Length == 0 ? "\r\n" : "\n";
+                bool endsWithNl = text.Length == 0 || text.EndsWith("\n");
+                var lines = new System.Collections.Generic.List<string>(text.Length == 0 ? new string[0] : text.Replace("\r\n", "\n").Split('\n'));
+                if (endsWithNl && lines.Count > 0 && lines[lines.Count - 1].Length == 0) lines.RemoveAt(lines.Count - 1);
                 int start = -1, end = lines.Count;
                 for (int i = 0; i < lines.Count; i++)
                 {
@@ -267,7 +272,7 @@ namespace ViExtras
                         lines.Insert(at, line);
                     }
                 }
-                File.WriteAllLines(Paths.Ini, lines);
+                File.WriteAllText(Paths.Ini, string.Join(nl, lines) + (endsWithNl ? nl : ""));
                 _ini = null;   // read afresh next time
             }
             catch (Exception ex) { Log.Write("Config", "could not write " + section + "/" + key + ": " + ex.Message); }
