@@ -145,6 +145,7 @@ namespace ViExtras
         public static void Draw(CustomsMenu m)
         {
             Function.Call(Hash.HIDE_HUD_AND_RADAR_THIS_FRAME);
+            HudBridge.ShowMoney();   // GTA VI keeps the money up in a store
             if (m.Dialog != null) { DrawDialog(m); return; }
             Shade();
             MenuView view = m.Top;
@@ -333,6 +334,7 @@ namespace ViExtras
                 int count = kit != null ? m.Logic.Kits.Count : view.Options.Count;
                 string status = kit != null ? m.KitStatus(kit.Id) : m.StatusOf(view.Slot.Id, view.Options[view.Sel]);
                 int price = kit != null ? kit.Price : view.Options[view.Sel].Price;
+                if (status == "none" && price > ViExtras.Cash.Money) HudBridge.MoneyShort();
 
                 float h = V(3.45f) + V(3.9f);
                 if (count > 1) h += V(2.6f) + V(1.7f);
@@ -373,6 +375,7 @@ namespace ViExtras
                 }
                 y += V(3.6f) + V(2.8f);
                 string status = m.StatusOf(view.Slot.Id, option);
+                if (status == "none" && option.Price > ViExtras.Cash.Money) HudBridge.MoneyShort();
                 if (status != "stock") Status(x, y, status, option.Price);
             }
         }

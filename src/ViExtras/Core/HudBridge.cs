@@ -472,6 +472,44 @@ namespace ViExtras
             return _busy;
         }
 
+        // GTA6Hud's money row for a store it doesn't know of (Leonida Customs). In GTA VI the money shows the whole
+        // time you're in a store and goes grey while the item you're looking at costs more than you have: kept up this
+        // frame, as GTA6Hud keeps it for the game's own shops (its _cashVisibleFor), and greyed as for a store's BUY
+        // out of reach (ViPromptSeen, which the HUD's patch adds to GTA6Hud).
+        private static FieldInfo _cashFor;
+        private static Action<string, bool> _promptSeen;
+        private static bool _moneyLooked;
+
+        private static object MoneyHud()
+        {
+            object hud = Gta6Hud();
+            if (hud == null || _moneyLooked) return hud;
+            _moneyLooked = true;
+            const BindingFlags Any = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            _cashFor = hud.GetType().GetField("_cashVisibleFor", Any);
+            _promptSeen = Bind<Action<string, bool>>(null, hud.GetType().GetMethod("ViPromptSeen", Any, null, new[] { typeof(string), typeof(bool) }, null));
+            if (_cashFor == null || _promptSeen == null) Log.Write("HudBridge", "GTA6Hud's money row hooks: " + (_cashFor != null) + ", " + (_promptSeen != null));
+            return hud;
+        }
+
+        /// <summary>GTA6Hud's money row stays up this frame.</summary>
+        public static void ShowMoney()
+        {
+            try
+            {
+                object hud = MoneyHud();
+                if (hud != null && _cashFor != null && (float)_cashFor.GetValue(hud) < 0.25f) _cashFor.SetValue(hud, 0.25f);
+            }
+            catch { }
+        }
+
+        /// <summary>GTA6Hud's money row greys: what's selected costs more than the player has.</summary>
+        public static void MoneyShort()
+        {
+            try { if (MoneyHud() != null) _promptSeen?.Invoke("BUY", false); }
+            catch { }
+        }
+
         /// <summary>
         /// A typed delegate over one of GTA6Hud's methods, made once (null when it
         /// can't be: not there, or not the shape expected). MethodInfo.Invoke every

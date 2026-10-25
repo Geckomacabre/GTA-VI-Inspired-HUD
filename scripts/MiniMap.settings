@@ -15,6 +15,7 @@ SearchStartRadius=180
 SearchMinRadius=60
 SearchShrinkPerSec=4
 ShowWhenWanted=1
+; WantedTint: the minimap coloured while you are wanted (0 turns it off). ChaseFlash: 1 is GTA VI's colours (blue when the police are told or have lost you, red and blue while they chase you, red while you shoot), 0 the old red tint.
 WantedTint=1
 ChaseFlash=1
 ; HiddenBlips: GTA blip numbers left off the minimap (shops, barbers, bars, gas stations). The pause map still shows them. Leave it empty to show them all.
