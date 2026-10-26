@@ -10,6 +10,12 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Guides
+
+- **Removing NVE (and keeping the HUD).** The Enhanced guide's NVE section ends with how to take NaturalVision Enhanced out: which files it added (moved to a folder, so it can go back), keeping `xinput1_4.dll`, installing OpenRPF again so the HUD loads from `mods`, and moving a Lucia or Jason pack out of `onigiri`. LWE and Central's "for NVE" builds go with it.
+
 ## 2.6.5 (25 October 2026)
 
 ### Added

@@ -446,6 +446,46 @@ You only need this if your Lucia download isn't one of the two kinds in Part 2.
    That way you get the updated game's menu screens.
 7. Do Step 7 (Windowed Borderless), and play.
 
+### Removing NVE (and keeping the HUD)
+
+**What you get:** the game without NVE, and the HUD still working.
+
+⚠️ **Lively World Expansion and Central Real-Life Traffic / Environment ("for NVE")** load through NVE, so they go
+too.
+
+You'll move NVE's files into a folder instead of deleting them. That way you can put NVE back later.
+
+1. Close the game.
+2. Make a new folder on your Desktop called **`NVE removed`**.
+3. From your **game folder**, move these into **`NVE removed`**:
+   - **`NVE.asi`**, **`NVE.bin`** and **`NVE.ini`**
+   - **`onigiri.asi`**, **`onigiri.ini`** and the **`onigiri`** folder
+     (it also holds LWE, Central and your copies of the HUD's packs. The HUD still has its own in `mods`.)
+   - **`ReShade.asi`**, **`ReShade.ini`**, **`ReShade2.ini`** and the **`reshade-shaders`** folder
+   - any **`renodx-*.addon64`** files (moved out for AuraV? Move those into `NVE removed` too)
+   - **Had Central?** Also **`CentralLimits.asi`**, **`CentralLimits.ini`** and **`CentralDlcPatch.asi`**, and
+     **`ResourceExtensions.asi`** and **`ResourceExtensions.ini`** if you only got them for Central.
+4. ⚠️ **Keep `xinput1_4.dll`.** NVE replaced it, but it's the same file Script Hook V uses to load mods.
+5. Do **Step 4** (install OpenRPF). NVE needed it gone. Without NVE, the HUD loads from the `mods` folder through
+   OpenRPF.
+6. Check the HUD is still in the `mods` folder: open **`mods\update\x64\dlcpacks`**. You should see **`vihud`**,
+   **`vihudfonts`** and **`vihudanims`**.
+   - Not there? Do **Step 6** again (install the HUD).
+7. **Had Lucia or Jason?** Their packs were in `onigiri\dlcpacks`, which you just moved.
+   1. Copy **`luciaped`** / **`jasonped`** from **`NVE removed\onigiri\dlcpacks`** into **`mods\update\x64\dlcpacks`**.
+   2. Add their lines to the `dlclist.xml` in `mods` → `update` → **`update.rpf`** → `common` → `data`
+      (Part 4 of "Optional: Jason" / "Optional: Lucia", the **Without it** way).
+8. Start the game.
+
+✅ The HUD shows, with the game's own look and the HUD's own loading screens.
+
+| What you see | What to do |
+| --- | --- |
+| A message says the **VI UI pack (vihud) is not registered** | The HUD's packs aren't in the `mods` folder's list. Do **Step 6** again (install the HUD). |
+| The game **closes by itself** or crashes while loading | Check you kept **`xinput1_4.dll`** and did **Step 4** (OpenRPF). Then check `asiloader.log` in your game folder: it shouldn't list `NVE.asi` or `onigiri.asi` any more. |
+
+**To put NVE back:** move everything from **`NVE removed`** back into your game folder, and delete **`OpenRPF.asi`**.
+
 ---
 
 ## Optional: Lively World Expansion (with NaturalVision Enhanced)
@@ -753,6 +793,9 @@ After that, updates go in normally.
 ---
 
 ## How to remove the mod
+
+💡 Want to remove **NaturalVision Enhanced** and keep the HUD? See "Removing NVE (and keeping the HUD)" in the NVE
+section.
 
 ### The easiest way
 
