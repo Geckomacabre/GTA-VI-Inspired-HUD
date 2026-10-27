@@ -17,6 +17,12 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+> [!WARNING]
+> ### 🌐 English only
+> The HUD is made and tested with GTA V set to **English**, and English is the only language we support.
+> In other languages some text can show up as empty boxes, and switching characters has been reported to crash.
+> Please set GTA V's language to **English** in your game launcher's settings for GTA V before you play.
+
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
