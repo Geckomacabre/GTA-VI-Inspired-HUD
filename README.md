@@ -26,8 +26,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.6.5-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.6.5-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.7.0-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.7.0-Enhanced.oiv` with the OIV Package Installer.
 >
 > **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
 >
@@ -76,6 +76,22 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 
 ---
 
+## 🆕 New in 2.7
+
+- **Key cloning.** At a locked car's door, **CLONE KEY** (**E**, Square on a controller) is a timing game on the
+  ring: press while the dot is in the pink window, three times. It's the quiet way into a car with an immobiliser.
+  Get a key cloner at any store counter for $2,500, or by selling five cars to the fence.
+- **The slim jim plays like the FiveM version.** Press once, then drag (or push the right stick) left all the way
+  and the door opens. Right all the way is the trap that sets the alarm off. Your character steps up and works a real
+  strip into the window while you do it.
+- **POLICE LIGHTS can go to 0%** in HUD OPTIONS (hold **V**).
+- **Controller buttons that work:** the ATM, the hoop, the key cloner, drinks, SCAN and DIVE take the button they show.
+- **One SMASH WINDOW** at a locked car, without the extra F marker over it.
+- **Masks are masks:** Michael's, Franklin's and Trevor's MASKS row has only their real masks now, no bags.
+- **The crosshair switch works** under `[Crosshair]` in `ViExtras.ini` too.
+- **Shops are back on the pause map**, and **Jason gets the GTA VI clothes shop**.
+- Everything else is in the **[changelog](CHANGELOG.md)**.
+
 ## 🆕 New in 2.6
 
 - **GTA VI's character switcher.** Hold **Left Alt** and the characters are a row of cards, as in GTA VI: Michael,
@@ -107,6 +123,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 | :--- | :--- | :--- |
 | `GTA5.exe` | **Legacy** | 👉 **[Legacy guide](INSTALL-LEGACY.md)** |
 | `GTA5_Enhanced.exe` | **Enhanced** | 👉 **[Enhanced guide](INSTALL-ENHANCED.md)** |
+
+🌐 The guides in other languages: **Legacy** [한국어](INSTALL-LEGACY.ko.md) · [Español](INSTALL-LEGACY.es.md) · [Português (Brasil)](INSTALL-LEGACY.pt-BR.md) · [Italiano](INSTALL-LEGACY.it.md) · **Enhanced** [한국어](INSTALL-ENHANCED.ko.md) · [Español](INSTALL-ENHANCED.es.md) · [Português (Brasil)](INSTALL-ENHANCED.pt-BR.md) · [Italiano](INSTALL-ENHANCED.it.md)
 
 **2. Download 1 file** from the [latest release](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest):
 the `.oiv` with your version's name (Legacy **or** Enhanced).

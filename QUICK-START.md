@@ -1,5 +1,7 @@
 # ⚡ Quick start: the dead-simple version
 
+🌐 **Read in:** English · [한국어](QUICK-START.ko.md) · [Español](QUICK-START.es.md) · [Português (Brasil)](QUICK-START.pt-BR.md) · [Italiano](QUICK-START.it.md)
+
 *The GTA VI-Inspired HUD is made by **FBICat**, with features from the FiveM version. Credits are in the [README](README.md#-credits).*
 
 Never modded GTA V? Do these 6 steps in order. Each one links to the full guide if you want more detail:
@@ -38,7 +40,7 @@ Using **NaturalVision Enhanced**, **Lively World Expansion**, **Central Real-Lif
 
 From **[Releases](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)**, grab:
 
-- **`GTA-VI-Inspired-HUD-2.6.5-Legacy.oiv`** *or* **`GTA-VI-Inspired-HUD-2.6.5-Enhanced.oiv`** (yours only)
+- **`GTA-VI-Inspired-HUD-2.7.0-Legacy.oiv`** *or* **`GTA-VI-Inspired-HUD-2.7.0-Enhanced.oiv`** (yours only)
 - *(optional)* Lucia isn't included: her model is someone else's paid work. Get her from her creator,
   **[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com (for Jason, **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net).
 

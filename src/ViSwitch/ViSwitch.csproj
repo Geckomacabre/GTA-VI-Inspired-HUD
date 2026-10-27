@@ -15,6 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- the HUD's own words in the game's language (scripts\Hud\Lang), shared with ViExtras -->
+    <Compile Include="..\ViExtras\Core\Tr.cs" Link="Core\Tr.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Built against ScriptHookVDotNet 3.7 (the API GTA6Hud targets); SHVDN Enhanced resolves it too. -->
     <Reference Include="ScriptHookVDotNet3">
       <HintPath>$(ShvdnDir)\ScriptHookVDotNet3.dll</HintPath>

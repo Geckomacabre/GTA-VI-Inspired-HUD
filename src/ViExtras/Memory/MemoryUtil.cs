@@ -149,12 +149,33 @@ namespace ViExtras.NpcMemory
         public static bool IsFemale(Ped ped) => !Function.Call<bool>(Hash.IS_PED_MALE, ped);
 
         /// <summary>
-        /// Anything in the mask slot (component 1). um_memory only looked there
-        /// on the freemode peds; the story characters keep their masks in the
-        /// same slot (GTA6Hud's own face test reads it the same way), so here it
-        /// is any model.
+        /// A mask on, as GTA6Hud's MASKS row puts one on. The online characters
+        /// wear masks in slot 1 (um_memory's rule). Michael, Franklin and Trevor
+        /// wear theirs in slot 9, where only these models are masks: the rest are
+        /// bags, radios, harnesses and armour, and their slot 1 is the beard, which
+        /// once counted as a mask (each model looked at in the game, 2026-10-26).
+        /// Other models: no mask the HUD knows of.
         /// </summary>
-        public static bool IsMasked(Ped ped) => Function.Call<int>(Hash.GET_PED_DRAWABLE_VARIATION, ped, 1) > 0;
+        public static bool IsMasked(Ped ped)
+        {
+            uint model = (uint)ped.Model.Hash;
+            if (model == 0x705E61F2 || model == 0x9C9EFFD8)   // mp_m_freemode_01, mp_f_freemode_01
+                return Function.Call<int>(Hash.GET_PED_DRAWABLE_VARIATION, ped, 1) > 0;
+            return StoryMask(ped);
+        }
+
+        /// <summary>One of Michael's, Franklin's or Trevor's masks in slot 9.</summary>
+        public static bool StoryMask(Ped ped)
+        {
+            int d = Function.Call<int>(Hash.GET_PED_DRAWABLE_VARIATION, ped, 9);
+            switch ((uint)ped.Model.Hash)
+            {
+                case 0x0D7114C9: return d == 8;              // Michael: the wrestler mask
+                case 0x9B22DBAF: return d == 5;              // Franklin: the wrestler mask
+                case 0x9B810FA2: return d >= 5 && d <= 7;    // Trevor: goggles and respirator, wrestler, monster
+                default: return false;
+            }
+        }
 
         // GET_PED_HAIR_COLOR (0xE3DD5F2A84B42281), not named in SHVDN's list.
         private const Hash GetPedHairColor = (Hash)0xE3DD5F2A84B42281UL;

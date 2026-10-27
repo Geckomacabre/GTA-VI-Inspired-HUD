@@ -104,8 +104,12 @@ namespace ViExtras
             _sigPed = ped.Handle;
             var sb = new System.Text.StringBuilder(96);
             foreach (int c in OutfitComponents)
+            {
+                // A story character's mask is in slot 9: the face tell's business, as slot 1 is the online ones'.
+                if (c == 9 && NpcMemory.UM.StoryMask(ped)) { sb.Append("0:0,"); continue; }
                 sb.Append(Function.Call<int>(Hash.GET_PED_DRAWABLE_VARIATION, ped, c)).Append(':')
                   .Append(Function.Call<int>(Hash.GET_PED_TEXTURE_VARIATION, ped, c)).Append(',');
+            }
             foreach (int p in OutfitProps)
                 sb.Append('p').Append(Function.Call<int>(Hash.GET_PED_PROP_INDEX, ped, p)).Append(':')
                   .Append(Function.Call<int>(Hash.GET_PED_PROP_TEXTURE_INDEX, ped, p)).Append(',');
@@ -113,8 +117,8 @@ namespace ViExtras
             return _sig;
         }
 
-        // Component 1 is the mask slot; anything but the empty drawable covers the face.
-        private static bool FaceHidden(Ped ped) => Function.Call<int>(Hash.GET_PED_DRAWABLE_VARIATION, ped, 1) > 0;
+        // A mask covers the face: NpcMemory.UM.IsMasked has which slot and models are masks for whom.
+        private static bool FaceHidden(Ped ped) => NpcMemory.UM.IsMasked(ped);
 
         private static string PlateOf(Ped ped)
         {

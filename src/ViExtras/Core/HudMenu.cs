@@ -19,8 +19,8 @@ namespace ViExtras
     /// </summary>
     public static class HudMenu
     {
-        // POLICE LIGHTS: each press goes to the next size up, from the largest back to the smallest
-        private static readonly int[] PoliceSizes = { 60, 80, 100, 120, 140 };
+        // POLICE LIGHTS: each press goes to the next size up, from the largest back to 0 (no lights)
+        private static readonly int[] PoliceSizes = { 0, 60, 80, 100, 120, 140 };
 
         public static string Value(string key)
         {

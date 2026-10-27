@@ -165,12 +165,28 @@ namespace ViExtras
             return tells;
         }
 
+        // The two lines as the art has them (wanted.py's #copy). In another language (scripts\Hud\Lang)
+        // the box is drawn without them and the lines go over it in GTA's own text, which has every
+        // language the game has: Chalet London, capitals 16 px with their tops 17.5 px into the box,
+        // 31 px apart, 16.5 px in, rgb(215, 205, 210) as wanted.py sets them; the first line stops
+        // short of the star.
+        private const string Line1 = "The cops are searching for you", Line2 = "and they have your description";
+        private const float CopyX = 16.5f, CopyCapTop = 17.5f, CopyCap = 16f, CopyLine = 31f;
+        private static readonly Color CopyColour = Color.FromArgb(215, 205, 210);
+
         private static void Draw(string[] tells)
         {
             Art.Entry box = Art.Get("wanted_box");
             if (box == null) return;
             float x = 0.015f * Canvas.W;
-            Art.Draw(box, x, Top, Color.White);
+            string line1 = Tr.T(Line1), line2 = Tr.T(Line2);
+            if (line1 == Line1 && line2 == Line2) Art.Draw(box, x, Top, Color.White);
+            else
+            {
+                BlankBox(box, x, Top);
+                TextKit.GameLine(line1, 0, CopyCap, x + CopyX, Top + CopyCapTop, CopyColour, StarX - CopyX - 8f);
+                TextKit.GameLine(line2, 0, CopyCap, x + CopyX, Top + CopyCapTop + CopyLine, CopyColour, box.BoxW - 2f * CopyX);
+            }
             Art.Entry star = Art.Get("wanted_star");
             if (star != null) Art.Draw(star, x + StarX, Top + StarY, Color.White);
             for (int i = 0; i < tells.Length; i++)
@@ -178,6 +194,20 @@ namespace ViExtras
                 Art.Entry tell = Art.Get("wanted_tell_" + tells[i]);
                 if (tell != null) Art.Draw(tell, x + TellX + i * TellStep, Top + TellY, Color.White);
             }
+        }
+
+        // The box with no words, from its own picture: the top rows (corners, the light line) and the
+        // bottom rows as they are, and between them a band from below the words stretched (wanted.py's
+        // tint runs left to right only). Rows of the 2x picture, 228 tall: the words are 38-144, and the
+        // cuts sit on DXT5's 4-row blocks at full and half size, so no letter bleeds in.
+        private static void BlankBox(Art.Entry box, float x, float y)
+        {
+            const float Rows = 228f, TopEnd = 28f, BandFrom = 160f, BandTo = 200f, BottomFrom = 152f;
+            float left = x - box.BoxX, top = y - box.BoxY;
+            float topH = box.H * TopEnd / Rows, bottomAt = box.H * BottomFrom / Rows;
+            Canvas.ImagePart(box.Path, left, top, box.W, topH, 0f, 0f, 1f, TopEnd / Rows, Color.White);
+            Canvas.ImagePart(box.Path, left, top + topH, box.W, bottomAt - topH, 0f, BandFrom / Rows, 1f, BandTo / Rows, Color.White);
+            Canvas.ImagePart(box.Path, left, top + bottomAt, box.W, box.H - bottomAt, 0f, BottomFrom / Rows, 1f, 1f, Color.White);
         }
     }
 }

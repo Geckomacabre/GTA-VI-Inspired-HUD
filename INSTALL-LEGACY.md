@@ -1,5 +1,7 @@
 # How to install: GTA V **Legacy**
 
+🌐 **Read in:** English · [한국어](INSTALL-LEGACY.ko.md) · [Español](INSTALL-LEGACY.es.md) · [Português (Brasil)](INSTALL-LEGACY.pt-BR.md) · [Italiano](INSTALL-LEGACY.it.md)
+
 This guide is for the **original PC version** of GTA V.
 
 Does your game folder have a file called **`GTA5_Enhanced.exe`**? Then you have Enhanced.
@@ -117,10 +119,10 @@ OpenIV puts mods in a separate **`mods` folder**. Your original game files are n
 ## Step 5: Download the mod
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.6.5-Legacy.oiv`** (the mod, about 100 MB).
+2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.7.0-Legacy.oiv`** (the mod, about 100 MB).
    It also switches the mod on in the game. There's no separate patch to get.
 
-❌ Don't download `GTA-VI-Inspired-HUD-2.6.5-Enhanced.oiv`. That one is for the other version of the game.
+❌ Don't download `GTA-VI-Inspired-HUD-2.7.0-Enhanced.oiv`. That one is for the other version of the game.
 
 **Want to play as Lucia or Jason?** Their models aren't included.
 
@@ -129,7 +131,7 @@ OpenIV puts mods in a separate **`mods` folder**. Your original game files are n
 | **Lucia** | Her model is someone else's paid work. Get her from her creator:<br>**[Lucia Caminos on Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** or **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** on gta5-mods.com.<br>Or use another Lucia model.<br>To put her in the game, see "Optional: Lucia" below.<br>The HUD works without her. |
 | **Jason** | **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** from the same creator, or **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** on mod-hub.net.<br>To put him in the game, see "Optional: Jason" below. |
 
-💡 The number in the file name is the version (2.6.5 here). So you can always tell which one you installed.
+💡 The number in the file name is the version (2.7.0 here). So you can always tell which one you installed.
 Mention it when you ask for help.
 
 ---
@@ -143,7 +145,7 @@ Then right-click **OpenIV** → **Run as administrator**, and click **Yes**.
 💡 Windows lets only administrators change files there. Without it, the install can leave the old files in place.
 
 1. In OpenIV, click **Tools** → **Package Installer**.
-2. Pick **`GTA-VI-Inspired-HUD-2.6.5-Legacy.oiv`**.
+2. Pick **`GTA-VI-Inspired-HUD-2.7.0-Legacy.oiv`**.
 3. Click **Install**.
 4. When it asks where to install, choose **mods folder**.
 5. If it offers to create the folder, say yes.
@@ -574,7 +576,7 @@ After that, updates go in normally.
 An `.oiv` is just a zip:
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.6.5-Legacy.oiv`** to your Desktop.
+2. Copy **`GTA-VI-Inspired-HUD-2.7.0-Legacy.oiv`** to your Desktop.
 3. Rename the copy to **`.zip`**.
 
    💡 Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.

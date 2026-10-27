@@ -126,6 +126,99 @@ namespace ViExtras
             return f.Glyphs.TryGetValue(key, out g);
         }
 
+        // Whether the face draws c itself: as is, as its capital, or as the plain
+        // letter of an accented one (Find's rules, without its '?').
+        private static bool Has(FaceData f, char c)
+        {
+            if (f.Glyphs.ContainsKey(c)) return true;
+            char up = char.ToUpperInvariant(c);
+            if (up != c && f.Glyphs.ContainsKey(up)) return true;
+            if (c > 0x7F)
+            {
+                string bare = c.ToString().Normalize(NormalizationForm.FormD);
+                if (bare.Length > 0 && bare[0] != c && bare[0] <= 0x7F) return Has(f, bare[0]);
+            }
+            return false;
+        }
+
+        // A letter or digit the face can't draw: text in the player's language
+        // (Korean, Russian, Chinese...), from the game's own labels or their music.
+        // Such a line is drawn with GTA's own text instead, which has every
+        // language the game has; the atlases would show '?' for each letter.
+        private static bool Foreign(FaceData f, string text)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                char c = text[i];
+                if (c > 0x7F && char.IsLetterOrDigit(c) && !Has(f, c)) return true;
+            }
+            return false;
+        }
+
+        // ---- GTA's own text, for Foreign lines -----------------------------------
+        // Chalet Comprime Cologne (font 4), narrow like the display face, its line
+        // as tall as the CSS font size. Raw hashes: their names differ between
+        // Script Hook V .NET versions.
+        private const int GameFont = 4;
+        private const ulong RenderedCharacterHeight = 0xDB88A37483346780; // GET_RENDERED_CHARACTER_HEIGHT
+        private const ulong BeginWidth = 0x54CE8AC98E120CAB;              // BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT
+        private const ulong EndWidth = 0x85F061DA64ED2F67;                // END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT
+        private static readonly float[] _lineAtScale1 = new float[8];     // by GTA font
+
+        private static float GameScale(float sizePx, int font = GameFont)
+        {
+            if (_lineAtScale1[font] <= 0f)
+                _lineAtScale1[font] = GTA.Native.Function.Call<float>((GTA.Native.Hash)RenderedCharacterHeight, 1f, font);
+            float line = _lineAtScale1[font] > 0.001f ? _lineAtScale1[font] : 0.045f;
+            return sizePx / 1080f / line;
+        }
+
+        // The line as up to ten 33-character pieces of CELL_EMAIL_BCON (~a~ x10),
+        // as Script Hook V .NET does: a player-name piece holds 99 bytes of UTF-8.
+        private static void AddPieces(string text)
+        {
+            for (int i = 0, n = 0; i < text.Length && n < 10; i += 33, n++)
+                GTA.Native.Function.Call(GTA.Native.Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text.Substring(i, Math.Min(33, text.Length - i)));
+        }
+
+        private static float GameWidth(string text, float sizePx, int font = GameFont)
+        {
+            GTA.Native.Function.Call(GTA.Native.Hash.SET_TEXT_FONT, font);
+            GTA.Native.Function.Call(GTA.Native.Hash.SET_TEXT_SCALE, 0f, GameScale(sizePx, font));
+            GTA.Native.Function.Call((GTA.Native.Hash)BeginWidth, "CELL_EMAIL_BCON");
+            AddPieces(text);
+            return GTA.Native.Function.Call<float>((GTA.Native.Hash)EndWidth, true) * Canvas.W;
+        }
+
+        private static void GameDraw(string text, float sizePx, float x, float y, Color color, TextAlign align, bool outline, float maxWidth, int font = GameFont)
+        {
+            float width = GameWidth(text, sizePx, font);
+            if (maxWidth > 0f && width > maxWidth) sizePx *= maxWidth / width; // shrink to fit instead of cutting
+            GTA.Native.Function.Call(GTA.Native.Hash.SET_TEXT_FONT, font);
+            GTA.Native.Function.Call(GTA.Native.Hash.SET_TEXT_SCALE, 0f, GameScale(sizePx, font));
+            GTA.Native.Function.Call(GTA.Native.Hash.SET_TEXT_COLOUR, (int)color.R, (int)color.G, (int)color.B, (int)color.A);
+            if (outline) GTA.Native.Function.Call(GTA.Native.Hash.SET_TEXT_OUTLINE);
+            GTA.Native.Function.Call(GTA.Native.Hash.SET_TEXT_JUSTIFICATION, align == TextAlign.Center ? 0 : align == TextAlign.Right ? 2 : 1);
+            if (align == TextAlign.Right) GTA.Native.Function.Call(GTA.Native.Hash.SET_TEXT_WRAP, 0f, x / Canvas.W);
+            GTA.Native.Function.Call(GTA.Native.Hash.BEGIN_TEXT_COMMAND_DISPLAY_TEXT, "CELL_EMAIL_BCON");
+            AddPieces(text);
+            GTA.Native.Function.Call(GTA.Native.Hash.END_TEXT_COMMAND_DISPLAY_TEXT, x / Canvas.W, y / 1080f, 0);
+        }
+
+        /// <summary>
+        /// One line, left-aligned, in GTA's own text (font 0 Chalet London, 4 Chalet Comprime
+        /// Cologne), which has every language the game has: its capitals capHeight tall with their
+        /// tops at capTop, set as GTA6Hud sets its own (a line is the capitals / 0.72 tall and
+        /// starts 0.16 of a line above them). Wider than maxWidth, it shrinks to fit.
+        /// </summary>
+        public static void GameLine(string text, int font, float capHeight, float x, float capTop, Color color, float maxWidth = 0f)
+        {
+            if (string.IsNullOrEmpty(text) || capHeight <= 0f || color.A == 0) return;
+            text = Tr.T(text);
+            float line = capHeight / 0.72f;
+            GameDraw(text, line, x, capTop - line * 0.16f, color, TextAlign.Left, false, maxWidth, font);
+        }
+
         // One character's move of the pen, as the browser sets a line: the
         // kerning between it and the glyph before, its advance, then
         // letter-spacing (CSS adds that after every letter, the last one too).
@@ -239,9 +332,11 @@ namespace ViExtras
         public static float Measure(string text, TextFace face, float sizePx, float letterSpacingEm = 0f)
         {
             if (string.IsNullOrEmpty(text) || sizePx <= 0f) return 0f;
+            text = Tr.T(text);
             FaceData f = Get(face);
             // Without metrics nothing is drawn; a rough width keeps layouts apart.
             if (f == null) return text.Length * sizePx * 0.5f;
+            if (Foreign(f, text)) return GameWidth(text, sizePx);
             return Lay(f, text, text.Length, false, letterSpacingEm * f.Size) * sizePx / f.Size;
         }
 
@@ -259,6 +354,7 @@ namespace ViExtras
             TextAlign align = TextAlign.Left, bool outline = false, float letterSpacingEm = 0f, float maxWidth = 0f)
         {
             if (string.IsNullOrEmpty(text) || sizePx <= 0f || color.A == 0) return;
+            text = Tr.T(text);
             try
             {
                 FaceData f = Get(face);
@@ -269,6 +365,7 @@ namespace ViExtras
                     return;
                 }
                 if (f.AtlasW <= 0f || f.AtlasH <= 0f) { f.AtlasW = letters.W; f.AtlasH = letters.H; }
+                if (Foreign(f, text)) { GameDraw(text, sizePx, x, y, color, align, outline, maxWidth); return; }
 
                 float k = sizePx / f.Size;
                 float spacing = letterSpacingEm * f.Size;

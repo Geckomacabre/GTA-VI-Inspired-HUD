@@ -27,6 +27,7 @@
     <Compile Include="..\ViExtras\Core\HudBridge.cs" Link="Core\HudBridge.cs" />
     <Compile Include="..\ViExtras\Core\TextKit.cs" Link="Core\TextKit.cs" />
     <Compile Include="..\ViExtras\Core\PlateStore.cs" Link="Core\PlateStore.cs" />
+    <Compile Include="..\ViExtras\Core\Tr.cs" Link="Core\Tr.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ScriptHookVDotNet3">

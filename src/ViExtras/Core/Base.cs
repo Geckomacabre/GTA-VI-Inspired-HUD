@@ -142,8 +142,11 @@ namespace ViExtras
     /// players who only want to turn things on and off. Each switch stands in for
     /// the setting it names in the sections below (Crosshair for [Crosshair]
     /// Enabled), which is only read when the switch isn't there, so an older file
-    /// without [Switches] reads as it always did. Writing one of those settings
-    /// (HUD OPTIONS) writes its switch.
+    /// without [Switches] reads as it always did. When both lines are there (a
+    /// player wrote Enabled = False under [Crosshair] and the crosshair stayed, with
+    /// Crosshair = True at the top), False on either one turns the feature off.
+    /// Writing one of those settings (HUD OPTIONS) writes its switch, and the line
+    /// under its section too when the file has one.
     /// </summary>
     internal static class Config
     {
@@ -211,7 +214,10 @@ namespace ViExtras
             try
             {
                 string sw = SwitchOf(section, key);
-                return sw != null ? Ini.GetValue(Switches, sw, fallback) : Ini.GetValue(section, key, fallback);
+                if (sw == null) return Ini.GetValue(section, key, fallback);
+                T value = Ini.GetValue(Switches, sw, fallback);
+                if (value is bool on && on && Has(section, key) && !Ini.GetValue(section, key, true)) return (T)(object)false;
+                return value;
             }
             catch { return fallback; }
         }
@@ -232,7 +238,16 @@ namespace ViExtras
         public static void SetLine(string section, string key, string value)
         {
             string sw = SwitchOf(section, key);
+            // Its own line under the section as well: kept in step, or a False there would turn the feature back off
+            // at the next start (Get).
+            if (sw != null && Has(section, key)) WriteLine(section, key, value, false);
             if (sw != null) { section = Switches; key = sw; }
+            WriteLine(section, key, value, true);
+        }
+
+        // SetLine's write. add: put the line in when the file doesn't have it.
+        private static void WriteLine(string section, string key, string value, bool add)
+        {
             try
             {
                 string text = File.Exists(Paths.Ini) ? File.ReadAllText(Paths.Ini) : "";
@@ -251,6 +266,7 @@ namespace ViExtras
                 string line = key + " = " + value;
                 if (start < 0)
                 {
+                    if (!add) return;
                     lines.Add("");
                     lines.Add("[" + section + "]");
                     lines.Add(line);
@@ -265,6 +281,7 @@ namespace ViExtras
                         if (!t.StartsWith(";") && eq > 0 && string.Equals(t.Substring(0, eq).Trim(), key, StringComparison.OrdinalIgnoreCase)) { found = i; break; }
                     }
                     if (found >= 0) lines[found] = line;
+                    else if (!add) return;
                     else
                     {
                         int at = end;
@@ -323,6 +340,7 @@ namespace ViExtras
         public static void Post(string text)
         {
             if (string.IsNullOrEmpty(text)) return;
+            text = Tr.T(text);
             GTA.Native.Function.Call(GTA.Native.Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, "CELL_EMAIL_BCON");
             for (int i = 0; i < text.Length; i += 99)
                 GTA.Native.Function.Call(GTA.Native.Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text.Substring(i, Math.Min(99, text.Length - i)));

@@ -122,7 +122,9 @@ namespace ViExtras
             _nearSize = Math.Max(1f, Config.Get(S, "NearSize", 19f));
             _farSize = Math.Max(1f, Config.Get(S, "FarSize", 8f));
             _roundOpacity = Num.Clamp01(Config.Get(S, "RoundOpacity", 1f));
-            SizeScale = Num.Clamp(Config.Get(S, "Size", 100f), 40f, 200f) / 100f;
+            // 0: no lights at the screen's edge (the arrow keeps its own switch)
+            float size = Config.Get(S, "Size", 100f);
+            SizeScale = size <= 0f ? 0f : Num.Clamp(size, 40f, 200f) / 100f;
             _tallDistance = Math.Max(0f, Config.Get(S, "TallDistance", 5f));
             _shortDistance = Math.Max(_tallDistance + 1f, Config.Get(S, "ShortDistance", 60f));
             _whiteLampA = Config.Get(S, "WhiteLampWidth", 19f);
@@ -289,8 +291,11 @@ namespace ViExtras
         {
             // the round lights' size follows the siren's distance smoothly between scans
             _near += (_nearTarget - _near) * Math.Min(1f, Game.LastFrameTime * 4f);
-            if (_round) DrawRound(now);
-            else DrawWide(now);
+            if (SizeScale > 0f)
+            {
+                if (_round) DrawRound(now);
+                else DrawWide(now);
+            }
             if (_arrow) DrawArrow();
         }
 

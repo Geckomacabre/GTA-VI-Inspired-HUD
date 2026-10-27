@@ -1123,7 +1123,7 @@ namespace ViSwitch
         {
             try { if (_mNotify != null) { _mNotify.Invoke(null, new object[] { text }); return; } } catch { }
 #pragma warning disable CS0618   // PostTicker isn't in Script Hook V .NET Enhanced
-            GTA.UI.Notification.Show(text);
+            GTA.UI.Notification.Show(ViExtras.Tr.T(text));   // (GTA6Hud's Notify translates its own)
 #pragma warning restore CS0618
         }
 

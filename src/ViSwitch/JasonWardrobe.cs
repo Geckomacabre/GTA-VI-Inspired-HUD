@@ -154,6 +154,7 @@ namespace ViSwitch
 
         static void Help(string text)
         {
+            text = ViExtras.Tr.T(text);
             Function.Call(Hash.BEGIN_TEXT_COMMAND_DISPLAY_HELP, "CELL_EMAIL_BCON");
             for (int i = 0; i < text.Length; i += 90)
                 Function.Call(Hash.ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME, text.Substring(i, Math.Min(90, text.Length - i)));
