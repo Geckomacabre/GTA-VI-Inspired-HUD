@@ -10,6 +10,27 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Added
+
+- **Stamina rings on the minimap.** While you sprint, thin white rings go out from your marker, as in the FiveM version: a new one every 0.4 seconds, each fading out as it grows, so two or three are out at once, and the last is gone about a second after you stop. `StaminaRings = 0` in `MiniMap.settings` turns them off (ViMinimap patch).
+- **The minimap is seen from your height.** On a roof the city falls away below you, and under a parachute it shrinks, as in the FiveM version; the building you're on sits under your marker. Helicopters and planes keep the minimap's own zoom-out instead. `HeightCamera = 0` in `MiniMap.settings` keeps the view on the ground (ViMinimap patch).
+- **The GPS route on foot.** The minimap now draws the route, and the distance left, on foot too, not only in a vehicle (ViMinimap patch).
+- **A waypoint on a place shows the place.** Set the waypoint on a shop, a garage or any other place with a picture, and the minimap shows that place's picture where the waypoint pin would be (inside the ring in a vehicle), instead of the place's icon and a pin on top of each other (ViMinimap patch).
+- **Lane lines and haze.** The minimap draws lane lines on the roads, and the top of the map pales toward the horizon, as in the FiveM version. `Lanes = 0` and `Haze = 0` turn them off (ViMinimap patch).
+- **Dusk and dawn.** The minimap now darkens gradually from 7:30 pm to 9 pm and lightens from 5 am to 6:30 am (around `NightStartsAt` and `DayStartsAt`), instead of switching at 8 pm and 6 am. `DuskDawn = 0` brings the switch back (ViMinimap patch).
+- **The wanted colour fades.** While you're wanted, the minimap's red and blue now fade into each other, and the colour fades away when it's over, instead of switching at once. `WantedFade = 0` brings the switch back (ViMinimap patch).
+- **Maps for world map mods.** If you play on a map mod that replaces Los Santos and you have its map pictures in `scripts\ViMap`, the minimap draws them (with a night set after dark, if there is one) and the pause map shows the map mod's own radar tiles, so both match the world you're in. The HUD doesn't come with any pictures; without that folder nothing changes. The area the pictures cover is `[MapPictures]` in `GTA6Hud.ini` (`Enabled = False` always shows the HUD's own maps). With the pictures, the minimap is seen from twice as far out (`PictureZoomOut` in `MiniMap.settings`), and Z / D-pad down zooms it out further for a moment. Thanks to **GAVRA** (`@loodygawra`), whose VI map support and map pictures showed how (GTA6Hud and ViMinimap patches).
+
+### Changed
+
+- **The minimap shows on foot.** It used to show only in a vehicle (or while you're wanted), so the route on foot, the stamina rings and the view from a roof were hidden while walking. `OnlyInVehicle = 1` in `MiniMap.settings` brings back the old way.
+
+### Fixed
+
+- **Police stations are back on the minimap.** Hiding the police's blips also hid the police stations; they're places, so they show again. Officers, police cars and helicopters are still left off (ViMinimap patch).
+
 ## 2.7 (27 October 2026)
 
 ### Added

@@ -206,6 +206,8 @@ from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and 
   additions, and everything else in this mod.
 - **moddims** (Discord `@moddims`): the original "GTA VI MiniMap (3D Buildings)" mod the minimap is built
   on, including `ViMinimap.asi`.
+- **GAVRA** (Discord `@loodygawra`): the "VI map support" and its map pictures, which the minimap and pause
+  map's support for world map mods (`[MapPictures]`) is built on.
 - **Grand Figma Kit VI**: the UI design kit behind the HUD art,
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 - **[LemonUI](https://github.com/LemonUIbyLemon/LemonUI)** by Lemon (MIT), included as `scripts\LemonUI.SHVDN3.dll`.

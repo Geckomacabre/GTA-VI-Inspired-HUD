@@ -1,6 +1,6 @@
 Enabled=1
 Buildings3D=1
-OnlyInVehicle=1
+OnlyInVehicle=0
 AltitudeZoom=0
 Zoom=6
 WheelEnabled=1
@@ -20,3 +20,16 @@ WantedTint=1
 ChaseFlash=1
 ; HiddenBlips: GTA blip numbers left off the minimap (shops, barbers, bars, gas stations). The pause map still shows them. Leave it empty to show them all.
 HiddenBlips=52,71,72,73,75,93,100,110,121,135,361
+; StaminaRings: rings going out from your marker while you sprint, as in the FiveM version (0 turns them off).
+StaminaRings=1
+; HeightCamera: the map is seen from your height, so the city falls away below you on a roof and shrinks under a parachute (aircraft keep their own zoom).
+HeightCamera=1
+; Lanes: lane lines on the roads. Haze: the top of the map pales toward the horizon.
+Lanes=1
+Haze=1
+; DuskDawn: the map darkens gradually from half an hour before NightStartsAt to an hour after, and lightens the same way round DayStartsAt (0 switches at once).
+DuskDawn=1
+; WantedFade: the wanted colour fades between red and blue, and in and out (0 switches at once).
+WantedFade=1
+; PictureZoomOut: with a world map mod's pictures (GTA6Hud.ini [MapPictures]), how much further out the map is seen; Z / D-pad down doubles it for a moment.
+PictureZoomOut=2
