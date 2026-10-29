@@ -603,18 +603,42 @@ An `.oiv` is just a zip:
 
 ## How to remove the mod
 
+### The easy way
+
+1. Download **[GTA-VI-Inspired-HUD-Uninstall-Legacy.oiv](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-Legacy.oiv)**.
+2. In OpenIV: **Tools** → **Package Installer**, pick it, **Install**, and choose the **mods folder**, as for the HUD.
+
+It takes off only the HUD: its scripts, **`ViMinimap.asi`**, its three packs and their lines in `dlclist.xml`, whichever
+version you have. Your other mods stay as they are.
+
+It leaves:
+- **Your progress**, in `scripts\Hud\Save`, in case you come back. Not coming back? Delete the **`scripts\Hud`** folder.
+- **The HUD's logs:** `scripts\GTA6Hud.perf.log`, `scripts\ViExtras.log` and the like, and `ViMinimap.log` next to
+  `GTA5.exe`. You can delete them.
+- **`scripts\LemonUI.SHVDN3.dll`**, because other mods use it too.
+- **`scripts\MiniMap.settings`**, **`.levels`**, **`.heights`** and **`.water`** (about 30 MB). The standalone
+  GTA VI MiniMap mod keeps its settings and map data in the same files. Don't have it? You can delete them.
+- **The higher game limits** in `gameconfig.xml`. Other mods may need them, and they do no harm.
+- **The VI loading screens**, if you installed them. To put the game's own back, see "Already have them, and want the
+  game's own back?" under **Optional: VI loading screens**.
+
+### Or by hand
+
 1. In your **game folder**, delete **`ViMinimap.asi`**.
 2. Open the **`scripts`** folder.
 3. Delete these:
-   - **`GTA6Hud.dll`**
-   - **`GTA6Hud.ini`**
-   - **`ViMinimap.dll`**
-   - **`LemonUI.SHVDN3.dll`**
-   - the **`MiniMap.*`** files
-   - the **`Hud`** folder
-4. Delete the **`mods`** folder.
-
-   ⚠️ This also removes any other mods you installed with OpenIV.
+   - **`GTA6Hud.dll`**, **`ViExtras.dll`**, **`ViWasted.dll`**, **`ViCustoms.dll`**, **`ViCrouch.dll`**,
+     **`ViSwitch.dll`** and **`ViMinimap.dll`**
+   - their **`.ini`** files: `GTA6Hud.ini`, `ViExtras.ini`, `ViWasted.ini`, `ViCustoms.ini`, `ViCrouch.ini`
+   - the **`MiniMap.*`** files, unless you also use the standalone GTA VI MiniMap mod
+   - the **`Hud`**, **`ViExtras`**, **`ViWasted`**, **`ViCustoms`** and **`ViCrouch`** folders
+4. In your game folder, open **`mods\update\x64\dlcpacks`** and delete the **`vihud`**, **`vihudfonts`** and
+   **`vihudanims`** folders.
+5. Open **OpenIV** and click **Edit mode** at the top, so it's on.
+6. In OpenIV, open: `mods` → `update` → **`update.rpf`** → `common` → `data`. Right-click **`dlclist.xml`** → **Edit**.
+7. Delete the three lines with **`dlcpacks:/vihud/`**, **`dlcpacks:/vihudfonts/`** and **`dlcpacks:/vihudanims/`**.
+   Leave every other line as it is.
+8. Press **Ctrl + S** to save, and close the window.
 
 ✅ Your game is back to normal. Script Hook V and Script Hook V .NET can stay. They don't change anything
 on their own.

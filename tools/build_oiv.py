@@ -3,6 +3,26 @@
     python tools/build_oiv.py legacy         --dlcpacks <folder> [--startscreen <folder>] [--out build]
     python tools/build_oiv.py enhanced       --dlcpacks <folder> [--startscreen <folder>] [--out build]
     python tools/build_oiv.py <edition> --loadingscreens --startscreen <folder> [--out build]
+    python tools/build_oiv.py <edition> --uninstall [--out build]
+
+--uninstall: the uninstaller (GTA-VI-Inspired-HUD-<version>-Uninstall-<Edition>.oiv,
+from oiv/uninstall-<edition>.xml; the guides link to copies without the version
+in extras/, so rebuild and copy them there when the HUD's file list changes).
+It deletes every file the HUD package of this build installs, which takes in
+every older version's (none was ever dropped), and takes the packs out of
+dlclist.xml (oiv/unregister.xml, first).
+The scripts DLLs and ViMinimap.asi go first, then the packs, then the rest, so
+the HUD no longer loads even if a step after them stops. It leaves what the
+package never installed (scripts\\Hud\\Save, logs), the files other mods share
+(SHARED: LemonUI.SHVDN3.dll, the MiniMap.* data the standalone minimap mod
+uses too), the raised gameconfig.xml pools (other mods may need them) and
+the loading screens (putting Rockstar's movies back would mean shipping them).
+The OIV Package Installer copies a package's update\\ files into mods\\ but
+deletes a path as written, from the game folder, so the Enhanced packs are
+deleted as mods\\update\\...; OpenIV deletes them from where it installed them,
+as Rebalanced Dispatch Enhanced's uninstaller does. OpenIV won't open a package
+without a content folder ("Unable to find "content" folder"), so a package
+with nothing to install carries content/PLACEHOLDER, as other uninstallers do.
 
 --loadingscreens: the start screen on its own, as an optional package
 (GTA-VI-Inspired-HUD-<version>-LoadingScreens-<Edition>.oiv, from
@@ -81,6 +101,10 @@ SKIP_DIRS = {"Save", ".muffled"}
 ART_PNGS = "scripts/ViExtras/Art/"
 EDITIONS = ("legacy", "enhanced")
 STARTSCREEN_ARCHIVE = r"x64\data\cdimages\scaleform_frontend.rpf"
+# Never deleted by the uninstallers, which take off only what is the HUD's alone: other mods use LemonUI, and the
+# standalone GTA VI MiniMap (3D Buildings) mod keeps its settings and learned map data in the same MiniMap.* files.
+SHARED = {"scripts\\lemonui.shvdn3.dll", "scripts\\minimap.heights", "scripts\\minimap.levels",
+          "scripts\\minimap.settings", "scripts\\minimap.water"}
 
 
 def template(name):
@@ -98,6 +122,13 @@ def output_name(edition, part=""):
 
 def collect_files(dlcpacks):
     """Return (source path on disk, path inside content/, install path) for every file."""
+    files = collect_scripts()
+    add_packs(files, dlcpacks, HUD_PACKS)
+    return files
+
+
+def collect_scripts():
+    """collect_files without the packs: the scripts and ViMinimap.asi."""
     files = []
     scripts = os.path.join(ROOT, "scripts")
     for dirpath, dirnames, filenames in os.walk(scripts):
@@ -113,8 +144,16 @@ def collect_files(dlcpacks):
         if not os.path.isfile(src):
             sys.exit(f"missing {name}")
         files.append((src, name, name))
-    add_packs(files, dlcpacks, HUD_PACKS)
     return files
+
+
+def uninstall_paths(edition):
+    """What the uninstaller deletes, in order: ViMinimap.asi and the scripts DLLs, the packs, then everything else."""
+    files = [install for _, _, install in collect_scripts() if install.lower() not in SHARED]
+    first = [f for f in files if "\\" not in f or (f.count("\\") == 1 and f.lower().endswith(".dll"))]
+    prefix = "mods\\" if edition == "enhanced" else ""
+    packs = [f"{prefix}update\\x64\\dlcpacks\\{pack}\\dlc.rpf" for pack in HUD_PACKS]
+    return first + packs + [f for f in files if f not in first]
 
 
 def add_packs(files, dlcpacks, packs):
@@ -145,8 +184,13 @@ def collect_startscreen(edition, folder):
     return [(os.path.join(folder, n), f"startscreen/{n}", n) for n in names]
 
 
-def assembly_xml(edition, files, startscreen, name=None):
+def assembly_xml(edition, files, startscreen, name=None, deletes=()):
     xml = template(name or edition)
+    if "<!-- UNREGISTER -->" in xml:
+        with open(os.path.join(ROOT, "oiv", "unregister.xml"), encoding="utf-8") as f:
+            xml = xml.replace("    <!-- UNREGISTER -->", f.read().rstrip("\n"))
+    if "<!-- DELETES -->" in xml:
+        xml = xml.replace("    <!-- DELETES -->", "\n".join(f"    <delete>{escape(d)}</delete>" for d in deletes))
     if "<!-- FILES -->" in xml:
         lines = [f'    <add source="{escape(content.replace("/", chr(92)))}">{escape(install)}</add>'
                  for _, content, install in files]
@@ -199,15 +243,26 @@ def main():
     ap.add_argument("--dlcpacks", help="folder with vihud/, vihudfonts/ and vihudanims/")
     ap.add_argument("--startscreen", help="folder of files for update.rpf's scaleform_frontend.rpf")
     ap.add_argument("--loadingscreens", action="store_true", help="build the optional loading screens package only")
+    ap.add_argument("--uninstall", action="store_true", help="build the uninstaller")
     ap.add_argument("--out", default=os.path.join(ROOT, "build"))
     args = ap.parse_args()
 
     startscreen = []
-    if args.loadingscreens:
+    deletes = []
+    part = ""
+    if args.uninstall:
+        if args.loadingscreens or args.startscreen or args.dlcpacks:
+            ap.error("--uninstall takes no --dlcpacks, --startscreen or --loadingscreens")
+        files = []
+        name = f"uninstall-{args.edition}"
+        deletes = uninstall_paths(args.edition)
+        part = "Uninstall-"
+    elif args.loadingscreens:
         if not args.startscreen:
             ap.error("--loadingscreens needs --startscreen")
         files = []
         name = f"loadingscreens-{args.edition}"
+        part = "LoadingScreens-"
     else:
         if not args.dlcpacks:
             ap.error(f"{args.edition} needs --dlcpacks")
@@ -217,13 +272,15 @@ def main():
         startscreen = collect_startscreen(args.edition, args.startscreen)
 
     os.makedirs(args.out, exist_ok=True)
-    out = os.path.join(args.out, output_name(args.edition, "LoadingScreens-" if args.loadingscreens else ""))
+    out = os.path.join(args.out, output_name(args.edition, part))
     tmp = out + ".part"
     with zipfile.ZipFile(tmp, "w", allowZip64=True) as zf:
-        write_entry(zf, "assembly.xml", data=assembly_xml(args.edition, files, startscreen, name).encode("utf-8"))
+        write_entry(zf, "assembly.xml", data=assembly_xml(args.edition, files, startscreen, name, deletes).encode("utf-8"))
         write_entry(zf, "icon.png", src=os.path.join(ROOT, "oiv", "icon.png"))
         for src, content, _ in files + startscreen:
             write_entry(zf, "content/" + content, src=src)
+        if not files and not startscreen:
+            write_entry(zf, "content/PLACEHOLDER", data=b"OpenIV needs a content folder; this package installs nothing.\r\n")
     os.replace(tmp, out)
 
     sha = hashlib.sha256()
@@ -231,6 +288,8 @@ def main():
         for chunk in iter(lambda: f.read(1 << 22), b""):
             sha.update(chunk)
     extra_note = f" + {len(startscreen)} start screen" if startscreen else ""
+    if deletes:
+        extra_note += f" + {len(deletes)} deletes"
     print(f"{out}  {os.path.getsize(out):,} bytes  {len(files)} files{extra_note}  sha256 {sha.hexdigest()}")
 
 

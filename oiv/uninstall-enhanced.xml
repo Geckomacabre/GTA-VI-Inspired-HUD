@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.1" id="{390eca58-c391-4e55-a413-9816d92c2468}" target="Five">
+  <metadata>
+    <name>GTA VI-Inspired HUD 2.7.0 Uninstaller (GTA V Enhanced)</name>
+    <version><major>2</major><minor>7</minor><tag>ENHANCED UNINSTALL 2.7.0</tag></version>
+    <author><displayName>Geckomacabre x FBICat</displayName></author>
+    <description><![CDATA[Takes the GTA VI-Inspired HUD off GTA V ENHANCED (GTA5_Enhanced.exe) again. Maintained by Geckomacabre.
+Drag it onto the OIV Package Installer (CodeWalker.OIVInstaller.exe), the same way you installed the HUD.
+Game in C:\Program Files? Start the installer with right-click > Run as administrator.
+
+Need help? discord.gg/C7gE5SHEzH, or a GitHub issue.
+
+What it removes
+  - The HUD's scripts: GTA6Hud, ViExtras, ViWasted, ViCustoms, ViCrouch, ViSwitch and ViMinimap, with their .ini
+    files and the files in scripts\Hud, scripts\ViExtras, ViCustoms, ViCrouch and ViWasted
+  - ViMinimap.asi, next to GTA5_Enhanced.exe
+  - The packs vihud, vihudfonts and vihudanims (mods\update\x64\dlcpacks), and their lines in dlclist.xml
+  Only the HUD's own files: it removes the files of every version up to this one, whichever you have, and
+  nothing another mod also uses. Your other mods stay as they are.
+
+What it leaves
+  - Your progress, in scripts\Hud\Save. Coming back later? It's still there. If not, delete the scripts\Hud folder.
+  - The HUD's logs (scripts\GTA6Hud.perf.log, scripts\ViExtras.log and the like, and ViMinimap.log next to the game).
+    You can delete them.
+  - scripts\LemonUI.SHVDN3.dll, because other mods use it too.
+  - scripts\MiniMap.settings, .levels, .heights and .water (about 30 MB): the standalone GTA VI MiniMap mod keeps
+    its settings and map data in the same files. Don't have it? You can delete them.
+  - The higher limits in gameconfig.xml. Other mods may need them, and they do no harm.
+  - The VI loading screens, if you installed them. Your install guide's "Optional: VI loading screens" shows how to
+    put the game's own back.
+  - Script Hook V, Script Hook V .NET Enhanced, OpenRPF, and Jason or Lucia if you added them.
+
+With NaturalVision Enhanced
+  The installer can't edit NVE's files. Delete the vihud, vihudfonts and vihudanims folders in onigiri\dlcpacks, and
+  their three lines in onigiri\common\data\dlclist.xml. If you copied the loading screens there, delete
+  onigiri\platform\data\cdimages\scaleform_frontend.rpf too.
+
+https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
+]]></description>
+    <licence><![CDATA[Personal use. Removes the GTA VI-Inspired HUD (by FBICat, maintained by Geckomacabre); it installs nothing.]]></licence>
+  </metadata>
+  <colors>
+    <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>
+    <iconBackground>$FFE06AA8</iconBackground>
+  </colors>
+  <content>
+    <!-- UNREGISTER -->
+    <!-- DELETES -->
+  </content>
+</package>

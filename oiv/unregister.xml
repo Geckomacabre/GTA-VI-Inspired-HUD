@@ -1,0 +1,20 @@
+    <archive path="update\update.rpf" createIfNotExist="False" type="RPF7">
+      <xml path="common\data\dlclist.xml">
+        <add xpath="/SMandatoryPacksData" append="Last">
+          <ViHudScratch />
+        </add>
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihud/'])] | /SMandatoryPacksData/ViHudScratch" append="Last">
+          <Item>dlcpacks:/vihud/</Item>
+        </add>
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudanims/'])] | /SMandatoryPacksData/ViHudScratch" append="Last">
+          <Item>dlcpacks:/vihudanims/</Item>
+        </add>
+        <add xpath="/SMandatoryPacksData/Paths[not(Item[.='dlcpacks:/vihudfonts/'])] | /SMandatoryPacksData/ViHudScratch" append="Last">
+          <Item>dlcpacks:/vihudfonts/</Item>
+        </add>
+        <remove xpath="/SMandatoryPacksData/ViHudScratch" />
+        <remove xpath="/SMandatoryPacksData/Paths/Item[.='dlcpacks:/vihud/']" />
+        <remove xpath="/SMandatoryPacksData/Paths/Item[.='dlcpacks:/vihudanims/']" />
+        <remove xpath="/SMandatoryPacksData/Paths/Item[.='dlcpacks:/vihudfonts/']" />
+      </xml>
+    </archive>

@@ -801,25 +801,56 @@ section.
 
 ### The easiest way
 
+1. Download **[GTA-VI-Inspired-HUD-Uninstall-Enhanced.oiv](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-Enhanced.oiv)**.
+2. Drag it onto the **OIV Package Installer** (`CodeWalker.OIVInstaller.exe`), as for the HUD. Game in Program
+   Files? Right-click the installer → **Run as administrator** first.
+
+It takes off only the HUD: its scripts, **`ViMinimap.asi`**, its three packs and their lines in `dlclist.xml`, whichever
+version you have. Your other mods stay as they are.
+
+It leaves:
+- **Your progress**, in `scripts\Hud\Save`, in case you come back. Not coming back? Delete the **`scripts\Hud`** folder.
+- **The HUD's logs:** `scripts\GTA6Hud.perf.log`, `scripts\ViExtras.log` and the like, and `ViMinimap.log` next to
+  `GTA5_Enhanced.exe`. You can delete them.
+- **`scripts\LemonUI.SHVDN3.dll`**, because other mods use it too.
+- **`scripts\MiniMap.settings`**, **`.levels`**, **`.heights`** and **`.water`** (about 30 MB). The standalone
+  GTA VI MiniMap mod keeps its settings and map data in the same files. Don't have it? You can delete them.
+- **The higher game limits** in `gameconfig.xml`. Other mods may need them, and they do no harm.
+- **The VI loading screens**, if you installed them. To put the game's own back, see "Already have them, and want the
+  game's own back?" under **Optional: VI loading screens**.
+
+💡 The installer keeps a copy of what it took off (about 140 MB, in `OIV_CW_Uninstall_Data`), so **Manage Mods** can
+put the HUD back. Sure you won't need it? Delete the `GTA VI-Inspired HUD ... Uninstaller` folder in there.
+
+**With NaturalVision Enhanced**, the installer can't reach NVE's files, so also:
+1. In **`onigiri\dlcpacks`**, delete the **`vihud`**, **`vihudfonts`** and **`vihudanims`** folders.
+2. Open **`onigiri\common\data\dlclist.xml`** (Notepad is fine) and delete the three lines with `vihud`,
+   `vihudfonts` and `vihudanims`. Save.
+3. Copied the loading screens there? Delete **`onigiri\platform\data\cdimages\scaleform_frontend.rpf`** too.
+
+### Or with Manage Mods
+
 1. Open the **OIV Package Installer**.
 2. Go to **Manage Mods**.
-3. Uninstall both packages.
+3. Uninstall the HUD's packages, newest first.
 
 ### Or by hand
 
 1. In your **game folder**, delete **`ViMinimap.asi`**.
 2. Open the **`scripts`** folder.
 3. Delete these:
-   - **`GTA6Hud.dll`**
-   - **`GTA6Hud.ini`**
-   - **`ViMinimap.dll`**
-   - **`LemonUI.SHVDN3.dll`**
-   - the **`MiniMap.*`** files
-   - the **`Hud`** folder
-4. Delete the **`mods`** folder. ⚠️ This also removes any other mods in it.
-5. With NaturalVision Enhanced, also delete:
-   - **`onigiri\platform\data\cdimages\scaleform_frontend.rpf`** (the HUD's loading screens)
-   - the HUD's packs in `onigiri\dlcpacks`
+   - **`GTA6Hud.dll`**, **`ViExtras.dll`**, **`ViWasted.dll`**, **`ViCustoms.dll`**, **`ViCrouch.dll`**,
+     **`ViSwitch.dll`** and **`ViMinimap.dll`**
+   - their **`.ini`** files: `GTA6Hud.ini`, `ViExtras.ini`, `ViWasted.ini`, `ViCustoms.ini`, `ViCrouch.ini`
+   - the **`MiniMap.*`** files, unless you also use the standalone GTA VI MiniMap mod
+   - the **`Hud`**, **`ViExtras`**, **`ViWasted`**, **`ViCustoms`** and **`ViCrouch`** folders
+4. In your game folder, open **`mods\update\x64\dlcpacks`** and delete the **`vihud`**, **`vihudfonts`** and
+   **`vihudanims`** folders.
+5. Open **CodeWalker RPF Explorer** and click **Edit** → **Edit mode**.
+6. Open `mods` → `update` → **`update.rpf`** → `common` → `data` → **`dlclist.xml`**.
+7. Delete the three lines with **`dlcpacks:/vihud/`**, **`dlcpacks:/vihudfonts/`** and **`dlcpacks:/vihudanims/`**.
+   Leave every other line as it is, and save.
+8. With NaturalVision Enhanced, also do the three NVE steps above.
 
 ✅ Your game is back to normal.
 
