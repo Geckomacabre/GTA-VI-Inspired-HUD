@@ -15,9 +15,14 @@ namespace ViExtras
     ///
     /// While a gun is aimed: on foot, three ticks (left, right, bottom) that
     /// kick outward on every shot and ease back; in a vehicle, a ring with a
-    /// dot. The game's own reticle is hidden only while this one shows. A kill
-    /// by the player flashes a four-wedge mark over it: red for a one-hit
-    /// headshot, yellow when it took more than one hit, white otherwise.
+    /// dot. vice_hud has the ticks for every gun; FBICat's VicePoint reticle
+    /// (GTA6Hud's UpdateViceReticle, off in this fork) gives shotguns a pair of
+    /// brackets and rifles, SMGs and machine guns a dot that opens into a ring
+    /// while firing, so those are drawn here from his textures, which the vihud
+    /// pack carries (vicepoint.ytd), on the ticks' kick. The game's own
+    /// reticle is hidden only while this one shows. A kill by the player
+    /// flashes a four-wedge mark over it: red for a one-hit headshot, yellow
+    /// when it took more than one hit, white otherwise.
     ///
     /// vice_hud's third eye (#third-eye, SetThirdEyeActive) is not here: it is
     /// the targeting system's reticle, shown only when ox_target says so, and
@@ -50,6 +55,15 @@ namespace ViExtras
         // game, as GTA6Hud's own reticle leaves them; hiding it took the scope away (a player: "the scope of the
         // sniper doesnt load").
         private const uint GroupSniper = 0xB7BBD827;
+        private const uint GroupShotgun = 0x33431399, GroupRifle = 0x39D5C192, GroupMg = 0x451B04BC, GroupSmg = 0xC6E9A5C5;
+
+        // ---- FBICat's VicePoint numbers, GTA6Hud.ini [Reticle]'s defaults, in canvas px --------
+        // Each picture is the whole 2048 px texture drawn as a square VpSize tall, its
+        // shape near the middle, as his ViceSprite draws it.
+        private const string VpTxd = "vicepoint";
+        private const float VpSize = 550f, VpSizeKick = 400f;               // BaseIdleScalePx, BaseRecoilScalePx
+        private const float VpShotgun = 10f, VpShotgunKick = 30f;           // ShotgunBaseOffsetPx, ShotgunRecoilOffsetPx
+        private const float VpRifle = 0.08f, VpRifleKicked = 0.6f;          // ArBaseRatio, ArRecoilRatio
         // A ped's death can land a frame or two after the hit that caused it.
         private const int DeathLagFrames = 15;
         private const int CombatWindowMs = 10000;
@@ -61,6 +75,7 @@ namespace ViExtras
         private long _fullSweepUntil;
 
         private enum Mode { None, Foot, Vehicle }
+        private enum Shape { Ticks, Shotgun, Rifle }
 
         // ---- settings, [Crosshair] in ViExtras.ini ---------------------------------
         private readonly bool _debug;
@@ -74,6 +89,7 @@ namespace ViExtras
         // without .hidden, which a kill also sets (onKillMark's show(box, true)).
         private bool _active, _shown;
         private Mode _mode = Mode.None;          // [data-mode]; unset until first aimed
+        private Shape _shape = Shape.Ticks;      // the foot reticle, by the gun in hand
         private bool _wasShooting;               // crossWasShooting
         private long _lastFireMs = -100000;
         private int _lastWeapon, _lastClip = -1;
@@ -143,8 +159,12 @@ namespace ViExtras
                 // on screen until the first shot.
                 bool freeAiming = Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING, player)
                                   || Function.Call<bool>(Hash.IS_PLAYER_TARGETTING_ANYTHING, player);
-                bool scoped = armedGun && Function.Call<uint>(Hash.GET_WEAPONTYPE_GROUP,
-                    Function.Call<uint>(Hash.GET_SELECTED_PED_WEAPON, ped)) == GroupSniper;
+                uint group = armedGun ? Function.Call<uint>(Hash.GET_WEAPONTYPE_GROUP,
+                    Function.Call<uint>(Hash.GET_SELECTED_PED_WEAPON, ped)) : 0u;
+                bool scoped = group == GroupSniper;
+                _shape = group == GroupShotgun ? Shape.Shotgun
+                    : group == GroupRifle || group == GroupSmg || group == GroupMg ? Shape.Rifle
+                    : Shape.Ticks;
                 bool aiming = !blocked && armedGun && !scoped && (freeAiming || shootingNow);
                 Mode mode = Function.Call<bool>(Hash.IS_PED_IN_ANY_VEHICLE, ped, false) ? Mode.Vehicle : Mode.Foot;
 
@@ -327,9 +347,30 @@ namespace ViExtras
             else if (_mode == Mode.Foot)
             {
                 float s = _spread.At(now);
-                DrawCentred("xhair_tick_left", cx - s, cy, 1f, Color.White);
-                DrawCentred("xhair_tick_right", cx + s, cy, 1f, Color.White);
-                DrawCentred("xhair_tick_bottom", cx, cy + s, 1f, Color.White);
+                // FBICat's recoil, 0 to 1: the ticks' kick, so every shape moves alike.
+                float k = s / SpreadKick;
+                // Until vicepoint is in memory (or without the vihud pack), the ticks.
+                Shape shape = _shape != Shape.Ticks && Canvas.GameDictReady(VpTxd) ? _shape : Shape.Ticks;
+                if (shape == Shape.Shotgun)
+                {
+                    // ViceShotgun: cross_par on the left, and turned round on the right.
+                    float size = VpSize + VpSizeKick * k, off = VpShotgun + VpShotgunKick * k;
+                    DrawVp("cross_par", cx - off, cy, size, 0f);
+                    DrawVp("cross_par", cx + off, cy, size, 180f);
+                }
+                else if (shape == Shape.Rifle)
+                {
+                    // ViceRifle: a filled dot at rest; firing, only its ring, opening out.
+                    float size = VpSize * (VpRifle + (VpRifleKicked - VpRifle) * k);
+                    DrawVp("cross_ar", cx, cy, size, 0f);
+                    if (s <= 0f) DrawVp("cross_ar_dot", cx, cy, size, 0f);
+                }
+                else
+                {
+                    DrawCentred("xhair_tick_left", cx - s, cy, 1f, Color.White);
+                    DrawCentred("xhair_tick_right", cx + s, cy, 1f, Color.White);
+                    DrawCentred("xhair_tick_bottom", cx, cy + s, 1f, Color.White);
+                }
             }
 
             float opacity = _markOpacity.At(now);
@@ -350,6 +391,12 @@ namespace ViExtras
                 return;
             }
             Canvas.Image(e.Path, x, y, e.W * scale, e.H * scale, color, centered: true);
+        }
+
+        // One of FBICat's vicepoint textures, the whole square centred on x, y.
+        private static void DrawVp(string tex, float x, float y, float size, float rotation)
+        {
+            Canvas.GamePart(VpTxd, tex, x - size * 0.5f, y - size * 0.5f, size, size, 0f, 0f, 1f, 1f, Color.White, rotation);
         }
 
         // ---- kills ---------------------------------------------------------------------

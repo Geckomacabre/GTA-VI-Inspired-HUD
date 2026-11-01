@@ -4,3 +4,4 @@ build/
 dlcpacks/
 src/*/bin/
 src/*/obj/
+__pycache__/

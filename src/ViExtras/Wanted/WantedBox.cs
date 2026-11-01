@@ -9,9 +9,10 @@ namespace ViExtras
 {
     /// <summary>
     /// GTA VI's wanted notification, in place of GTA6Hud's "The cops are searching for you" box:
-    /// "The cops are searching for you / and they have your description", its red star, and under it
+    /// "The cops are searching for you / and they have your description", its star, and under it
     /// the tells, what the police have on you (tools/render/wanted.py has the look, measured off a
-    /// GTA VI frame).
+    /// GTA VI frame). The star is the corner row's own, in the same state (WantedStars.CornerTexture),
+    /// as vice_hud's box takes its corner stars' class.
     ///
     /// GTA VI shows it when the police have your description, so it shows only while you're wanted and
     /// at least one tell is lit. It comes up for about seven seconds when a tell lights that wasn't lit
@@ -34,6 +35,7 @@ namespace ViExtras
         // left corner: the star, and the first tell and the step between tells (wanted.py prints them).
         internal const float Top = 26.7f * 10.8f;
         private const float StarX = 377f, StarY = 12f;
+        private const float CornerStar = 28f;   // GTA6Hud's corner stars (DrawKitStars) and GTA VI's box star alike
         private const float TellX = 20.0037f, TellY = 74f, TellStep = 34f;
         private static readonly string[] TellNames = { "camera", "weapon", "hanger", "person", "people", "vehicle" };
 
@@ -187,8 +189,17 @@ namespace ViExtras
                 TextKit.GameLine(line1, 0, CopyCap, x + CopyX, Top + CopyCapTop, CopyColour, StarX - CopyX - 8f);
                 TextKit.GameLine(line2, 0, CopyCap, x + CopyX, Top + CopyCapTop + CopyLine, CopyColour, box.BoxW - 2f * CopyX);
             }
+            // The star is the corner row's, in its state now (contact, searching, hollow or red), from
+            // the same texture at the same 28 px, centred where the box's own picture of it was; that
+            // picture only if the corner row's can't be read.
             Art.Entry star = Art.Get("wanted_star");
-            if (star != null) Art.Draw(star, x + StarX, Top + StarY, Color.White);
+            string corner = WantedStars.CornerTexture();
+            if (corner != null && star != null)
+            {
+                float cx = x + StarX + star.BoxW * 0.5f, cy = Top + StarY + star.BoxH * 0.5f;
+                Canvas.GamePart("vipause", corner, cx - CornerStar * 0.5f, cy - CornerStar * 0.5f, CornerStar, CornerStar, 0f, 0f, 1f, 1f, Color.White);
+            }
+            else if (star != null) Art.Draw(star, x + StarX, Top + StarY, Color.White);
             for (int i = 0; i < tells.Length; i++)
             {
                 Art.Entry tell = Art.Get("wanted_tell_" + tells[i]);

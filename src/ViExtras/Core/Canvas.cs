@@ -222,13 +222,16 @@ namespace ViExtras
         /// Draws part of one of the game's own textures, by dictionary and name: the rectangle u0..u1, v0..v1 of it
         /// (0..1) into x, y, w, h. Nothing of the game's is copied: it is drawn from where the game keeps it.
         /// </summary>
-        public static void GamePart(string txd, string tex, float x, float y, float w, float h, float u0, float v0, float u1, float v1, Color color)
+        public static void GamePart(string txd, string tex, float x, float y, float w, float h, float u0, float v0, float u1, float v1, Color color, float rotation = 0f)
         {
             if (w <= 0f || h <= 0f || color.A == 0 || u1 <= u0 || v1 <= v0 || !DictReady(txd)) return;
             float sw = W;
             Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, txd, tex, (x + w * 0.5f) / sw, (y + h * 0.5f) / H, w / sw, h / H,
-                u0, v0, u1, v1, 0f, (int)color.R, (int)color.G, (int)color.B, (int)color.A, false);
+                u0, v0, u1, v1, rotation, (int)color.R, (int)color.G, (int)color.B, (int)color.A, false);
         }
+
+        /// <summary>Asks for one of the game's texture dictionaries; true once it can be drawn from.</summary>
+        public static bool GameDictReady(string txd) => DictReady(txd);
 
         public static Color Alpha(Color c, float a) => Color.FromArgb((int)Num.Clamp(c.A * a, 0f, 255f), c.R, c.G, c.B);
     }

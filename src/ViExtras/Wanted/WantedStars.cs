@@ -48,6 +48,34 @@ namespace ViExtras
         /// <summary>vice_hud's wanted state now: contact, searching, hollow or red; null when not wanted.</summary>
         public static string State { get; private set; }
 
+        private static FieldInfo _shownState;
+
+        /// <summary>
+        /// The star the corner row is drawing now, as GTA6Hud's DrawKitStars picks it from its _starState
+        /// (whoever set it: this script, or GTA6Hud alone with VI WANTED STARS off): hud_star_filled for
+        /// white, hud_star_possible for red, hud_star_searching otherwise, in the vipause dictionary. The
+        /// wanted box draws the same one, so its star is the corner row's, as vice_hud's is. Null if
+        /// GTA6Hud isn't there.
+        /// </summary>
+        public static string CornerTexture()
+        {
+            object hud = HudBridge.Gta6Hud();
+            if (hud == null) return null;
+            try
+            {
+                if (_shownState == null)
+                    _shownState = hud.GetType().GetField("_starState", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                switch (_shownState?.GetValue(hud)?.ToString())
+                {
+                    case null: return null;
+                    case "White": return "hud_star_filled";
+                    case "Red": return "hud_star_possible";
+                    default: return "hud_star_searching";
+                }
+            }
+            catch { return null; }
+        }
+
         public WantedStars()
         {
             Paths.Init(BaseDirectory);

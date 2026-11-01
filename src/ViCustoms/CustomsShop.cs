@@ -682,12 +682,11 @@ namespace ViExtras
         private bool Pay(int price)
         {
             if (price <= 0) return true;
-            if (Cash.Money < price)
+            if (!Cash.Spend(price))
             {
                 Ask("Payment declined", new List<string> { "Not enough money, $" + price.ToString(CultureInfo.InvariantCulture) + " required." }, () => Dialog = null, null);
                 return false;
             }
-            Cash.Money -= price;
             return true;
         }
 
@@ -828,12 +827,11 @@ namespace ViExtras
             var lines = new List<string> { "You'll need to repair this vehicle before making modifications." };
             Ask("Repair for " + (cost > 0 ? "$" + cost.ToString("N0", CultureInfo.InvariantCulture) : "free") + "?", lines, () =>
             {
-                if (Cash.Money < cost)
+                if (!Cash.Spend(cost))
                 {
                     Ask("Repair declined", new List<string> { "You need $" + CustomsData.RepairCost.ToString("N0", CultureInfo.InvariantCulture) + " to repair this vehicle." }, () => Close(true), null);
                     return;
                 }
-                Cash.Money -= cost;
                 _veh.Repair();
                 Function.Call(Hash.SET_VEHICLE_DIRT_LEVEL, _veh, 0f);
                 _veh.BodyHealth = 1000f;
