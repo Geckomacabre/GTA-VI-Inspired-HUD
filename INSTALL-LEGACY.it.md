@@ -119,10 +119,10 @@ OpenIV mette le mod in una **cartella `mods`** separata. I file originali del gi
 ## Passo 5: Scarica la mod
 
 1. Vai alla [**pagina Releases**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Sotto **Assets**, scarica **`GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`** (la mod, circa 100 MB).
+2. Sotto **Assets**, scarica **`GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`** (la mod, circa 100 MB).
    Attiva anche la mod nel gioco. Non c'è nessuna patch separata da scaricare.
 
-❌ Non scaricare `GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`. Quello è per l'altra versione del gioco.
+❌ Non scaricare `GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`. Quello è per l'altra versione del gioco.
 
 **Vuoi giocare con Lucia o Jason?** I loro modelli non sono inclusi.
 
@@ -131,7 +131,7 @@ OpenIV mette le mod in una **cartella `mods`** separata. I file originali del gi
 | **Lucia** | Il suo modello è un lavoro a pagamento di qualcun altro. Prendila dal suo creatore:<br>**[Lucia Caminos su Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** o **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** su gta5-mods.com.<br>Oppure usa un altro modello di Lucia.<br>Per metterla nel gioco, vedi "Opzionale: Lucia" più sotto.<br>L'HUD funziona anche senza di lei. |
 | **Jason** | **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** dallo stesso creatore, oppure **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** su mod-hub.net.<br>Per metterlo nel gioco, vedi "Opzionale: Jason" più sotto. |
 
-💡 Il numero nel nome del file è la versione (qui 2.7.1). Così sai sempre quale hai installato.
+💡 Il numero nel nome del file è la versione (qui 2.7.2). Così sai sempre quale hai installato.
 Indicalo quando chiedi aiuto.
 
 ---
@@ -145,7 +145,7 @@ Allora fai clic destro su **OpenIV** → **Esegui come amministratore (Run as ad
 💡 Windows permette solo agli amministratori di modificare i file lì. Senza, l'installazione può lasciare al loro posto i file vecchi.
 
 1. In OpenIV, fai clic su **Tools** → **Package Installer**.
-2. Scegli **`GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`**.
+2. Scegli **`GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`**.
 3. Fai clic su **Install**.
 4. Quando ti chiede dove installare, scegli **mods folder** (cartella mods).
 5. Se ti propone di creare la cartella, rispondi di sì.
@@ -202,6 +202,7 @@ Fino alla 2.6.4 le schermate di caricamento erano dentro il pacchetto dell'HUD. 
 3. Fai clic destro su **`scaleform_frontend.rpf`** → **Extract** (in CodeWalker: **Extract Raw...**) e salvalo sul Desktop.
 4. Apri **`mods`** → `update` → **`update.rpf`** → `x64` → `data` → `cdimages`.
 5. Trascina lo **`scaleform_frontend.rpf`** dal Desktop in quella finestra, e sostituisci quello che c'è.
+6. Reinstalla il pacchetto dell'HUD (Passo 6). Rimette le notifiche dell'HUD in quel file.
 
 ---
 
@@ -579,7 +580,7 @@ Dopo, gli aggiornamenti si installano normalmente.
 Un `.oiv` è solo uno zip:
 
 1. Chiudi il gioco.
-2. Copia **`GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`** sul Desktop.
+2. Copia **`GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`** sul Desktop.
 3. Rinomina la copia in **`.zip`**.
 
    💡 Non vedi la parte `.oiv` del nome? In Esplora file, attiva **Visualizza** → **Mostra** → **Estensioni nomi file**.

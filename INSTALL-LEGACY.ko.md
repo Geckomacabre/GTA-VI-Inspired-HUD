@@ -119,10 +119,10 @@ OpenIV는 모드를 따로 떨어진 **`mods` 폴더**에 넣어요. 원래 게�
 ## 5단계: 모드 다운로드하기
 
 1. [**Releases 페이지**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)로 가세요.
-2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`** 파일(모드 본체, 약 100 MB)을 다운로드하세요.
+2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`** 파일(모드 본체, 약 100 MB)을 다운로드하세요.
    이 파일이 게임에서 모드를 켜는 일까지 해 줘요. 따로 받을 패치는 없어요.
 
-❌ `GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`는 받지 마세요. 그건 다른 버전의 게임용이에요.
+❌ `GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`는 받지 마세요. 그건 다른 버전의 게임용이에요.
 
 **Lucia나 Jason으로 플레이하고 싶나요?** 두 캐릭터의 모델은 포함되어 있지 않아요.
 
@@ -131,7 +131,7 @@ OpenIV는 모드를 따로 떨어진 **`mods` 폴더**에 넣어요. 원래 게�
 | **Lucia** | Lucia 모델은 다른 사람이 만든 유료 작품이에요. 제작자에게서 받으세요:<br>**[Patreon의 Lucia Caminos](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** 또는 gta5-mods.com의 **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)**.<br>다른 Lucia 모델을 써도 돼요.<br>게임에 넣는 방법은 아래 "선택 사항: Lucia"를 보세요.<br>HUD는 Lucia 없이도 잘 돌아가요. |
 | **Jason** | 같은 제작자의 **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)**, 또는 mod-hub.net의 **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)**.<br>게임에 넣는 방법은 아래 "선택 사항: Jason"을 보세요. |
 
-💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.7.1). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
+💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.7.2). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
 도움을 요청할 때 이 숫자도 알려 주세요.
 
 ---
@@ -145,7 +145,7 @@ OpenIV는 모드를 따로 떨어진 **`mods` 폴더**에 넣어요. 원래 게�
 💡 Windows는 그곳의 파일을 관리자만 바꿀 수 있게 해요. 관리자 권한 없이 설치하면 예전 파일이 그대로 남을 수 있어요.
 
 1. OpenIV에서 **Tools** → **Package Installer** 순서로 클릭하세요.
-2. **`GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`** 파일을 고르세요.
+2. **`GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`** 파일을 고르세요.
 3. **Install**을 클릭하세요.
 4. 어디에 설치할지 물으면 **mods folder**(mods 폴더)를 고르세요.
 5. 폴더를 만들겠냐고 물으면 예라고 하세요.
@@ -202,6 +202,7 @@ OpenIV에서: HUD 때처럼 **Tools** → **Package Installer**로 가서 파일
 3. **`scaleform_frontend.rpf`** 파일을 마우스 오른쪽 버튼으로 클릭 → **Extract**(CodeWalker에서는 **Extract Raw...**)로 바탕 화면에 꺼내세요.
 4. **`mods`** → `update` → **`update.rpf`** → `x64` → `data` → `cdimages`를 여세요.
 5. 바탕 화면의 **`scaleform_frontend.rpf`** 파일을 그 창으로 끌어다 놓고, 원래 있던 파일을 바꾸세요.
+6. HUD 패키지를 다시 설치하세요(6단계). 그래야 HUD의 알림이 그 파일에 다시 들어가요.
 
 ---
 
@@ -579,7 +580,7 @@ OpenIV를 관리자 권한으로 실행하거나(6단계), 새 스크립트를 �
 `.oiv` 파일은 사실 그냥 zip 파일이에요:
 
 1. 게임을 닫으세요.
-2. **`GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`** 파일을 바탕 화면에 복사하세요.
+2. **`GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`** 파일을 바탕 화면에 복사하세요.
 3. 복사본 이름의 끝부분을 **`.zip`으로** 바꾸세요.
 
    💡 이름에서 `.oiv` 부분이 안 보이나요? 파일 탐색기에서 **보기(View)** → **표시(Show)** → **파일 확장명(File name extensions)** 옵션을 켜세요.

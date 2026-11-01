@@ -10,10 +10,15 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
-## Unreleased
+## 2.7.2 (1 November 2026)
+
+### Added
+
+- **Fill up with the pump's nozzle, as in FiveM.** At a gas station on foot, **E** at a pump takes its nozzle, on a hose back to the pump. **E** at a car's fuel cap puts it in, and the tank fills on the vehicle card's gauge while you pay as it goes in, at the same price as the SERVICES menu (`GTA6Hud.ini` `[FuelStation]` `FullTankCost`). It stops by itself when the tank is full or your cash runs out. **E** at the cap takes it out, and **E** at the pump hangs it up. Walk or drive further than the hose and it comes off. The SERVICES menu still works from the car. `FuelNozzle` in `ViExtras.ini` `[Switches]` turns it off; `[Nozzle]` sets how fast it fills and how long the hose is.
 
 ### Fixed
 
+- **Legacy: notifications clear of the minimap.** On Legacy GTA's notifications stayed in the minimap's corner, under the 3D map, whenever it showed. GTA loads its notification movie for the loading screen, from `update.rpf`, before the HUD's packs, so the HUD's own movie (the one that hangs the cards at the left, where the wanted box goes) was never the one on screen, as it is on Enhanced. The Legacy HUD package now puts the HUD's movie in `update.rpf` too, and the cards hang at the left on Legacy as well. Took the game's own loading screens back? Install the HUD again afterwards (your guide's "Optional: VI loading screens").
 - **Minimap icons stay up when you get close.** The minimap hid any icon or blip one of its 3D buildings stood in front of. Shops and other places sit in or against their own building, so as you walked up, the building rose on the minimap and covered its own icon. Icons and blips are now drawn over the buildings, as GTA's own minimap draws them; the route still goes behind them (ViMinimap patch).
 - **One pink marker for a mission.** GTA marks a mission's objectives with yellow blips, and the minimap drew them in that yellow, next to the pink circle at the end of the pink mission route. When the objective was more than 80 m from the road (in a park, up a hill, across a big lot) that made two markers. The pink circle now sits on the objective itself, its yellow dot comes off, and any other yellow mission blip is drawn pink. Waypoints stay teal (ViMinimap patch).
 

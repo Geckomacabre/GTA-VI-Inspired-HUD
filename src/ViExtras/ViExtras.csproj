@@ -8,7 +8,7 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>ViExtras</AssemblyName>
     <RootNamespace>ViExtras</RootNamespace>
-    <Version>2.7.1</Version>
+    <Version>2.7.2</Version>
     <!-- the build time rides along in the log's first line (Paths.Banner), so two builds of one version can be told apart -->
     <InformationalVersion>$(Version)+$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmm"))</InformationalVersion>
     <Nullable>disable</Nullable>
@@ -26,5 +26,9 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- the player's cash and BuckMe, through GTA6Hud's wallet (the fuel nozzle pays with it) -->
+    <Compile Include="..\ViCustoms\Cash.cs" Link="Core\Cash.cs" />
   </ItemGroup>
 </Project>

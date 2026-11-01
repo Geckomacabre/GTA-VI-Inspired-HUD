@@ -26,8 +26,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv` with the OIV Package Installer.
 >
 > **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
 >
@@ -75,6 +75,17 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 <sub>BuckMe (your bank) and your wallet at the top right. An empty one turns grey.</sub>
 
 ---
+
+## 🆕 New in 2.7.2
+
+- **Fill up with the pump's nozzle, as in FiveM.** On foot at a gas station, **E** at a pump takes the nozzle, on a
+  hose. **E** at your car's fuel cap puts it in, and the tank fills while you pay as it goes in. The SERVICES menu
+  still works from the car. `FuelNozzle` in `ViExtras.ini` turns it off.
+- **Minimap icons stay up when you get close.** Shops and other places no longer vanish behind their own building.
+- **One pink marker for a mission.** The pink circle sits on the objective, and GTA's yellow mission blips are drawn
+  pink. Waypoints stay teal.
+- **Legacy: notifications clear of the minimap.** They hang at the left, where the wanted box goes, as on
+  Enhanced, instead of under the 3D map.
 
 ## 🆕 New in 2.7.1
 
@@ -164,6 +175,7 @@ It takes off only the HUD, and keeps your progress and your other mods. "How to 
 | Radio | Hold GTA's radio button in a car (**Q**; controller: **D-pad Left**). **O** mutes it (controller: click the right stick while the wheel is open) |
 | Your own music (On Demand) | In the radio wheel, press **Down** (controller: right stick down). **Left / Right** (right stick) switch between your stations (each folder in `CustomMusic` is one), the **mouse wheel** (D-pad Right / Up) changes the song, **Up** goes back to the radio |
 | Nitrous | Hold **Left Shift** (controller: **X** / **Square**) in a car with a bottle |
+| Fill up at a gas station | On foot, **E** at a pump takes the nozzle, **E** at the car's fuel cap puts it in. Or stop at a pump in the car and hold **E** for SERVICES |
 | Mod your car | Drive into a **Los Santos Customs** garage and stop. Hold **Backspace** (or **B**) 2 s to leave from anywhere |
 | Crouch | **Left Ctrl** twice |
 | Lie down / crawl | **Right Ctrl**, then **W / S** |
@@ -197,6 +209,7 @@ the radio wheel: each subfolder becomes a station of its own. Chase music goes i
 - A **radio wheel** with station logos, the song and artist, and **On Demand** for your own music
 - **WASTED / BUSTED** screens, a **crash cam** and **binoculars**
 - **Leonida Customs**: a full mod shop with nitrous
+- **Fuel**: cars burn it, and you fill up at the pump with its nozzle, as in FiveM
 - **Honor**, **skills**, a **gym**, and people who **remember you**
 - **Crouch and crawl**, a **crosshair with kill marks**, **Focus**, and a switch to **carry every weapon**
 
@@ -235,6 +248,7 @@ from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and 
     themselves are Rockstar's own, from GTA V; the front crawl's leg motion is reworked from Rockstar's crawl.
   - **WASTED / BUSTED** from vi_wasted (GPL-3).
   - **Nitrous** from StreetKings.
+  - **The fuel nozzle** after Toxic Scripts' Refueling Nozzle (the idea: the code is the HUD's own).
   - **NPC memory** from um_memory.
   - **The radio** after sej0bec's "VI Radio". Some station logos are from Logopedia; the stations are
     Rockstar Games' trademarks.
@@ -258,7 +272,7 @@ The 2.5 script files have their own licences:
 too big for git, so they're only in the releases. Python 3.8+, no extra modules:
 
 ```bash
-python tools/build_oiv.py legacy --dlcpacks path/to/legacy/dlcpacks
+python tools/build_oiv.py legacy --dlcpacks path/to/legacy/dlcpacks --startscreen path/to/feed
 python tools/build_oiv.py enhanced --dlcpacks path/to/gen9/dlcpacks
 ```
 

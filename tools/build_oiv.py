@@ -63,7 +63,15 @@ Enhanced) to do it, as FBICat's own package does: a nested <archive> in place
 of <!-- STARTSCREEN --> in oiv/<edition>.xml. Legacy gets his landing page and
 loading screens; Enhanced only the loading screens (its landing page is a
 different movie), with the .ytd files in the gen9 format. A .ytd in the other
-edition's format stops the build. With NaturalVision Enhanced the game doesn't
+edition's format stops the build.
+
+The Legacy HUD package (2.7.2 on) is built with --startscreen too, a folder
+holding only the HUD's notification movie: game_stream.gfx, taken from the
+legacy vihud pack (dlc.rpf\\x64\\data\\cdimages\\vihud.rpf). Legacy loads its
+feed movie from this archive for the loading screen, before any pack, so the
+pack's copy alone never replaced GTA's (the feed stayed under the 3D map).
+The loading screens package adds other files to the same archive, so the two
+don't clash. Enhanced takes the pack's copy as it is. With NaturalVision Enhanced the game doesn't
 read the mods folder, so its players copy that scaleform_frontend.rpf into
 onigiri\\platform\\data\\cdimages (INSTALL-ENHANCED.md).
 

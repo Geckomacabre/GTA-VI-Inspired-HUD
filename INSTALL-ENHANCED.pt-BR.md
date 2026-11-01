@@ -124,12 +124,12 @@ O OpenRPF deixa o jogo carregar mods de uma **pasta `mods`** separada. Os arquiv
 ### Parte 1: Pegue o mod
 
 1. Vá até a [**página de Releases**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Em **Assets**, baixe o **`GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`**. É o mod, uns 100 MB.
+2. Em **Assets**, baixe o **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`**. É o mod, uns 100 MB.
    Ele também ativa o mod no jogo, então não tem nenhum patch separado para baixar.
 
-❌ Não baixe o `GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`. Ele é para a outra versão e vai fazer o Enhanced dar crash.
+❌ Não baixe o `GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`. Ele é para a outra versão e vai fazer o Enhanced dar crash.
 
-💡 O número no nome do arquivo é a versão (2.7.1 aqui). Assim você sempre sabe qual instalou.
+💡 O número no nome do arquivo é a versão (2.7.2 aqui). Assim você sempre sabe qual instalou.
 Diga qual é quando pedir ajuda.
 
 ### Quer jogar como a Lucia?
@@ -172,7 +172,7 @@ a instalação pode deixar os arquivos antigos no lugar.
 
 1. Abra a pasta do OIV Package Installer.
 2. Rode o **`CodeWalker.OIVInstaller.exe`** do jeito que a tabela diz.
-3. Arraste o **`GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`** para a janela dele. (Ou clique em **Browse** e escolha ele.)
+3. Arraste o **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** para a janela dele. (Ou clique em **Browse** e escolha ele.)
 4. Ele pede a sua pasta do jogo. Escolha a pasta com o **`GTA5_Enhanced.exe`**.
 5. Clique em **Install**.
 6. Espere até terminar.
@@ -773,7 +773,7 @@ Você também pode copiar os scripts novos você mesmo. Um `.oiv` é só um zip.
 Depois disso, as atualizações entram normalmente.
 
 1. Feche o jogo.
-2. Copie o **`GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`** para a sua Área de Trabalho.
+2. Copie o **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** para a sua Área de Trabalho.
 3. Renomeie a cópia para **`.zip`**.
    Não consegue ver a parte `.oiv` do nome? No Explorador de Arquivos, ligue **Exibir** → **Mostrar** → **Extensões de nomes de arquivos**.
 4. Abra o zip → **`content`** → **`scripts`**.

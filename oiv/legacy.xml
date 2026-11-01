@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{9a4c2e61-7b3f-4d08-8e15-2c6b0f9a7d43}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.7.1 (GTA V Legacy)</name>
-    <version><major>2</major><minor>7</minor><tag>LEGACY 2.7.1</tag></version>
+    <name>GTA VI-Inspired HUD 2.7.2 (GTA V Legacy)</name>
+    <version><major>2</major><minor>7</minor><tag>LEGACY 2.7.2</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V LEGACY (the original PC version, GTA5.exe). Maintained by Geckomacabre.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -45,6 +45,19 @@ What it installs
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
   - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
+
+Changes in 2.7.2
+  - Fill up with the pump's nozzle, as in FiveM: on foot, E at a pump takes the nozzle on a hose, E at the car's
+    fuel cap puts it in, and the tank fills while you pay as it goes in (the SERVICES menu's price). E at the cap
+    takes it out, E at the pump hangs it up; walk or drive off with it and the hose comes off. The SERVICES menu
+    still works from the car. FuelNozzle in [Switches] of ViExtras.ini turns it off; [Nozzle] sets the speed and
+    the hose's length.
+  - Minimap icons and blips stay up when you get close: they're drawn over the 3D buildings, as GTA's own minimap
+    draws them, so a shop no longer vanishes behind its own building.
+  - One pink marker for a mission: the pink circle sits on the objective itself, its yellow dot comes off, and any
+    other yellow mission blip is drawn pink. Waypoints stay teal.
+  - Legacy: notifications hang at the left, where the wanted box goes, clear of the minimap, as on Enhanced.
+    The package puts the HUD's notification movie in update.rpf (scaleform_frontend.rpf), where GTA loads it.
 
 Changes in 2.7.1
   - The minimap, as in the FiveM version: it shows on foot, with stamina rings while you sprint, the view from your
