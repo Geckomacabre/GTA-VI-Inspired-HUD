@@ -124,12 +124,12 @@ OpenRPF는 게임이 따로 떨어진 **`mods` 폴더**에서 모드를 불러�
 ### 파트 1: 모드 받기
 
 1. [**Releases 페이지**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)로 가세요.
-2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.7.0-Enhanced.oiv`** 파일을 다운로드하세요. 모드 본체이고, 약 100 MB예요.
+2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`** 파일을 다운로드하세요. 모드 본체이고, 약 100 MB예요.
    이 파일이 게임에서 모드를 켜는 일까지 해 줘서, 따로 받을 패치는 없어요.
 
-❌ `GTA-VI-Inspired-HUD-2.7.0-Legacy.oiv`는 받지 마세요. 다른 버전용이라 Enhanced를 튕기게 해요.
+❌ `GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`는 받지 마세요. 다른 버전용이라 Enhanced를 튕기게 해요.
 
-💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.7.0). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
+💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.7.1). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
 도움을 요청할 때 이 숫자도 알려 주세요.
 
 ### Lucia로 플레이하고 싶나요?
@@ -172,7 +172,7 @@ OpenIV는 Enhanced에 모드를 설치하지 못해요. 그래서 대신 **OIV P
 
 1. OIV Package Installer 폴더를 여세요.
 2. 표에 나온 방법대로 **`CodeWalker.OIVInstaller.exe`** 파일을 실행하세요.
-3. **`GTA-VI-Inspired-HUD-2.7.0-Enhanced.oiv`** 파일을 창 위로 끌어다 놓으세요. (또는 **Browse**를 클릭해서 고르세요.)
+3. **`GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`** 파일을 창 위로 끌어다 놓으세요. (또는 **Browse**를 클릭해서 고르세요.)
 4. 게임 폴더를 물어봐요. **`GTA5_Enhanced.exe`** 파일이 있는 폴더를 고르세요.
 5. **Install**을 클릭하세요.
 6. 끝날 때까지 기다리세요.
@@ -773,7 +773,7 @@ Windows는 그 폴더를 보호해요. OIV Package Installer를 관리자 권한
 그다음부터는 업데이트가 정상적으로 들어가요.
 
 1. 게임을 닫으세요.
-2. **`GTA-VI-Inspired-HUD-2.7.0-Enhanced.oiv`** 파일을 바탕 화면에 복사하세요.
+2. **`GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`** 파일을 바탕 화면에 복사하세요.
 3. 복사본 이름의 끝부분을 **`.zip`으로** 바꾸세요.
    이름에서 `.oiv` 부분이 안 보이나요? 파일 탐색기에서 **보기(View)** → **표시(Show)** → **파일 확장명(File name extensions)** 옵션을 켜세요.
 4. zip을 열고 **`content`** → **`scripts`** 폴더로 들어가세요.

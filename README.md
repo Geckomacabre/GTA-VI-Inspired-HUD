@@ -26,8 +26,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.7.0-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.7.0-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv` with the OIV Package Installer.
 >
 > **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
 >
@@ -75,6 +75,19 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 <sub>BuckMe (your bank) and your wallet at the top right. An empty one turns grey.</sub>
 
 ---
+
+## 🆕 New in 2.7.1
+
+- **A livelier minimap, as in the FiveM version.** It shows on foot, with **stamina rings** while you sprint, the city
+  falling away below you on a roof, the GPS route on foot, lane lines, haze, and a gradual dusk and dawn.
+  `MiniMap.settings` has a switch for each.
+- **Maps for world map mods.** With a map mod's pictures in `scripts\ViMap`, the minimap and the pause map match the
+  world you're in. Thanks to **GAVRA**.
+- **Shotguns and rifles get their own crosshair**, as in FBICat's original: brackets for shotguns, and a dot that opens
+  into a ring while you fire for rifles, SMGs and machine guns.
+- **BuckMe pays too**, at Leonida Customs and at story mode's businesses for sale.
+- **An uninstaller** for each edition, in `extras/`.
+- Everything else is in the **[changelog](CHANGELOG.md)**.
 
 ## 🆕 New in 2.7
 

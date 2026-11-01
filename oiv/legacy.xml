@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{9a4c2e61-7b3f-4d08-8e15-2c6b0f9a7d43}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.7.0 (GTA V Legacy)</name>
-    <version><major>2</major><minor>7</minor><tag>LEGACY 2.7.0</tag></version>
+    <name>GTA VI-Inspired HUD 2.7.1 (GTA V Legacy)</name>
+    <version><major>2</major><minor>7</minor><tag>LEGACY 2.7.1</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V LEGACY (the original PC version, GTA5.exe). Maintained by Geckomacabre.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -45,6 +45,20 @@ What it installs
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
   - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
+
+Changes in 2.7.1
+  - The minimap, as in the FiveM version: it shows on foot, with stamina rings while you sprint, the view from your
+    height on a roof or under a parachute, the GPS route on foot, lane lines, haze, a gradual dusk and dawn, a fading
+    wanted colour, and police stations back on it. MiniMap.settings has a switch for each.
+  - A waypoint on a shop, garage or any place with a picture shows that picture on the minimap.
+  - Maps for world map mods: with a map mod's pictures in scripts\ViMap, the minimap and the pause map draw them
+    ([MapPictures] in GTA6Hud.ini). Thanks to GAVRA.
+  - Shotguns and rifles get their own crosshair, as in FBICat's original: two brackets for shotguns, a dot that opens
+    into a ring while you fire for rifles, SMGs and machine guns.
+  - BuckMe pays too: at Leonida Customs, and at story mode's businesses for sale. The $20,000 cash limit is WalletCap
+    under [TopRight] in GTA6Hud.ini.
+  - The wanted box's star is the corner row's own star, in the same state.
+  - An uninstaller for each edition: GTA-VI-Inspired-HUD-Uninstall-<edition>.oiv, in extras/ on GitHub.
 
 Changes in 2.7.0
   - Key cloning: CLONE KEY (E / Square) at a locked car's door is a three-hit timing game on the ring, and the quiet

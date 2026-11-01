@@ -40,7 +40,7 @@ Enhanced에서 **NaturalVision Enhanced**, **Lively World Expansion**, **Central
 
 **[Releases](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)에서** 다음을 받으세요:
 
-- **`GTA-VI-Inspired-HUD-2.7.0-Legacy.oiv`** *또는* **`GTA-VI-Inspired-HUD-2.7.0-Enhanced.oiv`** (내 버전용 하나만)
+- **`GTA-VI-Inspired-HUD-2.7.1-Legacy.oiv`** *또는* **`GTA-VI-Inspired-HUD-2.7.1-Enhanced.oiv`** (내 버전용 하나만)
 - *(선택)* Lucia는 포함되어 있지 않아요: Lucia 모델은 다른 사람이 만든 유료 작품이에요. 제작자에게서 받으세요.
   **[Patreon의 Lucia Caminos](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** 또는 gta5-mods.com의 **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)**(Jason은 같은 제작자의 **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)**, 또는 mod-hub.net의 **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)**).
 
