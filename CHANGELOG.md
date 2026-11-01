@@ -10,6 +10,13 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Fixed
+
+- **Minimap icons stay up when you get close.** The minimap hid any icon or blip one of its 3D buildings stood in front of. Shops and other places sit in or against their own building, so as you walked up, the building rose on the minimap and covered its own icon. Icons and blips are now drawn over the buildings, as GTA's own minimap draws them; the route still goes behind them (ViMinimap patch).
+- **One pink marker for a mission.** GTA marks a mission's objectives with yellow blips, and the minimap drew them in that yellow, next to the pink circle at the end of the pink mission route. When the objective was more than 80 m from the road (in a park, up a hill, across a big lot) that made two markers. The pink circle now sits on the objective itself, its yellow dot comes off, and any other yellow mission blip is drawn pink. Waypoints stay teal (ViMinimap patch).
+
 ## 2.7.1 (31 October 2026)
 
 ### Added
