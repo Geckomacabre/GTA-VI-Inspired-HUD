@@ -195,7 +195,13 @@ In OpenIV: **Tools** → **Package Installer**, sceglilo, **Install**, e scegli 
 
 ### Le hai già e rivuoi quelle originali del gioco?
 
-Fino alla 2.6.4 le schermate di caricamento erano dentro il pacchetto dell'HUD. Per toglierle:
+1. Scarica **[GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv)**.
+2. In OpenIV: **Tools** → **Package Installer**, sceglilo, **Install**, e scegli la **mods folder**, come per l'HUD.
+
+Rimette le schermate di caricamento originali del gioco ed elimina le immagini VI, sia che siano arrivate col loro
+pacchetto sia (fino alla 2.6.4) dentro quello dell'HUD. L'HUD resta com'è.
+
+**Oppure a mano:**
 
 1. Apri **OpenIV** e fai clic su **Edit mode** (modalità modifica) in alto.
 2. Apri, nei file originali del gioco, **`update`** → **`update.rpf`** → `x64` → `data` → `cdimages` (non quello dentro `mods`).

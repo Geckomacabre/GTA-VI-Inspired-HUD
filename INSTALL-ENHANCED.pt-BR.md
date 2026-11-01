@@ -215,7 +215,14 @@ Arraste ele para o **OIV Package Installer** (`CodeWalker.OIVInstaller.exe`), ig
 
 ### Já tem essas telas e quer as do próprio jogo de volta?
 
-Até a 2.6.4, as telas de carregamento vinham dentro do pacote do HUD. Para tirar elas:
+1. Baixe **[GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Enhanced.oiv](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Enhanced.oiv)**.
+2. Arraste ele para o **OIV Package Installer** (`CodeWalker.OIVInstaller.exe`), igual ao HUD. O jogo está em
+   Program Files? Antes, clique com o botão direito no instalador → **Executar como administrador (Run as administrator)**.
+
+Ele coloca as telas de carregamento do próprio jogo de volta e apaga as imagens VI, tenham elas vindo no pacote delas
+ou (até a 2.6.4) dentro do pacote do HUD. O HUD fica como está.
+
+**Ou à mão:**
 
 1. Abra o **CodeWalker RPF Explorer** e clique em **Edit** → **Edit mode** (modo de edição).
 2. Abra o **`update`** do próprio jogo → **`update.rpf`** → `x64` → `data` → `cdimages` (não o que está em `mods`).

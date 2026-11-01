@@ -3,6 +3,7 @@
     python tools/build_oiv.py legacy         --dlcpacks <folder> [--startscreen <folder>] [--out build]
     python tools/build_oiv.py enhanced       --dlcpacks <folder> [--startscreen <folder>] [--out build]
     python tools/build_oiv.py <edition> --loadingscreens --startscreen <folder> [--out build]
+    python tools/build_oiv.py <edition> --uninstall --loadingscreens --startscreen <folder> [--out build]
     python tools/build_oiv.py <edition> --uninstall [--out build]
 
 --uninstall: the uninstaller (GTA-VI-Inspired-HUD-<version>-Uninstall-<Edition>.oiv,
@@ -16,7 +17,7 @@ the HUD no longer loads even if a step after them stops. It leaves what the
 package never installed (scripts\\Hud\\Save, logs), the files other mods share
 (SHARED: LemonUI.SHVDN3.dll, the MiniMap.* data the standalone minimap mod
 uses too), the raised gameconfig.xml pools (other mods may need them) and
-the loading screens (putting Rockstar's movies back would mean shipping them).
+the loading screens (they have an uninstaller of their own, below).
 The OIV Package Installer copies a package's update\\ files into mods\\ but
 deletes a path as written, from the game folder, so the Enhanced packs are
 deleted as mods\\update\\...; OpenIV deletes them from where it installed them,
@@ -30,6 +31,18 @@ oiv/loadingscreens-<edition>.xml): no scripts, packs or registration. Neither
 installer has a tick-box for one part of a package, so players who don't want
 FBICat's loading screens leave this one out; the HUD package is then built
 without --startscreen.
+
+--uninstall --loadingscreens: their uninstaller
+(GTA-VI-Inspired-HUD-<version>-Uninstall-LoadingScreens-<Edition>.oiv, from
+oiv/uninstall-loadingscreens-<edition>.xml; extras/ has it without the version).
+--startscreen is then a folder of Rockstar's own movies, unchanged, taken from
+the game's update\\update.rpf (not the mods copy): Legacy's landing_page.gfx,
+loadingscreen_startup.gfx, loadingscreen_newgame.gfx and gtav_online.gfx;
+Enhanced the same but landing_page.gfx, which its loading screens leave alone.
+They go back over FBICat's, and the VI pictures (LOADING_PICTURES) are deleted
+from the archive. Deleting the movies instead would leave the game without
+them, so putting them back means shipping Rockstar's. game_stream.gfx stays:
+the HUD's, not the loading screens'.
 
 <folder> holds one sub-folder per pack, each with its dlc.rpf: vihud, vihudfonts
 and vihudanims. Legacy and Enhanced need different dlcpacks: the Enhanced ones
@@ -109,6 +122,8 @@ SKIP_DIRS = {"Save", ".muffled"}
 ART_PNGS = "scripts/ViExtras/Art/"
 EDITIONS = ("legacy", "enhanced")
 STARTSCREEN_ARCHIVE = r"x64\data\cdimages\scaleform_frontend.rpf"
+# The VI pictures FBICat's loading screens add to that archive (every version's), which their uninstaller deletes
+LOADING_PICTURES = [f"viload_{i}.ytd" for i in range(12)] + ["viload_logo.ytd"]
 # Never deleted by the uninstallers, which take off only what is the HUD's alone: other mods use LemonUI, and the
 # standalone GTA VI MiniMap (3D Buildings) mod keeps its settings and learned map data in the same MiniMap.* files.
 SHARED = {"scripts\\lemonui.shvdn3.dll", "scripts\\minimap.heights", "scripts\\minimap.levels",
@@ -192,7 +207,7 @@ def collect_startscreen(edition, folder):
     return [(os.path.join(folder, n), f"startscreen/{n}", n) for n in names]
 
 
-def assembly_xml(edition, files, startscreen, name=None, deletes=()):
+def assembly_xml(edition, files, startscreen, name=None, deletes=(), startscreen_deletes=()):
     xml = template(name or edition)
     if "<!-- UNREGISTER -->" in xml:
         with open(os.path.join(ROOT, "oiv", "unregister.xml"), encoding="utf-8") as f:
@@ -210,6 +225,8 @@ def assembly_xml(edition, files, startscreen, name=None, deletes=()):
                      f'      <archive path="{STARTSCREEN_ARCHIVE}" createIfNotExist="False" type="RPF7">']
             lines += [f'        <add source="{escape(content.replace("/", chr(92)))}">{escape(name)}</add>'
                       for _, content, name in startscreen]
+            # after the adds: the game's movies are back even if an installer stops at a delete
+            lines += [f'        <delete>{escape(name)}</delete>' for name in startscreen_deletes]
             lines += ['      </archive>', '    </archive>']
             block = "\n".join(lines)
         xml = xml.replace("    <!-- STARTSCREEN -->", block)
@@ -257,10 +274,18 @@ def main():
 
     startscreen = []
     deletes = []
+    startscreen_deletes = []
     part = ""
-    if args.uninstall:
-        if args.loadingscreens or args.startscreen or args.dlcpacks:
-            ap.error("--uninstall takes no --dlcpacks, --startscreen or --loadingscreens")
+    if args.uninstall and args.loadingscreens:
+        if not args.startscreen or args.dlcpacks:
+            ap.error("--uninstall --loadingscreens needs --startscreen (Rockstar's movies) and no --dlcpacks")
+        files = []
+        name = f"uninstall-loadingscreens-{args.edition}"
+        startscreen_deletes = LOADING_PICTURES
+        part = "Uninstall-LoadingScreens-"
+    elif args.uninstall:
+        if args.startscreen or args.dlcpacks:
+            ap.error("--uninstall takes no --dlcpacks or --startscreen")
         files = []
         name = f"uninstall-{args.edition}"
         deletes = uninstall_paths(args.edition)
@@ -283,7 +308,7 @@ def main():
     out = os.path.join(args.out, output_name(args.edition, part))
     tmp = out + ".part"
     with zipfile.ZipFile(tmp, "w", allowZip64=True) as zf:
-        write_entry(zf, "assembly.xml", data=assembly_xml(args.edition, files, startscreen, name, deletes).encode("utf-8"))
+        write_entry(zf, "assembly.xml", data=assembly_xml(args.edition, files, startscreen, name, deletes, startscreen_deletes).encode("utf-8"))
         write_entry(zf, "icon.png", src=os.path.join(ROOT, "oiv", "icon.png"))
         for src, content, _ in files + startscreen:
             write_entry(zf, "content/" + content, src=src)
@@ -296,8 +321,8 @@ def main():
         for chunk in iter(lambda: f.read(1 << 22), b""):
             sha.update(chunk)
     extra_note = f" + {len(startscreen)} start screen" if startscreen else ""
-    if deletes:
-        extra_note += f" + {len(deletes)} deletes"
+    if deletes or startscreen_deletes:
+        extra_note += f" + {len(deletes) + len(startscreen_deletes)} deletes"
     print(f"{out}  {os.path.getsize(out):,} bytes  {len(files)} files{extra_note}  sha256 {sha.hexdigest()}")
 
 

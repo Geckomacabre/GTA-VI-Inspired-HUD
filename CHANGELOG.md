@@ -10,6 +10,12 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Added
+
+- **An uninstaller for the loading screens.** `GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv` (OpenIV, to the mods folder) and `GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Enhanced.oiv` (the OIV Package Installer), in `extras/` on GitHub, take FBICat's VI loading screens off again and put the game's own back, whether they came in their own package or (up to 2.6.4) inside the HUD's. They put back Rockstar's own movies, unchanged (the landing page and loading screens; on Enhanced the loading screens only) and delete the VI pictures. The HUD stays, and so does its notification movie on Legacy. Before, the only way was to put the game's whole `scaleform_frontend.rpf` back by hand, which is still in the guides. "Already have them, and want the game's own back?" in both install guides has the steps.
+
 ## 2.7.2 (1 November 2026)
 
 ### Added

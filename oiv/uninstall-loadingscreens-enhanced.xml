@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.1" id="{72074969-e30a-4fc6-b09e-9cef4b35beca}" target="Five">
+  <metadata>
+    <name>GTA VI-Inspired HUD 2.7.2 Loading Screens Uninstaller (GTA V Enhanced)</name>
+    <version><major>2</major><minor>7</minor><tag>ENHANCED LOADING SCREENS UNINSTALL 2.7.2</tag></version>
+    <author><displayName>Geckomacabre x FBICat</displayName></author>
+    <description><![CDATA[Takes FBICat's VI loading screens off GTA V ENHANCED (GTA5_Enhanced.exe) and puts the game's own back. Maintained by Geckomacabre.
+Drag it onto the OIV Package Installer (CodeWalker.OIVInstaller.exe), the same way you installed the loading screens.
+Game in C:\Program Files? Start the installer with right-click > Run as administrator.
+
+Need help? discord.gg/C7gE5SHEzH, or a GitHub issue.
+
+What it does
+  In update.rpf\x64\data\cdimages\scaleform_frontend.rpf (your mods folder's copy):
+  - Puts back Rockstar's own loading screens: loadingscreen_startup.gfx, loadingscreen_newgame.gfx and
+    gtav_online.gfx, as the game has them.
+  - Deletes the VI pictures, viload_0.ytd to viload_11.ytd and viload_logo.ytd.
+  Works for the loading screens of any version, whether they came in their own package or (up to 2.6.4) in the HUD's.
+
+What it leaves
+  - The HUD itself. It works the same with the game's own loading screens.
+  - Your other mods.
+
+With NaturalVision Enhanced
+  The installer can't edit NVE's files. If you copied the loading screens into NVE, delete
+  onigiri\platform\data\cdimages\scaleform_frontend.rpf: the game then uses its own again.
+
+The three movies are Rockstar's, unchanged, from GTA V's own update.rpf: the only way to put them back.
+https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
+]]></description>
+    <licence><![CDATA[Personal use. Puts GTA V's own loading screens back; the three movies in it are Rockstar Games' own, unchanged.]]></licence>
+  </metadata>
+  <colors>
+    <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>
+    <iconBackground>$FFE06AA8</iconBackground>
+  </colors>
+  <content>
+    <!-- STARTSCREEN -->
+  </content>
+</package>

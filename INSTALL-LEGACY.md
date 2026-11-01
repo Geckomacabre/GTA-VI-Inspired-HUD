@@ -195,7 +195,13 @@ In OpenIV: **Tools** → **Package Installer**, pick it, **Install**, and choose
 
 ### Already have them, and want the game's own back?
 
-Up to 2.6.4 the loading screens came inside the HUD package. To take them off:
+1. Download **[GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv)**.
+2. In OpenIV: **Tools** → **Package Installer**, pick it, **Install**, and choose the **mods folder**, as for the HUD.
+
+It puts the game's own loading screens back and deletes the VI pictures, whether they came in their own package or
+(up to 2.6.4) inside the HUD's. The HUD stays as it is.
+
+**Or by hand:**
 
 1. Open **OpenIV** and click **Edit mode** at the top.
 2. Open your game's own **`update`** → **`update.rpf`** → `x64` → `data` → `cdimages` (not the one in `mods`).

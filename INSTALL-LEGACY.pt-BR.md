@@ -195,7 +195,13 @@ No OpenIV: **Tools** → **Package Installer**, escolha o arquivo, **Install**, 
 
 ### Já tem essas telas e quer as do próprio jogo de volta?
 
-Até a 2.6.4, as telas de carregamento vinham dentro do pacote do HUD. Para tirar elas:
+1. Baixe **[GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv)**.
+2. No OpenIV: **Tools** → **Package Installer**, escolha o arquivo, **Install**, e escolha a **mods folder**, igual ao HUD.
+
+Ele coloca as telas de carregamento do próprio jogo de volta e apaga as imagens VI, tenham elas vindo no pacote delas
+ou (até a 2.6.4) dentro do pacote do HUD. O HUD fica como está.
+
+**Ou à mão:**
 
 1. Abra o **OpenIV** e clique em **Edit mode** (modo de edição) lá em cima.
 2. Abra o **`update`** do próprio jogo → **`update.rpf`** → `x64` → `data` → `cdimages` (não o que está em `mods`).

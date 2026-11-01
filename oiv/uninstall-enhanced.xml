@@ -26,8 +26,8 @@ What it leaves
   - scripts\MiniMap.settings, .levels, .heights and .water (about 30 MB): the standalone GTA VI MiniMap mod keeps
     its settings and map data in the same files. Don't have it? You can delete them.
   - The higher limits in gameconfig.xml. Other mods may need them, and they do no harm.
-  - The VI loading screens, if you installed them. Your install guide's "Optional: VI loading screens" shows how to
-    put the game's own back.
+  - The VI loading screens, if you installed them. GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Enhanced.oiv, next to
+    this one, puts the game's own back.
   - Script Hook V, Script Hook V .NET Enhanced, OpenRPF, and Jason or Lucia if you added them.
 
 With NaturalVision Enhanced

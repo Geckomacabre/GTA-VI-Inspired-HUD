@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package version="2.1" id="{20e79926-567e-418a-99b8-92a0a5c09b24}" target="Five">
+  <metadata>
+    <name>GTA VI-Inspired HUD 2.7.2 Loading Screens Uninstaller (GTA V Legacy)</name>
+    <version><major>2</major><minor>7</minor><tag>LEGACY LOADING SCREENS UNINSTALL 2.7.2</tag></version>
+    <author><displayName>Geckomacabre x FBICat</displayName></author>
+    <description><![CDATA[Takes FBICat's VI loading screens off GTA V LEGACY (GTA5.exe) and puts the game's own back. Maintained by Geckomacabre.
+Install it with OpenIV, to the mods folder, the same way you installed the loading screens.
+Game in C:\Program Files? Start OpenIV with right-click > Run as administrator.
+
+Need help? discord.gg/C7gE5SHEzH, or a GitHub issue.
+
+What it does
+  In update.rpf\x64\data\cdimages\scaleform_frontend.rpf (your mods folder's copy):
+  - Puts back Rockstar's own landing page and loading screens: landing_page.gfx, loadingscreen_startup.gfx,
+    loadingscreen_newgame.gfx and gtav_online.gfx, as the game has them.
+  - Deletes the VI pictures, viload_0.ytd to viload_11.ytd and viload_logo.ytd.
+  Works for the loading screens of any version, whether they came in their own package or (up to 2.6.4) in the HUD's.
+
+What it leaves
+  - The HUD itself. It works the same with the game's own loading screens.
+  - The HUD's notification movie in the same file (game_stream.gfx), so its notifications stay clear of the minimap.
+  - Your other mods.
+
+The four movies are Rockstar's, unchanged, from GTA V's own update.rpf: the only way to put them back.
+https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
+]]></description>
+    <licence><![CDATA[Personal use. Puts GTA V's own loading screens back; the four movies in it are Rockstar Games' own, unchanged.]]></licence>
+  </metadata>
+  <colors>
+    <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>
+    <iconBackground>$FFE06AA8</iconBackground>
+  </colors>
+  <content>
+    <!-- STARTSCREEN -->
+  </content>
+</package>

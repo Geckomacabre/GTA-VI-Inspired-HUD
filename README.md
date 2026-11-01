@@ -162,6 +162,8 @@ Want to play as **Lucia**? She isn't included: her model is someone else's paid 
 **Want it off again?** Install the uninstaller the same way: **[Legacy](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-Legacy.oiv)**
 or **[Enhanced](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-Enhanced.oiv)**.
 It takes off only the HUD, and keeps your progress and your other mods. "How to remove the mod" in your guide has the details.
+The VI loading screens have their own: **[Legacy](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv)**
+or **[Enhanced](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Enhanced.oiv)**. They put the game's own back.
 
 ---
 

@@ -215,7 +215,14 @@ HUD 때처럼 **OIV Package Installer**(`CodeWalker.OIVInstaller.exe`) 창에 �
 
 ### 이미 깔려 있는데, 게임 원래 화면으로 되돌리고 싶다면?
 
-2.6.4까지는 로딩 화면이 HUD 패키지 안에 들어 있었어요. 빼는 방법:
+1. **[GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Enhanced.oiv](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/extras/GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Enhanced.oiv)** 파일을 다운로드하세요.
+2. HUD 때처럼 **OIV Package Installer**(`CodeWalker.OIVInstaller.exe`) 창에 끌어다 놓으세요. 게임이 Program Files에
+   있다면, 먼저 설치 프로그램을 마우스 오른쪽 버튼으로 클릭 → **관리자 권한으로 실행(Run as administrator)**을 누르세요.
+
+게임 원래의 로딩 화면을 되돌리고 VI 사진들을 지워요. 로딩 화면을 따로 받은 패키지로 깔았든, (2.6.4까지처럼)
+HUD 패키지로 깔았든 상관없어요. HUD는 그대로 남아요.
+
+**직접 하려면:**
 
 1. **CodeWalker RPF Explorer**를 열고 **Edit** → **Edit mode**(편집 모드)를 클릭하세요.
 2. 게임 원본의 **`update`** → **`update.rpf`** → `x64` → `data` → `cdimages`를 여세요(`mods` 안에 있는 것 말고요).
