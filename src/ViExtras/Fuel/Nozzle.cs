@@ -171,12 +171,13 @@ namespace ViExtras
                 return;
             }
             if (!ok) return;
-            if (_hoseDue && _nozzle != null && _nozzle.Exists())
-            {
-                _hoseDue = false;
-                Hose(_nozzle);
-            }
-            bool down = Down();
+            if (_hoseDue && _nozzle != null && _nozzle.Exists()) _hoseDue = !Hose(_nozzle);
+            // GTA6Hud's ContextDown takes the game's own E (and Enter) away for the frame it's asked in, so it's only asked
+            // while a prompt of the nozzle's can be up: with the nozzle out, or at a pump. Asked every frame on foot, as in
+            // 2.7.2, it left every E prompt of the game's dead: wardrobes, barbers, the gym, missions.
+            bool ours = _stage != Stage.Off || AtPumpPrompt(player);
+            if (ours) RopeTexturesIn();
+            bool down = Down(ours);
             bool pressed = down && !_wasDown;
             _wasDown = down;
 
@@ -188,10 +189,19 @@ namespace ViExtras
             }
         }
 
-        private bool Down()
+        // ours: GTA6Hud's ContextDown, which takes the key from the game this frame; otherwise only looked at
+        private bool Down(bool ours)
         {
-            if (_contextDown != null) return _contextDown();
+            if (ours && _contextDown != null) return _contextDown();
             return Game.IsKeyPressed(Keys.E) || Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, 51);
+        }
+
+        // AtPump's prompt is up (or about to be): the pump found last frame is within reach, and GTA6Hud's FILL CAN
+        // doesn't have it
+        private bool AtPumpPrompt(Ped player)
+        {
+            return _nearPump != null && _nearPump.Exists() && !CanWantsPump
+                && player.Position.DistanceTo2D(_nearPump.Position) <= PumpReach + 0.6f;
         }
 
         // ---- a pump --------------------------------------------------------------------------------
@@ -264,19 +274,35 @@ namespace ViExtras
                 false, false, false, false, 2, true);
         }
 
-        // the hose from the pump to the nozzle (made again each time the nozzle moves to another thing)
-        private void Hose(Prop to)
+        // The rope's textures, asked for at a pump, so they're in before the nozzle is taken.
+        private static bool RopeTexturesIn()
+        {
+            if (Function.Call<bool>(Hash.ROPE_ARE_TEXTURES_LOADED)) return true;
+            Function.Call(Hash.ROPE_LOAD_TEXTURES);
+            return false;
+        }
+
+        // The hose from the pump to the nozzle (made again each time the nozzle moves to another thing): false until it
+        // can be, so it's tried again next frame. Only once the rope's textures are in: made the frame they were asked
+        // for, the first hose of a session crashed GTA V Enhanced in ATTACH_ENTITIES_TO_ROPE (2026-11-02).
+        private bool Hose(Prop to)
         {
             DropHose();
-            if (!Function.Call<bool>(Hash.ROPE_ARE_TEXTURES_LOADED)) Function.Call(Hash.ROPE_LOAD_TEXTURES);
+            if (!RopeTexturesIn()) return false;
             Vector3 a = _hoseTop;
             float length = Math.Max(1f, Math.Min(_hoseLength, a.DistanceTo(to.Position) + 0.6f));
             _rope = Function.Call<int>(Hash.ADD_ROPE, a.X, a.Y, a.Z, 0f, 0f, 0f, length, RopeType, _hoseLength + 1f, 0.5f, 0.5f,
                 false, false, true, 1f, false, 0);
-            if (_rope == 0) return;
+            if (_rope == 0 || !new Rope(_rope).Exists())
+            {
+                _rope = 0;
+                Log.Write("Nozzle", "the hose couldn't be made: no rope");
+                return true;
+            }
             Vector3 b = to.GetOffsetPosition(Collar);
             new Rope(_rope).Connect(_pump, a, to, b, _hoseLength + 1f);
             new Rope(_rope).ActivatePhysics();
+            return true;
         }
 
         private void DropHose()

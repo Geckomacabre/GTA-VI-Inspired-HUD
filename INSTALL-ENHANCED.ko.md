@@ -126,12 +126,12 @@ OpenRPF는 게임이 따로 떨어진 **`mods` 폴더**에서 모드를 불러�
 ### 파트 1: 모드 받기
 
 1. [**Releases 페이지**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)로 가세요.
-2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** 파일을 다운로드하세요. 모드 본체이고, 약 100 MB예요.
+2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** 파일을 다운로드하세요. 모드 본체이고, 약 100 MB예요.
    이 파일이 게임에서 모드를 켜는 일까지 해 줘서, 따로 받을 패치는 없어요.
 
-❌ `GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`는 받지 마세요. 다른 버전용이라 Enhanced를 튕기게 해요.
+❌ `GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`는 받지 마세요. 다른 버전용이라 Enhanced를 튕기게 해요.
 
-💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.7.2). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
+💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.7.3). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
 도움을 요청할 때 이 숫자도 알려 주세요.
 
 ### Lucia로 플레이하고 싶나요?
@@ -174,7 +174,7 @@ OpenIV는 Enhanced에 모드를 설치하지 못해요. 그래서 대신 **OIV P
 
 1. OIV Package Installer 폴더를 여세요.
 2. 표에 나온 방법대로 **`CodeWalker.OIVInstaller.exe`** 파일을 실행하세요.
-3. **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** 파일을 창 위로 끌어다 놓으세요. (또는 **Browse**를 클릭해서 고르세요.)
+3. **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** 파일을 창 위로 끌어다 놓으세요. (또는 **Browse**를 클릭해서 고르세요.)
 4. 게임 폴더를 물어봐요. **`GTA5_Enhanced.exe`** 파일이 있는 폴더를 고르세요.
 5. **Install**을 클릭하세요.
 6. 끝날 때까지 기다리세요.
@@ -757,6 +757,7 @@ Enhanced용 LSPDFR은 아직 초기 프리뷰 단계예요. HUD를 그것과 함
 | **Central Real-Life Traffic**이나 **Environment**를 설치했더니 **HUD 일부가 사라졌어요** | Central의 `dlclist.xml`이 내 파일을 바꿔 버렸어요. 그 파일에는 HUD의 팩이 없어요.<br>거기에 HUD의 줄을 다시 추가하세요: 위의 "선택 사항: Central Real-Life Traffic과 Environment"를 보세요. |
 | **Central Real-Life Traffic**을 넣은 뒤로 게임이 **로딩 화면이 끝나자마자 튕겨요** | 1. **ResourceExtensions**를 설치하세요(Central에 필요해요).<br>2. Central이 `onigiri\common\data`에 넣은 기본 `gameconfig.xml`을 그대로 두세요.<br>ResourceExtensions는 수정된 파일을 지원하지 않아요. NVE의 파일도 마찬가지예요. |
 | **Forests of San Andreas**나 **GTA V Remastered**를 넣었는데 **새 나무가 안 보여요** | 이 팩들은 게임이 팩을 불러오는 곳에 있어야 해요:<br>• **NaturalVision Enhanced를 쓴다면:** `onigiri\dlcpacks`에 넣고, 그 줄을 `onigiri\common\data\dlclist.xml`에 추가.<br>• **안 쓴다면:** `mods\update\x64\dlcpacks`에 넣고, 그 줄을 `mods\update\update.rpf`의 `dlclist.xml`에 추가.<br>위의 "선택 사항: Forests of San Andreas와 GTA V Remastered"를 보세요. |
+| **운전을 시작하고 몇 초 뒤에 게임이 꺼져요**(주로 미션 중). **VStancer**(`VStancer.asi`)를 쓰고 있어요 | VStancer 0.4.0은 Enhanced 1.0.1013용이에요. 1.0.1158에서는 운전하자마자 게임이 꺼질 수 있어요.<br>1. 게임 폴더에서 **`VStancer.asi`**를 다른 곳으로 옮기세요(`VStancer` 폴더는 그대로 둬도 돼요).<br>2. VStancer 업데이트에 내 게임 버전이 나오면 다시 넣으세요(ikt가 gta5-mods.com에 올리고, 가끔 Patreon에 먼저 올려요).<br>💡 HUD 때문이 아니에요. Enhanced에서 HUD는 바퀴나 서스펜션을 바꾸지 않아요. |
 | Script Hook V 메시지에 **"unknown game version"**(알 수 없는 게임 버전)이라고 떠요 | GTA V가 막 업데이트됐는데, Script Hook V가 아직 따라오지 못한 거예요.<br>1. 새 Script Hook V가 나올 때까지 기다리세요.<br>2. 2단계를 다시 하세요. |
 | 게임은 켜지는데 **새 HUD가 안 보여요** | 3단계의 SHVDNE 파일 5개가 `GTA5_Enhanced.exe` 옆에 있는지 확인하세요. |
 | 모드를 **업데이트**했는데 게임이 아직 **예전 버전**처럼 동작해요 | Script Hook V .NET이 예전 스크립트의 저장된 사본을 계속 실행하고 있을 수 있어요.<br>1. 게임을 닫으세요.<br>2. **Win + R**을 누르세요.<br>3. `%LOCALAPPDATA%\assembly`를 입력하고 Enter를 누르세요.<br>4. **`dl3`** 폴더를 지우세요. 그냥 캐시예요.<br>**그래도 예전 버전인가요?** OIV Package Installer를 관리자 권한으로 실행해서 다시 설치하세요(6단계). 아니면 스크립트를 직접 복사해 넣으세요: 아래 "직접 업데이트하기"를 보세요. |
@@ -782,7 +783,7 @@ Windows는 그 폴더를 보호해요. OIV Package Installer를 관리자 권한
 그다음부터는 업데이트가 정상적으로 들어가요.
 
 1. 게임을 닫으세요.
-2. **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** 파일을 바탕 화면에 복사하세요.
+2. **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** 파일을 바탕 화면에 복사하세요.
 3. 복사본 이름의 끝부분을 **`.zip`으로** 바꾸세요.
    이름에서 `.oiv` 부분이 안 보이나요? 파일 탐색기에서 **보기(View)** → **표시(Show)** → **파일 확장명(File name extensions)** 옵션을 켜세요.
 4. zip을 열고 **`content`** → **`scripts`** 폴더로 들어가세요.
@@ -800,7 +801,7 @@ Windows는 그 폴더를 보호해요. OIV Package Installer를 관리자 권한
        복사하세요.
     2. 6단계처럼 OIV Package Installer로 모드를 한 번 설치하세요. 그러면 새 팩이 켜져요.
 11. 게임을 시작하세요. 이제 `scripts\ViExtras.log`가 `==== ViExtras …` 줄로 시작해요.
-    그 줄에 다운로드한 버전이 나와요.
+    그 줄에 다운로드한 버전이 나와요. 예전 버전이 나오면 새 파일이 들어가지 않은 거예요.
 
 ---
 

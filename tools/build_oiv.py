@@ -128,6 +128,31 @@ LOADING_PICTURES = [f"viload_{i}.ytd" for i in range(12)] + ["viload_logo.ytd"]
 # standalone GTA VI MiniMap (3D Buildings) mod keeps its settings and learned map data in the same MiniMap.* files.
 SHARED = {"scripts\\lemonui.shvdn3.dll", "scripts\\minimap.heights", "scripts\\minimap.levels",
           "scripts\\minimap.settings", "scripts\\minimap.water"}
+# What FBICat's 2.1 installed that no version since has (its VIHud-2.1-Legacy/Enhanced.oiv, compared file by file):
+# deleted by the HUD package and the uninstaller. Its Lucia packs (luciaped, luciaolf) stay: the guides have players
+# put their own Lucia in that same luciaped folder.
+OLD_LEFTOVERS = [
+    "scripts\\Hud\\Lighting\\base_gta5\\w_neutral.xml",
+    "scripts\\Hud\\Music\\track1.mp3",
+    "scripts\\Hud\\Music\\track2.mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\Devil Woman by Cliff Richard (Lyrics) [AJwwIDCeqoU].mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\Prefab Sprout - Cars and Girls (Official Video) [jEJdfDD4dVg].mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\Se Me Nota (Agarrame) [-uj9b1qcf0Y].mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\SG Lewis, Robyn & Channel Tres - Impact [AOYRWZYnz7o].mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\Tate McRae - Sports Car (Lyrics) - Vibe Music.mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\Wanderlust - The Weeknd - US-UK.mp3",
+    # GTA6Hud's muffled copies of those songs (a cache it makes again for whatever songs are there)
+    "scripts\\Hud\\Radio\\CustomMusic\\.muffled\\6f3b788d.mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\.muffled\\937d7ce1.mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\.muffled\\9b11a201.mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\.muffled\\aa0c6e0b.mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\.muffled\\d858b3c2.mp3",
+    "scripts\\Hud\\Radio\\CustomMusic\\.muffled\\ec2d166f.mp3",
+]
+# An older minimap plugin (older installs, or the standalone 3D minimap mod): loaded beside ViMinimap.asi, the two
+# draw over each other and the icons flicker (iliuha, 2026-11-01). The HUD package deletes it; the uninstaller leaves
+# it, as it may be that other mod's.
+OLD_MINIMAP = ["MiniMap.asi", "MiniMapHudPresent.asi", "scripts\\MiniMap.dll"]
 
 
 def template(name):
@@ -176,7 +201,7 @@ def uninstall_paths(edition):
     first = [f for f in files if "\\" not in f or (f.count("\\") == 1 and f.lower().endswith(".dll"))]
     prefix = "mods\\" if edition == "enhanced" else ""
     packs = [f"{prefix}update\\x64\\dlcpacks\\{pack}\\dlc.rpf" for pack in HUD_PACKS]
-    return first + packs + [f for f in files if f not in first]
+    return first + packs + [f for f in files if f not in first] + OLD_LEFTOVERS
 
 
 def add_packs(files, dlcpacks, packs):
@@ -301,6 +326,7 @@ def main():
             ap.error(f"{args.edition} needs --dlcpacks")
         files = collect_files(args.dlcpacks)
         name = None
+        deletes = OLD_MINIMAP + OLD_LEFTOVERS
     if args.startscreen:
         startscreen = collect_startscreen(args.edition, args.startscreen)
 

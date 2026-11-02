@@ -40,7 +40,7 @@ Usa o **NaturalVision Enhanced**, o **Lively World Expansion**, o **Central Real
 
 Em **[Releases](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)**, pegue:
 
-- o **`GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`** *ou* o **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** (só o seu)
+- o **`GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`** *ou* o **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** (só o seu)
 - *(opcional)* A Lucia não vem incluída: o modelo dela é trabalho pago de outra pessoa. Pegue com o criador dela,
   **[Lucia Caminos no Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** ou **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** no gta5-mods.com (para o Jason, **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** do mesmo criador, ou **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** no mod-hub.net).
 

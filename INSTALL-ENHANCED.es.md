@@ -126,12 +126,12 @@ OpenRPF permite que el juego cargue mods desde una **carpeta `mods`** aparte. Lo
 ### Parte 1: Consigue el mod
 
 1. Ve a la [**página de Releases**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. En **Assets**, descarga **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`**. Es el mod, unos 100 MB.
+2. En **Assets**, descarga **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`**. Es el mod, unos 100 MB.
    También activa el mod en el juego, así que no hace falta descargar ningún parche aparte.
 
-❌ No descargues `GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`. Es para la otra versión y hará que Enhanced se cierre de golpe.
+❌ No descargues `GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`. Es para la otra versión y hará que Enhanced se cierre de golpe.
 
-💡 El número del nombre del archivo es la versión (aquí, 2.7.2). Así siempre sabes cuál instalaste.
+💡 El número del nombre del archivo es la versión (aquí, 2.7.3). Así siempre sabes cuál instalaste.
 Menciónalo cuando pidas ayuda.
 
 ### ¿Quieres jugar como Lucia?
@@ -174,7 +174,7 @@ la instalación puede dejar los archivos antiguos sin reemplazar.
 
 1. Abre la carpeta del OIV Package Installer.
 2. Ejecuta **`CodeWalker.OIVInstaller.exe`** como dice la tabla.
-3. Arrastra **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** a su ventana. (O haz clic en **Browse** y elígelo.)
+3. Arrastra **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** a su ventana. (O haz clic en **Browse** y elígelo.)
 4. Te pide tu carpeta del juego. Elige la carpeta que tiene **`GTA5_Enhanced.exe`**.
 5. Haz clic en **Install**.
 6. Espera hasta que termine.
@@ -757,6 +757,7 @@ Busca lo que te pasa en la columna de la izquierda. Haz lo que dice la columna d
 | Instalaste **Central Real-Life Traffic** o **Environment** y ahora **faltan partes del HUD** | El `dlclist.xml` de Central reemplazó el tuyo. No incluye los packs del HUD.<br>Vuelve a añadirle las líneas del HUD: consulta "Opcional: Central Real-Life Traffic y Environment" más arriba. |
 | El juego **se cierra de golpe justo después de la pantalla de carga** desde que añadiste **Central Real-Life Traffic** | 1. Instala **ResourceExtensions** (Central lo necesita).<br>2. Conserva el `gameconfig.xml` original que Central puso en `onigiri\common\data`.<br>ResourceExtensions no es compatible con uno modificado, incluido el de NVE. |
 | Añadiste **Forests of San Andreas** o **GTA V Remastered** y **no aparecen árboles nuevos** | Sus packs tienen que estar donde tu juego carga los packs:<br>• **Con NaturalVision Enhanced:** en `onigiri\dlcpacks`, con sus líneas en `onigiri\common\data\dlclist.xml`.<br>• **Sin él:** en `mods\update\x64\dlcpacks`, con sus líneas en el `dlclist.xml` de `mods\update\update.rpf`.<br>Consulta "Opcional: Forests of San Andreas y GTA V Remastered" más arriba. |
+| El juego **se cierra unos segundos después de empezar a conducir**, a menudo en una misión, y tienes **VStancer** (`VStancer.asi`) | VStancer 0.4.0 está hecho para Enhanced 1.0.1013. En la 1.0.1158 puede cerrar el juego en cuanto conduces.<br>1. Saca **`VStancer.asi`** de tu carpeta del juego (la carpeta `VStancer` puede quedarse).<br>2. Vuelve a ponerlo cuando una actualización de VStancer mencione tu versión del juego (ikt las publica en gta5-mods.com, a veces primero en Patreon).<br>💡 No es el HUD: en Enhanced el HUD no cambia las ruedas ni la suspensión. |
 | Un mensaje de Script Hook V dice **"unknown game version"** | GTA V se acaba de actualizar y Script Hook V todavía no se ha puesto al día.<br>1. Espera a que salga un Script Hook V nuevo.<br>2. Repite el Paso 2. |
 | El juego arranca pero **el nuevo HUD no aparece** | Comprueba que los 5 archivos de SHVDNE del Paso 3 están junto a `GTA5_Enhanced.exe`. |
 | **Actualizaste** el mod, pero el juego sigue comportándose como la **versión antigua** | Script Hook V .NET puede seguir ejecutando su copia guardada de los scripts antiguos.<br>1. Cierra el juego.<br>2. Pulsa **Win + R**.<br>3. Escribe `%LOCALAPPDATA%\assembly` y pulsa Enter.<br>4. Borra la carpeta **`dl3`**. Solo es una caché.<br>**¿Sigue la versión antigua?** Instálalo otra vez con el OIV Package Installer ejecutado como administrador (Paso 6). O copia tú mismo los scripts: consulta "Actualizar a mano" más abajo. |
@@ -782,7 +783,7 @@ También puedes copiar tú mismo los scripts nuevos. Un `.oiv` no es más que un
 Después de eso, las actualizaciones se instalan con normalidad.
 
 1. Cierra el juego.
-2. Copia **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** a tu Escritorio.
+2. Copia **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** a tu Escritorio.
 3. Cambia la terminación de la copia a **`.zip`**.
    ¿No ves la parte `.oiv` del nombre? En el Explorador de archivos, activa **Ver** → **Mostrar** → **Extensiones de nombre de archivo**.
 4. Abre el zip → **`content`** → **`scripts`**.
@@ -800,7 +801,7 @@ Después de eso, las actualizaciones se instalan con normalidad.
        tu carpeta del juego.
     2. Instala el mod una vez con el OIV Package Installer, como en el Paso 6. Eso activa el pack nuevo.
 11. Inicia el juego. `scripts\ViExtras.log` ahora empieza con una línea `==== ViExtras …`.
-    Muestra la versión que descargaste.
+    Muestra la versión que descargaste. ¿Sale una versión anterior? Los archivos nuevos no se copiaron.
 
 ---
 

@@ -53,6 +53,11 @@ namespace ViExtras
             if (Scripts == null)
             {
                 Scripts = scriptsDir;
+                // a new log each session, so its banner is this session's build and the file doesn't
+                // grow for good; the last session's stays beside it, for a crash reported after a restart
+                string log = Path.Combine(scriptsDir, Name + ".log");
+                try { if (File.Exists(log)) File.Copy(log, Path.Combine(scriptsDir, Name + ".prev.log"), true); } catch { }
+                try { File.WriteAllText(log, ""); } catch { }
                 Log.Write(Name, Banner());
             }
             EnhancedPlayerInfo.TurnOff();

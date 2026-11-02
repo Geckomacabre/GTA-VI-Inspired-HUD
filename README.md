@@ -26,8 +26,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv` with the OIV Package Installer.
 >
 > **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
 >
@@ -75,6 +75,16 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 <sub>BuckMe (your bank) and your wallet at the top right. An empty one turns grey.</sub>
 
 ---
+
+## 🆕 New in 2.7.3
+
+- **Enhanced: no crash when you take the pump's nozzle.** The first one of a session could close the game.
+- **E works again at the game's own prompts.** In 2.7.2, on foot, E did nothing at wardrobes, barbers, Ammu-Nation,
+  the gym or prompts in missions: the pump's nozzle was taking it.
+- **The gym, fixed.** Bench press at Muscle Beach: you lie on the bench with the barbell and press. Chin-ups hang
+  from the right bar, facing it. Push-ups and sit-ups keep going, and every rep you do counts, as you do it.
+- **No old minimap fighting the new one.** Installing removes an older minimap plugin, left from an earlier install
+  or another 3D minimap mod, that drew over the HUD's and made its icons flicker.
 
 ## 🆕 New in 2.7.2
 

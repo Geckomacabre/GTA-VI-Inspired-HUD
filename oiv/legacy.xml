@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{9a4c2e61-7b3f-4d08-8e15-2c6b0f9a7d43}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.7.2 (GTA V Legacy)</name>
-    <version><major>2</major><minor>7</minor><tag>LEGACY 2.7.2</tag></version>
+    <name>GTA VI-Inspired HUD 2.7.3 (GTA V Legacy)</name>
+    <version><major>2</major><minor>7</minor><tag>LEGACY 2.7.3</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V LEGACY (the original PC version, GTA5.exe). Maintained by Geckomacabre.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -33,6 +33,9 @@ What it installs
   - dlcpacks:/vihudfonts/  pause menu, HUD art and fonts, vehicle maker emblems
   - dlcpacks:/vihudanims/  body carry / loot animations, the crawl, the slim jim and its strip
   - 3D minimap: scripts\ViMinimap.dll + MiniMap.* data + ViMinimap.asi (in-game drawing)
+  - Removes an older minimap plugin (MiniMap.asi, MiniMapHudPresent.asi, scripts\MiniMap.dll), which would draw
+    over this one, and what FBICat's 2.1 left that no version uses since (a lighting file, its music and bundled
+    songs). A Lucia you added stays.
   - Start screen: FBICat's VI landing page and loading screens, in update.rpf\x64\data\cdimages\scaleform_frontend.rpf
   - Registration, in update.rpf: the 3 packs in dlclist.xml; gameconfig.xml MetaDataStore 4000, ExprDictStore 400,
     TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600
@@ -45,6 +48,20 @@ What it installs
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
   - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
+
+Changes in 2.7.3
+  - Enhanced: taking the pump's nozzle no longer crashes the game (the first hose of a session was made before
+    the game had loaded rope textures).
+  - E works again at the game's own prompts: in 2.7.2, on foot, E did nothing at wardrobes, barbers, Ammu-Nation,
+    the gym or prompts in missions, because the pump's nozzle took it every frame. It now takes E only at a pump or
+    with the nozzle in your hand.
+  - The gym: bench press at Muscle Beach puts you on the bench with its barbell, pressing (a short fade either
+    way); chin-ups start at the game's own spot on each bar, facing it; push-ups and sit-ups no longer stop after
+    3 s; and reps are counted from the movement, one for each one you do.
+  - Installing removes an older minimap plugin (MiniMap.asi, MiniMapHudPresent.asi, scripts\MiniMap.dll), which
+    drew over the HUD's and made its icons flicker, and what FBICat's 2.1 left that no version uses since.
+  - ViExtras.log starts afresh each session, its first line this session's version; the last one is kept as
+    ViExtras.prev.log.
 
 Changes in 2.7.2
   - Fill up with the pump's nozzle, as in FiveM: on foot, E at a pump takes the nozzle on a hose, E at the car's
@@ -228,5 +245,6 @@ https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
     <!-- FILES -->
     <!-- STARTSCREEN -->
     <!-- REGISTER -->
+    <!-- DELETES -->
   </content>
 </package>

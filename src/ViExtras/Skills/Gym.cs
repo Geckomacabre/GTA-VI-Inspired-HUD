@@ -14,9 +14,9 @@ namespace ViExtras
     /// The FiveM version's training (vice_hud client_training.lua and
     /// server_gym.lua), for single player: ways to earn the Health skill.
     ///
-    /// The ped plays the game's own exercise scenario and every `secs` on it a
-    /// rep is counted and paid in Health XP (only Health, by design, as in
-    /// FiveM). A set is 25 reps, then a minute's rest. Push-ups and sit-ups work
+    /// The ped plays the game's own exercise scenario, and each rep he does in it
+    /// (a hand or his head going down and back up) is counted and paid in
+    /// Health XP (only Health, by design, as in FiveM). A set is 25 reps, then a minute's rest. Push-ups and sit-ups work
     /// anywhere, on their own keys (FiveM's /pushups and /situps); bench press
     /// and chin-ups are offered next to the real gym props (FiveM's ox_target
     /// options on those models), and any exercise at a placed station
@@ -27,7 +27,7 @@ namespace ViExtras
         private sealed class Exercise
         {
             public string Key, Label, Scenario;
-            public float Secs;
+            public int Bone;      // what goes down and up once a rep
             public double Xp;
             public bool AtProp, Station;
         }
@@ -45,18 +45,77 @@ namespace ViExtras
             public string Exercise;
             public Vector3 At;
             public float Heading;
-            public bool AtPosition;
+            public bool AtPosition, FromStation;
+            public int Model;
+        }
+
+        // The exercise a piece of equipment has, where the ped's root goes on it (from its origin, in its own frame: x
+        // right, y forward, z up) and which way he faces from its heading: the game's own scenario point on that
+        // model (its CExtensionDefSpawnPoint in v_sports.ytyp), which Muscle Beach's gym-goers use. Measured in game
+        // too, the same to the millimetre. Started at the origin, or a guessed height, the set played inside the
+        // bench, under the sand, on top of the bench or facing away from the bar (iliuha, 2026-11-01); and only one of
+        // the bench models has a bench press at all (bench_05 is a pull-up station). Equipment with no placement here
+        // isn't offered.
+        private readonly Dictionary<int, (string Exercise, Vector3 Offset, float Turn)> _placements = new Dictionary<int, (string, Vector3, float)>();
+
+        private void Placements()
+        {
+            _placements[Game.GenerateHash("prop_muscle_bench_03")] = ("bench", new Vector3(0.020f, -0.150f, -0.260f), 180f);
+            _placements[Game.GenerateHash("prop_muscle_bench_05")] = ("chinups", new Vector3(-0.014f, 0.800f, -0.032f), 180f);
+            _placements[Game.GenerateHash("prop_beach_bars_01")] = ("chinups", new Vector3(-1.396f, 0.139f, 0.965f), 180f);
+            _placements[Game.GenerateHash("prop_beach_bars_02")] = ("chinups", new Vector3(0f, 0.140f, 0.965f), 180f);
         }
 
         // config.lua Config.Training.exercises
         private static readonly Exercise[] Exercises =
         {
-            new Exercise { Key = "pushups", Label = "Push-ups",     Scenario = "WORLD_HUMAN_PUSH_UPS",               Secs = 3.0f, Xp = 20 },
-            new Exercise { Key = "situps",  Label = "Sit-ups",      Scenario = "WORLD_HUMAN_SIT_UPS",                Secs = 3.0f, Xp = 18 },
-            new Exercise { Key = "weights", Label = "Free weights", Scenario = "WORLD_HUMAN_MUSCLE_FREE_WEIGHTS",    Secs = 4.0f, Xp = 28, Station = true },
-            new Exercise { Key = "bench",   Label = "Bench press",  Scenario = "PROP_HUMAN_SEAT_MUSCLE_BENCH_PRESS", Secs = 4.5f, Xp = 34, AtProp = true },
-            new Exercise { Key = "chinups", Label = "Chin-ups",     Scenario = "PROP_HUMAN_MUSCLE_CHIN_UPS",         Secs = 4.0f, Xp = 30, AtProp = true },
+            new Exercise { Key = "pushups", Label = "Push-ups",     Scenario = "WORLD_HUMAN_PUSH_UPS",               Bone = Head,      Xp = 20 },
+            new Exercise { Key = "situps",  Label = "Sit-ups",      Scenario = "WORLD_HUMAN_SIT_UPS",                Bone = Head,      Xp = 18 },
+            new Exercise { Key = "weights", Label = "Free weights", Scenario = "WORLD_HUMAN_MUSCLE_FREE_WEIGHTS",    Bone = RightHand, Xp = 28, Station = true },
+            new Exercise { Key = "bench",   Label = "Bench press",  Scenario = "PROP_HUMAN_SEAT_MUSCLE_BENCH_PRESS", Bone = RightHand, Xp = 34, AtProp = true },
+            new Exercise { Key = "chinups", Label = "Chin-ups",     Scenario = "PROP_HUMAN_MUSCLE_CHIN_UPS",         Bone = Head,      Xp = 30, AtProp = true },
         };
+
+        private const int Head = 31086, RightHand = 57005;   // SKEL_Head, SKEL_R_Hand
+
+        /// <summary>
+        /// One rep: the exercise's bone goes down to near the bottom of its range and back up to near the top, the
+        /// range being what it covered in the last few seconds (longer than half the slowest rep, a sit-up's ~5 s; the
+        /// whole set would take in the get-down from standing, whose top no push-up or sit-up comes back to). A pause,
+        /// or the clip holding the bar up, counts nothing. They were counted on a timer (FiveM's `secs`), out of step
+        /// with the presses: he'd come down and up and it wouldn't count (iliuha, 2026-11-02).
+        /// </summary>
+        private sealed class RepCounter
+        {
+            private const float MinRange = 0.08f, Margin = 0.3f;
+            private const int WindowMs = 4500;
+            private readonly Queue<(int At, float Z)> _recent = new Queue<(int, float)>();
+            private bool _down;
+
+            public bool Update(float z)
+            {
+                int now = Game.GameTime;
+                _recent.Enqueue((now, z));
+                while (_recent.Count > 0 && now - _recent.Peek().At > WindowMs) _recent.Dequeue();
+                float lo = float.MaxValue, hi = float.MinValue;
+                foreach (var s in _recent)
+                {
+                    lo = Math.Min(lo, s.Z);
+                    hi = Math.Max(hi, s.Z);
+                }
+                float range = hi - lo;
+                if (range < MinRange) return false;
+                if (!_down && z <= lo + Margin * range) _down = true;
+                else if (_down && z >= hi - Margin * range)
+                {
+                    _down = false;
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        private static float BoneZ(Ped ped, int bone) => Function.Call<Vector3>(Hash.GET_PED_BONE_COORDS, ped, bone, 0f, 0f, 0f).Z;
 
         private static Exercise Find(string key)
         {
@@ -76,6 +135,7 @@ namespace ViExtras
         private readonly List<Station> _stations = new List<Station>();
 
         private bool _exercising;
+        private int _reps;              // this set's reps so far
         private int _restUntil;
         private string _requested;      // an anywhere exercise asked for by key
         private Spot _spot;             // where the player is standing, if somewhere to train
@@ -96,6 +156,7 @@ namespace ViExtras
                 "prop_muscle_bench_01, prop_muscle_bench_02, prop_muscle_bench_03, prop_muscle_bench_04, prop_muscle_bench_05, prop_muscle_bench_06, prop_weight_bench_02, m25_2_prop_m52_gymbench_01a"));
             Models(_chinModels, Config.Get("Gym", "ChinUpModels", "prop_beach_bars_01, prop_beach_bars_02, m25_2_prop_m52_gympullup_01a"));
             ParseStations(Config.Get("Gym", "Stations", ""));
+            Placements();
 
             if (!_enabled) return;
             Tick += OnTick;
@@ -203,7 +264,7 @@ namespace ViExtras
                 if (d <= Math.Max(st.Radius, _targetDistance) && d < bestD)
                 {
                     bestD = d;
-                    best = new Spot { Exercise = st.Exercise, At = st.At, Heading = st.Heading, AtPosition = true };
+                    best = new Spot { Exercise = st.Exercise, At = st.At, Heading = st.Heading, AtPosition = true, FromStation = true };
                 }
             }
 
@@ -249,8 +310,9 @@ namespace ViExtras
 
         private void Gather(int model, Vector3 pos, float heading)
         {
-            string ex = _benchModels.Contains(model) ? "bench" : _chinModels.Contains(model) ? "chinups" : null;
-            if (ex != null) _equipment.Add(new Spot { Exercise = ex, At = pos, Heading = heading, AtPosition = true });
+            // one of [Gym]'s models, with a placement: the placement says which exercise it is
+            if ((_benchModels.Contains(model) || _chinModels.Contains(model)) && _placements.TryGetValue(model, out var place))
+                _equipment.Add(new Spot { Exercise = place.Exercise, At = pos, Heading = heading, AtPosition = true, Model = model });
         }
 
         // ---- one set (client_training.lua train) --------------------------------------
@@ -286,17 +348,37 @@ namespace ViExtras
 
         private void Run(Exercise ex, Spot spot, Ped ped)
         {
+            // The scenario starts where the ped's root goes: a placed station's own position, or the measured placement
+            // on a bench or bar (see _placements), turned with it.
             if (spot != null && spot.AtPosition)
-                Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, ped, ex.Scenario, spot.At.X, spot.At.Y, spot.At.Z, spot.Heading, 0, true, true);
+            {
+                Vector3 at = spot.At;
+                float heading = spot.Heading;
+                if (!spot.FromStation && _placements.TryGetValue(spot.Model, out var place))
+                {
+                    double h = spot.Heading * Math.PI / 180.0;
+                    float c = (float)Math.Cos(h), s = (float)Math.Sin(h);
+                    at += new Vector3(place.Offset.X * c - place.Offset.Y * s, place.Offset.X * s + place.Offset.Y * c, place.Offset.Z);
+                    heading = (spot.Heading + place.Turn) % 360f;
+                }
+                if (ex.Key == "bench" && !spot.FromStation)
+                {
+                    BenchPress(ex, ped, at, heading);
+                    return;
+                }
+                Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, ped, ex.Scenario, at.X, at.Y, at.Z, heading, 0, true, true);
+            }
             else
                 Function.Call(Hash.TASK_START_SCENARIO_IN_PLACE, ped, ex.Scenario, 0, true);
 
-            // The scenario can refuse (occupied, no room, a model it has no clip for).
+            // The scenario can refuse (occupied, no room, a model it has no clip for). Using one counts from its first
+            // step (getting down for push-ups): IS_PED_ACTIVE_IN_SCENARIO stayed false through that, and after 3 s the
+            // set was cleared mid-way down with "Cannot do that here." (iliuha).
             bool started = false;
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Wait(100);
-                if (Function.Call<bool>(Hash.IS_PED_ACTIVE_IN_SCENARIO, ped)) { started = true; break; }
+                if (InScenario(ped)) { started = true; break; }
             }
             if (!started)
             {
@@ -305,8 +387,9 @@ namespace ViExtras
                 return;
             }
 
-            int reps = 0;
-            float elapsed = 0f, lostFor = 0f;
+            int reps = _reps = 0;
+            float lostFor = 0f;
+            var counter = new RepCounter();
             int last = Game.GameTime;
             while (true)
             {
@@ -317,14 +400,12 @@ namespace ViExtras
 
                 if (ped.IsDead || Stopped()) break;
 
-                if (Function.Call<bool>(Hash.IS_PED_ACTIVE_IN_SCENARIO, ped))
+                if (InScenario(ped))
                 {
                     lostFor = 0f;
-                    elapsed += dt;
-                    if (elapsed >= ex.Secs)
+                    if (counter.Update(BoneZ(ped, ex.Bone)))
                     {
-                        elapsed -= ex.Secs;
-                        reps++;
+                        _reps = ++reps;
                         SkillsApi.Award("health", ex.Xp);
                         if (reps >= _setReps)
                         {
@@ -344,7 +425,129 @@ namespace ViExtras
                 DrawSet(ex, reps);
             }
 
-            if (Function.Call<bool>(Hash.IS_PED_ACTIVE_IN_SCENARIO, ped)) Function.Call(Hash.CLEAR_PED_TASKS, ped);
+            if (InScenario(ped)) Function.Call(Hash.CLEAR_PED_TASKS, ped);
+        }
+
+        private static bool InScenario(Ped ped) => Function.Call<bool>(Hash.IS_PED_USING_ANY_SCENARIO, ped);
+
+        // ---- the bench press (its scenario's own rep clip, played here) -----------------------------------
+        //
+        // PROP_HUMAN_SEAT_MUSCLE_BENCH_PRESS plays only for a ped holding its BARBELL prop set (every one of its clips
+        // has CScenarioConditionHasProp BARBELL, scenarios.meta) and only for Muscle Beach's own models: the gym-goers
+        // spawn with the bar, lying. The player has none, so the scenario put him at the bench's point and played
+        // nothing, standing in the bench. Its rep clip, from the bench's point, with the same bar (propsets.meta
+        // BARBELL: Prop_Barbell_02) in his right hand, behind a short fade either way: its enter and exit clips need the
+        // walk-up and collision handling of the scenario itself, and played by hand they put him in the bench or under
+        // the floor (2026-11-02).
+        // Its base clip only holds the bar up (a scenario's resting pose); the presses are its idle, which the scenario
+        // plays a second into each base (NextIdleTime 1). Looped on its own, base held the bar in the air with no reps.
+        private const string BenchReps = "amb@prop_human_seat_muscle_bench_press@idle_a", BenchRepsClip = "idle_a", Barbell = "prop_barbell_02";
+        private const int RightHandProp = 28422;   // PH_R_Hand, where scenario props are held
+        private const int FadeMs = 300;
+        private const float BenchTakenRadius = 1.2f;
+
+        private static bool Load(string dict)
+        {
+            Function.Call(Hash.REQUEST_ANIM_DICT, dict);
+            for (int i = 0; i < 50 && !Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, dict); i++) Wait(100);
+            return Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, dict);
+        }
+
+        private static void FadeOut()
+        {
+            Function.Call(Hash.DO_SCREEN_FADE_OUT, FadeMs);
+            for (int i = 0; i < 20 && !Function.Call<bool>(Hash.IS_SCREEN_FADED_OUT); i++) Wait(50);
+        }
+
+        private static bool Playing(Ped ped, string dict, string clip) => Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, ped, dict, clip, 3);
+
+        private static bool BenchTaken(Ped ped, Vector3 at)
+        {
+            foreach (Ped p in World.GetNearbyPeds(at, BenchTakenRadius))
+                if (p != null && p.Exists() && p != ped && !p.IsDead) return true;
+            return false;
+        }
+
+        private void BenchPress(Exercise ex, Ped ped, Vector3 at, float heading)
+        {
+            if (BenchTaken(ped, at))
+            {
+                Notify("Someone is using that.");
+                return;
+            }
+            var bar = new Model(Barbell);
+            if (!Load(BenchReps) || !bar.Request(5000))
+            {
+                Notify("Cannot do that here.");
+                return;
+            }
+            Vector3 stood = ped.Position;
+            float stoodHeading = ped.Heading;
+            Prop barbell = null;
+            try
+            {
+                FadeOut();
+                Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, ped);
+                ped.IsPositionFrozen = true;
+                Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, ped, BenchReps, BenchRepsClip, at.X, at.Y, at.Z, 0f, 0f, heading, 1000f, -4f, -1, 1, 0f, 2, 0);
+                barbell = World.CreateProp(bar, ped.Position, false, false);
+                if (barbell != null)
+                {
+                    barbell.IsCollisionEnabled = false;
+                    Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, barbell, ped, Function.Call<int>(Hash.GET_PED_BONE_INDEX, ped, RightHandProp),
+                        0f, 0f, 0f, 0f, 0f, 0f, false, false, false, false, 2, true);
+                }
+                Wait(150);
+                Function.Call(Hash.DO_SCREEN_FADE_IN, FadeMs);
+
+                float lostFor = 0f;
+                var counter = new RepCounter();
+                int reps = _reps = 0, last = Game.GameTime;
+                while (true)
+                {
+                    Wait(0);
+                    int t = Game.GameTime;
+                    float dt = (t - last) / 1000f;
+                    last = t;
+                    if (ped.IsDead || Stopped()) break;
+                    if (Playing(ped, BenchReps, BenchRepsClip))
+                    {
+                        lostFor = 0f;
+                        if (counter.Update(BoneZ(ped, ex.Bone)))
+                        {
+                            _reps = ++reps;
+                            SkillsApi.Award("health", ex.Xp);
+                            if (reps >= _setReps)
+                            {
+                                _restUntil = Game.GameTime + _restSeconds * 1000;
+                                Notify(string.Format(CultureInfo.InvariantCulture, "{0} reps. You are winded, rest a minute.", reps));
+                                break;
+                            }
+                        }
+                    }
+                    else if ((lostFor += dt) > 1f) break;   // knocked out of it
+                    DrawSet(ex, reps);
+                }
+                if (!ped.IsDead) FadeOut();
+            }
+            finally
+            {
+                if (barbell != null && barbell.Exists())
+                {
+                    barbell.Detach();
+                    barbell.Delete();
+                }
+                bar.MarkAsNoLongerNeeded();
+                ped.IsPositionFrozen = false;
+                Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, ped);
+                if (!ped.IsDead)
+                {
+                    ped.Position = stood;
+                    ped.Heading = stoodHeading;
+                }
+                Function.Call(Hash.REMOVE_ANIM_DICT, BenchReps);
+                if (!Function.Call<bool>(Hash.IS_SCREEN_FADED_IN)) Function.Call(Hash.DO_SCREEN_FADE_IN, FadeMs);
+            }
         }
 
         private static bool Stopped()

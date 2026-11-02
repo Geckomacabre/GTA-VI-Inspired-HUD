@@ -40,7 +40,7 @@ Todo lo de abajo indica para cuál es cada paso. No los confundas: los archivos 
 
 En **[Releases](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)**, descarga:
 
-- **`GTA-VI-Inspired-HUD-2.7.2-Legacy.oiv`** *o* **`GTA-VI-Inspired-HUD-2.7.2-Enhanced.oiv`** (solo el tuyo)
+- **`GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`** *o* **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** (solo el tuyo)
 - *(opcional)* Lucia no viene incluida: su modelo es un trabajo de pago de otra persona. Consíguela de su creador,
   **[Lucia Caminos en Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** o **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** en gta5-mods.com (para Jason, **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** del mismo creador, o **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** en mod-hub.net).
 
