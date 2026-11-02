@@ -1,6 +1,6 @@
 # Como instalar: GTA V **Enhanced**
 
-*Esta é uma tradução. O guia em inglês ([INSTALL-ENHANCED.md](INSTALL-ENHANCED.md)) é sempre o mais atualizado.*
+*Esta é uma tradução. O guia em inglês ([INSTALL-ENHANCED.md](../INSTALL-ENHANCED.md)) é sempre o mais atualizado.*
 
 Este guia é para a **versão de PC de 2025** do GTA V. Veja qual arquivo a pasta do seu jogo tem:
 

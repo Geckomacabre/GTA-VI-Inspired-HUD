@@ -1,6 +1,6 @@
 # 설치 방법: GTA V **Legacy**
 
-*이 가이드는 번역본이에요. 가장 최신 내용은 영어 가이드([INSTALL-LEGACY.md](INSTALL-LEGACY.md))에 있어요.*
+*이 가이드는 번역본이에요. 가장 최신 내용은 영어 가이드([INSTALL-LEGACY.md](../INSTALL-LEGACY.md))에 있어요.*
 
 이 가이드는 GTA V **오리지널 PC 버전**용이에요.
 

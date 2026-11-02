@@ -1,6 +1,6 @@
 # How to install: GTA V **Enhanced**
 
-🌐 **Read in:** English · [한국어](INSTALL-ENHANCED.ko.md) · [Español](INSTALL-ENHANCED.es.md) · [Português (Brasil)](INSTALL-ENHANCED.pt-BR.md) · [Italiano](INSTALL-ENHANCED.it.md)
+🌐 **Read in:** English · [한국어](Guides-Multi-Language/INSTALL-ENHANCED.ko.md) · [Español](Guides-Multi-Language/INSTALL-ENHANCED.es.md) · [Português (Brasil)](Guides-Multi-Language/INSTALL-ENHANCED.pt-BR.md) · [Italiano](Guides-Multi-Language/INSTALL-ENHANCED.it.md)
 
 This guide is for the **2025 PC version** of GTA V. Check which file your game folder has:
 

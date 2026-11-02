@@ -1,6 +1,6 @@
 # ⚡ Quick start: the dead-simple version
 
-🌐 **Read in:** English · [한국어](QUICK-START.ko.md) · [Español](QUICK-START.es.md) · [Português (Brasil)](QUICK-START.pt-BR.md) · [Italiano](QUICK-START.it.md)
+🌐 **Read in:** English · [한국어](Guides-Multi-Language/QUICK-START.ko.md) · [Español](Guides-Multi-Language/QUICK-START.es.md) · [Português (Brasil)](Guides-Multi-Language/QUICK-START.pt-BR.md) · [Italiano](Guides-Multi-Language/QUICK-START.it.md)
 
 *The GTA VI-Inspired HUD is made by **FBICat**, with features from the FiveM version. Credits are in the [README](README.md#-credits).*
 

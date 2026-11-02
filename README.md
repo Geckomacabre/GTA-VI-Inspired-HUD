@@ -158,7 +158,7 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 | `GTA5.exe` | **Legacy** | 👉 **[Legacy guide](INSTALL-LEGACY.md)** |
 | `GTA5_Enhanced.exe` | **Enhanced** | 👉 **[Enhanced guide](INSTALL-ENHANCED.md)** |
 
-🌐 The guides in other languages: **Legacy** [한국어](INSTALL-LEGACY.ko.md) · [Español](INSTALL-LEGACY.es.md) · [Português (Brasil)](INSTALL-LEGACY.pt-BR.md) · [Italiano](INSTALL-LEGACY.it.md) · **Enhanced** [한국어](INSTALL-ENHANCED.ko.md) · [Español](INSTALL-ENHANCED.es.md) · [Português (Brasil)](INSTALL-ENHANCED.pt-BR.md) · [Italiano](INSTALL-ENHANCED.it.md)
+🌐 The guides in other languages: **Legacy** [한국어](Guides-Multi-Language/INSTALL-LEGACY.ko.md) · [Español](Guides-Multi-Language/INSTALL-LEGACY.es.md) · [Português (Brasil)](Guides-Multi-Language/INSTALL-LEGACY.pt-BR.md) · [Italiano](Guides-Multi-Language/INSTALL-LEGACY.it.md) · **Enhanced** [한국어](Guides-Multi-Language/INSTALL-ENHANCED.ko.md) · [Español](Guides-Multi-Language/INSTALL-ENHANCED.es.md) · [Português (Brasil)](Guides-Multi-Language/INSTALL-ENHANCED.pt-BR.md) · [Italiano](Guides-Multi-Language/INSTALL-ENHANCED.it.md)
 
 **2. Download 1 file** from the [latest release](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest):
 the `.oiv` with your version's name (Legacy **or** Enhanced).

@@ -1,8 +1,8 @@
 # ⚡ Avvio rapido: la versione semplicissima
 
-*Questa è una traduzione. La guida in inglese è sempre la più aggiornata: [QUICK-START.md](QUICK-START.md).*
+*Questa è una traduzione. La guida in inglese è sempre la più aggiornata: [QUICK-START.md](../QUICK-START.md).*
 
-*Il GTA VI-Inspired HUD è opera di **FBICat**, con funzioni prese dalla versione FiveM. I crediti sono nel [README](README.md#-credits).*
+*Il GTA VI-Inspired HUD è opera di **FBICat**, con funzioni prese dalla versione FiveM. I crediti sono nel [README](../README.md#-credits).*
 
 Non hai mai moddato GTA V? Fai questi 6 passi in ordine. Se vuoi più dettagli, ognuno rimanda alla guida completa:
 **[Guida Legacy](INSTALL-LEGACY.it.md)** · **[Guida Enhanced](INSTALL-ENHANCED.it.md)**.
@@ -67,4 +67,4 @@ Avvia la **Story Mode**. L'HUD compare da solo.
   i file `.mp3` in `scripts\Hud\Radio\CustomMusic`.
 - **Tieni premuto Left Alt** (Alt sinistro; controller: **D-pad Down**): personaggi, la fila di schede di GTA VI (anche Jason e Lucia, se hai i loro modelli). **Q / E** (controller: **LB / RB**) sceglie, quando lasci il tasto cambi personaggio
 
-Tutti i comandi sono nel **[README](README.md#-controls)**.
+Tutti i comandi sono nel **[README](../README.md#-controls)**.

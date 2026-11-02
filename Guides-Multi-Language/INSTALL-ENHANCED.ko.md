@@ -1,6 +1,6 @@
 # 설치 방법: GTA V **Enhanced**
 
-*이 가이드는 번역본이에요. 가장 최신 내용은 영어 가이드([INSTALL-ENHANCED.md](INSTALL-ENHANCED.md))에 있어요.*
+*이 가이드는 번역본이에요. 가장 최신 내용은 영어 가이드([INSTALL-ENHANCED.md](../INSTALL-ENHANCED.md))에 있어요.*
 
 이 가이드는 GTA V **2025년 PC 버전**용이에요. 게임 폴더에 어떤 파일이 있는지 확인하세요:
 

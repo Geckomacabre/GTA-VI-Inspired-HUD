@@ -1,8 +1,8 @@
 # ⚡ 빠른 시작: 아주 간단한 버전
 
-*이 가이드는 번역본이에요. 가장 최신 내용은 영어 가이드([QUICK-START.md](QUICK-START.md))에 있어요.*
+*이 가이드는 번역본이에요. 가장 최신 내용은 영어 가이드([QUICK-START.md](../QUICK-START.md))에 있어요.*
 
-*GTA VI-Inspired HUD는 **FBICat**이 만들었고, FiveM 버전의 기능이 더해졌어요. 크레딧은 [README](README.md#-credits)에 있어요.*
+*GTA VI-Inspired HUD는 **FBICat**이 만들었고, FiveM 버전의 기능이 더해졌어요. 크레딧은 [README](../README.md#-credits)에 있어요.*
 
 GTA V 모드를 한 번도 안 해 봤나요? 이 6단계를 순서대로 하세요. 더 자세히 알고 싶다면 각 단계에서 전체 가이드를 보면 돼요:
 **[Legacy 가이드](INSTALL-LEGACY.ko.md)** · **[Enhanced 가이드](INSTALL-ENHANCED.ko.md)**.
@@ -67,4 +67,4 @@ Enhanced에서 **NaturalVision Enhanced**, **Lively World Expansion**, **Central
   `scripts\Hud\Radio\CustomMusic` 폴더에 `.mp3` 파일을 넣어 두세요.
 - **Left Alt 누르고 있기**(컨트롤러: **D-pad Down**): 캐릭터 선택. GTA VI처럼 카드가 한 줄로 나와요(모델이 있다면 Jason과 Lucia도). **Q / E**(컨트롤러: **LB / RB**)로 고르고, 손을 떼면 바뀌어요
 
-모든 조작법은 **[README](README.md#-controls)에** 있어요.
+모든 조작법은 **[README](../README.md#-controls)에** 있어요.

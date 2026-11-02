@@ -1,6 +1,6 @@
 # Come installare: GTA V **Legacy**
 
-*Questa è una traduzione. La guida in inglese è sempre la più aggiornata: [INSTALL-LEGACY.md](INSTALL-LEGACY.md).*
+*Questa è una traduzione. La guida in inglese è sempre la più aggiornata: [INSTALL-LEGACY.md](../INSTALL-LEGACY.md).*
 
 Questa guida è per la **versione PC originale** di GTA V.
 
