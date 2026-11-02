@@ -98,6 +98,8 @@ unos 20 segundos después de cargar la partida. Necesitas la edición **Enhanced
 
 ¿Windows pregunta si quieres reemplazar archivos? Haz clic en **Reemplazar (Replace)**. (Significa que antes tenías la versión normal.)
 
+¿Tienes **`ScriptHookVDotNet-Loader.asi`** o **`ScriptHookVDotNet.dll`** junto a `GTA5_Enhanced.exe`? Bórralos los dos. Son de la versión normal, que se cargaría junto con SHVDNE.
+
 ✅ Esos 5 archivos ya están junto a `GTA5_Enhanced.exe`.
 
 ---
@@ -743,7 +745,7 @@ Busca lo que te pasa en la columna de la izquierda. Haz lo que dice la columna d
 
 | Qué pasa | Qué hacer |
 | --- | --- |
-| El juego **se cierra solo unos 20 segundos después de cargar** | Tienes el Script Hook V .NET normal.<br>1. Repite el Paso 3 con **SHVDNE**.<br>2. Borra la carpeta **`dl3`** de `%LOCALAPPDATA%\assembly` (una caché del antiguo).<br>**Para comprobar cuál tienes:** en tu carpeta del juego, haz clic derecho en **`ScriptHookVDotNet.asi`** → **Propiedades (Properties)** → **Detalles (Details)**. SHVDNE pone **"Script Hook V .Net Enhanced"** ahí. El normal no (su versión es 3.6.0.0).<br>**¿Sigue pasando?** Puede que un complemento de ReShade (un archivo que termina en `.addon64` en tu carpeta del juego) esté chocando. Mueve esos archivos a otro sitio y vuelve a probar. |
+| El juego **se cierra solo unos 20 segundos después de cargar** | Tienes el Script Hook V .NET normal.<br>1. Repite el Paso 3 con **SHVDNE**.<br>2. Borra **`ScriptHookVDotNet-Loader.asi`** y **`ScriptHookVDotNet.dll`** de tu carpeta del juego, si están (son del normal).<br>3. Borra la carpeta **`dl3`** de `%LOCALAPPDATA%\assembly` (una caché del antiguo).<br>**Para comprobar cuál tienes:** en tu carpeta del juego, haz clic derecho en **`ScriptHookVDotNet.asi`** → **Propiedades (Properties)** → **Detalles (Details)**. SHVDNE pone **"Script Hook V .Net Enhanced"** ahí. El normal no (su versión es 3.6.0.0).<br>**¿Sigue pasando?** Puede que un complemento de ReShade (un archivo que termina en `.addon64` en tu carpeta del juego) esté chocando. Mueve esos archivos a otro sitio y vuelve a probar. |
 | Tu carpeta del juego tiene **`MiniMap.asi`** o **`MiniMapHudPresent.asi`** (de otro mod de minimapa 3D o de una instalación anterior) | 1. Bórralo.<br>2. Borra también `scripts\MiniMap.dll`, si está. (El del HUD es `scripts\ViMinimap.dll`.)<br>3. Deja `ViMinimap.asi` junto a `GTA5_Enhanced.exe`.<br>Es una copia antigua del plugin del minimapa que el HUD ya trae como `ViMinimap.asi`. Dos copias cargadas a la vez se estorban entre sí. |
 | El juego **se cierra de golpe al abrir el menú de AuraV-Lite** | Tienes los complementos de ReShade de RenoDX (`renodx-*.addon64`) en tu carpeta del juego. NVE los trae.<br>Sácalos mientras uses AuraV.<br>Consulta "Opcional: AuraV-Lite" más arriba, o "Opcional: AuraV-Lite con NaturalVision Enhanced". |
 | Un cuadro **"Debug Assertion Failed!"** de Microsoft Visual C++ menciona **`renodx-dlssfix.addon64`** | Es el complemento de RenoDX que arregla el DLSS, no el HUD. Es una versión de depuración (debug).<br>¿No usas DLSS 5? Entonces no lo necesitas: borra `renodx-dlssfix.addon64` de tu carpeta del juego.<br>`renodx-gtav-enhanced.addon64` se puede quedar.<br>No hace falta reinstalar Visual C++ por esto. |

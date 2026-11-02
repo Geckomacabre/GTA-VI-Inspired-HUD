@@ -88,13 +88,18 @@
 3. **Assets**를 펼치세요.
 4. **`.zip`** 파일을 다운로드하세요.
 5. 압축을 푸세요.
-6. 다음 파일들을 **게임 폴더**에 복사하세요:
-   - **`ScriptHookVDotNet.asi`**
+6. 다음 **5개 파일**을 **게임 폴더**에 복사하세요:
+   - **`ScriptHookVDotNet-Loader.asi`**
+   - **`ScriptHookVDotNet.dll`**
    - **`ScriptHookVDotNet2.dll`**
    - **`ScriptHookVDotNet3.dll`**
-   - **`ScriptHookVDotNet.ini`**
+   - **`ScriptHookVDotNet.ini`** (Windows가 `.ini`를 숨길 수 있어요. 톱니바퀴 아이콘이 있는 파일이에요.)
+7. `.pdb` 파일, `Docs`와 `Licenses` 폴더, `README.txt`는 건너뛰세요. 필요 없어요.
+8. 예전에 넣은 **`ScriptHookVDotNet.asi`**가 `GTA5.exe` 옆에 있나요? 지우세요. 새 다운로드에서는 이름이 `ScriptHookVDotNet-Loader.asi`이고, 두 개가 같이 있으면 서로 방해해요.
 
-✅ 이제 그 4개 파일이 `GTA5.exe` 옆에 있어요.
+💡 zip에 `ScriptHookVDotNet-Loader.asi`가 없고 `ScriptHookVDotNet.asi`가 있나요? 예전 다운로드예요. 맨 위 릴리스를 다시 받으세요.
+
+✅ 이제 그 5개 파일이 `GTA5.exe` 옆에 있어요.
 
 ---
 
@@ -558,7 +563,7 @@ HUD를 이 둘과 동시에 쓰는 건 아직 테스트하지 않았어요.
 | 증상 | 할 일 |
 | --- | --- |
 | Script Hook V 메시지에 **"unknown game version"**(알 수 없는 게임 버전)이라고 떠요 | GTA V가 막 업데이트됐어요. Script Hook V가 아직 따라오지 못한 거예요.<br>1. 새 Script Hook V가 나올 때까지 기다리세요.<br>2. 2단계를 다시 하세요. |
-| 게임은 켜지는데 **새 HUD가 안 보여요** | Script Hook V .NET이 너무 오래된 버전이에요.<br>최신 버전으로 3단계를 다시 하세요. |
+| 게임은 켜지는데 **새 HUD가 안 보여요** | Script Hook V .NET이 너무 오래된 버전이거나, 파일 하나가 빠져 있어요.<br>최신 버전으로 3단계를 다시 하고, 5개 파일을 모두 복사하세요. |
 | **FileNotFoundException**과 함께 **Unhandled exception in script**(예: **"MiniMap"**)라는 메시지가 떠요 | Script Hook V .NET이 HUD에 필요한 버전(3.7.0 nightly 193)보다 오래됐어요.<br>1. nightly 페이지의 **맨 위** 릴리스로 3단계를 다시 하세요.<br>2. 게임을 닫으세요.<br>3. **Win + R**을 누르세요.<br>4. `%LOCALAPPDATA%\assembly`를 입력하고 **Enter**를 누르세요.<br>5. **`dl3`** 폴더를 지우세요(그냥 캐시예요).<br>💡 이 문제라면 게임 폴더의 `ScriptHookVDotNet.log`에 **"Unable to resolve API version"** 문구가 나와 있어요. |
 | HUD가 안 보이고, 게임 폴더의 `ScriptHookVDotNet.log`에 HUD 것만이 아니라 **모든** 스크립트에 대해 **NullReferenceException**과 함께 **"Failed to instantiate script"**라고 나와 있어요 | Script Hook V .NET 설치가 섞여 있어요: 남아 있던 사본이 있거나, 서로 다른 다운로드의 파일이 섞였어요. 고칠 때까지 스크립트 모드는 하나도 시작되지 않아요.<br>1. 게임을 닫으세요.<br>2. 게임 폴더에서 이름이 `ScriptHookVDotNet`으로 시작하는 파일을 모두 지우세요.<br>3. `scripts` 폴더에서도 똑같이 하세요.<br>4. nightly 페이지의 **맨 위** 릴리스로 3단계를 다시 하세요.<br>5. **Win + R**을 누르세요.<br>6. `%LOCALAPPDATA%\assembly`를 입력하고 **Enter**를 누르세요.<br>7. **`dl3`** 폴더를 지우세요(그냥 캐시예요). |
 | 모드를 **업데이트**했는데 게임이 아직 **예전 버전**처럼 동작해요 | Script Hook V .NET이 예전 스크립트의 저장된 사본을 계속 실행하고 있을 수 있어요.<br>1. 게임을 닫으세요.<br>2. **Win + R**을 누르세요.<br>3. `%LOCALAPPDATA%\assembly`를 입력하고 **Enter**를 누르세요.<br>4. **`dl3`** 폴더를 지우세요(그냥 캐시예요).<br>그래도 예전 버전인가요? OpenIV를 관리자 권한으로 실행해서 다시 설치하세요(6단계).<br>아니면 스크립트를 직접 복사해 넣으세요: 아래 "직접 업데이트하기"를 보세요. |

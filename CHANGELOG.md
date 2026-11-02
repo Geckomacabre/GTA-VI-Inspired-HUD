@@ -16,6 +16,10 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 - **An uninstaller for the loading screens.** `GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Legacy.oiv` (OpenIV, to the mods folder) and `GTA-VI-Inspired-HUD-Uninstall-LoadingScreens-Enhanced.oiv` (the OIV Package Installer), in `extras/` on GitHub, take FBICat's VI loading screens off again and put the game's own back, whether they came in their own package or (up to 2.6.4) inside the HUD's. They put back Rockstar's own movies, unchanged (the landing page and loading screens; on Enhanced the loading screens only) and delete the VI pictures. The HUD stays, and so does its notification movie on Legacy. Before, the only way was to put the game's whole `scaleform_frontend.rpf` back by hand, which is still in the guides. "Already have them, and want the game's own back?" in both install guides has the steps.
 
+### Guides
+
+- **Script Hook V .NET's new files.** Its nightly download changed this week: since nightly 196 it needs `ScriptHookVDotNet.dll` as well, and since 199 its `.asi` is called `ScriptHookVDotNet-Loader.asi`. Step 3 of the Legacy guide still listed the old four files, so with today's download Script Hook V .NET didn't start and nothing of the HUD's scripts ran. It now lists the five files, says to delete an old `ScriptHookVDotNet.asi`, and the "HUD doesn't show" row mentions a missing file. The Enhanced guide's SHVDNE is unchanged; Step 3 and the "closes by itself" row now say to delete the normal version's `ScriptHookVDotNet-Loader.asi` and `ScriptHookVDotNet.dll`, which "Replace" doesn't overwrite.
+
 ## 2.7.2 (1 November 2026)
 
 ### Added

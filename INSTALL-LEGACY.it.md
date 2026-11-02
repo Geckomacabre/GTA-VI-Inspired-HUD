@@ -88,13 +88,18 @@ Con una più vecchia, gli script dell'HUD non partono, oppure uno si ferma con u
 3. Apri **Assets**.
 4. Scarica il file **`.zip`**.
 5. Estrailo.
-6. Copia questi file nella tua **cartella del gioco**:
-   - **`ScriptHookVDotNet.asi`**
+6. Copia questi **5 file** nella tua **cartella del gioco**:
+   - **`ScriptHookVDotNet-Loader.asi`**
+   - **`ScriptHookVDotNet.dll`**
    - **`ScriptHookVDotNet2.dll`**
    - **`ScriptHookVDotNet3.dll`**
-   - **`ScriptHookVDotNet.ini`**
+   - **`ScriptHookVDotNet.ini`** (Windows può nascondere il `.ini`. È quello con l'icona a forma di ingranaggio.)
+7. Salta i file `.pdb`, le cartelle `Docs` e `Licenses` e il file `README.txt`. Non ti servono.
+8. Hai un vecchio **`ScriptHookVDotNet.asi`** accanto a `GTA5.exe`, di prima? Eliminalo. I download nuovi lo chiamano `ScriptHookVDotNet-Loader.asi`, e due copie si danno fastidio a vicenda.
 
-✅ Ora quei 4 file sono accanto a `GTA5.exe`.
+💡 Il tuo zip ha `ScriptHookVDotNet.asi` e non `ScriptHookVDotNet-Loader.asi`? È un download vecchio. Riscarica la versione più in alto.
+
+✅ Ora quei 5 file sono accanto a `GTA5.exe`.
 
 ---
 
@@ -558,7 +563,7 @@ Oppure [apri una segnalazione](https://github.com/Geckomacabre/GTA-VI-Inspired-H
 | Cosa succede | Cosa fare |
 | --- | --- |
 | Un messaggio di Script Hook V dice **"unknown game version"** | GTA V si è appena aggiornato. Script Hook V non si è ancora messo al passo.<br>1. Aspetta un nuovo Script Hook V.<br>2. Rifai il Passo 2. |
-| Il gioco parte ma **il nuovo HUD non si vede** | Il tuo Script Hook V .NET è troppo vecchio.<br>Rifai il Passo 3 con la versione più recente. |
+| Il gioco parte ma **il nuovo HUD non si vede** | Il tuo Script Hook V .NET è troppo vecchio, oppure manca uno dei suoi file.<br>Rifai il Passo 3 con la versione più recente, copiando tutti e 5 i file. |
 | Un messaggio dice **Unhandled exception in script** (per esempio **"MiniMap"**) con una **FileNotFoundException** | Il tuo Script Hook V .NET è più vecchio di quello che serve all'HUD (3.7.0 nightly 193).<br>1. Rifai il Passo 3 con la release più **in alto** nella pagina delle nightly.<br>2. Chiudi il gioco.<br>3. Premi **Win + R**.<br>4. Scrivi `%LOCALAPPDATA%\assembly` e premi **Enter**.<br>5. Elimina la cartella **`dl3`** (è solo una cache).<br>💡 Quando il problema è questo, `ScriptHookVDotNet.log` nella cartella del gioco dice **"Unable to resolve API version"**. |
 | L'HUD non si vede, e `ScriptHookVDotNet.log` nella cartella del gioco dice **"Failed to instantiate script"** con una **NullReferenceException** per **tutti** gli script, non solo quelli dell'HUD | La tua installazione di Script Hook V .NET è mescolata: una copia rimasta, o file di download diversi. Finché non la sistemi, nessuna delle tue mod di script può partire.<br>1. Chiudi il gioco.<br>2. Nella cartella del gioco, elimina tutti i file il cui nome inizia con `ScriptHookVDotNet`.<br>3. Fai lo stesso nella cartella `scripts`.<br>4. Rifai il Passo 3 con la release più **in alto** nella pagina delle nightly.<br>5. Premi **Win + R**.<br>6. Scrivi `%LOCALAPPDATA%\assembly` e premi **Enter**.<br>7. Elimina la cartella **`dl3`** (è solo una cache). |
 | Hai **aggiornato** la mod, ma il gioco si comporta ancora come la **versione vecchia** | Script Hook V .NET può continuare a usare la sua copia salvata dei vecchi script.<br>1. Chiudi il gioco.<br>2. Premi **Win + R**.<br>3. Scrivi `%LOCALAPPDATA%\assembly` e premi **Enter**.<br>4. Elimina la cartella **`dl3`** (è solo una cache).<br>Ancora la versione vecchia? Reinstallala con OpenIV eseguito come amministratore (Passo 6).<br>Oppure copia tu gli script: vedi "Aggiornare a mano" più sotto. |

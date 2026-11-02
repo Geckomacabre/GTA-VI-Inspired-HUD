@@ -98,6 +98,8 @@ Enhanced가 저절로 꺼져요. **SHVDNE**라는 **Enhanced** 에디션이 필�
 
 Windows가 파일을 바꿀지 물어보나요? **덮어쓰기(Replace)** 버튼을 클릭하세요. (전에 일반 버전을 쓰고 있었다는 뜻이에요.)
 
+`GTA5_Enhanced.exe` 옆에 **`ScriptHookVDotNet-Loader.asi`**나 **`ScriptHookVDotNet.dll`**이 있나요? 둘 다 지우세요. 일반 버전의 파일이라, 남겨 두면 SHVDNE와 함께 로드돼요.
+
 ✅ 이제 그 5개 파일이 `GTA5_Enhanced.exe` 옆에 있어요.
 
 ---
@@ -743,7 +745,7 @@ Enhanced용 LSPDFR은 아직 초기 프리뷰 단계예요. HUD를 그것과 함
 
 | 증상 | 할 일 |
 | --- | --- |
-| 게임이 **로딩 후 20초쯤 지나서 저절로 꺼져요** | 일반 Script Hook V .NET을 쓰고 있어요.<br>1. **SHVDNE**로 3단계를 다시 하세요.<br>2. `%LOCALAPPDATA%\assembly` 안의 **`dl3`** 폴더를 지우세요(예전 버전의 캐시예요).<br>**어떤 버전인지 확인하려면:** 게임 폴더에서 **`ScriptHookVDotNet.asi`** 파일을 마우스 오른쪽 버튼으로 클릭 → **속성(Properties)** → **자세히(Details)** 탭을 보세요. SHVDNE라면 거기에 **"Script Hook V .Net Enhanced"** 문구가 나와요. 일반 버전은 그렇게 나오지 않아요(버전이 3.6.0.0이에요).<br>**그래도 계속 그런가요?** ReShade 애드온(게임 폴더에 있는 `.addon64`로 끝나는 파일)이 충돌하고 있을 수 있어요. 그 파일들을 다른 곳으로 옮기고 다시 해 보세요. |
+| 게임이 **로딩 후 20초쯤 지나서 저절로 꺼져요** | 일반 Script Hook V .NET을 쓰고 있어요.<br>1. **SHVDNE**로 3단계를 다시 하세요.<br>2. 게임 폴더에 **`ScriptHookVDotNet-Loader.asi`**와 **`ScriptHookVDotNet.dll`**이 있으면 지우세요(일반 버전의 파일이에요).<br>3. `%LOCALAPPDATA%\assembly` 안의 **`dl3`** 폴더를 지우세요(예전 버전의 캐시예요).<br>**어떤 버전인지 확인하려면:** 게임 폴더에서 **`ScriptHookVDotNet.asi`** 파일을 마우스 오른쪽 버튼으로 클릭 → **속성(Properties)** → **자세히(Details)** 탭을 보세요. SHVDNE라면 거기에 **"Script Hook V .Net Enhanced"** 문구가 나와요. 일반 버전은 그렇게 나오지 않아요(버전이 3.6.0.0이에요).<br>**그래도 계속 그런가요?** ReShade 애드온(게임 폴더에 있는 `.addon64`로 끝나는 파일)이 충돌하고 있을 수 있어요. 그 파일들을 다른 곳으로 옮기고 다시 해 보세요. |
 | 게임 폴더에 **`MiniMap.asi`** 또는 **`MiniMapHudPresent.asi`** 파일이 있어요(다른 3D 미니맵 모드나 예전 설치에서 남은 것) | 1. 그 파일을 지우세요.<br>2. `scripts\MiniMap.dll` 파일도 있다면 지우세요. (HUD의 파일은 `scripts\ViMinimap.dll`이에요.)<br>3. `ViMinimap.asi`는 `GTA5_Enhanced.exe` 옆에 그대로 두세요.<br>그건 HUD가 `ViMinimap.asi`로 직접 가져오는 미니맵 플러그인의 예전 사본이에요. 두 사본이 동시에 로드되면 서로 방해해요. |
 | **AuraV-Lite 메뉴를 열면 게임이 튕겨요** | 게임 폴더에 RenoDX의 ReShade 애드온(`renodx-*.addon64`)이 있어요. NVE에 들어 있는 파일이에요.<br>AuraV를 쓰는 동안에는 그 파일들을 빼 두세요.<br>위의 "선택 사항: AuraV-Lite"나 "선택 사항: AuraV-Lite와 NaturalVision Enhanced"를 보세요. |
 | Microsoft Visual C++의 **"Debug Assertion Failed!"** 창에 **`renodx-dlssfix.addon64`** 파일 이름이 나와요 | 그건 HUD가 아니라 RenoDX의 DLSS 수정 애드온이에요. 그 애드온의 디버그 빌드예요.<br>DLSS 5를 안 쓰나요? 그럼 필요 없어요: 게임 폴더에서 `renodx-dlssfix.addon64`를 지우세요.<br>`renodx-gtav-enhanced.addon64`는 남겨 둬도 돼요.<br>이 문제 때문에 Visual C++를 다시 설치할 필요는 없어요. |
