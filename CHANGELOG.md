@@ -10,6 +10,12 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Guides
+
+- **"Blocking script!" for GTA6Hud.** Both install guides' troubleshooting tables (and the four translations) have a row for a `ScriptHookVDotNet.log` that says GTA6Hud was "terminated because it caused the game to freeze too long". Script Hook V .NET stops a script that spends more than 5 seconds in one tick, and the HUD loads its pictures, sounds and settings in its first tick, while the game is still loading, which on a slower PC or a hard drive can take longer. The row says to raise `ScriptTimeoutThreshold` in `ScriptHookVDotNet.ini` to `30000`; failing that, to install again and clear the `dl3` cache, and to send `scripts\GTA6Hud.perf.log`, whose STUCK line names what the HUD was busy with.
+
 ## 2.7.3 (2 November 2026)
 
 ### Added
