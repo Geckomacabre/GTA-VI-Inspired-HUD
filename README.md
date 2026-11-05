@@ -1,5 +1,14 @@
 <div align="center">
 
+## 🔴 Come watch me live on November 19th when GTA VI releases at midnight EST
+### on [Twitch](https://www.twitch.tv/geckomacabre) or [Kick](https://kick.com/geckomacabre)
+
+</div>
+
+---
+
+<div align="center">
+
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD and minimap for GTA V story mode on PC.**
