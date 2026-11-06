@@ -12,7 +12,11 @@ namespace ViExtras
     /// The FiveM version's honor (vice_hud/honor, formerly qbx_honor), for
     /// single player.
     ///
-    /// Every character has an honor value, -100 to 100, saved between sessions.
+    /// Every character has an honor value, -1000 to 1000, saved between sessions.
+    /// (It was -100 to 100, as in FiveM, with the same amounts per deed. The
+    /// user, 2026-11-04, chose 1000 to take ten times as long: the deeds kept
+    /// their amounts, the badge and rank thresholds went x10, and the saved
+    /// values stayed as they were.)
     /// Deeds move it through the named hooks of Config.Hooks (HonorHooks.cs),
     /// each with its own amount, cooldown and session cap; robberies escalate
     /// when the police are already on you or you killed someone a few minutes
@@ -109,11 +113,13 @@ namespace ViExtras
         {
             Paths.Init(BaseDirectory);
             _enabled = Config.Get(Section, "Enabled", true);
-            _min = Config.Get(Section, "MinHonor", -100);
-            _max = Config.Get(Section, "MaxHonor", 100);
+            _min = Config.Get(Section, "MinHonor", -1000);
+            _max = Config.Get(Section, "MaxHonor", 1000);
+            HonorApi.MinValue = _min;
+            HonorApi.MaxValue = _max;
             _default = Config.Get(Section, "DefaultHonor", 0);
-            _angelAt = Config.Get(Section, "AngelThreshold", 40);
-            _devilAt = Config.Get(Section, "DevilThreshold", -40);
+            _angelAt = Config.Get(Section, "AngelThreshold", 400);
+            _devilAt = Config.Get(Section, "DevilThreshold", -400);
             _whenWanted = Config.Get(Section, "EscalateWhenWanted", true);
             _whenRecentKill = Config.Get(Section, "EscalateWhenRecentKill", true);
             _recentKillWindowMs = Config.Get(Section, "RecentKillWindowMs", 180000);

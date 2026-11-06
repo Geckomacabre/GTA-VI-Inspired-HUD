@@ -21,8 +21,9 @@ the boxes recorded in manifest_memory.txt.
 from render_fivem_art import KBM_TOKENS, PAD_TOKENS, token_file
 
 GROUP = "memory"
-# "Pet" is single player's own (HonorDogs.cs), drawn on the same prompt.
-LABELS = ["Greet", "Defuse", "Antagonize", "Intimidate", "Pet"]
+# "Pet" is single player's own (HonorDogs.cs), drawn on the same prompt, and so
+# are "Pick up" / "Throw" (DogWalkers: the dropped poop bag) and "Sit" / "Lean" / "Stand up" (Sit).
+LABELS = ["Greet", "Defuse", "Antagonize", "Intimidate", "Pet", "Pick up", "Throw", "Sit", "Lean", "Stand up"]
 
 PROBE = """
 () => {

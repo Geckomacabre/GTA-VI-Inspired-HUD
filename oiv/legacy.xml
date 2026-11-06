@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{9a4c2e61-7b3f-4d08-8e15-2c6b0f9a7d43}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.7.3 (GTA V Legacy)</name>
-    <version><major>2</major><minor>7</minor><tag>LEGACY 2.7.3</tag></version>
+    <name>GTA VI-Inspired HUD 2.8.0 (GTA V Legacy)</name>
+    <version><major>2</major><minor>8</minor><tag>LEGACY 2.8.0</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V LEGACY (the original PC version, GTA5.exe). Maintained by Geckomacabre.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -31,7 +31,7 @@ What it installs
   - HUD: scripts\GTA6Hud.dll + scripts\Hud\ (art, sounds, data) + scripts\GTA6Hud.ini
   - dlcpacks:/vihud/       FBICat's 2.1 HUD art and movies: weapon wheel, prompts, gauges, his VI pause menu
   - dlcpacks:/vihudfonts/  pause menu, HUD art and fonts, vehicle maker emblems
-  - dlcpacks:/vihudanims/  body carry / loot animations, the crawl, the slim jim and its strip
+  - dlcpacks:/vihudanims/  body carry / loot animations, the crawl, the slim jim and its strip, the Poo Bag
   - 3D minimap: scripts\ViMinimap.dll + MiniMap.* data + ViMinimap.asi (in-game drawing)
   - Removes an older minimap plugin (MiniMap.asi, MiniMapHudPresent.asi, scripts\MiniMap.dll), which would draw
     over this one, and what FBICat's 2.1 left that no version uses since (a lighting file, its music and bundled
@@ -48,6 +48,31 @@ What it installs
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
   - No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic
+
+Changes in 2.8.0
+  - Sit anywhere: stand still facing a bench, a low wall, a ledge or a drop and SIT comes up (E); a tall wall gives
+    LEAN. A port of Invalid0190's dynamic-sit for FiveM (MIT). [Switches] Sit in ViExtras.ini turns it off.
+  - People walking their dogs: now and then a big dog poops and its owner bags it. Punch an owner and the bag drops;
+    pick it up and throw it (the Poo Bag, a new thrown weapon). [Switches] DogPoop turns it off.
+  - Hostages in bank and Vangelico robberies: aim at a customer or teller and hold E. The police outside wait 90 s,
+    and 60 s more for each hostage; let one go, or hold one as a human shield. [Switches] Hostages turns it off.
+    The Fleecas, empty in story mode, now have two tellers and three customers ([Switches] BankCustomers).
+  - The robbery drill works: it's GTA Online's Fleeca drill (mouse forward pushes the bit, the left button or RT spins
+    it). Fleeca vault doors open once drilled, the drill goes on the handle, Pacific Standard's gates start locked,
+    no more deposit boxes, and the robbery panel no longer sits under the drill's controls.
+  - BuckMe is your character's own bank account: wallet and BuckMe together are the game's own money, in your save.
+    Each character has his own, and quitting without saving takes it back. The old buckme.txt balance moves in once.
+  - The mouse steers the weapon wheel as in GTA V (no cursor). [WeaponWheel] MouseSteer = False brings it back.
+  - On Demand shuffles each station's songs. [Radio] CustomMusicShuffle = False plays them in name order.
+  - A car you cloned the key of plays the key cloner's dial-up as you get in and out. [Switches] ClonedKeySound.
+  - The police lights and arrow only while you're wanted; the wanted stars no longer flicker in a chase; patrols
+    no longer park for hours; gangs come for you once and muggers half as often; honor goes to 1000.
+  - Fixed: a freeze when On Demand started a song (sounds no longer go through Windows' wave mapper), weapons
+    vanishing from car trunks, TRUNK coming up in missions, the trunk's title under the ammo, the clothes
+    shop's dark edges over its menu, the ATM's amount stuck at $0 (it now says why), and Trevor's camera on the
+    train jump.
+  - An update that didn't take effect (Script Hook V .NET's old cached copy) is found and fixed: the feed says to
+    restart once. [CacheCheck] Enabled = False turns it off.
 
 Changes in 2.7.3
   - Enhanced: taking the pump's nozzle no longer crashes the game (the first hose of a session was made before
@@ -235,7 +260,7 @@ Known conflicts
 
 https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
 ]]></description>
-    <licence><![CDATA[Personal use. By FBICat. Contains art cut from Rockstar's official GTA VI media (property of Rockstar Games) and the Grand Figma Kit VI (CC BY 4.0). Minimap based on "GTA VI MiniMap (3D Buildings)" by moddims. 2.5 ports from GTA-VI-UI-and-HUD-for-FiveM by Geckomacabre: ViCustoms.dll, ViCrouch.dll and ViWasted.dll are GPL-3 (source on GitHub, licence beside them); the radio code is PolyForm Noncommercial 1.0.0 (scripts\ViExtras\Radio\LICENSE.md); Anton font by Vernon Adams, SIL OFL 1.1.]]></licence>
+    <licence><![CDATA[Personal use. By FBICat. Contains art cut from Rockstar's official GTA VI media (property of Rockstar Games) and the Grand Figma Kit VI (CC BY 4.0). Minimap based on "GTA VI MiniMap (3D Buildings)" by moddims. 2.5 ports from GTA-VI-UI-and-HUD-for-FiveM by Geckomacabre: ViCustoms.dll, ViCrouch.dll and ViWasted.dll are GPL-3 (source on GitHub, licence beside them); the radio code is PolyForm Noncommercial 1.0.0 (scripts\ViExtras\Radio\LICENSE.md); Sit is a port of Invalid0190's dynamic-sit, MIT (scripts\ViExtras\Sit\LICENSE.md); Anton font by Vernon Adams, SIL OFL 1.1.]]></licence>
   </metadata>
   <colors>
     <headerBackground useBlackTextColor="false">$FF2B1B3D</headerBackground>

@@ -1,5 +1,5 @@
 [Honor]
-; Every character has an honor standing, -100 to 100, kept between sessions
+; Every character has an honor standing, -1000 to 1000, kept between sessions
 ; (scripts\ViExtras\Save\Honor.ini, one section each for Michael, Franklin,
 ; Trevor and Lucia). Every deed that moves it pops a + or - and a face in the
 ; middle of the screen; the mugshot panel in the bottom-right corner only
@@ -7,13 +7,13 @@
 ; honor has just broken. Hitting the bottom breaks honor for good: the badge
 ; stays grey and cracked whatever the number does afterwards.
 ; On / off: Honor in [Switches] at the top.
-MinHonor = -100
-MaxHonor = 100
+MinHonor = -1000
+MaxHonor = 1000
 DefaultHonor = 0
 ; At or above AngelThreshold the badge is the angel; at or below
 ; DevilThreshold the devil; in between, none.
-AngelThreshold = 40
-DevilThreshold = -40
+AngelThreshold = 400
+DevilThreshold = -400
 ; How long the corner panel stays up, in ms. 0 keeps it up.
 HoldMs = 6000
 ; A robbery-type deed counts as the worse version of itself when the police
@@ -60,7 +60,7 @@ PetSameDogMs = 300000
 ; At or below RankPsycho honor (or once it has broken), people nearby who see
 ; you now and then back off with a word, and some run: about one every
 ; ReactEveryMs (game ms).
-RankPsycho = -40
+RankPsycho = -400
 ; On / off: PeopleFearPsychos in [Switches] at the top.
 ReactEveryMsPsycho = 9000
 ReactEveryMsShattered = 4500

@@ -126,12 +126,12 @@ OpenRPF는 게임이 따로 떨어진 **`mods` 폴더**에서 모드를 불러�
 ### 파트 1: 모드 받기
 
 1. [**Releases 페이지**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)로 가세요.
-2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** 파일을 다운로드하세요. 모드 본체이고, 약 100 MB예요.
+2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** 파일을 다운로드하세요. 모드 본체이고, 약 100 MB예요.
    이 파일이 게임에서 모드를 켜는 일까지 해 줘서, 따로 받을 패치는 없어요.
 
-❌ `GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`는 받지 마세요. 다른 버전용이라 Enhanced를 튕기게 해요.
+❌ `GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv`는 받지 마세요. 다른 버전용이라 Enhanced를 튕기게 해요.
 
-💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.7.3). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
+💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.8.0). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
 도움을 요청할 때 이 숫자도 알려 주세요.
 
 ### Lucia로 플레이하고 싶나요?
@@ -174,7 +174,7 @@ OpenIV는 Enhanced에 모드를 설치하지 못해요. 그래서 대신 **OIV P
 
 1. OIV Package Installer 폴더를 여세요.
 2. 표에 나온 방법대로 **`CodeWalker.OIVInstaller.exe`** 파일을 실행하세요.
-3. **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** 파일을 창 위로 끌어다 놓으세요. (또는 **Browse**를 클릭해서 고르세요.)
+3. **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** 파일을 창 위로 끌어다 놓으세요. (또는 **Browse**를 클릭해서 고르세요.)
 4. 게임 폴더를 물어봐요. **`GTA5_Enhanced.exe`** 파일이 있는 폴더를 고르세요.
 5. **Install**을 클릭하세요.
 6. 끝날 때까지 기다리세요.
@@ -442,8 +442,9 @@ Lucia 다운로드가 파트 2의 두 가지 형태 중 어느 것도 아닐 때
    - ⚠️ 맨 위의 `<Paths>` 아래가 아니에요: 게임은 거기 있는 줄을 건너뛰어요.
    - Lucia 모델이 있나요? Lucia 팩의 줄도 추가하세요.
    - NVE의 `gameconfig.xml`은 그대로 두세요.
-6. **로딩 화면.** 이 단계는 건너뛰어도 돼요: 그러면 게임 원래 로딩 화면이 나와요. 설치 프로그램은 HUD의
-   로딩 화면을 **`mods\update\update.rpf`** 안에 넣었어요. NVE의 로더는 그것도 읽지 않으니, 꺼내서 복사해야 해요:
+6. **로딩 화면과 알림.** 이 단계는 건너뛰어도 돼요: 그러면 게임 원래 로딩 화면이 나오고, 알림은 색이 바랜 회색 상자로 나와요.
+   설치 프로그램은 HUD의 로딩 화면과 알림 무비를 **`mods\update\update.rpf`** 안에 넣었어요. NVE의 로더는 그것도
+   읽지 않으니, 꺼내서 복사해야 해요:
    1. **CodeWalker RPF Explorer**(**30_dev48** 버전 이상)를 받으세요. 받는 곳은
       [dexyfex의 Discord](https://discord.gg/BxfKHkk) releases 채널이에요.
    2. 게임 폴더에서 **`onigiri\platform\data`** 폴더를 열고, 그 안에 새 폴더를 만드세요. 이름: **`cdimages`**
@@ -452,7 +453,7 @@ Lucia 다운로드가 파트 2의 두 가지 형태 중 어느 것도 아닐 때
    4. **`scaleform_frontend.rpf`** 파일을 마우스 오른쪽 버튼으로 클릭 → **Extract Raw...** 메뉴를 고르세요. 방금 만든 **`onigiri\platform\data\cdimages`**
       폴더를 고르고 **Save**를 클릭하세요.
 
-   💡 그 파일은 HUD의 로딩 화면이 들어간 게임 메뉴 화면의 사본이에요.
+   💡 그 파일은 HUD의 로딩 화면과 알림이 들어간 게임 메뉴 화면의 사본이에요.
    **게임이 업데이트되면** 이 파일을 지우고, HUD를 다시 설치한 다음, 이 단계를 다시 하세요.
    그래야 업데이트된 게임의 메뉴 화면을 쓸 수 있어요.
 7. 7단계(Windowed Borderless)를 하고 플레이하세요.
@@ -745,7 +746,7 @@ Enhanced용 LSPDFR은 아직 초기 프리뷰 단계예요. HUD를 그것과 함
 
 | 증상 | 할 일 |
 | --- | --- |
-| 게임이 **로딩 후 20초쯤 지나서 저절로 꺼져요** | 일반 Script Hook V .NET을 쓰고 있어요.<br>1. **SHVDNE**로 3단계를 다시 하세요.<br>2. 게임 폴더에 **`ScriptHookVDotNet-Loader.asi`**와 **`ScriptHookVDotNet.dll`**이 있으면 지우세요(일반 버전의 파일이에요).<br>3. `%LOCALAPPDATA%\assembly` 안의 **`dl3`** 폴더를 지우세요(예전 버전의 캐시예요).<br>**어떤 버전인지 확인하려면:** 게임 폴더에서 **`ScriptHookVDotNet.asi`** 파일을 마우스 오른쪽 버튼으로 클릭 → **속성(Properties)** → **자세히(Details)** 탭을 보세요. SHVDNE라면 거기에 **"Script Hook V .Net Enhanced"** 문구가 나와요. 일반 버전은 그렇게 나오지 않아요(버전이 3.6.0.0이에요).<br>**그래도 계속 그런가요?** ReShade 애드온(게임 폴더에 있는 `.addon64`로 끝나는 파일)이 충돌하고 있을 수 있어요. 그 파일들을 다른 곳으로 옮기고 다시 해 보세요. |
+| 게임이 **로딩 후 20초쯤 지나서 저절로 꺼져요** | 일반 Script Hook V .NET을 쓰고 있어요.<br>1. **SHVDNE**로 3단계를 다시 하세요.<br>2. 게임 폴더에 **`ScriptHookVDotNet-Loader.asi`**와 **`ScriptHookVDotNet.dll`**이 있으면 지우세요(일반 버전의 파일이에요).<br>**어떤 버전인지 확인하려면:** 게임 폴더에서 **`ScriptHookVDotNet.asi`** 파일을 마우스 오른쪽 버튼으로 클릭 → **속성(Properties)** → **자세히(Details)** 탭을 보세요. SHVDNE라면 거기에 **"Script Hook V .Net Enhanced"** 문구가 나와요. 일반 버전은 그렇게 나오지 않아요(버전이 3.6.0.0이에요).<br>**그래도 계속 그런가요?** ReShade 애드온(게임 폴더에 있는 `.addon64`로 끝나는 파일)이 충돌하고 있을 수 있어요. 그 파일들을 다른 곳으로 옮기고 다시 해 보세요. |
 | 게임이 **로딩 중에 튕기는데**, **`mods\update`**를 다른 곳으로 옮기면 괜찮아져요 (대신 HUD가 안 보여요) | **`mods\update\update.rpf`**가 게임 업데이트 전에 만들어진 게임 파일의 옛 사본이에요. 다시 설치해도 바뀌지 않아요: 설치 프로그램이 이미 있는 사본을 계속 써요.<br>1. `mods\update`에서 **`update.rpf`**의 이름을 **`update.rpf.old`**로 바꾸세요.<br>2. HUD 패키지를 다시 설치하세요 (**관리자 권한으로 실행**). 지금 게임에서 새 사본을 만들어요.<br>3. `update.rpf`에 설치된 다른 모드도 다시 설치하세요 (예: 조명이나 날씨 모드). 그 변경 내용은 옛 사본에 있었어요.<br>4. 최신 **OpenRPF**를 받으세요 (4단계).<br>다시 잘 되나요? `update.rpf.old`는 지워도 돼요. |
 | 게임 폴더에 **`MiniMap.asi`** 또는 **`MiniMapHudPresent.asi`** 파일이 있어요(다른 3D 미니맵 모드나 예전 설치에서 남은 것) | 1. 그 파일을 지우세요.<br>2. `scripts\MiniMap.dll` 파일도 있다면 지우세요. (HUD의 파일은 `scripts\ViMinimap.dll`이에요.)<br>3. `ViMinimap.asi`는 `GTA5_Enhanced.exe` 옆에 그대로 두세요.<br>그건 HUD가 `ViMinimap.asi`로 직접 가져오는 미니맵 플러그인의 예전 사본이에요. 두 사본이 동시에 로드되면 서로 방해해요. |
 | **AuraV-Lite 메뉴를 열면 게임이 튕겨요** | 게임 폴더에 RenoDX의 ReShade 애드온(`renodx-*.addon64`)이 있어요. NVE에 들어 있는 파일이에요.<br>AuraV를 쓰는 동안에는 그 파일들을 빼 두세요.<br>위의 "선택 사항: AuraV-Lite"나 "선택 사항: AuraV-Lite와 NaturalVision Enhanced"를 보세요. |
@@ -761,8 +762,9 @@ Enhanced용 LSPDFR은 아직 초기 프리뷰 단계예요. HUD를 그것과 함
 | **운전을 시작하고 몇 초 뒤에 게임이 꺼져요**(주로 미션 중). **VStancer**(`VStancer.asi`)를 쓰고 있어요 | VStancer 0.4.0은 Enhanced 1.0.1013용이에요. 1.0.1158에서는 운전하자마자 게임이 꺼질 수 있어요.<br>1. 게임 폴더에서 **`VStancer.asi`**를 다른 곳으로 옮기세요(`VStancer` 폴더는 그대로 둬도 돼요).<br>2. VStancer 업데이트에 내 게임 버전이 나오면 다시 넣으세요(ikt가 gta5-mods.com에 올리고, 가끔 Patreon에 먼저 올려요).<br>💡 HUD 때문이 아니에요. Enhanced에서 HUD는 바퀴나 서스펜션을 바꾸지 않아요. |
 | Script Hook V 메시지에 **"unknown game version"**(알 수 없는 게임 버전)이라고 떠요 | GTA V가 막 업데이트됐는데, Script Hook V가 아직 따라오지 못한 거예요.<br>1. 새 Script Hook V가 나올 때까지 기다리세요.<br>2. 2단계를 다시 하세요. |
 | 게임은 켜지는데 **새 HUD가 안 보여요** | 3단계의 SHVDNE 파일 5개가 `GTA5_Enhanced.exe` 옆에 있는지 확인하세요. |
-| HUD가 안 보이고, 게임 폴더의 `ScriptHookVDotNet.log`에 **GTA6Hud**에 대해 **"Blocking script!"**("terminated because it caused the game to freeze too long")라고 나와 있어요 | Script Hook V .NET은 게임을 5초 넘게 기다리게 하는 스크립트를 멈춰요. HUD는 게임이 아직 로딩 중일 때 그림, 소리, 설정을 불러오는데, 느린 PC나 하드 디스크에서는 그게 더 오래 걸릴 수 있어요.<br>1. 게임을 닫으세요.<br>2. 게임 폴더의 **`ScriptHookVDotNet.ini`**를 메모장으로 여세요.<br>3. **`ScriptTimeoutThreshold=5000`**을 **`ScriptTimeoutThreshold=30000`**으로 바꾸세요. 그 줄이 없으면 추가하세요.<br>4. 파일을 저장하고 게임을 시작하세요.<br>💡 이건 스크립트에 시간을 더 줄 뿐이에요. 정말로 멈춘 스크립트라면, 중지되기 전까지 게임이 최대 30초 동안 멈춰 있게 돼요.<br>**그래도 그런가요?** OIV Package Installer를 관리자 권한으로 실행해서 모드를 다시 설치하세요(6단계). 그다음 `%LOCALAPPDATA%\assembly`의 **`dl3`** 폴더를 지우세요(그냥 캐시예요).<br>**아직도 안 되나요?** 도움을 요청하고("그 밖의 문제" 참고) `scripts\GTA6Hud.perf.log`를 첨부하세요: 그 안의 **STUCK** 줄에 HUD가 무엇을 하느라 멈췄는지 나와 있어요. |
-| 모드를 **업데이트**했는데 게임이 아직 **예전 버전**처럼 동작해요 | Script Hook V .NET이 예전 스크립트의 저장된 사본을 계속 실행하고 있을 수 있어요.<br>1. 게임을 닫으세요.<br>2. **Win + R**을 누르세요.<br>3. `%LOCALAPPDATA%\assembly`를 입력하고 Enter를 누르세요.<br>4. **`dl3`** 폴더를 지우세요. 그냥 캐시예요.<br>**그래도 예전 버전인가요?** OIV Package Installer를 관리자 권한으로 실행해서 다시 설치하세요(6단계). 아니면 스크립트를 직접 복사해 넣으세요: 아래 "직접 업데이트하기"를 보세요. |
+| HUD가 안 보이고, 게임 폴더의 `asiloader.log`에 **"ScriptHookVDotNet.asi" failed to load**라고 나와 있어요 | Windows가 Script Hook V .NET을 시작하지 못했어요. 게임 파일이 아니라 Windows 쪽 문제라서, 게임을 새로 받아도 해결되지 않아요.<br>1. [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer)을 설치하세요. 이미 설치되어 있다고 나오면 괜찮아요.<br>2. [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe)를 설치하세요. **복구**가 나오면 그걸 고르세요.<br>3. 백신 프로그램의 격리 목록에 `ScriptHookVDotNet.asi`가 있는지 보고, 있으면 허용하세요.<br>4. PC를 다시 시작하고 게임을 시작하세요.<br>**아직도 안 되나요?** `ScriptHookV.dll`이 `GTA5_Enhanced.exe` 옆에 있는지 확인하세요(2단계). |
+| HUD가 안 보이고, 게임 폴더의 `ScriptHookVDotNet.log`에 **GTA6Hud**에 대해 **"Blocking script!"**("terminated because it caused the game to freeze too long")라고 나와 있어요 | Script Hook V .NET은 게임을 5초 넘게 기다리게 하는 스크립트를 멈춰요. HUD는 게임이 아직 로딩 중일 때 그림, 소리, 설정을 불러오는데, 느린 PC나 하드 디스크에서는 그게 더 오래 걸릴 수 있어요.<br>1. 게임을 닫으세요.<br>2. 게임 폴더의 **`ScriptHookVDotNet.ini`**를 메모장으로 여세요.<br>3. **`ScriptTimeoutThreshold=5000`**을 **`ScriptTimeoutThreshold=30000`**으로 바꾸세요. 그 줄이 없으면 추가하세요.<br>4. 파일을 저장하고 게임을 시작하세요.<br>💡 이건 스크립트에 시간을 더 줄 뿐이에요. 정말로 멈춘 스크립트라면, 중지되기 전까지 게임이 최대 30초 동안 멈춰 있게 돼요.<br>**그래도 그런가요?** OIV Package Installer를 관리자 권한으로 실행해서 모드를 다시 설치하세요(6단계).<br>**아직도 안 되나요?** 도움을 요청하고("그 밖의 문제" 참고) `scripts\GTA6Hud.perf.log`를 첨부하세요: 그 안의 **STUCK** 줄에 HUD가 무엇을 하느라 멈췄는지 나와 있어요. |
+| 모드를 **업데이트**했는데 게임이 아직 **예전 버전**처럼 동작해요 | Script Hook V .NET이 예전 스크립트의 저장된 사본을 계속 실행하고 있을 수 있어요.<br>HUD가 이 문제를 스스로 알아채요: 알림으로 알려 주고 다음에 게임을 시작할 때 고쳐지도록 해 두니까, GTA V를 한 번 다시 시작하세요.<br>못 고쳤다고 나오거나, 2.7.3 이하 버전을 쓰고 있나요? 캐시를 직접 지우세요:<br>1. 게임을 닫으세요.<br>2. **Win + R**을 누르세요.<br>3. `%LOCALAPPDATA%\assembly`를 입력하고 Enter를 누르세요.<br>4. **`dl3`** 폴더를 지우세요. 그냥 캐시예요.<br>**그래도 예전 버전인가요?** OIV Package Installer를 관리자 권한으로 실행해서 다시 설치하세요(6단계). 아니면 스크립트를 직접 복사해 넣으세요: 아래 "직접 업데이트하기"를 보세요. |
 | 차 안에서 **미니맵이 없어요** | 게임을 **Windowed Borderless**(테두리 없는 창 모드)로 설정하세요(7단계). |
 | **.NET**이나 **Visual C++** 관련 오류가 나와요 | 1. [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer)을 설치하세요.<br>2. [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe)를 설치하세요.<br>3. PC를 다시 시작하세요. |
 | **Lucia is not registered**라는 메시지가 떠요 | 이제 HUD에는 Lucia가 포함되어 있지 않아요(5단계 참고).<br>**Lucia가 없나요?** `scripts\GTA6Hud.ini`의 `[Lucia]` 아래에서 `Enabled = False`로 설정하세요. 메시지가 사라져요.<br>**Lucia 모델이 있나요?** `dlclist.xml`(**NaturalVision Enhanced**를 쓴다면 NVE의 파일)에 Lucia 팩이 빠져 있어요. 그 줄을 추가하세요.<br>메시지에 `VIHudSetup.exe`가 나오면 그 부분은 무시하세요: 이 모드는 그걸 쓰지 않아요. |
@@ -785,7 +787,7 @@ Windows는 그 폴더를 보호해요. OIV Package Installer를 관리자 권한
 그다음부터는 업데이트가 정상적으로 들어가요.
 
 1. 게임을 닫으세요.
-2. **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** 파일을 바탕 화면에 복사하세요.
+2. **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** 파일을 바탕 화면에 복사하세요.
 3. 복사본 이름의 끝부분을 **`.zip`으로** 바꾸세요.
    이름에서 `.oiv` 부분이 안 보이나요? 파일 탐색기에서 **보기(View)** → **표시(Show)** → **파일 확장명(File name extensions)** 옵션을 켜세요.
 4. zip을 열고 **`content`** → **`scripts`** 폴더로 들어가세요.
@@ -794,15 +796,11 @@ Windows는 그 폴더를 보호해요. OIV Package Installer를 관리자 권한
    `C:\Program Files\Rockstar Games\Grand Theft Auto V Enhanced\scripts`.
 7. **대상 폴더의 파일 덮어쓰기(Replace the files in the destination)** 항목을 고르세요.
 8. Windows가 관리자 권한을 요청하면 **계속(Continue)** 버튼을 클릭하세요.
-9. 새 파일을 불러오도록 Script Hook V .NET의 캐시를 지우세요:
-   1. **Win + R**을 누르세요.
-   2. `%LOCALAPPDATA%\assembly`를 입력하고 Enter를 누르세요.
-   3. **`dl3`** 폴더를 지우세요. 그냥 캐시예요. 다음에 게임을 시작할 때 다시 만들어져요.
-10. 2.5.4 이하 버전에서 업데이트하나요? 2.5.5에서 팩이 하나 추가됐어요:
+9. 2.5.4 이하 버전에서 업데이트하나요? 2.5.5에서 팩이 하나 추가됐어요:
     1. zip의 **`content`** → **`dlcpacks`** → **`vihud`** 폴더를 게임 폴더 안의 **`mods\update\x64\dlcpacks`** 폴더에
        복사하세요.
     2. 6단계처럼 OIV Package Installer로 모드를 한 번 설치하세요. 그러면 새 팩이 켜져요.
-11. 게임을 시작하세요. 이제 `scripts\ViExtras.log`가 `==== ViExtras …` 줄로 시작해요.
+10. 게임을 시작하세요. 이제 `scripts\ViExtras.log`가 `==== ViExtras …` 줄로 시작해요.
     그 줄에 다운로드한 버전이 나와요. 예전 버전이 나오면 새 파일이 들어가지 않은 거예요.
 
 ---

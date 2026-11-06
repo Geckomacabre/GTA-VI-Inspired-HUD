@@ -25,7 +25,8 @@ namespace ViExtras
     /// vihud pack is mounted, so vihud's copy never took its place: the feed stayed under the 3D map, and GTA's movie
     /// took each number as the next post's background colour and washed the cards out (2.6.5 stopped sending them on
     /// Legacy). Since 2.7.2 the Legacy HUD package puts vihud's game_stream.gfx in that scaleform_frontend.rpf too, so
-    /// the HUD's movie is the one loaded there as well.
+    /// the HUD's movie is the one loaded there as well. Enhanced came to do the same once the loading screens were in
+    /// that archive (washed-out cards, 2026-11-05), and its package now puts the HUD's movie there too.
     /// </summary>
     public sealed class FeedBesideMap : Script
     {

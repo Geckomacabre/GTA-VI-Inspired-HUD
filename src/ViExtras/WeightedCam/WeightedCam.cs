@@ -30,7 +30,9 @@ namespace ViExtras
     ///
     /// Left alone: first person, aiming, looking behind, the cinematic camera, any
     /// other scripted camera (missions, CrashCam, GTA6Hud's shops), player control
-    /// off, boats and aircraft. Any of those mid-dip hands the view straight back.
+    /// off, boats and aircraft, and missions altogether (SkipInMissions): a dip
+    /// left the view on Trevor's bike when he jumped from it onto the train. Any
+    /// of those mid-dip hands the view straight back.
     /// </summary>
     public sealed class WeightedCam : Script
     {
@@ -52,7 +54,7 @@ namespace ViExtras
         }
 
         // ---- settings, [WeightedCam] in ViExtras.ini ------------------------------
-        private readonly bool _debug;
+        private readonly bool _debug, _skipInMissions;
         // HUD OPTIONS (HudMenu) changes this at once; read from ViExtras.ini at start
         internal static bool On;
         private bool _wasOn;
@@ -92,6 +94,7 @@ namespace ViExtras
             _crashFull = Config.Get("WeightedCam", "CrashFull", 80f);
             _crashDip = Config.Get("WeightedCam", "CrashDip", 3.5f);
             _crashMs = Config.Get("WeightedCam", "CrashMs", 75f);
+            _skipInMissions = Config.Get("WeightedCam", "SkipInMissions", true);
             _debug = Config.Get("WeightedCam", "Debug", false);
 
             Tick += OnTick;
@@ -240,6 +243,8 @@ namespace ViExtras
             if (Binoculars.IsActive) return "the binoculars";
             if (HudBridge.Busy) return "a cutscene, character switch or black screen";
             if (HudBridge.HudMenuOpen) return "a GTA6Hud shop, camera or menu";
+            // Missions run their own cameras, and move the player between vehicles.
+            if (_skipInMissions && Game.IsMissionActive) return "a mission";
             if (!Function.Call<bool>(Hash.IS_PLAYER_CONTROL_ON, player)) return "player control off";
             int cam = Function.Call<int>(Hash.GET_RENDERING_CAM);
             if (cam != -1 && cam != _cam && Function.Call<bool>(Hash.DOES_CAM_EXIST, cam)) return "a scripted camera";

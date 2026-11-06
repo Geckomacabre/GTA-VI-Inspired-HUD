@@ -17,6 +17,18 @@ namespace ViExtras
         /// <summary>Current honor of the character being played (MinHonor..MaxHonor).</summary>
         public static int Value { get; internal set; }
 
+        /// <summary>MinHonor and MaxHonor (-1000 and 1000 unless the ini says otherwise).</summary>
+        public static int MinValue { get; internal set; }
+        public static int MaxValue { get; internal set; }
+
+        /// <summary>
+        /// Value as a share of the way to MaxHonor (up to 100) or MinHonor (down to -100): the scale honor had
+        /// before it went to 1000, for anything weighed against that (um_memory's mood).
+        /// </summary>
+        public static float Per100 => Value >= 0
+            ? (MaxValue > 0 ? Value * 100f / MaxValue : 0f)
+            : (MinValue < 0 ? Value * -100f / MinValue : 0f);
+
         /// <summary>Latched once honor has hit the floor; never clears (Config "Unrepairable floor").</summary>
         public static bool Broken { get; internal set; }
 

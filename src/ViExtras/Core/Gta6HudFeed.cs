@@ -7,14 +7,15 @@ namespace ViExtras
 {
     /// <summary>
     /// GTA6Hud's notifications ("Not enough money.", "Lose the cops first.", "Registered. It is
-    /// yours now." ...) on Script Hook V .NET Enhanced. GTA6Hud posts them with SHVDN's
-    /// Notification.PostTicker(string, bool, bool), which Enhanced doesn't have, so the method
-    /// that posts them can't run there: none ever showed, and GTA6Hud logged the error every 10 s.
+    /// yours now." ...) on a Script Hook V .NET without the call GTA6Hud posts them with:
+    /// Notification.PostTicker(string, bool, bool) returning FeedPost. Enhanced doesn't have it,
+    /// and neither does Legacy's 3.9.0, so the method that posts them can't run there: none ever
+    /// showed, and GTA6Hud logged the error every 10 s.
     ///
     /// Where that call is missing, GTA6Hud's "Notifications" system is kept paused (the pause it
     /// gives itself for 10 s after an error, made to last) and its queue is posted here through the
-    /// game's feed natives, the way PostTicker posts it (Feed.Post). With Script Hook V .NET 3,
-    /// where GTA6Hud posts them itself, this does nothing.
+    /// game's feed natives, the way PostTicker posts it (Feed.Post). Where it's there and GTA6Hud
+    /// posts them itself, this does nothing.
     /// </summary>
     public sealed class Gta6HudFeed : Script
     {
@@ -55,11 +56,11 @@ namespace ViExtras
             _lock = t.GetField("_pendingLock", Stat)?.GetValue(null);
             if (_paused == null || _pending == null || _lock == null)
             {
-                Log.Write("Feed", "GTA6Hud's notification queue was not found; its notifications stay off on Script Hook V .NET Enhanced");
+                Log.Write("Feed", "GTA6Hud's notification queue was not found; its notifications stay off: this Script Hook V .NET has no Notification.PostTicker(string, bool, bool)");
                 _pending = null;
                 return false;
             }
-            Log.Write("Feed", "GTA6Hud's notifications go through the game's feed here: Script Hook V .NET Enhanced has no Notification.PostTicker(string, bool, bool)");
+            Log.Write("Feed", "GTA6Hud's notifications go through the game's feed here: this Script Hook V .NET has no Notification.PostTicker(string, bool, bool)");
             return true;
         }
 

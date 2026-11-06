@@ -126,12 +126,12 @@ OpenRPF lets the game load mods from a separate **`mods` folder**. Your original
 ### Part 1: Get the mod
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`**. It's the mod, about 100 MB.
+2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`**. It's the mod, about 100 MB.
    It also switches the mod on in the game, so there's no separate patch to get.
 
-❌ Don't download `GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`. It's for the other version and will crash Enhanced.
+❌ Don't download `GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv`. It's for the other version and will crash Enhanced.
 
-💡 The number in the file name is the version (2.7.3 here). That way you can always tell which one you installed.
+💡 The number in the file name is the version (2.8.0 here). That way you can always tell which one you installed.
 Mention it when you ask for help.
 
 ### Want to play as Lucia?
@@ -174,7 +174,7 @@ the install can leave the old files in place.
 
 1. Open the OIV Package Installer folder.
 2. Run **`CodeWalker.OIVInstaller.exe`** the way the table says.
-3. Drag **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** onto its window. (Or click **Browse** and pick it.)
+3. Drag **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** onto its window. (Or click **Browse** and pick it.)
 4. It asks for your game folder. Pick the folder with **`GTA5_Enhanced.exe`**.
 5. Click **Install**.
 6. Wait until it's finished.
@@ -442,8 +442,9 @@ You only need this if your Lucia download isn't one of the two kinds in Part 2.
    - ⚠️ Not under `<Paths>` at the top: the game skips lines there.
    - Got a Lucia model? Add her pack's lines too.
    - Leave NVE's `gameconfig.xml` as it is.
-6. **The loading screens.** You can skip this: you'll get the game's own loading screens. The installer put the
-   HUD's loading screens in **`mods\update\update.rpf`**. NVE's loader doesn't read that either, so copy them out:
+6. **The loading screens and notifications.** You can skip this: you'll get the game's own loading screens, and
+   notifications in washed-out grey boxes. The installer put the HUD's loading screens and its notification movie in
+   **`mods\update\update.rpf`**. NVE's loader doesn't read that either, so copy them out:
    1. Get **CodeWalker RPF Explorer** (version **30_dev48** or newer) from the releases channel of
       [dexyfex's Discord](https://discord.gg/BxfKHkk).
    2. In your game folder, open **`onigiri\platform\data`** and make a new folder there called **`cdimages`**.
@@ -452,7 +453,7 @@ You only need this if your Lucia download isn't one of the two kinds in Part 2.
    4. Right-click **`scaleform_frontend.rpf`** → **Extract Raw...**. Pick the **`onigiri\platform\data\cdimages`**
       folder you just made, and click **Save**.
 
-   💡 That file is a copy of the game's menu screens with the HUD's loading screens in it.
+   💡 That file is a copy of the game's menu screens with the HUD's loading screens and notifications in it.
    **After a game update,** delete it, install the HUD again, and do this step again.
    That way you get the updated game's menu screens.
 7. Do Step 7 (Windowed Borderless), and play.
@@ -745,7 +746,7 @@ Find what happens to you in the left column. Do what the right column says.
 
 | What happens | What to do |
 | --- | --- |
-| The game **closes by itself about 20 seconds after loading** | You have the normal Script Hook V .NET.<br>1. Redo Step 3 with **SHVDNE**.<br>2. Delete **`ScriptHookVDotNet-Loader.asi`** and **`ScriptHookVDotNet.dll`** from your game folder, if they're there (they're the normal one's).<br>3. Delete the **`dl3`** folder in `%LOCALAPPDATA%\assembly` (a cache of the old one).<br>**To check which one you have:** in your game folder, right-click **`ScriptHookVDotNet.asi`** → **Properties** → **Details**. SHVDNE says **"Script Hook V .Net Enhanced"** there. The normal one doesn't (its version is 3.6.0.0).<br>**Still happening?** A ReShade add-on (a file ending in `.addon64` in your game folder) may be clashing. Move those files somewhere else and try again. |
+| The game **closes by itself about 20 seconds after loading** | You have the normal Script Hook V .NET.<br>1. Redo Step 3 with **SHVDNE**.<br>2. Delete **`ScriptHookVDotNet-Loader.asi`** and **`ScriptHookVDotNet.dll`** from your game folder, if they're there (they're the normal one's).<br>**To check which one you have:** in your game folder, right-click **`ScriptHookVDotNet.asi`** → **Properties** → **Details**. SHVDNE says **"Script Hook V .Net Enhanced"** there. The normal one doesn't (its version is 3.6.0.0).<br>**Still happening?** A ReShade add-on (a file ending in `.addon64` in your game folder) may be clashing. Move those files somewhere else and try again. |
 | The game **crashes while loading**, and stops when you move **`mods\update`** out of the way (but then the HUD doesn't show) | Your **`mods\update\update.rpf`** is an old copy of the game's, from before a game update. Installing again doesn't replace it: the installer keeps using the copy that's there.<br>1. In `mods\update`, rename **`update.rpf`** to **`update.rpf.old`**.<br>2. Install the HUD's package again (**Run as administrator**). It makes a fresh copy from your game.<br>3. Install again any other mod that went into `update.rpf` (a lighting or weather mod, for example). Its changes were in the old copy.<br>4. Get the newest **OpenRPF** (Step 4).<br>Working again? You can delete `update.rpf.old`. |
 | Your game folder has **`MiniMap.asi`** or **`MiniMapHudPresent.asi`** (from another 3D minimap mod or an older install) | 1. Delete it.<br>2. Delete `scripts\MiniMap.dll` too, if it's there. (The HUD's is `scripts\ViMinimap.dll`.)<br>3. Keep `ViMinimap.asi` next to `GTA5_Enhanced.exe`.<br>It's an older copy of the minimap plugin the HUD brings itself as `ViMinimap.asi`. Two copies loaded at once get in each other's way. |
 | The game **crashes when you open AuraV-Lite's menu** | You have RenoDX's ReShade add-ons (`renodx-*.addon64`) in your game folder. NVE comes with them.<br>Move them out while you use AuraV.<br>See "Optional: AuraV-Lite" above, or "Optional: AuraV-Lite with NaturalVision Enhanced". |
@@ -761,8 +762,9 @@ Find what happens to you in the left column. Do what the right column says.
 | The game **closes a few seconds after you start driving**, often in a mission, and you have **VStancer** (`VStancer.asi`) | VStancer 0.4.0 is made for Enhanced 1.0.1013. On 1.0.1158 it can close the game as soon as you drive.<br>1. Move **`VStancer.asi`** out of your game folder (the `VStancer` folder can stay).<br>2. Put it back once a VStancer update lists your game version (ikt releases them on gta5-mods.com, sometimes on Patreon first).<br>💡 It isn't the HUD: on Enhanced the HUD doesn't change wheels or suspension. |
 | A Script Hook V message says **"unknown game version"** | GTA V just updated, and Script Hook V hasn't caught up yet.<br>1. Wait for a new Script Hook V.<br>2. Redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
-| The HUD doesn't show, and `ScriptHookVDotNet.log` in your game folder says **"Blocking script!"** for **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET stops a script that keeps the game waiting longer than 5 seconds. The HUD loads its pictures, sounds and settings while the game is still loading, and on a slower PC or a hard drive that can take longer.<br>1. Close the game.<br>2. Open **`ScriptHookVDotNet.ini`** in your game folder with Notepad.<br>3. Change **`ScriptTimeoutThreshold=5000`** to **`ScriptTimeoutThreshold=30000`**. No such line? Add it.<br>4. Save the file and start the game.<br>💡 This only gives scripts longer. One that's really stuck now freezes the game for up to 30 seconds before it's stopped.<br>**Still happening?** Install the mod again with the OIV Package Installer run as administrator (Step 6). Then delete the **`dl3`** folder in `%LOCALAPPDATA%\assembly`. It's only a cache.<br>**Still not fixed?** Ask for help (see "Something else") and attach `scripts\GTA6Hud.perf.log`: its **STUCK** line says what the HUD was busy with. |
-| You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts.<br>1. Close the game.<br>2. Press **Win + R**.<br>3. Type `%LOCALAPPDATA%\assembly` and press Enter.<br>4. Delete the **`dl3`** folder. It's only a cache.<br>**Still the old version?** Install it again with the OIV Package Installer run as administrator (Step 6). Or copy the scripts in yourself: see "Updating by hand" below. |
+| The HUD doesn't show, and `asiloader.log` in your game folder says **"ScriptHookVDotNet.asi" failed to load** | Windows couldn't start Script Hook V .NET. That's about Windows, not your game files, so a fresh copy of the game won't help.<br>1. Install [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer). If it says it's already installed, that's fine.<br>2. Install the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe). If it offers **Repair**, pick that.<br>3. Check your antivirus's quarantine for `ScriptHookVDotNet.asi`, and allow it if it's there.<br>4. Restart your PC and start the game.<br>**Still failing?** Check that `ScriptHookV.dll` is next to `GTA5_Enhanced.exe` (Step 2). |
+| The HUD doesn't show, and `ScriptHookVDotNet.log` in your game folder says **"Blocking script!"** for **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET stops a script that keeps the game waiting longer than 5 seconds. The HUD loads its pictures, sounds and settings while the game is still loading, and on a slower PC or a hard drive that can take longer.<br>1. Close the game.<br>2. Open **`ScriptHookVDotNet.ini`** in your game folder with Notepad.<br>3. Change **`ScriptTimeoutThreshold=5000`** to **`ScriptTimeoutThreshold=30000`**. No such line? Add it.<br>4. Save the file and start the game.<br>💡 This only gives scripts longer. One that's really stuck now freezes the game for up to 30 seconds before it's stopped.<br>**Still happening?** Install the mod again with the OIV Package Installer run as administrator (Step 6).<br>**Still not fixed?** Ask for help (see "Something else") and attach `scripts\GTA6Hud.perf.log`: its **STUCK** line says what the HUD was busy with. |
+| You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts.<br>The HUD spots this itself: it says so in the feed and fixes it for the next start, so restart GTA V once.<br>It says it couldn't, or you're on 2.7.3 or older? Clear the cache by hand:<br>1. Close the game.<br>2. Press **Win + R**.<br>3. Type `%LOCALAPPDATA%\assembly` and press Enter.<br>4. Delete the **`dl3`** folder. It's only a cache.<br>**Still the old version?** Install it again with the OIV Package Installer run as administrator (Step 6). Or copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |
 | An error about **.NET** or **Visual C++** | 1. Install [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer).<br>2. Install the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe).<br>3. Restart your PC. |
 | A message says **Lucia is not registered** | Lucia isn't included with the HUD any more (see Step 5).<br>**Don't have her?** Set `Enabled = False` under `[Lucia]` in `scripts\GTA6Hud.ini`. The message goes away.<br>**Have a Lucia model?** Her pack is missing from `dlclist.xml` (with **NaturalVision Enhanced**, from NVE's). Add its line.<br>If the message mentions a `VIHudSetup.exe`, ignore that part: this mod doesn't use it. |
@@ -785,7 +787,7 @@ You can also copy the new scripts in yourself. An `.oiv` is just a zip.
 After that, updates go in normally.
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** to your Desktop.
+2. Copy **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** to your Desktop.
 3. Rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 4. Open the zip → **`content`** → **`scripts`**.
@@ -794,15 +796,11 @@ After that, updates go in normally.
    `C:\Program Files\Rockstar Games\Grand Theft Auto V Enhanced\scripts`.
 7. Pick **Replace the files in the destination**.
 8. Click **Continue** when Windows asks for admin permission.
-9. Clear Script Hook V .NET's cache, so it loads the new files:
-   1. Press **Win + R**.
-   2. Type `%LOCALAPPDATA%\assembly` and press Enter.
-   3. Delete the **`dl3`** folder. It's only a cache. It's made again the next time you start the game.
-10. Coming from 2.5.4 or older? 2.5.5 adds a pack:
+9. Coming from 2.5.4 or older? 2.5.5 adds a pack:
     1. Copy the zip's **`content`** → **`dlcpacks`** → **`vihud`** folder into **`mods\update\x64\dlcpacks`** in
        your game folder.
     2. Install the mod once with the OIV Package Installer, as in Step 6. That switches the new pack on.
-11. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line.
+10. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line.
     It shows the version you downloaded. An older version there means the new files didn't go in.
 
 ---

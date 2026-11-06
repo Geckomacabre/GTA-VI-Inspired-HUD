@@ -1,0 +1,18 @@
+[Sit]
+; Sit anywhere (a port of invalid0190's dynamic-sit for FiveM, MIT:
+; scripts\ViExtras\Sit\LICENSE.md). Stand still facing a bench, a low wall,
+; a ledge, a railing or a drop, and SIT comes up over it (E / d-pad right): the
+; game's own seat scenarios, picked at random. A wall taller than you gives
+; LEAN. E again (STAND UP), walking off, getting hurt or a new star gets you up.
+; On / off: Sit in [Switches] at the top.
+; How long you stand still, facing the same way, before the prompt comes up
+; (ms). It keeps SIT from flashing on every wall you walk past.
+StillMs = 700
+; LEAN at walls taller than you.
+Lean = True
+; SIT at a drop in front of you (a roof's or a pier's edge), legs over it.
+Edges = True
+; No sitting during a story mission.
+SkipInMissions = True
+; Draw the rays for 15 s and write each step to scripts\ViExtras.log.
+Debug = False

@@ -35,8 +35,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv` with the OIV Package Installer.
 >
 > **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
 >
@@ -84,6 +84,27 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 <sub>BuckMe (your bank) and your wallet at the top right. An empty one turns grey.</sub>
 
 ---
+
+## 🆕 New in 2.8.0
+
+- **Sit anywhere.** Stand still facing a bench, a low wall, a ledge or a drop and **SIT** comes up (**E**). A wall
+  taller than you gives **LEAN**. **E** again or walking off gets you up.
+- **People walking their dogs.** Now and then a big dog poops and its owner bags it, or leaves it there. Punch an
+  owner and the bag drops: pick it up and throw it. It's a new weapon, the **Poo Bag**.
+- **Hostages in bank and Vangelico robberies.** Aim at a customer or teller and hold **E**: the Fleecas now have
+  tellers and customers. The police outside wait longer for each one. You can let one go, or hold one in front of
+  you as a human shield.
+- **The robbery drill works,** as GTA Online's Fleeca drill: mouse forward pushes the bit, the left button spins it.
+  Fleeca vault doors swing open once drilled, and Pacific Standard's gates are locked until you drill them.
+- **BuckMe is your character's own bank account.** Wallet and BuckMe together are the game's own money, kept in
+  your save: each character has his own, and a save you don't keep takes it back.
+- **The mouse steers the weapon wheel,** as in GTA V: hold **Tab** and nudge the mouse toward a weapon.
+- **On Demand shuffles your music,** every song once before any comes round again.
+- **Cloned keys dial up.** A car you cloned the key of plays the key cloner's dial-up as you get in and out.
+- **Calmer police and streets.** The police lights only show while you're wanted, the stars stop flickering in a
+  chase, patrols no longer park for hours, and gangs and muggers come for you less often.
+- **Fixed:** a freeze when On Demand started a song, weapons vanishing from car trunks, Enhanced's washed-out notifications, the clothes shop's dark edges
+  over its menu, and an update that didn't take effect (the HUD now fixes that itself; restart once when it says).
 
 ## 🆕 New in 2.7.3
 
@@ -294,7 +315,7 @@ too big for git, so they're only in the releases. Python 3.8+, no extra modules:
 
 ```bash
 python tools/build_oiv.py legacy --dlcpacks path/to/legacy/dlcpacks --startscreen path/to/feed
-python tools/build_oiv.py enhanced --dlcpacks path/to/gen9/dlcpacks
+python tools/build_oiv.py enhanced --dlcpacks path/to/gen9/dlcpacks --startscreen path/to/feed
 ```
 
 The packages go into `build\`. The install script comes from `oiv\<edition>.xml`, and the pack registration

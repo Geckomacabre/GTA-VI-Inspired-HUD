@@ -124,10 +124,10 @@ OpenIV pone los mods en una **carpeta `mods`** aparte. Los archivos originales d
 ## Paso 5: Descarga el mod
 
 1. Ve a la [**página de Releases**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. En **Assets**, descarga **`GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`** (el mod, unos 100 MB).
+2. En **Assets**, descarga **`GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv`** (el mod, unos 100 MB).
    También activa el mod en el juego. No hace falta descargar ningún parche aparte.
 
-❌ No descargues `GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`. Ese es para la otra versión del juego.
+❌ No descargues `GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`. Ese es para la otra versión del juego.
 
 **¿Quieres jugar como Lucia o Jason?** Sus modelos no vienen incluidos.
 
@@ -136,7 +136,7 @@ OpenIV pone los mods en una **carpeta `mods`** aparte. Los archivos originales d
 | **Lucia** | Su modelo es un trabajo de pago de otra persona. Consíguela de su creador:<br>**[Lucia Caminos en Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** o **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** en gta5-mods.com.<br>O usa otro modelo de Lucia.<br>Para añadirla al juego, consulta "Opcional: Lucia" más abajo.<br>El HUD funciona sin ella. |
 | **Jason** | **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** del mismo creador, o **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** en mod-hub.net.<br>Para añadirlo al juego, consulta "Opcional: Jason" más abajo. |
 
-💡 El número del nombre del archivo es la versión (aquí, 2.7.3). Así siempre sabes cuál instalaste.
+💡 El número del nombre del archivo es la versión (aquí, 2.8.0). Así siempre sabes cuál instalaste.
 Menciónalo cuando pidas ayuda.
 
 ---
@@ -150,7 +150,7 @@ Entonces haz clic derecho en **OpenIV** → **Ejecutar como administrador (Run a
 💡 Windows solo deja que los administradores cambien archivos ahí. Sin esto, la instalación puede dejar los archivos antiguos sin reemplazar.
 
 1. En OpenIV, haz clic en **Tools** → **Package Installer**.
-2. Elige **`GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`**.
+2. Elige **`GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv`**.
 3. Haz clic en **Install**.
 4. Cuando pregunte dónde instalarlo, elige **mods folder** (la carpeta mods).
 5. Si ofrece crear la carpeta, di que sí.
@@ -564,10 +564,11 @@ O [abre un issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 | --- | --- |
 | Un mensaje de Script Hook V dice **"unknown game version"** | GTA V se acaba de actualizar. Script Hook V todavía no se ha puesto al día.<br>1. Espera a que salga un Script Hook V nuevo.<br>2. Repite el Paso 2. |
 | El juego arranca pero **el nuevo HUD no aparece** | Tu Script Hook V .NET es demasiado antiguo, o le falta uno de sus archivos.<br>Repite el Paso 3 con la versión más reciente, copiando los 5 archivos. |
-| Un mensaje dice **Unhandled exception in script** (por ejemplo **"MiniMap"**) con una **FileNotFoundException** | Tu Script Hook V .NET es más antiguo de lo que necesita el HUD (3.7.0 nightly 193).<br>1. Repite el Paso 3 con la versión de **arriba del todo** de la página de nightlies.<br>2. Cierra el juego.<br>3. Pulsa **Win + R**.<br>4. Escribe `%LOCALAPPDATA%\assembly` y pulsa **Enter**.<br>5. Borra la carpeta **`dl3`** (solo es una caché).<br>💡 Si es esto, `ScriptHookVDotNet.log` en tu carpeta del juego dice **"Unable to resolve API version"**. |
-| El HUD no aparece, y `ScriptHookVDotNet.log` en tu carpeta del juego dice **"Failed to instantiate script"** con una **NullReferenceException** para **todos** los scripts, no solo los del HUD | Tu instalación de Script Hook V .NET está mezclada: una copia que sobró, o archivos de descargas distintas. Hasta que lo arregles, ninguno de tus mods de scripts puede arrancar.<br>1. Cierra el juego.<br>2. En tu carpeta del juego, borra todos los archivos cuyo nombre empieza por `ScriptHookVDotNet`.<br>3. Haz lo mismo en la carpeta `scripts`.<br>4. Repite el Paso 3 con la versión de **arriba del todo** de la página de nightlies.<br>5. Pulsa **Win + R**.<br>6. Escribe `%LOCALAPPDATA%\assembly` y pulsa **Enter**.<br>7. Borra la carpeta **`dl3`** (solo es una caché). |
-| El HUD no aparece, y `ScriptHookVDotNet.log` en tu carpeta del juego dice **"Blocking script!"** para **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET detiene cualquier script que haga esperar al juego más de 5 segundos. El HUD carga sus imágenes, sonidos y ajustes mientras el juego todavía está cargando, y en un PC más lento o en un disco duro eso puede tardar más.<br>1. Cierra el juego.<br>2. Abre **`ScriptHookVDotNet.ini`** en tu carpeta del juego con el Bloc de notas.<br>3. Cambia **`ScriptTimeoutThreshold=5000`** por **`ScriptTimeoutThreshold=30000`**. ¿No está esa línea? Añádela.<br>4. Guarda el archivo e inicia el juego.<br>💡 Esto solo da más tiempo a los scripts. Uno que de verdad se haya quedado atascado ahora congela el juego hasta 30 segundos antes de que lo detengan.<br>**¿Sigue pasando?** Instala el mod otra vez con OpenIV ejecutado como administrador (Paso 6). Después borra la carpeta **`dl3`** en `%LOCALAPPDATA%\assembly` (solo es una caché).<br>**¿Sigue sin arreglarse?** Pide ayuda (consulta "Otra cosa") y adjunta `scripts\GTA6Hud.perf.log`: su línea **STUCK** dice en qué estaba ocupado el HUD. |
-| **Actualizaste** el mod, pero el juego sigue comportándose como la **versión antigua** | Script Hook V .NET puede seguir ejecutando su copia guardada de los scripts antiguos.<br>1. Cierra el juego.<br>2. Pulsa **Win + R**.<br>3. Escribe `%LOCALAPPDATA%\assembly` y pulsa **Enter**.<br>4. Borra la carpeta **`dl3`** (solo es una caché).<br>¿Sigue la versión antigua? Instálalo otra vez con OpenIV ejecutado como administrador (Paso 6).<br>O copia tú mismo los scripts: consulta "Actualizar a mano" más abajo. |
+| El HUD no aparece, y `asiloader.log` en tu carpeta del juego dice **"ScriptHookVDotNet.asi" failed to load** | Windows no pudo iniciar Script Hook V .NET. Es cosa de Windows, no de los archivos del juego, así que una copia nueva del juego no ayudará.<br>1. Instala [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer). Si dice que ya está instalado, no pasa nada.<br>2. Instala el [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe). Si te ofrece **Reparar**, elige eso.<br>3. Mira en la cuarentena de tu antivirus si está `ScriptHookVDotNet.asi`, y permítelo si está ahí.<br>4. Reinicia tu PC e inicia el juego.<br>**¿Sigue fallando?** Comprueba que `ScriptHookV.dll` está junto a `GTA5.exe` (Paso 2). |
+| Un mensaje dice **Unhandled exception in script** (por ejemplo **"MiniMap"**) con una **FileNotFoundException** | Tu Script Hook V .NET es más antiguo de lo que necesita el HUD (3.7.0 nightly 193).<br>1. Cierra el juego.<br>2. Repite el Paso 3 con la versión de **arriba del todo** de la página de nightlies.<br>💡 Si es esto, `ScriptHookVDotNet.log` en tu carpeta del juego dice **"Unable to resolve API version"**. |
+| El HUD no aparece, y `ScriptHookVDotNet.log` en tu carpeta del juego dice **"Failed to instantiate script"** con una **NullReferenceException** para **todos** los scripts, no solo los del HUD | Tu instalación de Script Hook V .NET está mezclada: una copia que sobró, o archivos de descargas distintas. Hasta que lo arregles, ninguno de tus mods de scripts puede arrancar.<br>1. Cierra el juego.<br>2. En tu carpeta del juego, borra todos los archivos cuyo nombre empieza por `ScriptHookVDotNet`.<br>3. Haz lo mismo en la carpeta `scripts`.<br>4. Repite el Paso 3 con la versión de **arriba del todo** de la página de nightlies. |
+| El HUD no aparece, y `ScriptHookVDotNet.log` en tu carpeta del juego dice **"Blocking script!"** para **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET detiene cualquier script que haga esperar al juego más de 5 segundos. El HUD carga sus imágenes, sonidos y ajustes mientras el juego todavía está cargando, y en un PC más lento o en un disco duro eso puede tardar más.<br>1. Cierra el juego.<br>2. Abre **`ScriptHookVDotNet.ini`** en tu carpeta del juego con el Bloc de notas.<br>3. Cambia **`ScriptTimeoutThreshold=5000`** por **`ScriptTimeoutThreshold=30000`**. ¿No está esa línea? Añádela.<br>4. Guarda el archivo e inicia el juego.<br>💡 Esto solo da más tiempo a los scripts. Uno que de verdad se haya quedado atascado ahora congela el juego hasta 30 segundos antes de que lo detengan.<br>**¿Sigue pasando?** Instala el mod otra vez con OpenIV ejecutado como administrador (Paso 6).<br>**¿Sigue sin arreglarse?** Pide ayuda (consulta "Otra cosa") y adjunta `scripts\GTA6Hud.perf.log`: su línea **STUCK** dice en qué estaba ocupado el HUD. |
+| **Actualizaste** el mod, pero el juego sigue comportándose como la **versión antigua** | Script Hook V .NET puede seguir ejecutando su copia guardada de los scripts antiguos.<br>El HUD lo detecta solo: te lo avisa en las notificaciones y lo arregla para la próxima vez que inicies el juego, así que reinicia GTA V una vez.<br>¿Dice que no pudo, o tienes la 2.7.3 o anterior? Borra la caché a mano:<br>1. Cierra el juego.<br>2. Pulsa **Win + R**.<br>3. Escribe `%LOCALAPPDATA%\assembly` y pulsa **Enter**.<br>4. Borra la carpeta **`dl3`** (solo es una caché).<br>¿Sigue la versión antigua? Instálalo otra vez con OpenIV ejecutado como administrador (Paso 6).<br>O copia tú mismo los scripts: consulta "Actualizar a mano" más abajo. |
 | **No hay minimapa** en un coche | `ViMinimap.asi` no está junto a `GTA5.exe`.<br>Repite el Paso 7. |
 | Tu carpeta del juego tiene **`MiniMap.asi`** o **`MiniMapHudPresent.asi`** (de otro mod de minimapa 3D o de una instalación anterior) | 1. Bórralo.<br>2. Borra también **`scripts\MiniMap.dll`**, si está. (El del HUD es `scripts\ViMinimap.dll`.)<br>3. Deja **`ViMinimap.asi`** junto a `GTA5.exe`.<br>💡 Es una copia antigua del plugin del minimapa. El HUD trae su propia copia como `ViMinimap.asi`. Dos copias cargadas a la vez se estorban entre sí. |
 | El juego **se cierra de golpe al cargar** | 1. Vuelve a instalar el mod (Paso 6). Sube los límites del juego que necesita el HUD.<br>2. ¿Tienes otros mods grandes (personajes extra, mapas)? Prueba a desactivarlos. |
@@ -592,7 +593,7 @@ Después de eso, las actualizaciones se instalan con normalidad.
 Un `.oiv` no es más que un zip:
 
 1. Cierra el juego.
-2. Copia **`GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`** a tu Escritorio.
+2. Copia **`GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv`** a tu Escritorio.
 3. Cambia la terminación de la copia a **`.zip`**.
 
    💡 ¿No ves la parte `.oiv` del nombre? En el Explorador de archivos, activa **Ver** → **Mostrar** → **Extensiones de nombre de archivo**.
@@ -602,16 +603,10 @@ Un `.oiv` no es más que un zip:
    Por ejemplo: `C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts`.
 7. Elige **Reemplazar los archivos en el destino (Replace the files in the destination)**.
 8. Haz clic en **Continuar (Continue)** cuando Windows pida permiso de administrador.
-9. Borra la caché de Script Hook V .NET, para que cargue los archivos nuevos:
-   - Pulsa **Win + R**.
-   - Escribe `%LOCALAPPDATA%\assembly` y pulsa Enter.
-   - Borra la carpeta **`dl3`**.
-
-   💡 Solo es una caché. Se vuelve a crear la próxima vez que inicies el juego.
-10. **¿Vienes de la 2.5.4 o anterior?** La 2.5.5 añade un pack. Haz también esto:
+9. **¿Vienes de la 2.5.4 o anterior?** La 2.5.5 añade un pack. Haz también esto:
     - Copia la carpeta **`content`** → **`dlcpacks`** → **`vihud`** del zip en **`mods\update\x64\dlcpacks`** dentro de tu carpeta del juego.
     - Instala el mod una vez con OpenIV, como en el Paso 6. Esto activa el pack nuevo.
-11. Inicia el juego.
+10. Inicia el juego.
 
 ✅ `scripts\ViExtras.log` ahora empieza con una línea `==== ViExtras …`. Muestra la versión que descargaste. ¿Sale una versión anterior? Los archivos nuevos no se copiaron.
 

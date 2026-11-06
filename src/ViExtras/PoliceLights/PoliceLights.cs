@@ -77,7 +77,7 @@ namespace ViExtras
         private enum Edge { Top, Right, Bottom, Left }
         private static readonly float[] EdgeAngle = { 0f, -90f, 180f, 90f };
 
-        private readonly bool _enabled, _white, _requireSiren;
+        private readonly bool _enabled, _white, _requireSiren, _onlyWanted;
         private readonly int _scanMs, _flashMs, _sweepMs;
         private readonly float _maxDistance, _fullDistance, _maxOpacity, _focus, _whiteA;
         private readonly float _lampA, _lampB, _whiteLampA, _whiteLampB, _spread, _softness, _sweepAmt;
@@ -116,6 +116,7 @@ namespace ViExtras
             _whiteA = Config.Get(S, "WhiteAlpha", 0.70f);
             _focus = Config.Get(S, "Focus", 1.6f);
             _requireSiren = Config.Get(S, "RequireSiren", true);
+            _onlyWanted = Config.Get(S, "OnlyWhenWanted", true);
             _lampA = Config.Get(S, "LampWidth", 16f);
             _lampB = Config.Get(S, "LampHeight", 24f);
             _round = !string.Equals(Config.Get(S, "Shape", "Round"), "Wide", StringComparison.OrdinalIgnoreCase);
@@ -185,10 +186,18 @@ namespace ViExtras
             float camHeading = Function.Call<Vector3>(Hash.GET_GAMEPLAY_CAM_ROT, 2).Z;
             float maxDist = _maxDistance;
             float fullDist = Math.Min(_fullDistance, maxDist - 1f);
+            // Only while you're wanted (OnlyWhenWanted, the user 2026-11-04): a police car going past with its siren on,
+            // or the one you were driving, lit the screen and the arrow when nobody was after you, and players took it
+            // for a bug. With no star nothing counts, so the lights fade out as when the sirens stop. Your own car never
+            // counts.
+            bool wanted = !_onlyWanted || Game.Player.WantedLevel > 0;
+            int mine = ped.IsInVehicle() ? ped.CurrentVehicle.Handle : 0;
 
             foreach (Vehicle v in World.GetNearbyVehicles(p, maxDist))
             {
+                if (!wanted) break;
                 if (v == null || v.ClassType != VehicleClass.Emergency) continue;   // (it exists: the pool handed it back)
+                if (v.Handle == mine) continue;
                 // Config.PoliceLights.ignoreModels: an ambulance or fire truck on a call isn't the police
                 int model = v.Model.Hash;
                 if (model == Ambulance || model == FireTruck || model == Lifeguard) continue;

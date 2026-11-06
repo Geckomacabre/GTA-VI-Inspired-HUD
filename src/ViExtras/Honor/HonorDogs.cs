@@ -106,7 +106,8 @@ namespace ViExtras
                 if (ped == null || !ped.Exists() || ped.IsDead) continue;
                 int model = ped.Model.Hash;
                 if (!BigDogs.Contains(model) && !SmallDogs.Contains(model)) continue;
-                if (Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, ped)) continue;
+                // a script's dog is left alone, but not a walker's dog DogWalkers holds (it's only kept from despawning)
+                if (Function.Call<bool>(Hash.IS_ENTITY_A_MISSION_ENTITY, ped) && !DogWalkers.HeldDogs.Contains(ped.Handle)) continue;
                 if (Function.Call<bool>(Hash.IS_PED_IN_COMBAT, ped, 0) || Function.Call<bool>(Hash.IS_PED_FLEEING, ped)) continue;
                 if (_pettedAt.TryGetValue(ped.Handle, out int at) && now - at < 15000) continue;   // just petted: let it be
                 float d = ped.Position.DistanceTo(player.Position);

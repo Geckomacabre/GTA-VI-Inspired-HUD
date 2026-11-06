@@ -126,12 +126,12 @@ OpenRPF permite que el juego cargue mods desde una **carpeta `mods`** aparte. Lo
 ### Parte 1: Consigue el mod
 
 1. Ve a la [**página de Releases**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. En **Assets**, descarga **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`**. Es el mod, unos 100 MB.
+2. En **Assets**, descarga **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`**. Es el mod, unos 100 MB.
    También activa el mod en el juego, así que no hace falta descargar ningún parche aparte.
 
-❌ No descargues `GTA-VI-Inspired-HUD-2.7.3-Legacy.oiv`. Es para la otra versión y hará que Enhanced se cierre de golpe.
+❌ No descargues `GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv`. Es para la otra versión y hará que Enhanced se cierre de golpe.
 
-💡 El número del nombre del archivo es la versión (aquí, 2.7.3). Así siempre sabes cuál instalaste.
+💡 El número del nombre del archivo es la versión (aquí, 2.8.0). Así siempre sabes cuál instalaste.
 Menciónalo cuando pidas ayuda.
 
 ### ¿Quieres jugar como Lucia?
@@ -174,7 +174,7 @@ la instalación puede dejar los archivos antiguos sin reemplazar.
 
 1. Abre la carpeta del OIV Package Installer.
 2. Ejecuta **`CodeWalker.OIVInstaller.exe`** como dice la tabla.
-3. Arrastra **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** a su ventana. (O haz clic en **Browse** y elígelo.)
+3. Arrastra **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** a su ventana. (O haz clic en **Browse** y elígelo.)
 4. Te pide tu carpeta del juego. Elige la carpeta que tiene **`GTA5_Enhanced.exe`**.
 5. Haz clic en **Install**.
 6. Espera hasta que termine.
@@ -442,8 +442,9 @@ Solo necesitas esto si tu descarga de Lucia no es de ninguno de los dos tipos de
    - ⚠️ No debajo de `<Paths>` arriba del todo: el juego se salta las líneas que pongas ahí.
    - ¿Tienes un modelo de Lucia? Añade también las líneas de su pack.
    - Deja el `gameconfig.xml` de NVE como está.
-6. **Las pantallas de carga.** Puedes saltarte esto: tendrás las pantallas de carga propias del juego. El instalador puso las
-   pantallas de carga del HUD en **`mods\update\update.rpf`**. El cargador de NVE tampoco lee eso, así que cópialas fuera:
+6. **Las pantallas de carga y las notificaciones.** Puedes saltarte esto: tendrás las pantallas de carga propias del juego, y
+   las notificaciones en cuadros grises descoloridos. El instalador puso las pantallas de carga del HUD y su película de
+   notificaciones en **`mods\update\update.rpf`**. El cargador de NVE tampoco lee eso, así que cópialas fuera:
    1. Consigue **CodeWalker RPF Explorer** (versión **30_dev48** o más reciente) en el canal de releases del
       [Discord de dexyfex](https://discord.gg/BxfKHkk).
    2. En tu carpeta del juego, abre **`onigiri\platform\data`** y crea ahí una carpeta nueva llamada **`cdimages`**.
@@ -452,7 +453,7 @@ Solo necesitas esto si tu descarga de Lucia no es de ninguno de los dos tipos de
    4. Haz clic derecho en **`scaleform_frontend.rpf`** → **Extract Raw...**. Elige la carpeta **`onigiri\platform\data\cdimages`**
       que acabas de crear y haz clic en **Guardar (Save)**.
 
-   💡 Ese archivo es una copia de las pantallas de menú del juego con las pantallas de carga del HUD dentro.
+   💡 Ese archivo es una copia de las pantallas de menú del juego con las pantallas de carga y las notificaciones del HUD dentro.
    **Después de una actualización del juego,** bórralo, vuelve a instalar el HUD y repite este paso.
    Así tendrás las pantallas de menú del juego actualizado.
 7. Haz el Paso 7 (Ventana sin bordes) y a jugar.
@@ -745,7 +746,7 @@ Busca lo que te pasa en la columna de la izquierda. Haz lo que dice la columna d
 
 | Qué pasa | Qué hacer |
 | --- | --- |
-| El juego **se cierra solo unos 20 segundos después de cargar** | Tienes el Script Hook V .NET normal.<br>1. Repite el Paso 3 con **SHVDNE**.<br>2. Borra **`ScriptHookVDotNet-Loader.asi`** y **`ScriptHookVDotNet.dll`** de tu carpeta del juego, si están (son del normal).<br>3. Borra la carpeta **`dl3`** de `%LOCALAPPDATA%\assembly` (una caché del antiguo).<br>**Para comprobar cuál tienes:** en tu carpeta del juego, haz clic derecho en **`ScriptHookVDotNet.asi`** → **Propiedades (Properties)** → **Detalles (Details)**. SHVDNE pone **"Script Hook V .Net Enhanced"** ahí. El normal no (su versión es 3.6.0.0).<br>**¿Sigue pasando?** Puede que un complemento de ReShade (un archivo que termina en `.addon64` en tu carpeta del juego) esté chocando. Mueve esos archivos a otro sitio y vuelve a probar. |
+| El juego **se cierra solo unos 20 segundos después de cargar** | Tienes el Script Hook V .NET normal.<br>1. Repite el Paso 3 con **SHVDNE**.<br>2. Borra **`ScriptHookVDotNet-Loader.asi`** y **`ScriptHookVDotNet.dll`** de tu carpeta del juego, si están (son del normal).<br>**Para comprobar cuál tienes:** en tu carpeta del juego, haz clic derecho en **`ScriptHookVDotNet.asi`** → **Propiedades (Properties)** → **Detalles (Details)**. SHVDNE pone **"Script Hook V .Net Enhanced"** ahí. El normal no (su versión es 3.6.0.0).<br>**¿Sigue pasando?** Puede que un complemento de ReShade (un archivo que termina en `.addon64` en tu carpeta del juego) esté chocando. Mueve esos archivos a otro sitio y vuelve a probar. |
 | El juego **se cuelga mientras carga**, y deja de hacerlo si quitas **`mods\update`** de en medio (pero entonces el HUD no aparece) | Tu **`mods\update\update.rpf`** es una copia vieja del del juego, de antes de una actualización del juego. Instalar otra vez no la reemplaza: el instalador sigue usando la copia que ya está.<br>1. En `mods\update`, cambia el nombre de **`update.rpf`** a **`update.rpf.old`**.<br>2. Instala otra vez el paquete del HUD (**Ejecutar como administrador**). Hace una copia nueva de tu juego.<br>3. Instala otra vez cualquier otro mod que se instaló en `update.rpf` (un mod de iluminación o de clima, por ejemplo). Sus cambios estaban en la copia vieja.<br>4. Consigue el **OpenRPF** más nuevo (Paso 4).<br>¿Ya funciona? Puedes borrar `update.rpf.old`. |
 | Tu carpeta del juego tiene **`MiniMap.asi`** o **`MiniMapHudPresent.asi`** (de otro mod de minimapa 3D o de una instalación anterior) | 1. Bórralo.<br>2. Borra también `scripts\MiniMap.dll`, si está. (El del HUD es `scripts\ViMinimap.dll`.)<br>3. Deja `ViMinimap.asi` junto a `GTA5_Enhanced.exe`.<br>Es una copia antigua del plugin del minimapa que el HUD ya trae como `ViMinimap.asi`. Dos copias cargadas a la vez se estorban entre sí. |
 | El juego **se cierra de golpe al abrir el menú de AuraV-Lite** | Tienes los complementos de ReShade de RenoDX (`renodx-*.addon64`) en tu carpeta del juego. NVE los trae.<br>Sácalos mientras uses AuraV.<br>Consulta "Opcional: AuraV-Lite" más arriba, o "Opcional: AuraV-Lite con NaturalVision Enhanced". |
@@ -761,8 +762,9 @@ Busca lo que te pasa en la columna de la izquierda. Haz lo que dice la columna d
 | El juego **se cierra unos segundos después de empezar a conducir**, a menudo en una misión, y tienes **VStancer** (`VStancer.asi`) | VStancer 0.4.0 está hecho para Enhanced 1.0.1013. En la 1.0.1158 puede cerrar el juego en cuanto conduces.<br>1. Saca **`VStancer.asi`** de tu carpeta del juego (la carpeta `VStancer` puede quedarse).<br>2. Vuelve a ponerlo cuando una actualización de VStancer mencione tu versión del juego (ikt las publica en gta5-mods.com, a veces primero en Patreon).<br>💡 No es el HUD: en Enhanced el HUD no cambia las ruedas ni la suspensión. |
 | Un mensaje de Script Hook V dice **"unknown game version"** | GTA V se acaba de actualizar y Script Hook V todavía no se ha puesto al día.<br>1. Espera a que salga un Script Hook V nuevo.<br>2. Repite el Paso 2. |
 | El juego arranca pero **el nuevo HUD no aparece** | Comprueba que los 5 archivos de SHVDNE del Paso 3 están junto a `GTA5_Enhanced.exe`. |
-| El HUD no aparece, y `ScriptHookVDotNet.log` en tu carpeta del juego dice **"Blocking script!"** para **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET detiene cualquier script que haga esperar al juego más de 5 segundos. El HUD carga sus imágenes, sonidos y ajustes mientras el juego todavía está cargando, y en un PC más lento o en un disco duro eso puede tardar más.<br>1. Cierra el juego.<br>2. Abre **`ScriptHookVDotNet.ini`** en tu carpeta del juego con el Bloc de notas.<br>3. Cambia **`ScriptTimeoutThreshold=5000`** por **`ScriptTimeoutThreshold=30000`**. ¿No está esa línea? Añádela.<br>4. Guarda el archivo e inicia el juego.<br>💡 Esto solo da más tiempo a los scripts. Uno que de verdad se haya quedado atascado ahora congela el juego hasta 30 segundos antes de que lo detengan.<br>**¿Sigue pasando?** Instala el mod otra vez con el OIV Package Installer ejecutado como administrador (Paso 6). Después borra la carpeta **`dl3`** en `%LOCALAPPDATA%\assembly` (solo es una caché).<br>**¿Sigue sin arreglarse?** Pide ayuda (consulta "Otra cosa") y adjunta `scripts\GTA6Hud.perf.log`: su línea **STUCK** dice en qué estaba ocupado el HUD. |
-| **Actualizaste** el mod, pero el juego sigue comportándose como la **versión antigua** | Script Hook V .NET puede seguir ejecutando su copia guardada de los scripts antiguos.<br>1. Cierra el juego.<br>2. Pulsa **Win + R**.<br>3. Escribe `%LOCALAPPDATA%\assembly` y pulsa Enter.<br>4. Borra la carpeta **`dl3`**. Solo es una caché.<br>**¿Sigue la versión antigua?** Instálalo otra vez con el OIV Package Installer ejecutado como administrador (Paso 6). O copia tú mismo los scripts: consulta "Actualizar a mano" más abajo. |
+| El HUD no aparece, y `asiloader.log` en tu carpeta del juego dice **"ScriptHookVDotNet.asi" failed to load** | Windows no pudo iniciar Script Hook V .NET. Es cosa de Windows, no de los archivos del juego, así que una copia nueva del juego no ayudará.<br>1. Instala [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer). Si dice que ya está instalado, no pasa nada.<br>2. Instala el [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe). Si te ofrece **Reparar**, elige eso.<br>3. Mira en la cuarentena de tu antivirus si está `ScriptHookVDotNet.asi`, y permítelo si está ahí.<br>4. Reinicia tu PC e inicia el juego.<br>**¿Sigue fallando?** Comprueba que `ScriptHookV.dll` está junto a `GTA5_Enhanced.exe` (Paso 2). |
+| El HUD no aparece, y `ScriptHookVDotNet.log` en tu carpeta del juego dice **"Blocking script!"** para **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET detiene cualquier script que haga esperar al juego más de 5 segundos. El HUD carga sus imágenes, sonidos y ajustes mientras el juego todavía está cargando, y en un PC más lento o en un disco duro eso puede tardar más.<br>1. Cierra el juego.<br>2. Abre **`ScriptHookVDotNet.ini`** en tu carpeta del juego con el Bloc de notas.<br>3. Cambia **`ScriptTimeoutThreshold=5000`** por **`ScriptTimeoutThreshold=30000`**. ¿No está esa línea? Añádela.<br>4. Guarda el archivo e inicia el juego.<br>💡 Esto solo da más tiempo a los scripts. Uno que de verdad se haya quedado atascado ahora congela el juego hasta 30 segundos antes de que lo detengan.<br>**¿Sigue pasando?** Instala el mod otra vez con el OIV Package Installer ejecutado como administrador (Paso 6).<br>**¿Sigue sin arreglarse?** Pide ayuda (consulta "Otra cosa") y adjunta `scripts\GTA6Hud.perf.log`: su línea **STUCK** dice en qué estaba ocupado el HUD. |
+| **Actualizaste** el mod, pero el juego sigue comportándose como la **versión antigua** | Script Hook V .NET puede seguir ejecutando su copia guardada de los scripts antiguos.<br>El HUD lo detecta solo: te lo avisa en las notificaciones y lo arregla para la próxima vez que inicies el juego, así que reinicia GTA V una vez.<br>¿Dice que no pudo, o tienes la 2.7.3 o anterior? Borra la caché a mano:<br>1. Cierra el juego.<br>2. Pulsa **Win + R**.<br>3. Escribe `%LOCALAPPDATA%\assembly` y pulsa Enter.<br>4. Borra la carpeta **`dl3`**. Solo es una caché.<br>**¿Sigue la versión antigua?** Instálalo otra vez con el OIV Package Installer ejecutado como administrador (Paso 6). O copia tú mismo los scripts: consulta "Actualizar a mano" más abajo. |
 | **No hay minimapa** en un coche | Pon el juego en **Ventana sin bordes** (Paso 7). |
 | Un error sobre **.NET** o **Visual C++** | 1. Instala [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer).<br>2. Instala el [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe).<br>3. Reinicia tu PC. |
 | Un mensaje dice **Lucia is not registered** | Lucia ya no viene incluida con el HUD (consulta el Paso 5).<br>**¿No la tienes?** Pon `Enabled = False` en `[Lucia]` dentro de `scripts\GTA6Hud.ini`. El mensaje desaparece.<br>**¿Tienes un modelo de Lucia?** Falta su pack en `dlclist.xml` (con **NaturalVision Enhanced**, en el de NVE). Añade su línea.<br>Si el mensaje menciona un `VIHudSetup.exe`, ignora esa parte: este mod no lo usa. |
@@ -785,7 +787,7 @@ También puedes copiar tú mismo los scripts nuevos. Un `.oiv` no es más que un
 Después de eso, las actualizaciones se instalan con normalidad.
 
 1. Cierra el juego.
-2. Copia **`GTA-VI-Inspired-HUD-2.7.3-Enhanced.oiv`** a tu Escritorio.
+2. Copia **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** a tu Escritorio.
 3. Cambia la terminación de la copia a **`.zip`**.
    ¿No ves la parte `.oiv` del nombre? En el Explorador de archivos, activa **Ver** → **Mostrar** → **Extensiones de nombre de archivo**.
 4. Abre el zip → **`content`** → **`scripts`**.
@@ -794,15 +796,11 @@ Después de eso, las actualizaciones se instalan con normalidad.
    `C:\Program Files\Rockstar Games\Grand Theft Auto V Enhanced\scripts`.
 7. Elige **Reemplazar los archivos en el destino (Replace the files in the destination)**.
 8. Haz clic en **Continuar (Continue)** cuando Windows pida permiso de administrador.
-9. Borra la caché de Script Hook V .NET, para que cargue los archivos nuevos:
-   1. Pulsa **Win + R**.
-   2. Escribe `%LOCALAPPDATA%\assembly` y pulsa Enter.
-   3. Borra la carpeta **`dl3`**. Solo es una caché. Se vuelve a crear la próxima vez que inicies el juego.
-10. ¿Vienes de la 2.5.4 o anterior? La 2.5.5 añade un pack:
+9. ¿Vienes de la 2.5.4 o anterior? La 2.5.5 añade un pack:
     1. Copia la carpeta **`content`** → **`dlcpacks`** → **`vihud`** del zip en **`mods\update\x64\dlcpacks`** dentro de
        tu carpeta del juego.
     2. Instala el mod una vez con el OIV Package Installer, como en el Paso 6. Eso activa el pack nuevo.
-11. Inicia el juego. `scripts\ViExtras.log` ahora empieza con una línea `==== ViExtras …`.
+10. Inicia el juego. `scripts\ViExtras.log` ahora empieza con una línea `==== ViExtras …`.
     Muestra la versión que descargaste. ¿Sale una versión anterior? Los archivos nuevos no se copiaron.
 
 ---

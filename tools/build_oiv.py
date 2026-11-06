@@ -78,15 +78,19 @@ loading screens; Enhanced only the loading screens (its landing page is a
 different movie), with the .ytd files in the gen9 format. A .ytd in the other
 edition's format stops the build.
 
-The Legacy HUD package (2.7.2 on) is built with --startscreen too, a folder
-holding only the HUD's notification movie: game_stream.gfx, taken from the
-legacy vihud pack (dlc.rpf\\x64\\data\\cdimages\\vihud.rpf). Legacy loads its
-feed movie from this archive for the loading screen, before any pack, so the
-pack's copy alone never replaced GTA's (the feed stayed under the 3D map).
-The loading screens package adds other files to the same archive, so the two
-don't clash. Enhanced takes the pack's copy as it is. With NaturalVision Enhanced the game doesn't
-read the mods folder, so its players copy that scaleform_frontend.rpf into
-onigiri\\platform\\data\\cdimages (INSTALL-ENHANCED.md).
+Both HUD packages are built with --startscreen too (Legacy from 2.7.2, Enhanced
+from 2.8.0), a folder holding only the HUD's notification
+movie: game_stream.gfx, taken from the vihud pack (dlc.rpf\\x64\\data\\cdimages\\
+vihud.rpf; the same file for both editions). Legacy loads its feed movie from
+this archive for the loading screen, before any pack, so the pack's copy alone
+never replaced GTA's (the feed stayed under the 3D map). Enhanced did the same
+once the loading screens were in that archive: its cards came out washed-out
+grey (FeedBesideMap's numbers taken as background colours; seen 2026-11-05,
+its mods copy held GTA's 28,854-byte game_stream.gfx). The loading screens
+package adds other files to the same archive, so the two don't clash. With
+NaturalVision Enhanced the game doesn't read the mods folder, so its players
+copy that scaleform_frontend.rpf into onigiri\\platform\\data\\cdimages
+(INSTALL-ENHANCED.md).
 
 The package is a zip laid out like FBICat's originals: assembly.xml and
 icon.png at the top, the files under content/. assembly.xml comes from

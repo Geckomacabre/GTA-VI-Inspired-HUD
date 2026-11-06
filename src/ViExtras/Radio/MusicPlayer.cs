@@ -13,7 +13,8 @@ namespace ViExtras
 {
     /// <summary>
     /// Plays the tracks of one CustomMusic folder, as GTA6Hud's own player
-    /// (CustomRadio) does: in name order, the next one when a track ends, the
+    /// (CustomRadio) does: shuffled ([Radio] CustomMusicShuffle) or in name
+    /// order, the next one when a track ends, the
     /// game's next / previous track keys skipping, the track and place
     /// remembered per station for half an hour, a track that won't open skipped,
     /// and silent while the game is paused, in the background or not asking for
@@ -42,6 +43,7 @@ namespace ViExtras
 
         private readonly string _directory;
         private readonly Func<string, (string title, string artist)> _tags;
+        private readonly bool _shuffle;
         private readonly ConcurrentQueue<(int cmd, string arg)> _commands = new ConcurrentQueue<(int, string)>();
         private const int CmdSelect = 0, CmdNext = 1, CmdPrevious = 2;
 
@@ -52,10 +54,11 @@ namespace ViExtras
         private Thread _thread;
         private string _selected;
 
-        public MusicPlayer(string directory, Func<string, (string title, string artist)> tags)
+        public MusicPlayer(string directory, Func<string, (string title, string artist)> tags, bool shuffle)
         {
             _directory = directory;
             _tags = tags;
+            _shuffle = shuffle;
         }
 
         public State Now => _now;
@@ -106,6 +109,9 @@ namespace ViExtras
         private string[] _tracks = new string[0];
         private int _cursor = -1;
         private readonly List<int> _history = new List<int>();
+        // shuffled: the tracks still to come this time round, the next one last
+        private readonly List<int> _deck = new List<int>();
+        private readonly Random _rng = new Random();
         private readonly Dictionary<string, Resume> _resume = new Dictionary<string, Resume>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, long> _bad = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
         private string _current;
@@ -136,6 +142,7 @@ namespace ViExtras
             finally
             {
                 StopTrack();
+                CloseDevice();
                 if (mf) Mf.MFShutdown();
             }
         }
@@ -156,7 +163,7 @@ namespace ViExtras
             bool want = _enabled && now - Interlocked.Read(ref _heartbeat) < HeartbeatMs && GameIsForeground();
             if (!want)
             {
-                if (_out != null && !_paused) { _out.Pause(); _paused = true; RememberPosition(); }
+                if (_track != null && _out != null && !_paused) { _out.Pause(); _paused = true; RememberPosition(); }
                 return;
             }
             if (_track == null)
@@ -186,6 +193,7 @@ namespace ViExtras
                     RememberPosition();
                     _folder = arg;
                     _history.Clear();
+                    _deck.Clear();
                     _cursor = -1;
                     StopTrack();
                     Rescan();
@@ -226,10 +234,12 @@ namespace ViExtras
                 if (_cursor < 0) { Log.Write("Radio", "music: the track playing was removed"); StopTrack(); }
             }
             _history.RemoveAll(h => h >= _tracks.Length);
+            _deck.Clear();   // the numbers point at other tracks now: the next one deals afresh
         }
 
-        // CustomRadio.Advance without its shuffle (nothing here turns shuffle on): the
-        // next one in name order, wrapping round; back goes the way you came first.
+        // CustomRadio.Advance: the next one in name order, wrapping round, or shuffled,
+        // every track once before any comes round again (the one playing when a round
+        // is dealt counts as its first); back goes the way you came first.
         private void Advance(int dir, bool user)
         {
             int count = _tracks.Length;
@@ -240,6 +250,29 @@ namespace ViExtras
             {
                 pick = _history[_history.Count - 1];
                 _history.RemoveAt(_history.Count - 1);
+            }
+            else if (_shuffle && dir > 0)
+            {
+                // what's left of this round, then at most a whole new one
+                for (int i = 0; i < 2 * count && pick < 0; i++)
+                {
+                    if (_deck.Count == 0) Deal(was);
+                    int at = _deck[_deck.Count - 1];
+                    _deck.RemoveAt(_deck.Count - 1);
+                    if (!IsBad(_tracks[at])) pick = at;
+                }
+                if (pick < 0)
+                {
+                    Publish(n => n.Status = "NO PLAYABLE TRACKS");
+                    StopTrack();
+                    _retryAt = RealTime.Ms + 10000;
+                    return;
+                }
+                if (was >= 0 && was != pick)
+                {
+                    _history.Add(was);
+                    if (_history.Count > 50) _history.RemoveAt(0);
+                }
             }
             else
             {
@@ -267,6 +300,21 @@ namespace ViExtras
             Open(pick, 0);
         }
 
+        // A new round, in a random order, of every track but the one playing: it counts as heard in this round, so
+        // a song On Demand picked up where it left off doesn't come round again two songs later. One track alone
+        // plays again.
+        private void Deal(int last)
+        {
+            _deck.Clear();
+            for (int i = 0; i < _tracks.Length; i++) if (i != last) _deck.Add(i);
+            if (_deck.Count == 0 && _tracks.Length > 0) _deck.Add(Math.Max(0, last));
+            for (int i = _deck.Count - 1; i > 0; i--)
+            {
+                int j = _rng.Next(i + 1);
+                int t = _deck[i]; _deck[i] = _deck[j]; _deck[j] = t;
+            }
+        }
+
         private void Open(int i, long at100ns)
         {
             StopTrack();
@@ -274,7 +322,15 @@ namespace ViExtras
             try
             {
                 _track = new Track(_current, at100ns);
-                _out = new WaveOut(_track.Rate, _track.Channels, BufferMs, Buffers);
+                // the device already open plays the next song too, if it's the same format on the same device:
+                // opening one is where Windows' sound drivers can hang (WaveDevice), so it's done as seldom as can be
+                int device = WaveDevice.Preferred();
+                if (_out == null || !_out.Fits(_track.Rate, _track.Channels, device))
+                {
+                    CloseDevice();
+                    _out = new WaveOut(_track.Rate, _track.Channels, BufferMs, Buffers);
+                }
+                _out.Restart();
                 _paused = false;
             }
             catch (Exception ex)
@@ -324,14 +380,20 @@ namespace ViExtras
                 _resume[_folder] = new Resume { Track = _current, Pos100ns = _track.Start100ns + _out.Played100ns, At = RealTime.Ms };
         }
 
+        // The song stops; the device stays open (silent, emptied) for the next one.
         private void StopTrack()
         {
-            _out?.Dispose();
-            _out = null;
+            _out?.Reset();
             _track?.Dispose();
             _track = null;
             _current = null;
             _paused = false;
+        }
+
+        private void CloseDevice()
+        {
+            _out?.Dispose();
+            _out = null;
         }
 
         private static readonly uint Pid = (uint)Process.GetCurrentProcess().Id;
@@ -451,14 +513,6 @@ namespace ViExtras
 
         private sealed class WaveOut : IDisposable
         {
-            [StructLayout(LayoutKind.Sequential, Pack = 2)]
-            private struct WaveFormat
-            {
-                public ushort Tag, Channels;
-                public uint SamplesPerSec, AvgBytesPerSec;
-                public ushort BlockAlign, BitsPerSample, Size;
-            }
-
             [StructLayout(LayoutKind.Sequential)]
             private struct WaveHeader
             {
@@ -469,16 +523,14 @@ namespace ViExtras
                 public IntPtr Next, Reserved;
             }
 
-            [DllImport("winmm.dll")] private static extern int waveOutOpen(out IntPtr hwo, uint device, ref WaveFormat fmt, IntPtr callback, IntPtr instance, uint flags);
             [DllImport("winmm.dll")] private static extern int waveOutPrepareHeader(IntPtr hwo, IntPtr hdr, uint size);
             [DllImport("winmm.dll")] private static extern int waveOutWrite(IntPtr hwo, IntPtr hdr, uint size);
             [DllImport("winmm.dll")] private static extern int waveOutUnprepareHeader(IntPtr hwo, IntPtr hdr, uint size);
             [DllImport("winmm.dll")] private static extern int waveOutPause(IntPtr hwo);
             [DllImport("winmm.dll")] private static extern int waveOutRestart(IntPtr hwo);
             [DllImport("winmm.dll")] private static extern int waveOutReset(IntPtr hwo);
-            [DllImport("winmm.dll")] private static extern int waveOutClose(IntPtr hwo);
 
-            private const uint WaveMapper = 0xFFFFFFFF, WhdrDone = 1, WhdrPrepared = 2;
+            private const uint WhdrDone = 1, WhdrPrepared = 2;
             private static readonly uint HeaderSize = (uint)Marshal.SizeOf(typeof(WaveHeader));
 
             private IntPtr _hwo;
@@ -489,16 +541,15 @@ namespace ViExtras
             private readonly int _bytesPerSec;
             private long _playedBytes;
             private bool _sourceDone;
+            private readonly int _rate, _channels, _device;
 
             public WaveOut(int rate, int channels, int bufferMs, int count)
             {
-                var fmt = new WaveFormat
-                {
-                    Tag = 1, Channels = (ushort)channels, SamplesPerSec = (uint)rate, BitsPerSample = 16,
-                    BlockAlign = (ushort)(channels * 2), AvgBytesPerSec = (uint)(rate * channels * 2)
-                };
-                int err = waveOutOpen(out _hwo, WaveMapper, ref fmt, IntPtr.Zero, IntPtr.Zero, 0);
+                var fmt = WaveDevice.Pcm(rate, channels, 16);
+                int err = WaveDevice.Open(ref fmt, out _hwo, out _device);
                 if (err != 0) { _hwo = IntPtr.Zero; throw new InvalidOperationException("sound device (" + err + ")"); }
+                _rate = rate;
+                _channels = channels;
                 _bytesPerSec = (int)fmt.AvgBytesPerSec;
                 int size = Math.Max(fmt.BlockAlign, _bytesPerSec * bufferMs / 1000 / fmt.BlockAlign * fmt.BlockAlign);
                 _scratch = new byte[size];
@@ -556,6 +607,19 @@ namespace ViExtras
 
             public long Played100ns => _playedBytes * 10000000L / Math.Max(1, _bytesPerSec);
 
+            /// <summary>Open for this format on this device (-1: Windows' wave mapper, which follows the default itself).</summary>
+            public bool Fits(int rate, int channels, int device) => _hwo != IntPtr.Zero && rate == _rate && channels == _channels && (_device < 0 || device == _device);
+
+            /// <summary>Stops and empties it for the next song: every buffer back, the count at zero.</summary>
+            public void Reset()
+            {
+                if (_hwo == IntPtr.Zero) return;
+                waveOutReset(_hwo);
+                for (int i = 0; i < _queued.Length; i++) _queued[i] = false;
+                _playedBytes = 0;
+                _sourceDone = false;
+            }
+
             public void Pause() { if (_hwo != IntPtr.Zero) waveOutPause(_hwo); }
             public void Restart() { if (_hwo != IntPtr.Zero) waveOutRestart(_hwo); }
 
@@ -566,7 +630,7 @@ namespace ViExtras
                     waveOutReset(_hwo);
                     for (int i = 0; i < _header.Length; i++)
                         if (_header[i] != IntPtr.Zero) waveOutUnprepareHeader(_hwo, _header[i], HeaderSize);
-                    waveOutClose(_hwo);
+                    WaveDevice.Close(_hwo);
                     _hwo = IntPtr.Zero;
                 }
                 for (int i = 0; i < _header.Length; i++)

@@ -16,23 +16,21 @@ namespace ViExtras
     /// scaled by it here. Each sound gets its own waveOut device, so the close
     /// sound does not cut off an open sound still playing, as two Audio objects
     /// in the page would not either. (System.Media.SoundPlayer has no volume and
-    /// only one sound at a time.)
+    /// only one sound at a time.) A device that's done is kept open for the next
+    /// sound of the same format (two at most), so a session opens a few devices,
+    /// not one a click: opening one goes through WaveDevice, one at a time.
     /// </summary>
     internal static class RadioSound
     {
         private sealed class Clip
         {
-            public WaveFormat Format;
+            public WaveDevice.Format Format;
             public byte[] Data;
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 2)]
-        private struct WaveFormat
-        {
-            public ushort Tag, Channels;
-            public uint SamplesPerSec, AvgBytesPerSec;
-            public ushort BlockAlign, BitsPerSample, Size;
-        }
+        // devices that have finished a sound, by format, with the device number they were opened on
+        private static readonly Dictionary<string, Stack<(IntPtr hwo, int device)>> Idle = new Dictionary<string, Stack<(IntPtr, int)>>();
+        private const int IdlePerFormat = 2;
 
         [StructLayout(LayoutKind.Sequential)]
         private struct WaveHeader
@@ -44,14 +42,11 @@ namespace ViExtras
             public IntPtr Next, Reserved;
         }
 
-        [DllImport("winmm.dll")] private static extern int waveOutOpen(out IntPtr hwo, uint device, ref WaveFormat fmt, IntPtr callback, IntPtr instance, uint flags);
         [DllImport("winmm.dll")] private static extern int waveOutPrepareHeader(IntPtr hwo, IntPtr hdr, uint size);
         [DllImport("winmm.dll")] private static extern int waveOutWrite(IntPtr hwo, IntPtr hdr, uint size);
         [DllImport("winmm.dll")] private static extern int waveOutUnprepareHeader(IntPtr hwo, IntPtr hdr, uint size);
         [DllImport("winmm.dll")] private static extern int waveOutReset(IntPtr hwo);
-        [DllImport("winmm.dll")] private static extern int waveOutClose(IntPtr hwo);
 
-        private const uint WaveMapper = 0xFFFFFFFF;
         private const uint WhdrDone = 1;
 
         private static readonly Dictionary<string, Clip> Clips = new Dictionary<string, Clip>(StringComparer.OrdinalIgnoreCase);
@@ -84,7 +79,7 @@ namespace ViExtras
             }
 
             byte[] file = File.ReadAllBytes(path);
-            WaveFormat fmt = default;
+            WaveDevice.Format fmt = default;
             byte[] data = null;
             bool haveFmt = false;
             int at = 12; // "RIFF" size "WAVE"
@@ -140,15 +135,50 @@ namespace ViExtras
             return clip;
         }
 
+        private static string Key(WaveDevice.Format f) => f.SamplesPerSec + "/" + f.Channels + "/" + f.BitsPerSample;
+
+        // An idle device for this format on the preferred device, else a new one. Zero if none would open.
+        private static IntPtr Take(WaveDevice.Format fmt, out int device)
+        {
+            int preferred = WaveDevice.Preferred();
+            var stale = new List<IntPtr>();
+            IntPtr found = IntPtr.Zero;
+            device = -1;
+            lock (Idle)
+            {
+                if (Idle.TryGetValue(Key(fmt), out var idle))
+                    while (idle.Count > 0)
+                    {
+                        var d = idle.Pop();
+                        if (d.device < 0 || d.device == preferred) { found = d.hwo; device = d.device; break; }
+                        stale.Add(d.hwo);   // opened on a device that's no longer the default
+                    }
+            }
+            foreach (IntPtr h in stale) WaveDevice.Close(h);
+            if (found != IntPtr.Zero) return found;
+            return WaveDevice.Open(ref fmt, out IntPtr hwo, out device) == 0 ? hwo : IntPtr.Zero;
+        }
+
+        private static void Give(WaveDevice.Format fmt, IntPtr hwo, int device)
+        {
+            lock (Idle)
+            {
+                if (!Idle.TryGetValue(Key(fmt), out var idle)) Idle[Key(fmt)] = idle = new Stack<(IntPtr, int)>();
+                if (idle.Count < IdlePerFormat) { idle.Push((hwo, device)); return; }
+            }
+            WaveDevice.Close(hwo);
+        }
+
         private static void Run(Clip clip)
         {
             IntPtr hwo = IntPtr.Zero, buffer = IntPtr.Zero, header = IntPtr.Zero;
             uint headerSize = (uint)Marshal.SizeOf(typeof(WaveHeader));
-            bool prepared = false;
+            bool prepared = false, done = false;
+            int device = -1;
             try
             {
-                WaveFormat fmt = clip.Format;
-                if (waveOutOpen(out hwo, WaveMapper, ref fmt, IntPtr.Zero, IntPtr.Zero, 0) != 0) { hwo = IntPtr.Zero; return; }
+                hwo = Take(clip.Format, out device);
+                if (hwo == IntPtr.Zero) return;
                 buffer = Marshal.AllocHGlobal(clip.Data.Length);
                 Marshal.Copy(clip.Data, 0, buffer, clip.Data.Length);
                 header = Marshal.AllocHGlobal((int)headerSize);
@@ -162,7 +192,7 @@ namespace ViExtras
                 while (DateTime.UtcNow < giveUp)
                 {
                     var h = (WaveHeader)Marshal.PtrToStructure(header, typeof(WaveHeader));
-                    if ((h.Flags & WhdrDone) != 0) break;
+                    if ((h.Flags & WhdrDone) != 0) { done = true; break; }
                     Thread.Sleep(20);
                 }
             }
@@ -174,8 +204,10 @@ namespace ViExtras
                     if (hwo != IntPtr.Zero)
                     {
                         waveOutReset(hwo);
-                        if (prepared) waveOutUnprepareHeader(hwo, header, headerSize);
-                        waveOutClose(hwo);
+                        bool clean = !prepared || waveOutUnprepareHeader(hwo, header, headerSize) == 0;
+                        // a device that played its sound through goes back for the next one; one that didn't is closed
+                        if (done && clean) Give(clip.Format, hwo, device);
+                        else WaveDevice.Close(hwo);
                     }
                 }
                 catch { }

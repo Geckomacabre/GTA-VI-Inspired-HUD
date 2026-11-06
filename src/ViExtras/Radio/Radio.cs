@@ -178,7 +178,7 @@ namespace ViExtras
             _loud = Config.Get(S, "LoudRadio", true);
             _chaseTakesOver = Config.Get(S, "ChaseMusicTakesOver", true);
             if (Config.Get(S, "CustomMusic", true))
-                _custom = new CustomMusic(Path.Combine(Paths.Scripts, "Hud", "Radio", "CustomMusic"));
+                _custom = new CustomMusic(Path.Combine(Paths.Scripts, "Hud", "Radio", "CustomMusic"), Config.Get(S, "CustomMusicShuffle", true));
             _customGain = Config.Get(S, "CustomMusicVolume", 0.20f);   // GTA6Hud's own CustomGain is 0.12
             _invertSwitch = Config.Get(S, "InvertSwitchAxis", false);
             foreach (string name in Split(Config.Get(S, "HiddenStations", ""))) _hidden.Add(name);

@@ -36,6 +36,12 @@ namespace ViExtras
 
         private long _nextScan;
         private bool _contact;
+        // PoliceCanSee is one line-of-sight test per cop, and in a chase it fails and passes from one
+        // look to the next (a lamp post, a car between, the cop out of its 120 m), which turned the
+        // stars white and flashing in turn several times a second. They stay white SightHoldMs after
+        // the last look that saw you.
+        private readonly int _sightHoldMs;
+        private long _lastSeen = long.MinValue;
 
         // [WantedStars] Debug: what GTA6Hud's "cops are searching for you" box
         // (DrawPoliceSearchTip) hangs on, logged whenever it changes.
@@ -81,6 +87,7 @@ namespace ViExtras
             Paths.Init(BaseDirectory);
             On = Config.Get("WantedStars", "Enabled", true);
             _flashMs = Math.Max(100, Config.Get("WantedStars", "FlashMs", 900));
+            _sightHoldMs = Math.Max(0, Config.Get("WantedStars", "SightHoldMs", 2000));
             _debug = Config.Get("WantedStars", "Debug", false);
             Tick += OnTick;
         }
@@ -119,7 +126,7 @@ namespace ViExtras
         private void OnTick(object sender, EventArgs e)
         {
             if (!GameReady.Now) { State = null; return; }
-            if (!On || _broken || Game.Player.WantedLevel <= 0 || !Look()) { State = null; return; }
+            if (!On || _broken || Game.Player.WantedLevel <= 0 || !Look()) { State = null; _lastSeen = long.MinValue; return; }
             try
             {
                 long now = RealTime.Ms;
@@ -128,8 +135,9 @@ namespace ViExtras
                 if (now >= _nextScan)
                 {
                     _nextScan = now + 300;
-                    _contact = (bool)_canSee.Invoke(null, new object[] { ped });
+                    if ((bool)_canSee.Invoke(null, new object[] { ped })) _lastSeen = now;
                 }
+                _contact = _lastSeen != long.MinValue && now - _lastSeen <= _sightHoldMs;
                 object state;
                 if (_contact) { state = _white; State = "contact"; }
                 else if (!(bool)_seen.GetValue(_hud)) { state = _hollow; State = "hollow"; }

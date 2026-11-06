@@ -68,8 +68,8 @@ namespace ViExtras
             _enabled = Config.Get("Switcher", "Enabled", true);
             _honorOn = Config.Get("Honor", "Enabled", true);
             _honorDefault = Config.Get("Honor", "DefaultHonor", 0);
-            _angelAt = Config.Get("Honor", "AngelThreshold", 40);
-            _devilAt = Config.Get("Honor", "DevilThreshold", -40);
+            _angelAt = Config.Get("Honor", "AngelThreshold", 400);
+            _devilAt = Config.Get("Honor", "DevilThreshold", -400);
             if (!_enabled) return;
             Drawing = true;
             Tick += OnTick;

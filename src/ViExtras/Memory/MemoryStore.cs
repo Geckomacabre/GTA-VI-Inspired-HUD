@@ -360,8 +360,8 @@ namespace ViExtras.NpcMemory
             return Hostile;
         }
 
-        /// <summary>qbx_honor's value, 0 while Honor isn't running.</summary>
-        public static float Honor => HonorApi.Ready ? HonorApi.Value : 0f;
+        /// <summary>qbx_honor's value on its old -100..100 scale (HonorApi.Per100), 0 while Honor isn't running.</summary>
+        public static float Honor => HonorApi.Ready ? HonorApi.Per100 : 0f;
 
         public static float Of(Ped ped, out string band, out Temper temper, out PedClass cls)
         {

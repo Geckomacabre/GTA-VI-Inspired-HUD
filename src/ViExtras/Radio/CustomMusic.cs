@@ -32,10 +32,10 @@ namespace ViExtras
         private string _scanError;
         private volatile List<Station> _list = new List<Station>();
 
-        public CustomMusic(string directory)
+        public CustomMusic(string directory, bool shuffle)
         {
             _directory = directory;
-            _player = new MusicPlayer(directory, Tags);
+            _player = new MusicPlayer(directory, Tags, shuffle);
         }
 
         /// <summary>CustomRadio.IsTrack: what counts as a track.</summary>
