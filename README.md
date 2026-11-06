@@ -87,8 +87,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 
 ## 🆕 New in 2.8.0
 
-- **Sit anywhere.** Stand still facing a bench, a low wall, a ledge or a drop and **SIT** comes up (**E**). A wall
-  taller than you gives **LEAN**. **E** again or walking off gets you up.
+- **Sit anywhere.** Stand still facing a bench, a low wall, a ledge or a drop and **SIT** comes up (**E**): on a bench
+  or a chair you sit on its seat, as the game's own people do. A wall taller than you gives **LEAN**. **E** again or walking off gets you up.
 - **People walking their dogs.** Now and then a big dog poops and its owner bags it, or leaves it there. Punch an
   owner and the bag drops: pick it up and throw it. It's a new weapon, the **Poo Bag**.
 - **Hostages in bank and Vangelico robberies.** Aim at a customer or teller and hold **E**: the Fleecas now have

@@ -39,11 +39,21 @@ namespace ViExtras
             ["lean"] = (0.1f, 0.0f),
             ["ground"] = (0.1f, -0.95f),
         };
-        private static readonly string[] SeatScenarios =
+        // A wall, a ledge or a drop: the two poses made for sitting on an edge. (config.lua picked from seven, chairs
+        // and a bus stop's among them, which sat oddly on a wall.)
+        private static readonly string[] SeatScenarios = { "WORLD_HUMAN_SEAT_WALL", "WORLD_HUMAN_SEAT_LEDGE" };
+
+        // The game's own seats: benches, chairs and the like carry scenario points, where its people sit. Within
+        // SeatReach of what you face, SIT uses one of those (the seat, its height and its pose are the game's), so a
+        // bench isn't taken for a ledge: that seated you on whatever was highest, its backrest.
+        private static readonly string[] SeatPoints =
         {
-            "WORLD_HUMAN_SEAT_WALL", "WORLD_HUMAN_SEAT_LEDGE", "PROP_HUMAN_SEAT_BENCH", "PROP_HUMAN_SEAT_CHAIR",
-            "PROP_HUMAN_SEAT_BUS_STOP_WAIT", "PROP_HUMAN_SEAT_ARMCHAIR", "PROP_HUMAN_SEAT_STRIP_WATCH",
+            "PROP_HUMAN_SEAT_BENCH", "PROP_HUMAN_SEAT_CHAIR", "PROP_HUMAN_SEAT_BUS_STOP_WAIT", "PROP_HUMAN_SEAT_ARMCHAIR",
+            "PROP_HUMAN_SEAT_CHAIR_UPRIGHT", "PROP_HUMAN_SEAT_DECKCHAIR", "PROP_HUMAN_SEAT_BENCH_FOOD",
+            "PROP_HUMAN_SEAT_BENCH_DRINK", "PROP_HUMAN_SEAT_CHAIR_FOOD", "PROP_HUMAN_SEAT_CHAIR_DRINK",
+            "PROP_HUMAN_SEAT_SUNLOUNGER", "PROP_HUMAN_SEAT_STRIP_WATCH", "PROP_HUMAN_SEAT_BAR", "PROP_HUMAN_SEAT_COMPUTER",
         };
+        private const float SeatReach = 1.3f;
         // client.lua's vertical sweep: heights from the player's root, and the three side offsets
         private static readonly float[] SweepHeights = { -0.5f, -0.4f, -0.3f, -0.2f, -0.1f, 0.0f, 0.1f, 0.2f, 0.3f, 0.5f, 0.7f, 1.0f, 1.5f };
         private static readonly float[] SweepSides = { 0.0f, -0.15f, 0.15f };
@@ -343,6 +353,7 @@ namespace ViExtras
 
         private void SitDown(Ped ped, Spot s, int now)
         {
+            if (s.Style != "lean" && s.Style != "edge_fall" && GameSeat(ped, s)) return;
             Vector3 me = ped.Position;
             var diff = new Vector3(me.X - s.Hit.X, me.Y - s.Hit.Y, 0f);
             Vector3 normal = diff.Length() < 0.01f ? -ped.ForwardVector : Vector3.Normalize(diff);
@@ -380,6 +391,43 @@ namespace ViExtras
             _wantedAt = Game.Player.WantedLevel;
             _spot = null;
             Trace(s.Style + ": " + scenario + " at " + spawn + " heading " + heading.ToString("0.0") + " (edge " + s.Edge + ", hit " + s.Hit + ")");
+        }
+
+        // A free seat of the game's in reach of what you face: the game sits you on it (its own walk-up warped, its
+        // pose). Checked a moment later that it's a seat you're on; if not, the edge placement takes over.
+        private bool GameSeat(Ped ped, Spot s)
+        {
+            Vector3 at = s.Hit;
+            string seat = null;
+            foreach (string t in SeatPoints)
+                if (Function.Call<bool>(Hash.DOES_SCENARIO_OF_TYPE_EXIST_IN_AREA, at.X, at.Y, at.Z, t, SeatReach, true)) { seat = t; break; }
+            if (seat == null) return false;
+            Vector3 me = ped.Position;
+            float meHeading = ped.Heading;
+            Function.Call(Hash.TASK_USE_NEAREST_SCENARIO_TO_COORD_WARP, ped, at.X, at.Y, at.Z, SeatReach, 0);
+            Wait(400);
+            bool onSeat = false;
+            foreach (string t in SeatPoints)
+                if (Function.Call<bool>(Hash.IS_PED_USING_SCENARIO, ped, t)) { onSeat = true; break; }
+            if (!onSeat)
+            {
+                // the nearest point wasn't a seat (or it was taken meanwhile): back where you stood
+                Function.Call(Hash.CLEAR_PED_TASKS_IMMEDIATELY, ped);
+                ped.Position = me;
+                ped.Heading = meHeading;
+                Trace("the nearest scenario by " + seat + " wasn't a seat: the edge placement instead");
+                return false;
+            }
+            _from = me;
+            _fromHeading = meHeading;
+            _healthAt = ped.Health + ped.Armor;
+            _seated = true;
+            _style = "seat";
+            _seatedAt = Game.GameTime;
+            _wantedAt = Game.Player.WantedLevel;
+            _spot = null;
+            Trace("seat: the game's " + seat + " by " + at);
+            return true;
         }
 
         // ---- sitting, and getting up (client.lua ResetPlayer) --------------------------------------------------------

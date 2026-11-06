@@ -50,7 +50,8 @@ No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\
 
 Changes in 2.8.0
   - Sit anywhere: stand still facing a bench, a low wall, a ledge or a drop and SIT comes up (E); a tall wall gives
-    LEAN. A port of Invalid0190's dynamic-sit for FiveM (MIT). [Switches] Sit in ViExtras.ini turns it off.
+    LEAN; on a bench or a chair you sit on its seat, as the game's people do. A port of Invalid0190's dynamic-sit
+    for FiveM (MIT). [Switches] Sit in ViExtras.ini turns it off.
   - People walking their dogs: now and then a big dog poops and its owner bags it. Punch an owner and the bag drops;
     pick it up and throw it (the Poo Bag, a new thrown weapon). [Switches] DogPoop turns it off.
   - Hostages in bank and Vangelico robberies: aim at a customer or teller and hold E. The police outside wait 90 s,
