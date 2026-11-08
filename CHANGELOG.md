@@ -10,6 +10,12 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Guides
+
+- **A warning about game updates.** The Enhanced guide (and its four translations) now says near the top that a GTA V update can stop Script Hook V, and with it the HUD and other mods, until Script Hook V's maker puts out a version for it, and that reinstalling the HUD or the game won't help. It shows how to compare the game's version (`GTA5_Enhanced.exe` → Properties → Details) with "Supported patches" on the Script Hook V page, says SHVDNE, OpenRPF and other `.asi` mods can need an update too, and to get updates only from the pages the guide links. The "unknown game version" row points to it.
+
 ## 2.8.0 (6 November 2026)
 
 ### Added

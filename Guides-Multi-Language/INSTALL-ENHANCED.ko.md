@@ -23,6 +23,22 @@ GTA 모드가 처음이신가요? 걱정 마세요. 단계를 순서대로 따�
 > ⚠️ **Enhanced는 Legacy와 다른 도구를 써요.** 이 가이드에 링크된 다운로드만 쓰세요.
 > Legacy 도구와 Legacy 모드를 쓰면 Enhanced가 튕겨요.
 
+> ⚠️ **GTA V가 업데이트되면 한동안 모드가 작동하지 않을 수 있어요.** Script Hook V는 자기가 지원하는 게임 버전에서만
+> 작동해요. Rockstar가 게임을 업데이트하면, Script Hook V 제작자가 새 버전을 내놓을 때까지 HUD와 다른 모드가 로드되지
+> 않거나 게임이 튕길 수 있어요. HUD나 게임을 다시 설치해도 해결되지 않아요.
+>
+> **업데이트 후 확인하는 방법:**
+> 1. 게임 폴더에서 **`GTA5_Enhanced.exe`** 파일을 마우스 오른쪽 버튼으로 클릭 → **속성(Properties)** →
+>    **자세히(Details)** 탭에서 **파일 버전(File version)** 값을 보세요(예: `1.0.1158.13`).
+> 2. [Script Hook V 페이지](http://www.dev-c.com/gtav/scripthookv/)에서 **Supported patches** 항목을 보세요. 두 번째
+>    숫자가 Enhanced용이에요.
+> 3. 내 게임의 숫자가 더 새로운가요? 그러면 Script Hook V가 아직 작동하지 않을 수 있어요. 페이지에 그 숫자가 나올
+>    때까지 기다렸다가 2단계를 다시 하세요.
+>
+> SHVDNE(3단계), OpenRPF(4단계), 그리고 `.asi`로 끝나는 다른 모드도 업데이트가 필요할 수 있어요. 각 페이지를
+> 확인하세요. 업데이트는 이 가이드에 링크된 페이지에서만 받으세요. 다른 사이트에 올라온 "업데이트된" 파일은 가짜일 수
+> 있어요.
+
 ---
 
 ## 시작하기 전에: 간단한 Windows 설정 두 가지
@@ -760,7 +776,7 @@ Enhanced용 LSPDFR은 아직 초기 프리뷰 단계예요. HUD를 그것과 함
 | **Central Real-Life Traffic**을 넣은 뒤로 게임이 **로딩 화면이 끝나자마자 튕겨요** | 1. **ResourceExtensions**를 설치하세요(Central에 필요해요).<br>2. Central이 `onigiri\common\data`에 넣은 기본 `gameconfig.xml`을 그대로 두세요.<br>ResourceExtensions는 수정된 파일을 지원하지 않아요. NVE의 파일도 마찬가지예요. |
 | **Forests of San Andreas**나 **GTA V Remastered**를 넣었는데 **새 나무가 안 보여요** | 이 팩들은 게임이 팩을 불러오는 곳에 있어야 해요:<br>• **NaturalVision Enhanced를 쓴다면:** `onigiri\dlcpacks`에 넣고, 그 줄을 `onigiri\common\data\dlclist.xml`에 추가.<br>• **안 쓴다면:** `mods\update\x64\dlcpacks`에 넣고, 그 줄을 `mods\update\update.rpf`의 `dlclist.xml`에 추가.<br>위의 "선택 사항: Forests of San Andreas와 GTA V Remastered"를 보세요. |
 | **운전을 시작하고 몇 초 뒤에 게임이 꺼져요**(주로 미션 중). **VStancer**(`VStancer.asi`)를 쓰고 있어요 | VStancer 0.4.0은 Enhanced 1.0.1013용이에요. 1.0.1158에서는 운전하자마자 게임이 꺼질 수 있어요.<br>1. 게임 폴더에서 **`VStancer.asi`**를 다른 곳으로 옮기세요(`VStancer` 폴더는 그대로 둬도 돼요).<br>2. VStancer 업데이트에 내 게임 버전이 나오면 다시 넣으세요(ikt가 gta5-mods.com에 올리고, 가끔 Patreon에 먼저 올려요).<br>💡 HUD 때문이 아니에요. Enhanced에서 HUD는 바퀴나 서스펜션을 바꾸지 않아요. |
-| Script Hook V 메시지에 **"unknown game version"**(알 수 없는 게임 버전)이라고 떠요 | GTA V가 막 업데이트됐는데, Script Hook V가 아직 따라오지 못한 거예요.<br>1. 새 Script Hook V가 나올 때까지 기다리세요.<br>2. 2단계를 다시 하세요. |
+| Script Hook V 메시지에 **"unknown game version"**(알 수 없는 게임 버전)이라고 떠요 | GTA V가 막 업데이트됐는데, Script Hook V가 아직 따라오지 못한 거예요.<br>1. 새 Script Hook V가 나올 때까지 기다리세요. 확인하는 방법은 이 가이드 맨 위의 게임 업데이트 경고에 있어요.<br>2. 2단계를 다시 하세요. |
 | 게임은 켜지는데 **새 HUD가 안 보여요** | 3단계의 SHVDNE 파일 5개가 `GTA5_Enhanced.exe` 옆에 있는지 확인하세요. |
 | HUD가 안 보이고, 게임 폴더의 `asiloader.log`에 **"ScriptHookVDotNet.asi" failed to load**라고 나와 있어요 | Windows가 Script Hook V .NET을 시작하지 못했어요. 게임 파일이 아니라 Windows 쪽 문제라서, 게임을 새로 받아도 해결되지 않아요.<br>1. [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer)을 설치하세요. 이미 설치되어 있다고 나오면 괜찮아요.<br>2. [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe)를 설치하세요. **복구**가 나오면 그걸 고르세요.<br>3. 백신 프로그램의 격리 목록에 `ScriptHookVDotNet.asi`가 있는지 보고, 있으면 허용하세요.<br>4. PC를 다시 시작하고 게임을 시작하세요.<br>**아직도 안 되나요?** `ScriptHookV.dll`이 `GTA5_Enhanced.exe` 옆에 있는지 확인하세요(2단계). |
 | HUD가 안 보이고, 게임 폴더의 `ScriptHookVDotNet.log`에 **GTA6Hud**에 대해 **"Blocking script!"**("terminated because it caused the game to freeze too long")라고 나와 있어요 | Script Hook V .NET은 게임을 5초 넘게 기다리게 하는 스크립트를 멈춰요. HUD는 게임이 아직 로딩 중일 때 그림, 소리, 설정을 불러오는데, 느린 PC나 하드 디스크에서는 그게 더 오래 걸릴 수 있어요.<br>1. 게임을 닫으세요.<br>2. 게임 폴더의 **`ScriptHookVDotNet.ini`**를 메모장으로 여세요.<br>3. **`ScriptTimeoutThreshold=5000`**을 **`ScriptTimeoutThreshold=30000`**으로 바꾸세요. 그 줄이 없으면 추가하세요.<br>4. 파일을 저장하고 게임을 시작하세요.<br>💡 이건 스크립트에 시간을 더 줄 뿐이에요. 정말로 멈춘 스크립트라면, 중지되기 전까지 게임이 최대 30초 동안 멈춰 있게 돼요.<br>**그래도 그런가요?** OIV Package Installer를 관리자 권한으로 실행해서 모드를 다시 설치하세요(6단계).<br>**아직도 안 되나요?** 도움을 요청하고("그 밖의 문제" 참고) `scripts\GTA6Hud.perf.log`를 첨부하세요: 그 안의 **STUCK** 줄에 HUD가 무엇을 하느라 멈췄는지 나와 있어요. |

@@ -23,6 +23,23 @@ Nunca usou mods no GTA? Sem problema. Siga os passos na ordem. Não pule nenhum.
 > ⚠️ **O Enhanced usa ferramentas diferentes das do Legacy.** Use só os downloads com link neste guia.
 > Ferramentas e mods do Legacy fazem o Enhanced dar crash.
 
+> ⚠️ **Depois de uma atualização do GTA V, os mods podem parar de funcionar por um tempo.** O Script Hook V só funciona
+> com as versões do jogo para as quais foi feito. Quando a Rockstar atualiza o jogo, o HUD e seus outros mods podem
+> parar de carregar, ou o jogo pode dar crash, até o criador do Script Hook V lançar uma versão nova. Reinstalar o HUD
+> ou o jogo não resolve.
+>
+> **Para conferir depois de uma atualização:**
+> 1. Na sua pasta do jogo, clique com o botão direito em **`GTA5_Enhanced.exe`** → **Propriedades (Properties)** →
+>    **Detalhes (Details)** e veja **Versão do arquivo (File version)** (por exemplo `1.0.1158.13`).
+> 2. Na [página do Script Hook V](http://www.dev-c.com/gtav/scripthookv/), veja **Supported patches**. O segundo número
+>    é o do Enhanced.
+> 3. O número do seu jogo é mais novo? Então talvez o Script Hook V ainda não funcione com ele. Espere a página mostrar
+>    esse número e refaça o Passo 2.
+>
+> O SHVDNE (Passo 3), o OpenRPF (Passo 4) e outros mods que terminam em `.asi` também podem precisar de uma
+> atualização: confira as páginas deles. Baixe atualizações só das páginas com link neste guia. Cópias "atualizadas" em
+> outros sites podem ser falsas.
+
 ---
 
 ## Antes de começar: duas configurações rápidas do Windows
@@ -760,7 +777,7 @@ Encontre o que está acontecendo com você na coluna da esquerda. Faça o que a 
 | O jogo **dá crash logo depois da tela de carregamento** desde que você adicionou o **Central Real-Life Traffic** | 1. Instale o **ResourceExtensions** (o Central precisa dele).<br>2. Mantenha o `gameconfig.xml` original que o Central colocou em `onigiri\common\data`.<br>O ResourceExtensions não suporta um modificado, nem mesmo o do NVE. |
 | Você adicionou o **Forests of San Andreas** ou o **GTA V Remastered**, e **nenhuma árvore nova aparece** | Os packs deles precisam estar onde o seu jogo carrega os packs:<br>• **Com o NaturalVision Enhanced:** em `onigiri\dlcpacks`, com as linhas deles no `onigiri\common\data\dlclist.xml`.<br>• **Sem ele:** em `mods\update\x64\dlcpacks`, com as linhas deles no `dlclist.xml` do `mods\update\update.rpf`.<br>Veja "Opcional: Forests of San Andreas e GTA V Remastered" acima. |
 | O jogo **fecha alguns segundos depois que você começa a dirigir**, muitas vezes numa missão, e você tem o **VStancer** (`VStancer.asi`) | O VStancer 0.4.0 foi feito para o Enhanced 1.0.1013. Na 1.0.1158 ele pode fechar o jogo assim que você dirige.<br>1. Tire o **`VStancer.asi`** da sua pasta do jogo (a pasta `VStancer` pode ficar).<br>2. Coloque de volta quando uma atualização do VStancer citar a sua versão do jogo (o ikt publica no gta5-mods.com, às vezes primeiro no Patreon).<br>💡 Não é o HUD: no Enhanced o HUD não mexe nas rodas nem na suspensão. |
-| Uma mensagem do Script Hook V diz **"unknown game version"** (versão do jogo desconhecida) | O GTA V acabou de ser atualizado, e o Script Hook V ainda não acompanhou.<br>1. Espere sair um Script Hook V novo.<br>2. Refaça o Passo 2. |
+| Uma mensagem do Script Hook V diz **"unknown game version"** (versão do jogo desconhecida) | O GTA V acabou de ser atualizado, e o Script Hook V ainda não acompanhou.<br>1. Espere sair um Script Hook V novo. O aviso sobre atualizações do jogo, no começo deste guia, mostra como conferir.<br>2. Refaça o Passo 2. |
 | O jogo inicia, mas **o HUD novo não aparece** | Confira se os 5 arquivos do SHVDNE do Passo 3 estão ao lado do `GTA5_Enhanced.exe`. |
 | O HUD não aparece, e o `asiloader.log` na sua pasta do jogo diz **"ScriptHookVDotNet.asi" failed to load** | O Windows não conseguiu iniciar o Script Hook V .NET. Isso é coisa do Windows, não dos arquivos do jogo, então uma cópia nova do jogo não vai ajudar.<br>1. Instale o [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer). Se disser que já está instalado, tudo bem.<br>2. Instale o [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe). Se ele oferecer **Reparar**, escolha essa opção.<br>3. Veja a quarentena do seu antivírus: se o `ScriptHookVDotNet.asi` estiver lá, permita.<br>4. Reinicie o seu PC e inicie o jogo.<br>**Ainda não resolveu?** Confira se o `ScriptHookV.dll` está ao lado do `GTA5_Enhanced.exe` (Passo 2). |
 | O HUD não aparece, e o `ScriptHookVDotNet.log` na sua pasta do jogo diz **"Blocking script!"** para o **GTA6Hud**, "terminated because it caused the game to freeze too long" | O Script Hook V .NET para qualquer script que deixe o jogo esperando mais de 5 segundos. O HUD carrega as imagens, os sons e as configurações dele enquanto o jogo ainda está carregando, e num PC mais lento ou num HD isso pode demorar mais.<br>1. Feche o jogo.<br>2. Abra **`ScriptHookVDotNet.ini`** na sua pasta do jogo no Bloco de Notas.<br>3. Troque **`ScriptTimeoutThreshold=5000`** por **`ScriptTimeoutThreshold=30000`**. Não tem essa linha? Adicione.<br>4. Salve o arquivo e inicie o jogo.<br>💡 Isso só dá mais tempo aos scripts. Um que travou de verdade agora congela o jogo por até 30 segundos antes de ser parado.<br>**Ainda acontece?** Instale o mod de novo com o OIV Package Installer rodando como administrador (Passo 6).<br>**Ainda não resolveu?** Peça ajuda (veja "Outra coisa") e anexe `scripts\GTA6Hud.perf.log`: a linha **STUCK** dele diz com o que o HUD estava ocupado. |

@@ -23,6 +23,21 @@ Never modded GTA before? No problem. Follow the steps in order. Don't skip any. 
 > ⚠️ **Enhanced uses different tools than Legacy.** Only use the downloads linked in this guide.
 > Legacy tools and Legacy mods make Enhanced crash.
 
+> ⚠️ **After a GTA V update, mods can stop working for a while.** Script Hook V only works with the game versions it
+> was made for. When Rockstar updates the game, the HUD and your other mods can stop loading, or the game can crash,
+> until Script Hook V's maker puts out a new version. Reinstalling the HUD or the game won't help.
+>
+> **To check after an update:**
+> 1. In your game folder, right-click **`GTA5_Enhanced.exe`** → **Properties** → **Details**, and look at
+>    **File version** (like `1.0.1158.13`).
+> 2. On the [Script Hook V page](http://www.dev-c.com/gtav/scripthookv/), look at **Supported patches**. The second
+>    number is for Enhanced.
+> 3. Is your game's number newer? Then Script Hook V may not work with it yet. Wait until the page lists it, then redo
+>    Step 2.
+>
+> SHVDNE (Step 3), OpenRPF (Step 4) and other mods ending in `.asi` can need an update too: check their pages.
+> Only download updates from the pages linked in this guide. "Updated" copies on other sites can be fake.
+
 ---
 
 ## Before you start: two quick Windows settings
@@ -760,7 +775,7 @@ Find what happens to you in the left column. Do what the right column says.
 | The game **crashes right after the loading screen** since you added **Central Real-Life Traffic** | 1. Install **ResourceExtensions** (Central needs it).<br>2. Keep the stock `gameconfig.xml` Central put in `onigiri\common\data`.<br>ResourceExtensions doesn't support a modded one, NVE's included. |
 | You added **Forests of San Andreas** or **GTA V Remastered**, and **no new trees show** | Their packs need to be where your game loads packs from:<br>• **With NaturalVision Enhanced:** in `onigiri\dlcpacks`, with their lines in `onigiri\common\data\dlclist.xml`.<br>• **Without it:** in `mods\update\x64\dlcpacks`, with their lines in `mods\update\update.rpf`'s `dlclist.xml`.<br>See "Optional: Forests of San Andreas and GTA V Remastered" above. |
 | The game **closes a few seconds after you start driving**, often in a mission, and you have **VStancer** (`VStancer.asi`) | VStancer 0.4.0 is made for Enhanced 1.0.1013. On 1.0.1158 it can close the game as soon as you drive.<br>1. Move **`VStancer.asi`** out of your game folder (the `VStancer` folder can stay).<br>2. Put it back once a VStancer update lists your game version (ikt releases them on gta5-mods.com, sometimes on Patreon first).<br>💡 It isn't the HUD: on Enhanced the HUD doesn't change wheels or suspension. |
-| A Script Hook V message says **"unknown game version"** | GTA V just updated, and Script Hook V hasn't caught up yet.<br>1. Wait for a new Script Hook V.<br>2. Redo Step 2. |
+| A Script Hook V message says **"unknown game version"** | GTA V just updated, and Script Hook V hasn't caught up yet.<br>1. Wait for a new Script Hook V. The warning about game updates at the top of this guide shows how to check for it.<br>2. Redo Step 2. |
 | The game starts but **the new HUD doesn't show** | Check that the 5 SHVDNE files from Step 3 are next to `GTA5_Enhanced.exe`. |
 | The HUD doesn't show, and `asiloader.log` in your game folder says **"ScriptHookVDotNet.asi" failed to load** | Windows couldn't start Script Hook V .NET. That's about Windows, not your game files, so a fresh copy of the game won't help.<br>1. Install [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer). If it says it's already installed, that's fine.<br>2. Install the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe). If it offers **Repair**, pick that.<br>3. Check your antivirus's quarantine for `ScriptHookVDotNet.asi`, and allow it if it's there.<br>4. Restart your PC and start the game.<br>**Still failing?** Check that `ScriptHookV.dll` is next to `GTA5_Enhanced.exe` (Step 2). |
 | The HUD doesn't show, and `ScriptHookVDotNet.log` in your game folder says **"Blocking script!"** for **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET stops a script that keeps the game waiting longer than 5 seconds. The HUD loads its pictures, sounds and settings while the game is still loading, and on a slower PC or a hard drive that can take longer.<br>1. Close the game.<br>2. Open **`ScriptHookVDotNet.ini`** in your game folder with Notepad.<br>3. Change **`ScriptTimeoutThreshold=5000`** to **`ScriptTimeoutThreshold=30000`**. No such line? Add it.<br>4. Save the file and start the game.<br>💡 This only gives scripts longer. One that's really stuck now freezes the game for up to 30 seconds before it's stopped.<br>**Still happening?** Install the mod again with the OIV Package Installer run as administrator (Step 6).<br>**Still not fixed?** Ask for help (see "Something else") and attach `scripts\GTA6Hud.perf.log`: its **STUCK** line says what the HUD was busy with. |
