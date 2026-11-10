@@ -143,12 +143,12 @@ OpenRPF permette al gioco di caricare le mod da una **cartella `mods`** separata
 ### Parte 1: Procurati la mod
 
 1. Vai alla [**pagina Releases**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Sotto **Assets**, scarica **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`**. È la mod, circa 100 MB.
+2. Sotto **Assets**, scarica **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`**. È la mod, circa 100 MB.
    Attiva anche la mod nel gioco, quindi non c'è nessuna patch separata da scaricare.
 
-❌ Non scaricare `GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv`. È per l'altra versione e fa crashare Enhanced.
+❌ Non scaricare `GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv`. È per l'altra versione e fa crashare Enhanced.
 
-💡 Il numero nel nome del file è la versione (qui 2.8.0). Così sai sempre quale hai installato.
+💡 Il numero nel nome del file è la versione (qui 2.8.1). Così sai sempre quale hai installato.
 Indicalo quando chiedi aiuto.
 
 ### Vuoi giocare con Lucia?
@@ -191,7 +191,7 @@ l'installazione può lasciare al loro posto i file vecchi.
 
 1. Apri la cartella dell'OIV Package Installer.
 2. Avvia **`CodeWalker.OIVInstaller.exe`** come dice la tabella.
-3. Trascina **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** sulla sua finestra. (Oppure fai clic su **Browse** e sceglilo.)
+3. Trascina **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** sulla sua finestra. (Oppure fai clic su **Browse** e sceglilo.)
 4. Ti chiede la cartella del gioco. Scegli la cartella con **`GTA5_Enhanced.exe`**.
 5. Fai clic su **Install**.
 6. Aspetta che finisca.
@@ -804,7 +804,7 @@ Puoi anche copiare tu i nuovi script. Un `.oiv` è solo uno zip.
 Dopo, gli aggiornamenti si installano normalmente.
 
 1. Chiudi il gioco.
-2. Copia **`GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv`** sul Desktop.
+2. Copia **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** sul Desktop.
 3. Rinomina la copia in **`.zip`**.
    Non vedi la parte `.oiv` del nome? In Esplora file, attiva **Visualizza** → **Mostra** → **Estensioni nomi file**.
 4. Apri lo zip → **`content`** → **`scripts`**.

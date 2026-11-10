@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.8.0 (GTA V Enhanced)</name>
-    <version><major>2</major><minor>8</minor><tag>ENHANCED 2.8.0</tag></version>
+    <name>GTA VI-Inspired HUD 2.8.1 (GTA V Enhanced)</name>
+    <version><major>2</major><minor>8</minor><tag>ENHANCED 2.8.1</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). Maintained by Geckomacabre.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -47,6 +47,14 @@ pictures (not his landing page; Enhanced keeps its own).
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.8.1
+  - The slim jim is a weapon too: once you own one it's also on the weapon wheel's MELEE ring, swung with the
+    crowbar's moves and about as hard as a punch. [Switches] SlimJimWeapon in ViExtras.ini turns it off, and
+    [SlimJim] WeaponDamage sets how hard it hits.
+  - Fixed: the key cloner's third hit. The pink window is drawn on top of the fill now, so you can see it, and the
+    dot no longer speeds up for the third hit.
+  - The cloned key's dial-up is quieter ([ClonedKeys] Volume 25).
 
 Changes in 2.8.0
   - Sit anywhere: stand still facing a bench, a low wall, a ledge or a drop and SIT comes up (E); a tall wall gives

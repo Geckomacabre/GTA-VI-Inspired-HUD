@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{96d9af09-2b5e-4687-b719-0d9861a62826}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.8.0 Uninstaller (GTA V Legacy)</name>
-    <version><major>2</major><minor>8</minor><tag>LEGACY UNINSTALL 2.8.0</tag></version>
+    <name>GTA VI-Inspired HUD 2.8.1 Uninstaller (GTA V Legacy)</name>
+    <version><major>2</major><minor>8</minor><tag>LEGACY UNINSTALL 2.8.1</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[Takes the GTA VI-Inspired HUD off GTA V LEGACY (GTA5.exe) again. Maintained by Geckomacabre.
 Install it with OpenIV, to the mods folder, the same way you installed the HUD.

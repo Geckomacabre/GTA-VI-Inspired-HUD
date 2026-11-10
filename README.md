@@ -35,8 +35,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.8.0-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.8.0-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv` with the OIV Package Installer.
 >
 > **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
 >
@@ -84,6 +84,13 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 <sub>BuckMe (your bank) and your wallet at the top right. An empty one turns grey.</sub>
 
 ---
+
+## 🆕 New in 2.8.1
+
+- **The slim jim is a weapon too.** Once you own a slim jim it's also on the weapon wheel's **MELEE** ring: he swings
+  it with the crowbar's moves, about as hard as a punch. The door prompt's **SLIM JIM** works as before.
+- **Fixed:** the key cloner's third hit, where the pink window was hidden under the fill (thanks to **ilie_deviza**).
+- The cloned key's dial-up is quieter.
 
 ## 🆕 New in 2.8.0
 

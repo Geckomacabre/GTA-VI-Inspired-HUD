@@ -10,7 +10,19 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
-## Unreleased
+## 2.8.1 (10 November 2026)
+
+### Added
+
+- **The slim jim is a weapon too.** Once you own a slim jim it also sits on the weapon wheel's MELEE ring, with its own icon: he holds the strip and swings it with the crowbar's moves, but it hits about as hard as a punch. The weapon and the slim jim are one thing: buying the slim jim gives you the weapon, it comes back if a trainer or an arrest takes your weapons, and the door prompt's SLIM JIM still works the same way. The weapon is new in the vihudanims pack. `ViExtras.ini` `[Switches] SlimJimWeapon` turns it off, and `[SlimJim] WeaponDamage` sets how hard it hits.
+
+### Fixed
+
+- **The key cloner's third hit.** After two hits the pink fill covered most of the dot's path, and the pink window was drawn under it in the same pink, so on the third try the window was usually hidden. The window is now drawn on top of the fill, in white where the fill is under it. The dot also no longer speeds up for the third hit: it moves as fast as for the second (thanks to **ilie_deviza** for the report).
+
+### Changed
+
+- **The cloned key's dial-up is quieter.** `[ClonedKeys] Volume` in `ViExtras.ini` is now 25 (it was 100).
 
 ### Guides
 
