@@ -10,6 +10,12 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
+## Unreleased
+
+### Guides
+
+- **The game-update check no longer warns players on today's game.** The warning about game updates at the top of the Enhanced guide (and its four translations) told you to compare `GTA5_Enhanced.exe`'s File version with "Supported patches" on the Script Hook V page, and to wait if yours was newer. That page lists `1.0.1158.13`, while the current game is `1.0.1158.16`, which Script Hook V runs fine. So everyone on the current game was told Script Hook V might not work yet. The check now goes by what Script Hook V itself says: an "unknown game version" message means wait for a new version; "Success, game version is" in `ScriptHookV.log` means it works, even if the version it names is older than yours.
+
 ## 2.8.1 (10 November 2026)
 
 ### Added

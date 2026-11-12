@@ -28,12 +28,16 @@ GTA 모드가 처음이신가요? 걱정 마세요. 단계를 순서대로 따�
 > 않거나 게임이 튕길 수 있어요. HUD나 게임을 다시 설치해도 해결되지 않아요.
 >
 > **업데이트 후 확인하는 방법:**
-> 1. 게임 폴더에서 **`GTA5_Enhanced.exe`** 파일을 마우스 오른쪽 버튼으로 클릭 → **속성(Properties)** →
->    **자세히(Details)** 탭에서 **파일 버전(File version)** 값을 보세요(예: `1.0.1158.13`).
-> 2. [Script Hook V 페이지](http://www.dev-c.com/gtav/scripthookv/)에서 **Supported patches** 항목을 보세요. 두 번째
->    숫자가 Enhanced용이에요.
-> 3. 내 게임의 숫자가 더 새로운가요? 그러면 Script Hook V가 아직 작동하지 않을 수 있어요. 페이지에 그 숫자가 나올
->    때까지 기다렸다가 2단계를 다시 하세요.
+> 1. 게임을 실행하세요. Script Hook V 메시지에 **"unknown game version"**(알 수 없는 게임 버전)이라고 뜨나요? 그러면
+>    아직 내 게임에서 작동하지 않는 거예요. [Script Hook V 페이지](http://www.dev-c.com/gtav/scripthookv/)에 새 버전이
+>    나올 때까지 기다렸다가 2단계를 다시 하세요.
+> 2. 메시지가 안 뜨나요? 게임 폴더의 **`ScriptHookV.log`**를 메모장으로 여세요. **"Success, game version is"**라는 줄이
+>    있으면 Script Hook V가 내 게임에서 작동하는 거예요. 거기 적힌 버전이 내 버전보다 오래됐어도 괜찮아요. 그래도 모드가
+>    로드되지 않으면 아래 "문제가 생겼나요?"를 보세요.
+>
+> 💡 버전 숫자만 보고 판단하지 마세요. Script Hook V 페이지의 **Supported patches**는 늦게 바뀔 수 있어요. 2026년
+> 11월에는 `1.0.1158.13`이라고 나와 있었지만, Script Hook V는 당시 게임 버전인 `1.0.1158.16`에서도 작동했어요. 내 게임의
+> 숫자는 `GTA5_Enhanced.exe` → **속성(Properties)** → **자세히(Details)** → **파일 버전(File version)**에서 볼 수 있어요.
 >
 > SHVDNE(3단계), OpenRPF(4단계), 그리고 `.asi`로 끝나는 다른 모드도 업데이트가 필요할 수 있어요. 각 페이지를
 > 확인하세요. 업데이트는 이 가이드에 링크된 페이지에서만 받으세요. 다른 사이트에 올라온 "업데이트된" 파일은 가짜일 수

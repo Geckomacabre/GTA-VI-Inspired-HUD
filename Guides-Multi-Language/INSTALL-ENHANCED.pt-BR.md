@@ -29,12 +29,17 @@ Nunca usou mods no GTA? Sem problema. Siga os passos na ordem. Não pule nenhum.
 > ou o jogo não resolve.
 >
 > **Para conferir depois de uma atualização:**
-> 1. Na sua pasta do jogo, clique com o botão direito em **`GTA5_Enhanced.exe`** → **Propriedades (Properties)** →
->    **Detalhes (Details)** e veja **Versão do arquivo (File version)** (por exemplo `1.0.1158.13`).
-> 2. Na [página do Script Hook V](http://www.dev-c.com/gtav/scripthookv/), veja **Supported patches**. O segundo número
->    é o do Enhanced.
-> 3. O número do seu jogo é mais novo? Então talvez o Script Hook V ainda não funcione com ele. Espere a página mostrar
->    esse número e refaça o Passo 2.
+> 1. Inicie o jogo. Aparece uma mensagem do Script Hook V dizendo **"unknown game version"** (versão do jogo
+>    desconhecida)? Então ele ainda não funciona com o seu jogo. Espere a
+>    [página do Script Hook V](http://www.dev-c.com/gtav/scripthookv/) ter uma versão nova e refaça o Passo 2.
+> 2. Nenhuma mensagem? Abra **`ScriptHookV.log`** na sua pasta do jogo no Bloco de Notas. Uma linha com
+>    **"Success, game version is"** quer dizer que o Script Hook V funciona com o seu jogo, mesmo que a versão citada
+>    seja mais antiga que a sua. Se os mods ainda não carregarem, veja "Deu algo errado?" mais abaixo.
+>
+> 💡 Não se guie só pelos números de versão. **Supported patches** na página do Script Hook V pode ficar atrasado: em
+> novembro de 2026 mostrava `1.0.1158.13`, e o Script Hook V também funcionava na `1.0.1158.16`, a versão do jogo na
+> época. O número do seu jogo fica em `GTA5_Enhanced.exe` → **Propriedades (Properties)** → **Detalhes (Details)** →
+> **Versão do arquivo (File version)**.
 >
 > O SHVDNE (Passo 3), o OpenRPF (Passo 4) e outros mods que terminam em `.asi` também podem precisar de uma
 > atualização: confira as páginas deles. Baixe atualizações só das páginas com link neste guia. Cópias "atualizadas" em

@@ -28,12 +28,16 @@ Never modded GTA before? No problem. Follow the steps in order. Don't skip any. 
 > until Script Hook V's maker puts out a new version. Reinstalling the HUD or the game won't help.
 >
 > **To check after an update:**
-> 1. In your game folder, right-click **`GTA5_Enhanced.exe`** → **Properties** → **Details**, and look at
->    **File version** (like `1.0.1158.13`).
-> 2. On the [Script Hook V page](http://www.dev-c.com/gtav/scripthookv/), look at **Supported patches**. The second
->    number is for Enhanced.
-> 3. Is your game's number newer? Then Script Hook V may not work with it yet. Wait until the page lists it, then redo
+> 1. Start the game. Does a Script Hook V message say **"unknown game version"**? Then it doesn't work with your game
+>    yet. Wait until the [Script Hook V page](http://www.dev-c.com/gtav/scripthookv/) has a new version, then redo
 >    Step 2.
+> 2. No message? Open **`ScriptHookV.log`** in your game folder with Notepad. A line with **"Success, game version is"**
+>    means Script Hook V works with your game, even if the version it names is older than yours. If mods still don't
+>    load, see "Something went wrong?" below.
+>
+> 💡 Don't go by version numbers alone. **Supported patches** on the Script Hook V page can be behind: in November 2026
+> it listed `1.0.1158.13`, and Script Hook V also ran on `1.0.1158.16`, the game's version then. Your game's number is
+> under `GTA5_Enhanced.exe` → **Properties** → **Details** → **File version**.
 >
 > SHVDNE (Step 3), OpenRPF (Step 4) and other mods ending in `.asi` can need an update too: check their pages.
 > Only download updates from the pages linked in this guide. "Updated" copies on other sites can be fake.
