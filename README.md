@@ -22,9 +22,7 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 
 > [!IMPORTANT]
 > ### 💬 Need help? Join our support Discord
-> This version is a **fork of FBICat's VI HUD** with extra features, so it has its own support:
 > **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
-> FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
 > [!WARNING]
 > ### 🌐 English only
