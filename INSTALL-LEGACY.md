@@ -423,6 +423,44 @@ Installing or updating the HUD afterwards only raises a limit that's too low. So
 
 ---
 
+## Optional: Wanted Reworked
+
+**What you get:** **Wanted Reworked** by **ThatsPella**. Police and witnesses have to see you and recognise you, with
+markers that show it, and it brings its own surrender and arrests.
+**What you need:** the HUD installed, and **`WantedReworked.oiv`** from its download (**`WantedReworked+RDE.oiv`** if you
+use Rebalanced Dispatch Enhanced).
+
+> [!NOTE]
+> Not tested together with the HUD yet.
+> Something off with Wanted Reworked and the HUD together? Tell us on Discord or in a GitHub issue.
+
+### Part 1: Install it, then the HUD again
+
+1. In OpenIV, click **Tools** → **Package Installer**.
+2. Pick **`WantedReworked.oiv`**, and **mods folder**, like in Step 6.
+3. Install the HUD again (Step 6).
+
+💡 Both put their own `frontend.xml` in `update.rpf`, and the game uses the one installed last.
+The HUD's keeps GTA's own radar off the screen, so it can't show up as a second, empty minimap in story missions.
+Wanted Reworked's mainly changes the order of GTA's own wanted stars, cash and weapon icon at the top right.
+So install the HUD last, and again after you update Wanted Reworked.
+
+### Part 2: Both change the police
+
+Wanted Reworked and the HUD both change the police: witnesses who report you, surrendering, stun guns and arrests.
+If the police act oddly, or two surrender prompts come up, turn the HUD's off:
+
+- In **`scripts\ViExtras.ini`**, under **`[Switches]`**:
+  - `PoliceArrests = False` (the HUD's arrests, and its surrender with E)
+  - `StunGuns = False`
+  - `Witnesses = False`
+  - `CalmerPolice = False`
+- In **`scripts\GTA6Hud.ini`**, under **`[Police]`**: `SmartAiEnabled = False`
+
+The HUD's stars, wanted box and police lights keep working.
+
+---
+
 ## Optional: Los Santos RED
 
 **What you get:** **Los Santos RED** (LSR) by **Greskrendtregk**. It turns the game into a crime sandbox.
@@ -570,6 +608,7 @@ Or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 | The HUD doesn't show, and `ScriptHookVDotNet.log` in your game folder says **"Blocking script!"** for **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET stops a script that keeps the game waiting longer than 5 seconds. The HUD loads its pictures, sounds and settings while the game is still loading, and on a slower PC or a hard drive that can take longer.<br>1. Close the game.<br>2. Open **`ScriptHookVDotNet.ini`** in your game folder with Notepad.<br>3. Change **`ScriptTimeoutThreshold=5000`** to **`ScriptTimeoutThreshold=30000`**. No such line? Add it.<br>4. Save the file and start the game.<br>💡 This only gives scripts longer. One that's really stuck now freezes the game for up to 30 seconds before it's stopped.<br>**Still happening?** Install the mod again with OpenIV run as administrator (Step 6).<br>**Still not fixed?** Ask for help (see "Something else") and attach `scripts\GTA6Hud.perf.log`: its **STUCK** line says what the HUD was busy with. |
 | You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts.<br>The HUD spots this itself: it says so in the feed and fixes it for the next start, so restart GTA V once.<br>It says it couldn't, or you're on 2.7.3 or older? Clear the cache by hand:<br>1. Close the game.<br>2. Press **Win + R**.<br>3. Type `%LOCALAPPDATA%\assembly` and press **Enter**.<br>4. Delete the **`dl3`** folder (it's only a cache).<br>Still the old version? Install it again with OpenIV run as administrator (Step 6).<br>Or copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | `ViMinimap.asi` isn't next to `GTA5.exe`.<br>Redo Step 7. |
+| A **second, empty minimap** (GTA's own radar) shows up in story missions, since you installed another mod into `update.rpf`, such as **Wanted Reworked** | That mod brought its own `frontend.xml`, which replaced the HUD's. The HUD's keeps GTA's radar off the screen.<br>Install the HUD again (Step 6), after the other mod.<br>Using Wanted Reworked? See "Optional: Wanted Reworked" above. |
 | The game **closes a few seconds after you load in**, or when **On Demand** starts a song | `ViPreload.asi` isn't next to `GTA5.exe`.<br>Redo Step 7. |
 | Your game folder has **`MiniMap.asi`** or **`MiniMapHudPresent.asi`** (from another 3D minimap mod or an older install) | 1. Delete it.<br>2. Delete **`scripts\MiniMap.dll`** too, if it's there. (The HUD's is `scripts\ViMinimap.dll`.)<br>3. Keep **`ViMinimap.asi`** next to `GTA5.exe`.<br>💡 It's an older copy of the minimap plugin. The HUD brings its own copy as `ViMinimap.asi`. Two copies loaded at once get in each other's way. |
 | The game **crashes while loading** | 1. Install the mod again (Step 6). It raises the game limits the HUD needs.<br>2. Have other big mods (extra characters, maps)? Try turning them off. |
