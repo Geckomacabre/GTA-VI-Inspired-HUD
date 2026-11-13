@@ -279,6 +279,13 @@ the radio wheel: each subfolder becomes a station of its own. Chase music goes i
 
 Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 
+### 🔊 Recommended with it
+
+- **[DeathVI SFX](https://www.gta5-mods.com/misc/deathvi-sfx)** by **ZennoxTheModder** (Legacy and Enhanced): GTA VI's death
+  sound in place of GTA V's, to go with the HUD's GTA VI-style WASTED screen. It replaces two of the game's sound files
+  (`frontend.awc` in `RESIDENT.rpf` and `offmission_wasted.awc` in `SCRIPT.rpf`), which the HUD doesn't change, so it
+  doesn't matter which you install first. It's a separate mod: get it from its page and follow its own install steps.
+
 ---
 
 ## ⚠️ Known bugs (being fixed)
