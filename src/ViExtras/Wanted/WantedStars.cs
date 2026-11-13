@@ -84,7 +84,7 @@ namespace ViExtras
 
         public WantedStars()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             On = Config.Get("WantedStars", "Enabled", true);
             _flashMs = Math.Max(100, Config.Get("WantedStars", "FlashMs", 900));
             _sightHoldMs = Math.Max(0, Config.Get("WantedStars", "SightHoldMs", 2000));

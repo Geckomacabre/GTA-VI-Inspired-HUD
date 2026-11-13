@@ -29,7 +29,7 @@ namespace ViExtras
 
         public CacheCheck()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             if (!Config.Get("CacheCheck", "Enabled", true)) return;
             Tick += OnTick;
         }

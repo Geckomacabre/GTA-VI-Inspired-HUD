@@ -58,7 +58,7 @@ namespace ViExtras
 
         public BankCustomers()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Config.Switches, "BankCustomers", true);
             if (!_enabled) return;
             LoadSites();

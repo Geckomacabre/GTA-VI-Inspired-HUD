@@ -125,7 +125,7 @@ namespace ViExtras
 
         public Crosshair()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             On = Config.Get("Crosshair", "Enabled", true);
             KillMarksOn = Config.Get("Crosshair", "KillMarks", true);
             _armedWith = Config.Get("Crosshair", "ArmedWith", 4);

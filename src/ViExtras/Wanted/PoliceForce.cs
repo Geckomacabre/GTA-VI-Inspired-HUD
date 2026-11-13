@@ -104,7 +104,7 @@ namespace ViExtras
 
         public PoliceForce()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             const string S = "PoliceForce";
             _enabled = Config.Get(S, "Enabled", true);
             _stunGuns = Config.Get(S, "StunGuns", true);   // False: their own guns, as in GTA V; surrender and arrests stay

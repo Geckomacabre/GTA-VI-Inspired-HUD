@@ -57,7 +57,7 @@ namespace ViExtras
         public Lspdfr()
         {
             if (!Installed) return;
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             Tick += OnTick;
         }
 

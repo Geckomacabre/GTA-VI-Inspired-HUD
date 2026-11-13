@@ -148,12 +148,12 @@ O OpenRPF deixa o jogo carregar mods de uma **pasta `mods`** separada. Os arquiv
 ### Parte 1: Pegue o mod
 
 1. Vá até a [**página de Releases**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Em **Assets**, baixe o **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`**. É o mod, uns 100 MB.
+2. Em **Assets**, baixe o **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`**. É o mod, uns 100 MB.
    Ele também ativa o mod no jogo, então não tem nenhum patch separado para baixar.
 
-❌ Não baixe o `GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv`. Ele é para a outra versão e vai fazer o Enhanced dar crash.
+❌ Não baixe o `GTA-VI-Inspired-HUD-2.8.2-Legacy.oiv`. Ele é para a outra versão e vai fazer o Enhanced dar crash.
 
-💡 O número no nome do arquivo é a versão (2.8.1 aqui). Assim você sempre sabe qual instalou.
+💡 O número no nome do arquivo é a versão (2.8.2 aqui). Assim você sempre sabe qual instalou.
 Diga qual é quando pedir ajuda.
 
 ### Quer jogar como a Lucia?
@@ -196,7 +196,7 @@ a instalação pode deixar os arquivos antigos no lugar.
 
 1. Abra a pasta do OIV Package Installer.
 2. Rode o **`CodeWalker.OIVInstaller.exe`** do jeito que a tabela diz.
-3. Arraste o **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** para a janela dele. (Ou clique em **Browse** e escolha ele.)
+3. Arraste o **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`** para a janela dele. (Ou clique em **Browse** e escolha ele.)
 4. Ele pede a sua pasta do jogo. Escolha a pasta com o **`GTA5_Enhanced.exe`**.
 5. Clique em **Install**.
 6. Espere até terminar.
@@ -788,6 +788,7 @@ Encontre o que está acontecendo com você na coluna da esquerda. Faça o que a 
 | O HUD não aparece, e o `ScriptHookVDotNet.log` na sua pasta do jogo diz **"Blocking script!"** para o **GTA6Hud**, "terminated because it caused the game to freeze too long" | O Script Hook V .NET para qualquer script que deixe o jogo esperando mais de 5 segundos. O HUD carrega as imagens, os sons e as configurações dele enquanto o jogo ainda está carregando, e num PC mais lento ou num HD isso pode demorar mais.<br>1. Feche o jogo.<br>2. Abra **`ScriptHookVDotNet.ini`** na sua pasta do jogo no Bloco de Notas.<br>3. Troque **`ScriptTimeoutThreshold=5000`** por **`ScriptTimeoutThreshold=30000`**. Não tem essa linha? Adicione.<br>4. Salve o arquivo e inicie o jogo.<br>💡 Isso só dá mais tempo aos scripts. Um que travou de verdade agora congela o jogo por até 30 segundos antes de ser parado.<br>**Ainda acontece?** Instale o mod de novo com o OIV Package Installer rodando como administrador (Passo 6).<br>**Ainda não resolveu?** Peça ajuda (veja "Outra coisa") e anexe `scripts\GTA6Hud.perf.log`: a linha **STUCK** dele diz com o que o HUD estava ocupado. |
 | Você **atualizou** o mod, mas o jogo ainda age como a **versão antiga** | O Script Hook V .NET pode continuar rodando a cópia salva dos scripts antigos.<br>O HUD percebe isso sozinho: ele avisa nas notificações e deixa corrigido para a próxima vez que você iniciar o jogo, então reinicie o GTA V uma vez.<br>Ele diz que não conseguiu, ou você está na 2.7.3 ou mais antiga? Limpe o cache manualmente:<br>1. Feche o jogo.<br>2. Aperte **Win + R**.<br>3. Digite `%LOCALAPPDATA%\assembly` e aperte Enter.<br>4. Apague a pasta **`dl3`**. É só um cache.<br>**Ainda está na versão antiga?** Instale de novo com o OIV Package Installer rodando como administrador (Passo 6). Ou copie os scripts você mesmo: veja "Atualizando manualmente" abaixo. |
 | **Sem minimapa** no carro | Coloque o jogo em **Windowed Borderless** (Passo 7). |
+| O jogo **fecha poucos segundos depois de carregar**, ou quando o **On Demand** começa uma música | Confira se o **`ViPreload.asi`** está na sua pasta do jogo, ao lado do `GTA5_Enhanced.exe`.<br>Não está? Instale o mod de novo (Passo 6), ou copie ele do `.oiv` (veja "Atualizando manualmente" abaixo). |
 | Um erro sobre **.NET** ou **Visual C++** | 1. Instale o [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer).<br>2. Instale o [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe).<br>3. Reinicie o seu PC. |
 | Uma mensagem diz **Lucia is not registered** | A Lucia não vem mais incluída com o HUD (veja o Passo 5).<br>**Não tem ela?** Coloque `Enabled = False` embaixo de `[Lucia]` no `scripts\GTA6Hud.ini`. A mensagem some.<br>**Tem um modelo da Lucia?** O pack dela não está no `dlclist.xml` (com o **NaturalVision Enhanced**, no do NVE). Adicione a linha dele.<br>Se a mensagem falar de um `VIHudSetup.exe`, ignore essa parte: este mod não usa ele. |
 | **Trocar de personagem dá crash**, e o seu jogo não está em inglês | Os jogadores relatam que isso só acontece quando o jogo está em outro idioma.<br>Até ser corrigido: coloque o idioma do GTA V em **inglês** (English) nas configurações do GTA V no seu launcher. |
@@ -809,7 +810,7 @@ Você também pode copiar os scripts novos você mesmo. Um `.oiv` é só um zip.
 Depois disso, as atualizações entram normalmente.
 
 1. Feche o jogo.
-2. Copie o **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** para a sua Área de Trabalho.
+2. Copie o **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`** para a sua Área de Trabalho.
 3. Renomeie a cópia para **`.zip`**.
    Não consegue ver a parte `.oiv` do nome? No Explorador de Arquivos, ligue **Exibir** → **Mostrar** → **Extensões de nomes de arquivos**.
 4. Abra o zip → **`content`** → **`scripts`**.
@@ -818,11 +819,13 @@ Depois disso, as atualizações entram normalmente.
    `C:\Program Files\Rockstar Games\Grand Theft Auto V Enhanced\scripts`.
 7. Escolha **Substituir os arquivos no destino (Replace the files in the destination)**.
 8. Clique em **Continuar (Continue)** quando o Windows pedir permissão de administrador.
-9. Vindo da 2.5.4 ou mais antiga? A 2.5.5 adiciona um pack:
+9. Vindo da 2.8.1 ou mais antiga? A 2.8.2 adiciona um arquivo ao lado do `GTA5_Enhanced.exe`. Copie o **`ViPreload.asi`**
+   da pasta **`content`** do zip para a sua pasta do jogo, ao lado do `GTA5_Enhanced.exe`.
+10. Vindo da 2.5.4 ou mais antiga? A 2.5.5 adiciona um pack:
     1. Copie a pasta **`content`** → **`dlcpacks`** → **`vihud`** do zip para **`mods\update\x64\dlcpacks`** na
        sua pasta do jogo.
     2. Instale o mod uma vez com o OIV Package Installer, como no Passo 6. Isso ativa o pack novo.
-10. Inicie o jogo. O `scripts\ViExtras.log` agora começa com uma linha `==== ViExtras …`.
+11. Inicie o jogo. O `scripts\ViExtras.log` agora começa com uma linha `==== ViExtras …`.
     Ela mostra a versão que você baixou. Aparece uma versão mais antiga? Os arquivos novos não foram copiados.
 
 ---
@@ -840,7 +843,7 @@ NVE.
 
 ### Ou na mão
 
-1. Na sua **pasta do jogo**, apague o **`ViMinimap.asi`**.
+1. Na sua **pasta do jogo**, apague o **`ViMinimap.asi`** e o **`ViPreload.asi`**.
 2. Abra a pasta **`scripts`**.
 3. Apague estes:
    - **`GTA6Hud.dll`**

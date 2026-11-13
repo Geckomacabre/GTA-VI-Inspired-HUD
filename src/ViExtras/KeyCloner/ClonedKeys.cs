@@ -39,7 +39,7 @@ namespace ViExtras
 
         public ClonedKeys()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Config.Switches, "ClonedKeySound", true);
             _volume = Num.Clamp(Config.Get("ClonedKeys", "Volume", 100), 0, 100) / 100f;
             _sound = Path.Combine(Paths.Root, "KeyCloner", "pin_code_loop.wav");

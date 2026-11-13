@@ -124,10 +124,10 @@ OpenIV mette le mod in una **cartella `mods`** separata. I file originali del gi
 ## Passo 5: Scarica la mod
 
 1. Vai alla [**pagina Releases**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Sotto **Assets**, scarica **`GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv`** (la mod, circa 100 MB).
+2. Sotto **Assets**, scarica **`GTA-VI-Inspired-HUD-2.8.2-Legacy.oiv`** (la mod, circa 100 MB).
    Attiva anche la mod nel gioco. Non c'è nessuna patch separata da scaricare.
 
-❌ Non scaricare `GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`. Quello è per l'altra versione del gioco.
+❌ Non scaricare `GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`. Quello è per l'altra versione del gioco.
 
 **Vuoi giocare con Lucia o Jason?** I loro modelli non sono inclusi.
 
@@ -136,7 +136,7 @@ OpenIV mette le mod in una **cartella `mods`** separata. I file originali del gi
 | **Lucia** | Il suo modello è un lavoro a pagamento di qualcun altro. Prendila dal suo creatore:<br>**[Lucia Caminos su Patreon](https://www.patreon.com/u10507693/posts/lucia-caminos-6-170646256)** o **[MP Jason & Lucia V](https://www.gta5-mods.com/player/mp-jason-lucia-v)** su gta5-mods.com.<br>Oppure usa un altro modello di Lucia.<br>Per metterla nel gioco, vedi "Opzionale: Lucia" più sotto.<br>L'HUD funziona anche senza di lei. |
 | **Jason** | **[Jason Duval](https://www.patreon.com/u10507693/posts/jason-duval-from-168652433)** dallo stesso creatore, oppure **[Jason Duval character from GTA VI](https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en)** su mod-hub.net.<br>Per metterlo nel gioco, vedi "Opzionale: Jason" più sotto. |
 
-💡 Il numero nel nome del file è la versione (qui 2.8.1). Così sai sempre quale hai installato.
+💡 Il numero nel nome del file è la versione (qui 2.8.2). Così sai sempre quale hai installato.
 Indicalo quando chiedi aiuto.
 
 ---
@@ -150,7 +150,7 @@ Allora fai clic destro su **OpenIV** → **Esegui come amministratore (Run as ad
 💡 Windows permette solo agli amministratori di modificare i file lì. Senza, l'installazione può lasciare al loro posto i file vecchi.
 
 1. In OpenIV, fai clic su **Tools** → **Package Installer**.
-2. Scegli **`GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv`**.
+2. Scegli **`GTA-VI-Inspired-HUD-2.8.2-Legacy.oiv`**.
 3. Fai clic su **Install**.
 4. Quando ti chiede dove installare, scegli **mods folder** (cartella mods).
 5. Se ti propone di creare la cartella, rispondi di sì.
@@ -161,16 +161,17 @@ Allora fai clic destro su **OpenIV** → **Esegui come amministratore (Run as ad
 
 ---
 
-## Passo 7: Controlla un file
+## Passo 7: Controlla due file
 
-Cerca **`ViMinimap.asi`** nella tua **cartella del gioco**. Deve stare proprio accanto a `GTA5.exe`.
+Cerca **`ViMinimap.asi`** e **`ViPreload.asi`** nella tua **cartella del gioco**. Devono stare proprio accanto a `GTA5.exe`.
 
-| C'è? | Cosa fare |
+| Ci sono? | Cosa fare |
 | --- | --- |
 | **Sì** | Perfetto, vai al Passo 8. |
-| **No** | 1. Apri la cartella **`mods`** nella cartella del gioco.<br>2. Trova **`ViMinimap.asi`**.<br>3. Spostalo accanto a **`GTA5.exe`**. |
+| **No** | 1. Apri la cartella **`mods`** nella cartella del gioco.<br>2. Trova **`ViMinimap.asi`** e **`ViPreload.asi`**.<br>3. Spostali accanto a **`GTA5.exe`**. |
 
-💡 Senza questo file, la minimappa non si vede.
+💡 Senza `ViMinimap.asi`, la minimappa non si vede. Senza `ViPreload.asi`, il gioco può crashare pochi secondi dopo il
+caricamento, o quando parte la tua musica.
 
 ---
 
@@ -570,6 +571,7 @@ Oppure [apri una segnalazione](https://github.com/Geckomacabre/GTA-VI-Inspired-H
 | L'HUD non si vede, e `ScriptHookVDotNet.log` nella cartella del gioco dice **"Blocking script!"** per **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET ferma uno script che fa aspettare il gioco più di 5 secondi. L'HUD carica immagini, suoni e impostazioni mentre il gioco sta ancora caricando, e su un PC più lento o su un disco rigido può volerci di più.<br>1. Chiudi il gioco.<br>2. Apri **`ScriptHookVDotNet.ini`** nella cartella del gioco con Blocco note.<br>3. Cambia **`ScriptTimeoutThreshold=5000`** in **`ScriptTimeoutThreshold=30000`**. La riga non c'è? Aggiungila.<br>4. Salva il file e avvia il gioco.<br>💡 Così gli script hanno solo più tempo. Uno che si è davvero piantato ora congela il gioco fino a 30 secondi prima di essere fermato.<br>**Succede ancora?** Reinstalla la mod con OpenIV eseguito come amministratore (Passo 6).<br>**Ancora niente?** Chiedi aiuto (vedi "Qualcos'altro") e allega `scripts\GTA6Hud.perf.log`: la sua riga **STUCK** dice cosa stava facendo l'HUD. |
 | Hai **aggiornato** la mod, ma il gioco si comporta ancora come la **versione vecchia** | Script Hook V .NET può continuare a usare la sua copia salvata dei vecchi script.<br>L'HUD se ne accorge da solo: te lo dice nelle notifiche e lo sistema per la prossima volta che avvii il gioco, quindi riavvia GTA V una volta.<br>Dice che non ci è riuscito, o hai la 2.7.3 o una versione precedente? Svuota la cache a mano:<br>1. Chiudi il gioco.<br>2. Premi **Win + R**.<br>3. Scrivi `%LOCALAPPDATA%\assembly` e premi **Enter**.<br>4. Elimina la cartella **`dl3`** (è solo una cache).<br>Ancora la versione vecchia? Reinstallala con OpenIV eseguito come amministratore (Passo 6).<br>Oppure copia tu gli script: vedi "Aggiornare a mano" più sotto. |
 | **Niente minimappa** in auto | `ViMinimap.asi` non è accanto a `GTA5.exe`.<br>Rifai il Passo 7. |
+| Il gioco **si chiude pochi secondi dopo il caricamento**, o quando **On Demand** fa partire una canzone | `ViPreload.asi` non è accanto a `GTA5.exe`.<br>Rifai il Passo 7. |
 | Nella cartella del gioco c'è **`MiniMap.asi`** o **`MiniMapHudPresent.asi`** (da un'altra mod di minimappa 3D o da un'installazione più vecchia) | 1. Eliminalo.<br>2. Elimina anche **`scripts\MiniMap.dll`**, se c'è. (Quello dell'HUD è `scripts\ViMinimap.dll`.)<br>3. Tieni **`ViMinimap.asi`** accanto a `GTA5.exe`.<br>💡 È una copia più vecchia del plugin della minimappa. L'HUD porta la sua copia come `ViMinimap.asi`. Due copie caricate insieme si danno fastidio a vicenda. |
 | Il gioco **crasha durante il caricamento** | 1. Reinstalla la mod (Passo 6). Alza i limiti del gioco che servono all'HUD.<br>2. Hai altre mod grandi (personaggi extra, mappe)? Prova a disattivarle. |
 | Il gioco **crasha durante il caricamento** da quando hai aggiunto **Forests of San Andreas** o **GTA V Remastered** | I tanti alberi delle mappe possono riempire tre dei pool del gioco.<br>1. In OpenIV, attiva **Edit mode**.<br>2. Apri: `mods` → `update` → `update.rpf` → `common` → `data` → **`gameconfig.xml`**.<br>3. Imposta il `value` di `PoolSize` di **`Building`** a `70000`.<br>4. Imposta **`phInstGta`** a `20000`.<br>5. Imposta **`StaticBounds`** a `20000`.<br>Se un valore è già più alto, lascialo com'è.<br>⚠️ Non installare invece un `gameconfig.xml` diverso. Sostituirebbe quello preparato dall'HUD. (Se l'hai fatto, reinstalla la mod, come nel Passo 6.)<br>Crasha ancora? Aggiungi l'[Heap Adjuster](https://www.gta5-mods.com/tools/heapadjuster), che consiglia anche la guida delle mappe stesse. |
@@ -593,7 +595,7 @@ Dopo, gli aggiornamenti si installano normalmente.
 Un `.oiv` è solo uno zip:
 
 1. Chiudi il gioco.
-2. Copia **`GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv`** sul Desktop.
+2. Copia **`GTA-VI-Inspired-HUD-2.8.2-Legacy.oiv`** sul Desktop.
 3. Rinomina la copia in **`.zip`**.
 
    💡 Non vedi la parte `.oiv` del nome? In Esplora file, attiva **Visualizza** → **Mostra** → **Estensioni nomi file**.
@@ -603,10 +605,12 @@ Un `.oiv` è solo uno zip:
    Per esempio: `C:\Program Files\Rockstar Games\Grand Theft Auto V\scripts`.
 7. Scegli **Sostituisci i file nella destinazione (Replace the files in the destination)**.
 8. Fai clic su **Continua (Continue)** quando Windows chiede il permesso di amministratore.
-9. **Arrivi dalla 2.5.4 o da una versione precedente?** La 2.5.5 aggiunge un pack. Fai anche questo:
+9. **Arrivi dalla 2.8.1 o da una versione precedente?** La 2.8.2 aggiunge un file accanto a `GTA5.exe`. Copia
+   **`ViPreload.asi`** dalla cartella **`content`** dello zip nella tua cartella del gioco, accanto a `GTA5.exe`.
+10. **Arrivi dalla 2.5.4 o da una versione precedente?** La 2.5.5 aggiunge un pack. Fai anche questo:
     - Copia la cartella **`content`** → **`dlcpacks`** → **`vihud`** dello zip in **`mods\update\x64\dlcpacks`** nella tua cartella del gioco.
     - Installa la mod una volta con OpenIV, come nel Passo 6. Questo attiva il nuovo pack.
-10. Avvia il gioco.
+11. Avvia il gioco.
 
 ✅ Ora `scripts\ViExtras.log` inizia con una riga `==== ViExtras …`. Mostra la versione che hai scaricato. C'è una versione più vecchia? I file nuovi non sono stati copiati.
 
@@ -614,7 +618,7 @@ Un `.oiv` è solo uno zip:
 
 ## Come rimuovere la mod
 
-1. Nella tua **cartella del gioco**, elimina **`ViMinimap.asi`**.
+1. Nella tua **cartella del gioco**, elimina **`ViMinimap.asi`** e **`ViPreload.asi`**.
 2. Apri la cartella **`scripts`**.
 3. Elimina questi:
    - **`GTA6Hud.dll`**

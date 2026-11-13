@@ -43,7 +43,7 @@ namespace ViExtras
 
         public PatrolsKeepMoving()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             if (!Config.Get("BountyPatrols", "KeepMoving", true)) return;
             _stillMs = (int)(Math.Max(3f, Config.Get("BountyPatrols", "StillSeconds", 10f)) * 1000f);
             Interval = CheckMs;

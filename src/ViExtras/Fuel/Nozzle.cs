@@ -77,7 +77,7 @@ namespace ViExtras
 
         public Nozzle()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Config.Switches, "FuelNozzle", true);
             _secondsPerTank = Math.Max(2f, Config.Get("Nozzle", "SecondsPerTank", 20f));
             _hoseLength = Num.Clamp(Config.Get("Nozzle", "HoseLength", 6f), 2f, 12f);

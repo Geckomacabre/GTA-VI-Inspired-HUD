@@ -35,8 +35,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 > [!TIP]
 > ## 🔄 Updating? Just one file
 > **Already have 2.5.1 or newer?** Install the new HUD package over the old one, the same way as before:
-> - **Legacy:** `GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv` with OpenIV, to the **mods folder**.
-> - **Enhanced:** `GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv` with the OIV Package Installer.
+> - **Legacy:** `GTA-VI-Inspired-HUD-2.8.2-Legacy.oiv` with OpenIV, to the **mods folder**.
+> - **Enhanced:** `GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv` with the OIV Package Installer.
 >
 > **No more RegisterPatch:** the HUD package now switches its own packs on, so there's nothing else to install.
 >
@@ -84,6 +84,20 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 <sub>BuckMe (your bank) and your wallet at the top right. An empty one turns grey.</sub>
 
 ---
+
+## 🆕 New in 2.8.2
+
+- **Fixed: a crash a few seconds after loading in**, and one when **On Demand** starts your first song. The new
+  `ViPreload.asi` goes next to `ViMinimap.asi`.
+- **Fixed: a crash when GTA reloads the game**, as when you leave a mission replay or load a save.
+- **Fixed: a second, empty minimap in story missions.** GTA's own radar can't come back over the HUD's any more.
+- **Fixed:** replaying a mission from the pause menu loaded forever, the minimap could stay gone after a long loading
+  screen, dealership cars stood in mission scenes at Simeon's, and on Legacy cars got softer with every reload.
+- **Dive shops.** Buy scuba gear ($1,500) at a marina (the diver on the map), then **DIVE** in deep water takes you
+  under, in the game's own scuba gear.
+- **WASTED looks like GTA VI's**: its grey word and size, its low camera and dark edges, and its ending, the word
+  turning red on black.
+- The bank and Vangelico icons can come off the map: `GTA6Hud.ini` `[Heists] MapBlips = False`.
 
 ## 🆕 New in 2.8.1
 
@@ -223,6 +237,7 @@ or **[Enhanced](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/ext
 | Minimap | Get in a car (it also shows when you're wanted) |
 | Radio | Hold GTA's radio button in a car (**Q**; controller: **D-pad Left**). **O** mutes it (controller: click the right stick while the wheel is open) |
 | Your own music (On Demand) | In the radio wheel, press **Down** (controller: right stick down). **Left / Right** (right stick) switch between your stations (each folder in `CustomMusic` is one), the **mouse wheel** (D-pad Right / Up) changes the song, **Up** goes back to the radio |
+| Scuba diving | Buy scuba gear at a dive shop (the diver on the map). Swimming over deep water, press **H** (controller: **Square**) at **DIVE** |
 | Nitrous | Hold **Left Shift** (controller: **X** / **Square**) in a car with a bottle |
 | Fill up at a gas station | On foot, **E** at a pump takes the nozzle, **E** at the car's fuel cap puts it in. Or stop at a pump in the car and hold **E** for SERVICES |
 | Mod your car | Drive into a **Los Santos Customs** garage and stop. Hold **Backspace** (or **B**) 2 s to leave from anywhere |

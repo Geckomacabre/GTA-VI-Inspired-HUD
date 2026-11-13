@@ -1,4 +1,5 @@
     <archive path="update\update.rpf" createIfNotExist="True" type="RPF7">
+      <add source="ui\frontend.xml">common\data\ui\frontend.xml</add>
       <xml path="common\data\gameconfig.xml">
         <add xpath="/fwAllConfigs/ConfigArray/Item/Config/PoolSizes/Entries/Item[PoolName='MetaDataStore']" append="Last">
           <ViHudScratch />

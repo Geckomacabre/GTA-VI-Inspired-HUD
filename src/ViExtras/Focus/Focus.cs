@@ -52,7 +52,7 @@ namespace ViExtras
 
         public Focus()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get("Focus", "Enabled", true);
             _abilityLook = Config.Get("Focus", "AbilityLook", true);
             _replaceAbilityFx = Config.Get("Focus", "ReplaceAbilityEffects", true);

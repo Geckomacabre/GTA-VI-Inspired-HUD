@@ -63,6 +63,13 @@ namespace ViExtras
             EnhancedPlayerInfo.TurnOff();
         }
 
+        /// <summary>Init(script.BaseDirectory), and ConsoleGuard on the script.</summary>
+        public static void Init(Script script)
+        {
+            Init(script.BaseDirectory);
+            ConsoleGuard.Arm(script);
+        }
+
         // The first line of every session in the log: which build this is (version and the
         // time it was built), on which game, under which Script Hook V .NET. What to ask a
         // player for when something goes wrong.
@@ -88,6 +95,40 @@ namespace ViExtras
             catch { }
             try { hook = typeof(Script).Assembly.GetName().Name + " " + typeof(Script).Assembly.GetName().Version; } catch { }
             return "==== " + Name + " " + me + " on " + game.Trim() + " (" + hook + ") ====";
+        }
+    }
+
+    /// <summary>
+    /// Keeps Script Hook V .NET's console out of the way while it stops every script, which it
+    /// does whenever GTA reloads (loading a save, leaving a mission replay). It stops them one
+    /// after another without waiting, so each stopped script's thread writes its "Aborted script"
+    /// line at the same moment as the others, and the console's line queue isn't thread-safe:
+    /// two writes at once made it throw (ArgumentException in Queue.SetCapacity, under
+    /// Console.AddLines), nothing caught it, and .NET closed the game (Legacy, 2026-11-13, right
+    /// after a mission replay). SHVDN only writes to the console while the script domain's
+    /// "Console" entry holds it, so the first of these scripts told it's stopping on the thread
+    /// that started them (a reload, or SHVDN's own "Blocking script" timeout) clears that entry:
+    /// the rest of the shutdown goes to ScriptHookVDotNet.log only. A script that stops itself
+    /// after an error does so on its own thread and is left alone. The next reload makes a new
+    /// domain, with the console back.
+    /// </summary>
+    internal static class ConsoleGuard
+    {
+        private static int _startThread = -1;
+        private static bool _done;
+
+        public static void Arm(Script script)
+        {
+            if (_startThread < 0) _startThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            script.Aborted += Quiet;
+        }
+
+        private static void Quiet(object sender, EventArgs e)
+        {
+            if (_done || System.Threading.Thread.CurrentThread.ManagedThreadId != _startThread) return;
+            _done = true;
+            try { AppDomain.CurrentDomain.SetData("Console", null); } catch { }
+            Log.Write(Paths.Name, "Script Hook V .NET is stopping the scripts: its console is left out until they're all stopped");
         }
     }
 

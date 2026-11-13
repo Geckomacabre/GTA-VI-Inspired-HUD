@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{5e1f0c7a-2b8d-4c35-9a61-7d0e4b9f2c18}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.8.1 (GTA V Enhanced)</name>
-    <version><major>2</major><minor>8</minor><tag>ENHANCED 2.8.1</tag></version>
+    <name>GTA VI-Inspired HUD 2.8.2 (GTA V Enhanced)</name>
+    <version><major>2</major><minor>8</minor><tag>ENHANCED 2.8.2</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[GTA VI-Inspired HUD for GTA V ENHANCED (the 2025 PC version, GTA5_Enhanced.exe). Maintained by Geckomacabre.
 Fan-made and inspired by GTA VI. Not affiliated with Rockstar Games or Take-Two. Some HUD art is taken from
@@ -27,15 +27,18 @@ INSTALL - to your mods folder
   https://mod-hub.net/mod/personazh-jason-duval-z-gta-vi-dlya-gta-5/?lang=en
   Game in C:\Program Files? Start the OIV Package Installer (CodeWalker.OIVInstaller.exe) with right-click >
   Run as administrator, or the install can leave the old files in place.
-  ViMinimap.asi must end up next to GTA5_Enhanced.exe; the minimap needs it to draw in fullscreen.
+  ViMinimap.asi and ViPreload.asi must end up next to GTA5_Enhanced.exe: the minimap needs the first to draw in
+  fullscreen, and the second keeps the game from crashing when the minimap and your own music start.
 
 What it installs: the HUD (scripts\GTA6Hud.dll, scripts\Hud\, GTA6Hud.ini), the 3D minimap (scripts\ViMinimap.dll,
-MiniMap.* data, ViMinimap.asi), and the packs vihud (FBICat's 2.1 HUD art and movies), vihudfonts and vihudanims - gen9.
+MiniMap.* data, ViMinimap.asi), ViPreload.asi (loads parts of Windows the minimap and On Demand need when the game
+starts, so they never load mid-game), and the packs vihud (FBICat's 2.1 HUD art and movies), vihudfonts and vihudanims - gen9.
 What it removes: an older minimap plugin (MiniMap.asi, MiniMapHudPresent.asi, scripts\MiniMap.dll), which would draw
 over this one, and what FBICat's 2.1 left that no version uses since (a lighting file, its music and bundled songs).
 A Lucia you added stays.
 Registration, in update.rpf: the 3 packs in dlclist.xml; gameconfig.xml MetaDataStore 4000, ExprDictStore 400,
-TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600.
+TxdStore 150000, DwdStore 30000, MaxExtraPedModelInfos 600; frontend.xml with GTA's own radar moved off the screen
+(the HUD draws the minimap, and story missions keep switching GTA's back on).
 Loading screens, in update.rpf\x64\data\cdimages\scaleform_frontend.rpf: FBICat's, with Rockstar's whole Vice City
 pictures (not his landing page; Enhanced keeps its own).
   - 2.5 features (separate scripts; GTA6Hud.dll is FBICat's 2.1 with small fixes: the gun shop on Enhanced, a lighter
@@ -47,6 +50,24 @@ pictures (not his landing page; Enhanced keeps its own).
       scripts\ViCrouch.dll + scripts\ViCrouch\ + ViCrouch.ini     crouch and crawl (GPL-3)
       scripts\ViSwitch.dll                                       character switching: Michael, Franklin, Trevor, Jason and Lucia
 No music: put your own mp3/wav files in scripts\Hud\Music and scripts\Hud\Radio\CustomMusic.
+
+Changes in 2.8.2
+  - No crash a few seconds after loading in, or when On Demand starts your first song: the new ViPreload.asi, next to
+    ViMinimap.asi, loads three parts of Windows when the game starts (the font engine, and what Windows uses to pick
+    a music decoder), so they never load mid-game. It runs no code of its own.
+  - No second, empty minimap in story missions: GTA's own radar, its big map and its golf map now sit off the edge
+    of the screen (frontend.xml in update.rpf), so a mission can't bring it back. The uninstaller puts it back.
+  - Replaying a mission from the pause menu no longer loads forever, and the minimap comes back by itself after a
+    long loading screen.
+  - No crash when GTA reloads (leaving a mission replay, loading a save): Script Hook V .NET's console can't
+    take the "Aborted script" lines of every script at once, so the HUD leaves it out while they stop.
+  - Dive shops: scuba gear is bought ($1,500) at the boathouses at the LSYMC marina, Paleto Bay and the Alamo Sea
+    (the diver on the map). Once you own it, DIVE takes you diving: the game's own scuba gear for your character,
+    GTA's diving turned on, and down you go. The gear comes off a few seconds after you leave the water.
+  - WASTED looks like GTA VI's: its grey word, size and place, a low camera on the body, dark edges and a soft
+    background, and its ending, the word turning red on black before it fades.
+  - No dealership cars in mission scenes at Simeon's.
+  - [Heists] MapBlips = False in GTA6Hud.ini takes the bank and Vangelico icons off the map; the robberies still work.
 
 Changes in 2.8.1
   - The slim jim is a weapon too: once you own one it's also on the weapon wheel's MELEE ring, swung with the

@@ -39,7 +39,7 @@ namespace ViExtras
 
         public WheelWatch()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _overPickups = Config.Get("WeaponWheel", "OverPickups", true);
             Tick += OnTick;
             Aborted += (s, e) => HoldPrompt(false);

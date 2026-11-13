@@ -145,12 +145,12 @@ OpenRPF lets the game load mods from a separate **`mods` folder**. Your original
 ### Part 1: Get the mod
 
 1. Go to the [**Releases page**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest).
-2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`**. It's the mod, about 100 MB.
+2. Under **Assets**, download **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`**. It's the mod, about 100 MB.
    It also switches the mod on in the game, so there's no separate patch to get.
 
-❌ Don't download `GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv`. It's for the other version and will crash Enhanced.
+❌ Don't download `GTA-VI-Inspired-HUD-2.8.2-Legacy.oiv`. It's for the other version and will crash Enhanced.
 
-💡 The number in the file name is the version (2.8.1 here). That way you can always tell which one you installed.
+💡 The number in the file name is the version (2.8.2 here). That way you can always tell which one you installed.
 Mention it when you ask for help.
 
 ### Want to play as Lucia?
@@ -193,7 +193,7 @@ the install can leave the old files in place.
 
 1. Open the OIV Package Installer folder.
 2. Run **`CodeWalker.OIVInstaller.exe`** the way the table says.
-3. Drag **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** onto its window. (Or click **Browse** and pick it.)
+3. Drag **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`** onto its window. (Or click **Browse** and pick it.)
 4. It asks for your game folder. Pick the folder with **`GTA5_Enhanced.exe`**.
 5. Click **Install**.
 6. Wait until it's finished.
@@ -785,6 +785,7 @@ Find what happens to you in the left column. Do what the right column says.
 | The HUD doesn't show, and `ScriptHookVDotNet.log` in your game folder says **"Blocking script!"** for **GTA6Hud**, "terminated because it caused the game to freeze too long" | Script Hook V .NET stops a script that keeps the game waiting longer than 5 seconds. The HUD loads its pictures, sounds and settings while the game is still loading, and on a slower PC or a hard drive that can take longer.<br>1. Close the game.<br>2. Open **`ScriptHookVDotNet.ini`** in your game folder with Notepad.<br>3. Change **`ScriptTimeoutThreshold=5000`** to **`ScriptTimeoutThreshold=30000`**. No such line? Add it.<br>4. Save the file and start the game.<br>💡 This only gives scripts longer. One that's really stuck now freezes the game for up to 30 seconds before it's stopped.<br>**Still happening?** Install the mod again with the OIV Package Installer run as administrator (Step 6).<br>**Still not fixed?** Ask for help (see "Something else") and attach `scripts\GTA6Hud.perf.log`: its **STUCK** line says what the HUD was busy with. |
 | You **updated** the mod, but the game still acts like the **old version** | Script Hook V .NET can keep running its saved copy of the old scripts.<br>The HUD spots this itself: it says so in the feed and fixes it for the next start, so restart GTA V once.<br>It says it couldn't, or you're on 2.7.3 or older? Clear the cache by hand:<br>1. Close the game.<br>2. Press **Win + R**.<br>3. Type `%LOCALAPPDATA%\assembly` and press Enter.<br>4. Delete the **`dl3`** folder. It's only a cache.<br>**Still the old version?** Install it again with the OIV Package Installer run as administrator (Step 6). Or copy the scripts in yourself: see "Updating by hand" below. |
 | **No minimap** in a car | Set the game to **Windowed Borderless** (Step 7). |
+| The game **closes a few seconds after you load in**, or when **On Demand** starts a song | Check that **`ViPreload.asi`** is in your game folder, next to `GTA5_Enhanced.exe`.<br>Missing? Install the mod again (Step 6), or copy it from the `.oiv` (see "Updating by hand" below). |
 | An error about **.NET** or **Visual C++** | 1. Install [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer).<br>2. Install the [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe).<br>3. Restart your PC. |
 | A message says **Lucia is not registered** | Lucia isn't included with the HUD any more (see Step 5).<br>**Don't have her?** Set `Enabled = False` under `[Lucia]` in `scripts\GTA6Hud.ini`. The message goes away.<br>**Have a Lucia model?** Her pack is missing from `dlclist.xml` (with **NaturalVision Enhanced**, from NVE's). Add its line.<br>If the message mentions a `VIHudSetup.exe`, ignore that part: this mod doesn't use it. |
 | **Switching characters crashes**, and your game isn't in English | Players report this only happens when the game is set to another language.<br>Until it's fixed: set GTA V's language to **English** in your game launcher's settings for GTA V. |
@@ -806,7 +807,7 @@ You can also copy the new scripts in yourself. An `.oiv` is just a zip.
 After that, updates go in normally.
 
 1. Close the game.
-2. Copy **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** to your Desktop.
+2. Copy **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`** to your Desktop.
 3. Rename the copy to **`.zip`**.
    Can't see the `.oiv` part of the name? In File Explorer, turn on **View** → **Show** → **File name extensions**.
 4. Open the zip → **`content`** → **`scripts`**.
@@ -815,11 +816,13 @@ After that, updates go in normally.
    `C:\Program Files\Rockstar Games\Grand Theft Auto V Enhanced\scripts`.
 7. Pick **Replace the files in the destination**.
 8. Click **Continue** when Windows asks for admin permission.
-9. Coming from 2.5.4 or older? 2.5.5 adds a pack:
+9. Coming from 2.8.1 or older? 2.8.2 adds a file next to `GTA5_Enhanced.exe`. Copy **`ViPreload.asi`** from the
+   zip's **`content`** folder into your game folder, next to `GTA5_Enhanced.exe`.
+10. Coming from 2.5.4 or older? 2.5.5 adds a pack:
     1. Copy the zip's **`content`** → **`dlcpacks`** → **`vihud`** folder into **`mods\update\x64\dlcpacks`** in
        your game folder.
     2. Install the mod once with the OIV Package Installer, as in Step 6. That switches the new pack on.
-10. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line.
+11. Start the game. `scripts\ViExtras.log` now begins with a `==== ViExtras …` line.
     It shows the version you downloaded. An older version there means the new files didn't go in.
 
 ---
@@ -835,8 +838,9 @@ section.
 2. Drag it onto the **OIV Package Installer** (`CodeWalker.OIVInstaller.exe`), as for the HUD. Game in Program
    Files? Right-click the installer → **Run as administrator** first.
 
-It takes off only the HUD: its scripts, **`ViMinimap.asi`**, its three packs and their lines in `dlclist.xml`, whichever
-version you have. Your other mods stay as they are.
+It takes off only the HUD: its scripts, **`ViMinimap.asi`** and **`ViPreload.asi`**, its three packs and their lines in `dlclist.xml`, whichever
+version you have. It also puts GTA's own minimap back where it was (the HUD moves it off the screen). Your other mods
+stay as they are.
 
 It leaves:
 - **Your progress**, in `scripts\Hud\Save`, in case you come back. Not coming back? Delete the **`scripts\Hud`** folder.
@@ -866,7 +870,7 @@ put the HUD back. Sure you won't need it? Delete the `GTA VI-Inspired HUD ... Un
 
 ### Or by hand
 
-1. In your **game folder**, delete **`ViMinimap.asi`**.
+1. In your **game folder**, delete **`ViMinimap.asi`** and **`ViPreload.asi`**.
 2. Open the **`scripts`** folder.
 3. Delete these:
    - **`GTA6Hud.dll`**, **`ViExtras.dll`**, **`ViWasted.dll`**, **`ViCustoms.dll`**, **`ViCrouch.dll`**,
@@ -880,7 +884,11 @@ put the HUD back. Sure you won't need it? Delete the `GTA VI-Inspired HUD ... Un
 6. Open `mods` → `update` → **`update.rpf`** → `common` → `data` → **`dlclist.xml`**.
 7. Delete the three lines with **`dlcpacks:/vihud/`**, **`dlcpacks:/vihudfonts/`** and **`dlcpacks:/vihudanims/`**.
    Leave every other line as it is, and save.
-8. With NaturalVision Enhanced, also do the three NVE steps above.
+8. Put GTA's own minimap back: open `update` → **`update.rpf`** → `common` → `data` → **`ui`** (the game's own, not
+   the one under `mods`), right-click **`frontend.xml`** → **Extract**, and save it anywhere.
+9. Open `mods` → `update` → **`update.rpf`** → `common` → `data` → **`ui`**, drag that **`frontend.xml`** in, and
+   replace the HUD's copy.
+10. With NaturalVision Enhanced, also do the three NVE steps above.
 
 ✅ Your game is back to normal.
 

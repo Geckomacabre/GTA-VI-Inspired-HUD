@@ -30,7 +30,7 @@ namespace ViExtras
 
         public Gta6HudFeed()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             if (HasPostTicker()) return;
             Tick += OnTick;
         }

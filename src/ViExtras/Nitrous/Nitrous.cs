@@ -78,7 +78,7 @@ namespace ViExtras
 
         public Nitrous()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get("Nitrous", "Enabled", true);
             _fittedBy = Config.Get("Nitrous", "FittedBy", "Shop");
             _defaultTier = Config.Get("Nitrous", "Tier", "Street");

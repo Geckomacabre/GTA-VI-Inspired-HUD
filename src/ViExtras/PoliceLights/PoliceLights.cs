@@ -104,7 +104,7 @@ namespace ViExtras
 
         public PoliceLights()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             const string S = "PoliceLights";
             _enabled = Config.Get(S, "Enabled", true);
             _scanMs = Config.Get(S, "ScanMs", 250);

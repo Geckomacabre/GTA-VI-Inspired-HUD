@@ -1,4 +1,5 @@
     <archive path="update\update.rpf" createIfNotExist="False" type="RPF7">
+      <add source="ui\frontend.xml">common\data\ui\frontend.xml</add>
       <xml path="common\data\dlclist.xml">
         <add xpath="/SMandatoryPacksData" append="Last">
           <ViHudScratch />

@@ -31,7 +31,7 @@ namespace ViExtras
 
         public GameFolder()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             if (!Config.Get("GameFolder", "FixAccess", true)) return;
             try { _game = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName); }
             catch { return; }

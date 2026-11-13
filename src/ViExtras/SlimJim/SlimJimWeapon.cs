@@ -48,7 +48,7 @@ namespace ViExtras
 
         public SlimJimWeapon()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Config.Switches, "SlimJimWeapon", true);
             _damage = Num.Clamp(Config.Get("SlimJim", "WeaponDamage", 0.35f), 0f, 2f);
             Tick += OnTick;

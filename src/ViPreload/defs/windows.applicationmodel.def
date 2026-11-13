@@ -1,0 +1,3 @@
+LIBRARY windows.applicationmodel.dll
+EXPORTS
+  ViPreloadAppModelUnload EXPORTAS DllCanUnloadNow

@@ -27,7 +27,8 @@ namespace ViExtras
 
         public BountyPatrols()
         {
-            _oldBounty = Config.Get(Config.Switches, "OldBountyPatrols", false);
+            ConsoleGuard.Arm(this);
+            _oldBounty =Config.Get(Config.Switches, "OldBountyPatrols", false);
             _freshMs = Config.Get("BountyPatrols", "FreshMinutes", 10) * 60000;
             if (_oldBounty) return;
             Interval = CheckMs;

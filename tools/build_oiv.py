@@ -1,10 +1,10 @@
 """Build the GTA VI-Inspired HUD OIV packages.
 
-    python tools/build_oiv.py legacy         --dlcpacks <folder> [--startscreen <folder>] [--out build]
-    python tools/build_oiv.py enhanced       --dlcpacks <folder> [--startscreen <folder>] [--out build]
+    python tools/build_oiv.py legacy         --dlcpacks <folder> --frontend <frontend.xml> [--startscreen <folder>] [--out build]
+    python tools/build_oiv.py enhanced       --dlcpacks <folder> --frontend <frontend.xml> [--startscreen <folder>] [--out build]
     python tools/build_oiv.py <edition> --loadingscreens --startscreen <folder> [--out build]
     python tools/build_oiv.py <edition> --uninstall --loadingscreens --startscreen <folder> [--out build]
-    python tools/build_oiv.py <edition> --uninstall [--out build]
+    python tools/build_oiv.py <edition> --uninstall --frontend <frontend.xml> [--out build]
 
 --uninstall: the uninstaller (GTA-VI-Inspired-HUD-<version>-Uninstall-<Edition>.oiv,
 from oiv/uninstall-<edition>.xml; the guides link to copies without the version
@@ -68,6 +68,18 @@ one doesn't ("Unable to find XML Node"), which a plain guarded add did on
 every update. The OIV installer for Enhanced runs all adds before the removes,
 which this order needs too.
 
+--frontend: Rockstar's common\\data\\ui\\frontend.xml, taken unchanged from the game's update\\update.rpf (the
+same file for Legacy and Enhanced). The HUD packages and the HUD uninstallers need it.
+- The HUD package installs a copy with GTA's own radar moved off the screen. The <minimap> entries minimap,
+  minimap_mask, minimap_blur, bigmap, bigmap_mask, bigmap_blur and golf_courses get posX - 2.0, and the sizes stay
+  ("Feed MUST match sizeX"). Story missions call DISPLAY_RADAR(true) every frame (Complications' main loop), which
+  beats ViMinimap's DISPLAY_RADAR(false) when the mission's script runs later in the frame, so GTA's radar showed
+  as a second, dark minimap next to the HUD's.
+- The uninstaller puts Rockstar's file back.
+- frontend.xml isn't well-formed XML (comments with "--", attributes with no space between them), so an OIV <xml>
+  edit can't load it: the whole file goes in, as an <add> in register.xml / unregister.xml. Rockstar's file isn't
+  in the repo; the build makes the HUD's copy from it.
+
 --startscreen: every file in that folder goes into the game's
 update\\update.rpf\\x64\\data\\cdimages\\scaleform_frontend.rpf (FBICat's VI start
 screen and our edits to Rockstar's movies). That archive is NG-encrypted, so
@@ -116,7 +128,9 @@ from xml.sax.saxutils import escape
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HUD_PACKS = ("vihud", "vihudfonts", "vihudanims")
-ROOT_FILES = ("ViMinimap.asi",)
+# Next to GTA5.exe / GTA5_Enhanced.exe. ViPreload.asi only loads DirectWrite and three Media Foundation helpers at game
+# start (src/ViPreload): loaded mid-game, their static TLS could crash the game.
+ROOT_FILES = ("ViMinimap.asi", "ViPreload.asi")
 # Already compressed, or too big to be worth deflating; FBICat's packages store these.
 STORED = {".rpf", ".png", ".mp3", ".ogg", ".dds", ".jpg"}
 # Never packaged: player saves and caches the HUD writes at run time.
@@ -157,6 +171,48 @@ OLD_LEFTOVERS = [
 # draw over each other and the icons flicker (iliuha, 2026-11-01). The HUD package deletes it; the uninstaller leaves
 # it, as it may be that other mod's.
 OLD_MINIMAP = ["MiniMap.asi", "MiniMapHudPresent.asi", "scripts\\MiniMap.dll"]
+
+
+# GTA's own radar, off the screen: these frontend.xml <minimap> entries move this far left (screen widths)
+RADAR_ENTRIES = ("minimap", "minimap_mask", "minimap_blur", "bigmap", "bigmap_mask", "bigmap_blur", "golf_courses")
+RADAR_SHIFT = -2.0
+FRONTEND_CONTENT = "ui/frontend.xml"
+
+
+def radar_offscreen(text):
+    """Rockstar's frontend.xml with GTA's own radar moved off the screen (see --frontend)."""
+    moved = []
+
+    def shift(m):
+        line = m.group(0)
+        name = re.search(r'name="([^"]+)"', line).group(1)
+        if name not in RADAR_ENTRIES:
+            return line
+        x = float(re.search(r'posX="([^"]+)"', line).group(1))
+        moved.append((name, x))
+        return re.sub(r'posX="[^"]+"', 'posX="%s"' % format(x + RADAR_SHIFT, ".6f").rstrip("0").rstrip("."), line, count=1)
+
+    out = re.sub(r'<data name="[^"]+"[^>]*/>', shift, text)
+    if sorted(n for n, _ in moved) != sorted(RADAR_ENTRIES):
+        sys.exit(f"frontend.xml: expected the {len(RADAR_ENTRIES)} radar entries once each, found {[n for n, _ in moved]}"
+                 " (is it already the HUD's copy?)")
+    if any(x < -1.0 for _, x in moved):
+        sys.exit("frontend.xml: the radar is already off the screen; pass Rockstar's own file")
+    note = ("\t\t<!-- GTA VI-Inspired HUD: GTA's own radar (and its big map / golf map) sits 2.0 screen widths off the left\n"
+            "\t\t     edge, because the HUD's minimap draws the minimap and story missions switch GTA's radar back on every\n"
+            "\t\t     frame. Original posX: " + ", ".join(f"{n} {x:g}" for n, x in moved) + ". -->\n")
+    out, n = re.subn(r'(<minimap v="[^"]*">\r?\n)', lambda m: m.group(1) + note, out, count=1)
+    if n != 1:
+        sys.exit("frontend.xml: no <minimap> block")
+    return out
+
+
+def read_frontend(path):
+    raw = open(path, "rb").read()
+    text = raw.decode("utf-8-sig")
+    if "<minimap" not in text or "<frontend>" not in text:
+        sys.exit(f"{path} isn't GTA's frontend.xml")
+    return raw, text
 
 
 def template(name):
@@ -298,6 +354,8 @@ def main():
     ap.add_argument("--startscreen", help="folder of files for update.rpf's scaleform_frontend.rpf")
     ap.add_argument("--loadingscreens", action="store_true", help="build the optional loading screens package only")
     ap.add_argument("--uninstall", action="store_true", help="build the uninstaller")
+    ap.add_argument("--frontend", help="Rockstar's common/data/ui/frontend.xml from the game's update.rpf "
+                                       "(the HUD package and the HUD uninstaller)")
     ap.add_argument("--out", default=os.path.join(ROOT, "build"))
     args = ap.parse_args()
 
@@ -333,6 +391,17 @@ def main():
         deletes = OLD_MINIMAP + OLD_LEFTOVERS
     if args.startscreen:
         startscreen = collect_startscreen(args.edition, args.startscreen)
+    # the HUD package and its uninstaller carry frontend.xml (register.xml / unregister.xml add it to update.rpf)
+    frontend = None
+    if not args.loadingscreens:
+        if not args.frontend:
+            ap.error("--frontend (Rockstar's frontend.xml from update.rpf) is needed for the HUD package and its uninstaller")
+        raw, text = read_frontend(args.frontend)
+        if "GTA VI-Inspired HUD" in text:
+            ap.error("--frontend is the HUD's copy; pass Rockstar's own (from the game's update.rpf, not the mods copy)")
+        frontend = raw if args.uninstall else radar_offscreen(text).encode("utf-8")
+    elif args.frontend:
+        ap.error("--loadingscreens packages don't take --frontend")
 
     os.makedirs(args.out, exist_ok=True)
     out = os.path.join(args.out, output_name(args.edition, part))
@@ -342,7 +411,9 @@ def main():
         write_entry(zf, "icon.png", src=os.path.join(ROOT, "oiv", "icon.png"))
         for src, content, _ in files + startscreen:
             write_entry(zf, "content/" + content, src=src)
-        if not files and not startscreen:
+        if frontend is not None:
+            write_entry(zf, "content/" + FRONTEND_CONTENT, data=frontend)
+        if not files and not startscreen and frontend is None:
             write_entry(zf, "content/PLACEHOLDER", data=b"OpenIV needs a content folder; this package installs nothing.\r\n")
     os.replace(tmp, out)
 

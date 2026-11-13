@@ -31,7 +31,7 @@ namespace ViExtras
 
         public WheelSteer()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             if (!Config.Get("WeaponWheel", "MouseSteer", true)) return;
             Tick += OnTick;
             Aborted += (s, e) => Release();

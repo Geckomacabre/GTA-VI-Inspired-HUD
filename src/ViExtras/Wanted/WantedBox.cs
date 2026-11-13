@@ -62,7 +62,7 @@ namespace ViExtras
 
         public WantedBox()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             On = Config.Get("WantedBox", "Enabled", true);
             _indoorCameras = Config.Get("WantedBox", "IndoorCameras", true);
             Tick += OnTick;

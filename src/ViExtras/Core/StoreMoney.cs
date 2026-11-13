@@ -29,7 +29,8 @@ namespace ViExtras
 
         public StoreMoney()
         {
-            On = Config.Get(Config.Switches, "MoneyInStores", true);
+            ConsoleGuard.Arm(this);
+            On =Config.Get(Config.Switches, "MoneyInStores", true);
             Tick += OnTick;
         }
 

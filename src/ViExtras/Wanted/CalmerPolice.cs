@@ -39,7 +39,8 @@ namespace ViExtras
 
         public CalmerPolice()
         {
-            On = Config.Get(Config.Switches, "CalmerPolice", true);
+            ConsoleGuard.Arm(this);
+            On =Config.Get(Config.Switches, "CalmerPolice", true);
             _delayMul = Math.Max(1f, Config.Get("CalmerPolice", "SpawnDelayMultiplier", 2f));
             _spawnDistance = Config.Get("CalmerPolice", "SpawnDistance", 300f);
             _escapeMs = Math.Max(0, Config.Get("CalmerPolice", "EscapeSeconds", 10)) * 1000;

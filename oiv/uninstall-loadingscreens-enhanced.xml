@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{72074969-e30a-4fc6-b09e-9cef4b35beca}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.8.1 Loading Screens Uninstaller (GTA V Enhanced)</name>
-    <version><major>2</major><minor>8</minor><tag>ENHANCED LOADING SCREENS UNINSTALL 2.8.1</tag></version>
+    <name>GTA VI-Inspired HUD 2.8.2 Loading Screens Uninstaller (GTA V Enhanced)</name>
+    <version><major>2</major><minor>8</minor><tag>ENHANCED LOADING SCREENS UNINSTALL 2.8.2</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[Takes FBICat's VI loading screens off GTA V ENHANCED (GTA5_Enhanced.exe) and puts the game's own back. Maintained by Geckomacabre.
 Drag it onto the OIV Package Installer (CodeWalker.OIVInstaller.exe), the same way you installed the loading screens.

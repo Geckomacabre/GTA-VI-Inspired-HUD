@@ -41,7 +41,7 @@ namespace ViExtras
 
         public FeedBesideMap()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             bool enabled = Config.Get("Minimap", "FeedBesideMap", true);
             bool miniMap = File.Exists(Path.Combine(Paths.Scripts ?? ".", "ViMinimap.dll"));
             if (!enabled || !miniMap) return;

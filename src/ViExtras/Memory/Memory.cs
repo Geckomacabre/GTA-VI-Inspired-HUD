@@ -34,7 +34,7 @@ namespace ViExtras
 
         public Memory()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             MemCfg.Load();
             _enabled = MemCfg.Enabled;
             if (!_enabled) return;

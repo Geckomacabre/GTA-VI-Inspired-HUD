@@ -64,7 +64,7 @@ namespace ViExtras
 
         public PoliceMods()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _rdeOn = Config.Get("Compat", "Rde", true);
             _lsrOn = Config.Get("Compat", "Lsr", true);
             try

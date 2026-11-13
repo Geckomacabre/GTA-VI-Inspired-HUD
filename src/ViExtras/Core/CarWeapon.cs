@@ -44,7 +44,7 @@ namespace ViExtras
 
         public CarWeapon()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             if (!Config.Get("CarWeapon", "Enabled", true)) return;
             Tick += OnTick;
         }

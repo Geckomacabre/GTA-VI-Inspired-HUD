@@ -64,7 +64,7 @@ namespace ViExtras
 
         public Switcher()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get("Switcher", "Enabled", true);
             _honorOn = Config.Get("Honor", "Enabled", true);
             _honorDefault = Config.Get("Honor", "DefaultHonor", 0);

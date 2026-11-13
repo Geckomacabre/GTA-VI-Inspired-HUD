@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package version="2.1" id="{20e79926-567e-418a-99b8-92a0a5c09b24}" target="Five">
   <metadata>
-    <name>GTA VI-Inspired HUD 2.8.1 Loading Screens Uninstaller (GTA V Legacy)</name>
-    <version><major>2</major><minor>8</minor><tag>LEGACY LOADING SCREENS UNINSTALL 2.8.1</tag></version>
+    <name>GTA VI-Inspired HUD 2.8.2 Loading Screens Uninstaller (GTA V Legacy)</name>
+    <version><major>2</major><minor>8</minor><tag>LEGACY LOADING SCREENS UNINSTALL 2.8.2</tag></version>
     <author><displayName>Geckomacabre x FBICat</displayName></author>
     <description><![CDATA[Takes FBICat's VI loading screens off GTA V LEGACY (GTA5.exe) and puts the game's own back. Maintained by Geckomacabre.
 Install it with OpenIV, to the mods folder, the same way you installed the loading screens.

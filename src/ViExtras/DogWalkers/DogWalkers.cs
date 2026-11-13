@@ -55,7 +55,7 @@ namespace ViExtras
 
         public DogWalkers()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Config.Switches, "DogPoop", true);
             if (!_enabled) return;
             DogCfg.Load();

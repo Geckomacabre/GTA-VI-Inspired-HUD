@@ -111,7 +111,7 @@ namespace ViExtras
 
         public Honor()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Section, "Enabled", true);
             _min = Config.Get(Section, "MinHonor", -1000);
             _max = Config.Get(Section, "MaxHonor", 1000);

@@ -58,7 +58,7 @@ namespace ViExtras
 
         public SlimJim()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Config.Switches, "SlimJim", true);
             Tick += OnTick;
             Aborted += (s, e) => { Release(); Finish(Game.Player.Character, stopClip: true); };

@@ -104,7 +104,7 @@ namespace ViExtras
 
         public Sit()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Config.Switches, "Sit", true) && Config.Get(Section, "Enabled", true);
             if (!_enabled) return;
             _stillMs = Config.Get(Section, "StillMs", 700);

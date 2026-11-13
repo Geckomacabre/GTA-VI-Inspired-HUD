@@ -83,7 +83,7 @@ namespace ViExtras
 
         public WeightedCam()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             On = Config.Get("WeightedCam", "Enabled", true);
             _strength = Config.Get("WeightedCam", "Strength", 1f);
             _landMin = Config.Get("WeightedCam", "LandMin", 9f);

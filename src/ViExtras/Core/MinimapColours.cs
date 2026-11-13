@@ -28,7 +28,7 @@ namespace ViExtras
 
         public MinimapColours()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get("Minimap", "RouteColours", true);
             Interval = 1000;
             Tick += OnTick;

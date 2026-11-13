@@ -92,7 +92,7 @@ namespace ViExtras
 
         public Hostages()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get(Config.Switches, "Hostages", true);
             _perHostage = (int)(Num.Clamp(Config.Get("Hostages", "SecondsPerHostage", 60f), 0f, 600f) * 1000f);
             _perRelease = (int)(Num.Clamp(Config.Get("Hostages", "SecondsPerRelease", 45f), 0f, 600f) * 1000f);

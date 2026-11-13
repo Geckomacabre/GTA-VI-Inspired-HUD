@@ -143,7 +143,7 @@ namespace ViExtras
 
         public Gym()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get("Gym", "Enabled", true);
             _pushUpsKey = Config.Get("Gym", "PushUpsKey", Keys.N);
             _sitUpsKey = Config.Get("Gym", "SitUpsKey", Keys.N | Keys.Shift);

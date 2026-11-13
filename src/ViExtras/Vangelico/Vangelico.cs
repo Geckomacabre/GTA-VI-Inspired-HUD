@@ -81,7 +81,7 @@ namespace ViExtras
 
         public Vangelico()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             if (!Config.Get("Vangelico", "Enabled", true)) return;
             for (int i = 0; i < HeistScripts.Length; i++) _heistHashes[i] = Game.GenerateHash(HeistScripts[i]);
             Tick += OnTick;

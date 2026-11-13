@@ -69,7 +69,7 @@ namespace ViExtras
 
         public Binoculars()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             On = Config.Get("Binoculars", "Enabled", true);
             _key = Config.Get("Binoculars", "Key", Keys.None);
             _wheel = Config.Get("Binoculars", "WheelSlot", true);

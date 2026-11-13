@@ -146,7 +146,7 @@ namespace ViExtras
 
         public RadioWheel()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             const string S = "Radio";
             _enabled = Config.Get(S, "Enabled", true);
             Instance = this;

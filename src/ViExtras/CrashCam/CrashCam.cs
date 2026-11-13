@@ -59,7 +59,7 @@ namespace ViExtras
 
         public CrashCam()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get("CrashCam", "Enabled", true);
             _minSpeed = Config.Get("CrashCam", "MinSpeed", 80f);
             _minSpeedLoss = Config.Get("CrashCam", "MinSpeedLoss", 45f);

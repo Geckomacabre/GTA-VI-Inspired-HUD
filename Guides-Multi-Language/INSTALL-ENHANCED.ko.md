@@ -146,12 +146,12 @@ OpenRPF는 게임이 따로 떨어진 **`mods` 폴더**에서 모드를 불러�
 ### 파트 1: 모드 받기
 
 1. [**Releases 페이지**](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)로 가세요.
-2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** 파일을 다운로드하세요. 모드 본체이고, 약 100 MB예요.
+2. **Assets** 아래에서 **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`** 파일을 다운로드하세요. 모드 본체이고, 약 100 MB예요.
    이 파일이 게임에서 모드를 켜는 일까지 해 줘서, 따로 받을 패치는 없어요.
 
-❌ `GTA-VI-Inspired-HUD-2.8.1-Legacy.oiv`는 받지 마세요. 다른 버전용이라 Enhanced를 튕기게 해요.
+❌ `GTA-VI-Inspired-HUD-2.8.2-Legacy.oiv`는 받지 마세요. 다른 버전용이라 Enhanced를 튕기게 해요.
 
-💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.8.1). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
+💡 파일 이름에 있는 숫자가 버전이에요(여기서는 2.8.2). 그래서 어떤 버전을 설치했는지 언제든 알 수 있어요.
 도움을 요청할 때 이 숫자도 알려 주세요.
 
 ### Lucia로 플레이하고 싶나요?
@@ -194,7 +194,7 @@ OpenIV는 Enhanced에 모드를 설치하지 못해요. 그래서 대신 **OIV P
 
 1. OIV Package Installer 폴더를 여세요.
 2. 표에 나온 방법대로 **`CodeWalker.OIVInstaller.exe`** 파일을 실행하세요.
-3. **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** 파일을 창 위로 끌어다 놓으세요. (또는 **Browse**를 클릭해서 고르세요.)
+3. **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`** 파일을 창 위로 끌어다 놓으세요. (또는 **Browse**를 클릭해서 고르세요.)
 4. 게임 폴더를 물어봐요. **`GTA5_Enhanced.exe`** 파일이 있는 폴더를 고르세요.
 5. **Install**을 클릭하세요.
 6. 끝날 때까지 기다리세요.
@@ -786,6 +786,7 @@ Enhanced용 LSPDFR은 아직 초기 프리뷰 단계예요. HUD를 그것과 함
 | HUD가 안 보이고, 게임 폴더의 `ScriptHookVDotNet.log`에 **GTA6Hud**에 대해 **"Blocking script!"**("terminated because it caused the game to freeze too long")라고 나와 있어요 | Script Hook V .NET은 게임을 5초 넘게 기다리게 하는 스크립트를 멈춰요. HUD는 게임이 아직 로딩 중일 때 그림, 소리, 설정을 불러오는데, 느린 PC나 하드 디스크에서는 그게 더 오래 걸릴 수 있어요.<br>1. 게임을 닫으세요.<br>2. 게임 폴더의 **`ScriptHookVDotNet.ini`**를 메모장으로 여세요.<br>3. **`ScriptTimeoutThreshold=5000`**을 **`ScriptTimeoutThreshold=30000`**으로 바꾸세요. 그 줄이 없으면 추가하세요.<br>4. 파일을 저장하고 게임을 시작하세요.<br>💡 이건 스크립트에 시간을 더 줄 뿐이에요. 정말로 멈춘 스크립트라면, 중지되기 전까지 게임이 최대 30초 동안 멈춰 있게 돼요.<br>**그래도 그런가요?** OIV Package Installer를 관리자 권한으로 실행해서 모드를 다시 설치하세요(6단계).<br>**아직도 안 되나요?** 도움을 요청하고("그 밖의 문제" 참고) `scripts\GTA6Hud.perf.log`를 첨부하세요: 그 안의 **STUCK** 줄에 HUD가 무엇을 하느라 멈췄는지 나와 있어요. |
 | 모드를 **업데이트**했는데 게임이 아직 **예전 버전**처럼 동작해요 | Script Hook V .NET이 예전 스크립트의 저장된 사본을 계속 실행하고 있을 수 있어요.<br>HUD가 이 문제를 스스로 알아채요: 알림으로 알려 주고 다음에 게임을 시작할 때 고쳐지도록 해 두니까, GTA V를 한 번 다시 시작하세요.<br>못 고쳤다고 나오거나, 2.7.3 이하 버전을 쓰고 있나요? 캐시를 직접 지우세요:<br>1. 게임을 닫으세요.<br>2. **Win + R**을 누르세요.<br>3. `%LOCALAPPDATA%\assembly`를 입력하고 Enter를 누르세요.<br>4. **`dl3`** 폴더를 지우세요. 그냥 캐시예요.<br>**그래도 예전 버전인가요?** OIV Package Installer를 관리자 권한으로 실행해서 다시 설치하세요(6단계). 아니면 스크립트를 직접 복사해 넣으세요: 아래 "직접 업데이트하기"를 보세요. |
 | 차 안에서 **미니맵이 없어요** | 게임을 **Windowed Borderless**(테두리 없는 창 모드)로 설정하세요(7단계). |
+| 게임이 **로딩 후 몇 초 만에 꺼지거나**, **On Demand**에서 곡이 시작될 때 꺼져요 | 게임 폴더의 `GTA5_Enhanced.exe` 옆에 **`ViPreload.asi`** 파일이 있는지 확인하세요.<br>없나요? 모드를 다시 설치하거나(6단계), `.oiv`에서 복사해 넣으세요(아래 "직접 업데이트하기" 참고). |
 | **.NET**이나 **Visual C++** 관련 오류가 나와요 | 1. [.NET Framework 4.8](https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net48-web-installer)을 설치하세요.<br>2. [Visual C++ Redistributable (x64)](https://aka.ms/vs/17/release/vc_redist.x64.exe)를 설치하세요.<br>3. PC를 다시 시작하세요. |
 | **Lucia is not registered**라는 메시지가 떠요 | 이제 HUD에는 Lucia가 포함되어 있지 않아요(5단계 참고).<br>**Lucia가 없나요?** `scripts\GTA6Hud.ini`의 `[Lucia]` 아래에서 `Enabled = False`로 설정하세요. 메시지가 사라져요.<br>**Lucia 모델이 있나요?** `dlclist.xml`(**NaturalVision Enhanced**를 쓴다면 NVE의 파일)에 Lucia 팩이 빠져 있어요. 그 줄을 추가하세요.<br>메시지에 `VIHudSetup.exe`가 나오면 그 부분은 무시하세요: 이 모드는 그걸 쓰지 않아요. |
 | **캐릭터를 바꾸면 튕기고**, 게임 언어가 영어가 아니에요 | 플레이어들 말로는 게임이 다른 언어로 설정되어 있을 때만 이런 일이 생긴대요.<br>고쳐질 때까지: 게임 런처의 GTA V 설정에서 GTA V 언어를 **English**(영어)로 바꾸세요. |
@@ -807,7 +808,7 @@ Windows는 그 폴더를 보호해요. OIV Package Installer를 관리자 권한
 그다음부터는 업데이트가 정상적으로 들어가요.
 
 1. 게임을 닫으세요.
-2. **`GTA-VI-Inspired-HUD-2.8.1-Enhanced.oiv`** 파일을 바탕 화면에 복사하세요.
+2. **`GTA-VI-Inspired-HUD-2.8.2-Enhanced.oiv`** 파일을 바탕 화면에 복사하세요.
 3. 복사본 이름의 끝부분을 **`.zip`으로** 바꾸세요.
    이름에서 `.oiv` 부분이 안 보이나요? 파일 탐색기에서 **보기(View)** → **표시(Show)** → **파일 확장명(File name extensions)** 옵션을 켜세요.
 4. zip을 열고 **`content`** → **`scripts`** 폴더로 들어가세요.
@@ -816,11 +817,13 @@ Windows는 그 폴더를 보호해요. OIV Package Installer를 관리자 권한
    `C:\Program Files\Rockstar Games\Grand Theft Auto V Enhanced\scripts`.
 7. **대상 폴더의 파일 덮어쓰기(Replace the files in the destination)** 항목을 고르세요.
 8. Windows가 관리자 권한을 요청하면 **계속(Continue)** 버튼을 클릭하세요.
-9. 2.5.4 이하 버전에서 업데이트하나요? 2.5.5에서 팩이 하나 추가됐어요:
+9. 2.8.1 이하 버전에서 업데이트하나요? 2.8.2에서 `GTA5_Enhanced.exe` 옆에 두는 파일이 하나 추가됐어요. zip의
+   **`content`** 폴더에 있는 **`ViPreload.asi`** 파일을 게임 폴더의 `GTA5_Enhanced.exe` 옆에 복사하세요.
+10. 2.5.4 이하 버전에서 업데이트하나요? 2.5.5에서 팩이 하나 추가됐어요:
     1. zip의 **`content`** → **`dlcpacks`** → **`vihud`** 폴더를 게임 폴더 안의 **`mods\update\x64\dlcpacks`** 폴더에
        복사하세요.
     2. 6단계처럼 OIV Package Installer로 모드를 한 번 설치하세요. 그러면 새 팩이 켜져요.
-10. 게임을 시작하세요. 이제 `scripts\ViExtras.log`가 `==== ViExtras …` 줄로 시작해요.
+11. 게임을 시작하세요. 이제 `scripts\ViExtras.log`가 `==== ViExtras …` 줄로 시작해요.
     그 줄에 다운로드한 버전이 나와요. 예전 버전이 나오면 새 파일이 들어가지 않은 거예요.
 
 ---
@@ -838,7 +841,7 @@ Windows는 그 폴더를 보호해요. OIV Package Installer를 관리자 권한
 
 ### 또는 직접 지우기
 
-1. **게임 폴더**에서 **`ViMinimap.asi`** 파일을 지우세요.
+1. **게임 폴더**에서 **`ViMinimap.asi`** 파일과 **`ViPreload.asi`** 파일을 지우세요.
 2. **`scripts`** 폴더를 여세요.
 3. 다음을 지우세요:
    - **`GTA6Hud.dll`**

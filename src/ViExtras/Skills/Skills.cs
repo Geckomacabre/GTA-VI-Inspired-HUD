@@ -109,7 +109,7 @@ namespace ViExtras
 
         public Skills()
         {
-            Paths.Init(BaseDirectory);
+            Paths.Init(this);
             _enabled = Config.Get("Skills", "Enabled", true);
             _key = Config.Get("Skills", "Key", Keys.K);
             _cursor = Config.Get("Skills", "MouseCursor", true);
