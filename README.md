@@ -47,7 +47,7 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 >
 > - **Your progress stays.** Saves are never touched by the package.
 > - **Your settings go back to the defaults:** the package brings fresh `.ini` files, so if you changed any settings, note them down first.
-> - **NaturalVision Enhanced users:** after updating, copy the `vihud` and `vihudfonts` folders from `mods\update\x64\dlcpacks` into `onigiri\dlcpacks` (replace the old `vihudfonts`), and add `<Item>dlcpacks:/vihud/</Item>` to NVE's `onigiri\common\data\dlclist.xml`, just above the closing `</Paths>` at the bottom of the file (not under `<Paths>` at the top).
+> - **NaturalVision Enhanced users:** after updating, copy the `vihud`, `vihudfonts` and `vihudanims` folders from `mods\update\x64\dlcpacks` into `onigiri\dlcpacks` (replace the old ones). NVE's `onigiri\common\data\dlclist.xml` needs all three lines, `<Item>dlcpacks:/vihud/</Item>`, `<Item>dlcpacks:/vihudfonts/</Item>` and `<Item>dlcpacks:/vihudanims/</Item>`, just above the closing `</Paths>` at the bottom of the file (not under `<Paths>` at the top). [Optional: NaturalVision Enhanced](INSTALL-ENHANCED.md#optional-naturalvision-enhanced) in the Enhanced guide shows each step.
 >
 > Coming from **2.5.0 or older**? Install the HUD package.
 
