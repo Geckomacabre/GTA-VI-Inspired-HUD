@@ -13,7 +13,7 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 
 > [!IMPORTANT]
 > ### 💬 Need help? Join our support Discord
-> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> **[discord.gg/C7gE5SHEzH](https://discord.gg/geckomacabre)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 
 > [!WARNING]
 > ### 🌐 English only
