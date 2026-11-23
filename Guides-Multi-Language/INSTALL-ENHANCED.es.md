@@ -14,7 +14,7 @@ Esta guía es para la **versión de PC de 2025** de GTA V. Mira qué archivo tie
 > [!IMPORTANT]
 > ### 💬 ¿Necesitas ayuda? Únete a nuestro Discord de soporte
 > Esta versión es un **fork del VI HUD de FBICat** con funciones extra. Por eso tiene su propio soporte:
-> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, o un [issue en GitHub](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> **[discord.gg/geckomacabre](https://discord.gg/geckomacabre)**, o un [issue en GitHub](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > El Discord de FBICat es para su mod original. Por favor, trae tus preguntas sobre esta versión al nuestro. ¡Gracias!
 
 > ⚠️ **Los mods son solo para Story Mode (Modo Historia).** Nunca entres en GTA Online con mods instalados. Te pueden banear.
@@ -763,7 +763,7 @@ LSPDFR para Enhanced todavía es una vista previa temprana. No hemos probado el 
 
 Busca lo que te pasa en la columna de la izquierda. Haz lo que dice la columna de la derecha.
 
-**¿Sigues atascado?** Pregunta en **[nuestro Discord de soporte](https://discord.gg/C7gE5SHEzH)**, el de esta versión. O
+**¿Sigues atascado?** Pregunta en **[nuestro Discord de soporte](https://discord.gg/geckomacabre)**, el de esta versión. O
 [abre un issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 
 | Qué pasa | Qué hacer |
@@ -794,7 +794,7 @@ Busca lo que te pasa en la columna de la izquierda. Haz lo que dice la columna d
 | **Cambiar de personaje cierra el juego de golpe**, y tu juego no está en inglés | Los jugadores dicen que esto solo pasa cuando el juego está en otro idioma.<br>Hasta que se arregle: pon el idioma de GTA V en **inglés** (English) en los ajustes de GTA V de tu launcher. |
 | El HUD dice que tu juego **no puede guardar en su carpeta**, y un **aviso de Windows** pide permiso para que **icacls** haga cambios | Tu juego está en **Program Files**, donde Windows solo deja que los administradores cambien archivos. Así que el HUD no puede guardar sus ajustes (y ReShade tampoco los suyos).<br>1. Haz clic en **Sí**. Esto deja que tu usuario de Windows cambie la carpeta del juego. Es lo mismo que hacerlo a mano en **Propiedades** → **Seguridad (Security)** de la carpeta.<br>2. Reinicia el juego una vez.<br>**¿Hiciste clic en No?** Se te volverá a preguntar la próxima vez que inicies el juego.<br>`ViExtras.ini` `[GameFolder] FixAccess = False` hace que deje de preguntar. |
 | Quieres **llevar más de $20,000 en efectivo** | 1. Cierra el juego.<br>2. Abre **`scripts\GTA6Hud.ini`** con el Bloc de notas.<br>3. En **`[TopRight]`**, cambia **`WalletCap = 20000`** por la cantidad que quieras, por ejemplo `WalletCap = 1000000`.<br>4. Guarda el archivo e inicia el juego.<br>El efectivo que pase del límite va a BuckMe, y los cajeros te dejan retirar hasta el límite.<br>💡 No lo necesitas para Leonida Customs: lo que tu efectivo no cubra sale de BuckMe. |
-| **Otra cosa** | Pregunta en el **[Discord de soporte](https://discord.gg/C7gE5SHEzH)**.<br>O [abre un issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) y adjunta estos archivos de tu carpeta del juego:<br>• `ScriptHookVDotNet.log`<br>• `scripts\GTA6Hud.perf.log`<br>• `scripts\GTA6Hud.error.log` |
+| **Otra cosa** | Pregunta en el **[Discord de soporte](https://discord.gg/geckomacabre)**.<br>O [abre un issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) y adjunta estos archivos de tu carpeta del juego:<br>• `ScriptHookVDotNet.log`<br>• `scripts\GTA6Hud.perf.log`<br>• `scripts\GTA6Hud.error.log` |
 
 ---
 

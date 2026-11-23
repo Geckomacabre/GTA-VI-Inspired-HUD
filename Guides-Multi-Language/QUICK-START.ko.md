@@ -10,7 +10,7 @@ GTA V 모드를 한 번도 안 해 봤나요? 이 6단계를 순서대로 하세
 > [!IMPORTANT]
 > ### 💬 도움이 필요하신가요? 지원 Discord에 들어오세요
 > 이 버전은 **FBICat의 VI HUD를 포크한 버전**으로, 기능이 더 들어 있어요. 그래서 지원 창구도 따로 있어요:
-> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, 또는 [GitHub 이슈](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> **[discord.gg/geckomacabre](https://discord.gg/geckomacabre)**, 또는 [GitHub 이슈](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat의 Discord는 그분의 원작 모드를 위한 곳이니, 이 버전에 대한 질문은 저희 쪽으로 가져와 주세요. 감사합니다!
 
 > ⚠️ 스토리 모드 전용이에요. 모드를 GTA Online에 절대 가져가지 마세요.

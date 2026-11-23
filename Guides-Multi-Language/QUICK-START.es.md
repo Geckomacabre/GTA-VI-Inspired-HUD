@@ -10,7 +10,7 @@
 > [!IMPORTANT]
 > ### 💬 ¿Necesitas ayuda? Únete a nuestro Discord de soporte
 > Esta versión es un **fork del VI HUD de FBICat** con funciones extra, así que tiene su propio soporte:
-> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, o un [issue en GitHub](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> **[discord.gg/geckomacabre](https://discord.gg/geckomacabre)**, o un [issue en GitHub](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > El Discord de FBICat es para su mod original, así que por favor trae tus preguntas sobre esta versión al nuestro. ¡Gracias!
 
 > ⚠️ Solo Story Mode (Modo Historia). Nunca lleves los mods a GTA Online.

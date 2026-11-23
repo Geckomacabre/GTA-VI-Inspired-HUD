@@ -14,7 +14,7 @@ GTA 모드가 처음이신가요? 걱정 마세요. 단계를 순서대로 따�
 > [!IMPORTANT]
 > ### 💬 도움이 필요하신가요? 지원 Discord에 들어오세요
 > 이 버전은 **FBICat의 VI HUD를 포크한 버전**으로, 기능이 더 들어 있어요. 그래서 지원 창구도 따로 있어요:
-> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, 또는 [GitHub 이슈](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> **[discord.gg/geckomacabre](https://discord.gg/geckomacabre)**, 또는 [GitHub 이슈](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat의 Discord는 그분의 원작 모드를 위한 곳이에요. 이 버전에 대한 질문은 저희 쪽으로 가져와 주세요. 감사합니다!
 
 > ⚠️ **모드는 스토리 모드에서만 쓰세요.** 모드를 설치한 채로 GTA Online에 절대 들어가지 마세요. 밴을 당할 수 있어요.
@@ -761,7 +761,7 @@ Enhanced용 LSPDFR은 아직 초기 프리뷰 단계예요. HUD를 그것과 함
 
 왼쪽 열에서 내 증상을 찾으세요. 오른쪽 열에 나온 대로 하세요.
 
-**그래도 해결이 안 되나요?** 이 버전을 위한 **[저희 지원 Discord](https://discord.gg/C7gE5SHEzH)에서** 물어보세요. 또는
+**그래도 해결이 안 되나요?** 이 버전을 위한 **[저희 지원 Discord](https://discord.gg/geckomacabre)에서** 물어보세요. 또는
 [이슈를 여세요](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 
 | 증상 | 할 일 |
@@ -792,7 +792,7 @@ Enhanced용 LSPDFR은 아직 초기 프리뷰 단계예요. HUD를 그것과 함
 | **캐릭터를 바꾸면 튕기고**, 게임 언어가 영어가 아니에요 | 플레이어들 말로는 게임이 다른 언어로 설정되어 있을 때만 이런 일이 생긴대요.<br>고쳐질 때까지: 게임 런처의 GTA V 설정에서 GTA V 언어를 **English**(영어)로 바꾸세요. |
 | HUD가 게임이 **폴더에 저장할 수 없다**고 알려 주고, **Windows 확인 창**이 **icacls**의 변경을 허용할지 물어봐요 | 게임이 **Program Files** 안에 있는데, Windows는 그곳의 파일을 관리자만 바꿀 수 있게 해요. 그래서 HUD가 설정을 저장하지 못해요(ReShade도 자기 설정을 저장하지 못해요).<br>1. **예(Yes)** 버튼을 클릭하세요. 내 Windows 사용자 계정이 게임 폴더를 바꿀 수 있게 해 줘요. 폴더의 **속성(Properties)** → **보안(Security)** 탭에서 직접 하는 것과 같아요.<br>2. 게임을 한 번 다시 시작하세요.<br>**아니요(No)를 눌렀나요?** 다음에 게임을 시작할 때 다시 물어봐요.<br>`ViExtras.ini`의 `[GameFolder] FixAccess = False` 설정으로 더 이상 묻지 않게 할 수 있어요. |
 | **현금을 $20,000보다 많이 들고 다니고** 싶을 때 | 1. 게임을 닫습니다.<br>2. **`scripts\GTA6Hud.ini`** 를 메모장으로 엽니다.<br>3. **`[TopRight]`** 아래의 **`WalletCap = 20000`** 을 원하는 금액으로 바꿉니다. 예: `WalletCap = 1000000`.<br>4. 파일을 저장하고 게임을 시작합니다.<br>한도를 넘는 현금은 BuckMe로 들어가고, ATM에서는 한도까지 인출할 수 있습니다.<br>💡 Leonida Customs에서는 이 설정이 필요 없습니다. 현금으로 모자란 금액은 BuckMe에서 빠져나갑니다. |
-| **그 밖의 문제** | **[지원 Discord](https://discord.gg/C7gE5SHEzH)에서** 물어보세요.<br>또는 [이슈를 열고](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) 게임 폴더에서 다음 파일을 첨부하세요:<br>• `ScriptHookVDotNet.log`<br>• `scripts\GTA6Hud.perf.log`<br>• `scripts\GTA6Hud.error.log` |
+| **그 밖의 문제** | **[지원 Discord](https://discord.gg/geckomacabre)에서** 물어보세요.<br>또는 [이슈를 열고](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) 게임 폴더에서 다음 파일을 첨부하세요:<br>• `ScriptHookVDotNet.log`<br>• `scripts\GTA6Hud.perf.log`<br>• `scripts\GTA6Hud.error.log` |
 
 ---
 

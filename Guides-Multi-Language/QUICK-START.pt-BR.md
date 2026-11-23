@@ -10,7 +10,7 @@ Nunca usou mods no GTA V? Faça estes 6 passos na ordem. Cada um tem link para o
 > [!IMPORTANT]
 > ### 💬 Precisa de ajuda? Entre no nosso Discord de suporte
 > Esta versão é um **fork do VI HUD do FBICat** com recursos extras, então ela tem o seu próprio suporte:
-> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, ou uma [issue no GitHub](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> **[discord.gg/geckomacabre](https://discord.gg/geckomacabre)**, ou uma [issue no GitHub](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > O Discord do FBICat é para o mod original dele, então traga as suas dúvidas sobre esta versão para o nosso. Obrigado!
 
 > ⚠️ Só no Modo História (Story Mode). Nunca leve mods para o GTA Online.

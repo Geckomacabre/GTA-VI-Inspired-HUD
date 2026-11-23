@@ -7,7 +7,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 > [!IMPORTANT]
 > ### 💬 Need help? Join our support Discord
 > This version is a **fork of FBICat's VI HUD** with extra features, so it has its own support:
-> **[discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
+> **[discord.gg/geckomacabre](https://discord.gg/geckomacabre)**, or a [GitHub issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues).
 > FBICat's Discord is there for his original mod, so please bring questions about this version to ours. Thank you!
 
 ## 2.8.2 (13 November 2026)
@@ -460,7 +460,7 @@ Newest first. "Unreleased" is what's in testing and not yet on the Releases page
 
 ### Changed
 
-- **Support Discord:** [discord.gg/C7gE5SHEzH](https://discord.gg/C7gE5SHEzH), at the top of the README and both install guides, for questions about this version. FBICat's Discord is for his original.
+- **Support Discord:** [discord.gg/geckomacabre](https://discord.gg/geckomacabre), at the top of the README and both install guides, for questions about this version. FBICat's Discord is for his original.
 - **Police only shoot to kill when you're armed and wanted at 3+ stars.** The rest of the time every cop carries a stun gun, and you're arrested (BUSTED) instead: when a stun gun drops you, or when you stand still, unarmed, near a cop at 1-2 stars.
   - "Armed" is a gun in your hand, or one fired in the last 5 seconds.
   - The arrest is the game's own. You drop to 1 star (it only arrests at 1), FBICat's police AI pauses, and the nearest cop on foot is told to arrest you. Draw a gun, or go 15 seconds without an arrest, and your stars come back.
