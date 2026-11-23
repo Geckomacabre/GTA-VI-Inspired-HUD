@@ -10,7 +10,7 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 [![VirusTotal: 2.8.2 Legacy, 0/63 detections](https://img.shields.io/badge/VirusTotal_2.8.2_Legacy-0%2F63_clean-brightgreen?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/72b8fe300bd99978756def3711dd5afe4bd5a3b65bd4aee9e4c8fdf97f250835)
 [![VirusTotal: 2.8.2 Enhanced, 0/67 detections](https://img.shields.io/badge/VirusTotal_2.8.2_Enhanced-0%2F67_clean-brightgreen?logo=virustotal&logoColor=white)](https://www.virustotal.com/gui/file/b3b5bf36b72bde7af6eafc2f57d380491d50943f2789ec870b2ac85bd0b9d468)
 
-### [💬 Support Discord](https://discord.gg/C7gE5SHEzH)
+### [💬 Support Discord](https://discord.gg/geckomacabre)
 
 </div>
 
@@ -288,7 +288,7 @@ Everything that changed, version by version: **[changelog](CHANGELOG.md)**.
 ## 🆘 Something wrong?
 
 Each install guide ends with a **"Something went wrong?"** section. Still stuck? Ask in
-**[our support Discord](https://discord.gg/C7gE5SHEzH)**, the one for this version, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files
+**[our support Discord](https://discord.gg/geckomacabre)**, the one for this version, or [open an issue](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/issues) and attach these files
 from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and `scripts\ViExtras.log`.
 
 ---
