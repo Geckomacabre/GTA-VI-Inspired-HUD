@@ -1,0 +1,82 @@
+GTA VI-Inspired HUD License
+
+Copyright (c) 2026 Geckomacabre
+https://github.com/Geckomacabre/GTA-VI-Inspired-HUD
+
+This license covers everything in this repository and in its release packages that I (Geckomacabre) made,
+called "my work" below. Parts made by other people are not covered and keep their own terms, see
+"Other people's work" at the bottom. Anything this license doesn't allow stays reserved.
+
+
+1. Playing it
+
+You can download, install and use the mod for free, for your own personal use. Videos, streams and
+screenshots of it are fine.
+
+
+2. Reuploading it as it is
+
+You can't reupload, mirror or repost the mod or any of its files unchanged. That includes renaming it,
+repacking it, changing a few settings or putting it in a modpack. Link to the official pages instead: the
+GitHub repository above and my own Nexus Mods pages.
+
+
+3. Forks and modified versions
+
+You can share a modified version of the mod anywhere, a fork on GitHub included, as long as all of these
+are true:
+
+  a. You've done meaningful work on it, like new features, real fixes, new art or a real rework. Renaming,
+     repacking, changing settings or reuploading it doesn't count.
+  b. It clearly says it's a fork or modified version of GTA VI-Inspired HUD, and what you changed, where
+     people get it (the top of its README or mod page).
+  c. It credits Geckomacabre as the maker of GTA VI-Inspired HUD, with a link to
+     https://github.com/Geckomacabre/GTA-VI-Inspired-HUD.
+  d. You don't claim you made the whole mod, or any part of it you didn't make.
+  e. It keeps this LICENSE file, and the credits and license files for the other people's work in it.
+  f. The parts that came from my work stay under this license. Your own additions can be under any license
+     you like.
+  g. It's free, see 4.
+
+
+4. Money
+
+You can't sell the mod or a modified version of it, or put it behind a paywall, a Patreon tier or early
+access.
+
+
+5. Other people's work
+
+These parts belong to the people who made them. This license doesn't give you any rights to them, so to
+share them you need to follow their own terms:
+
+  - The original VI HUD by FBICat (GTA6Hud.dll and its art), shared in this mod with FBICat's permission,
+    for personal use. A fork that includes it needs FBICat's permission too.
+  - The "GTA VI MiniMap (3D Buildings)" mod by moddims that the minimap is built on (ViMinimap.asi), GAVRA's
+    map pictures and molot's minimap icons.
+  - ViCustoms.dll, ViCrouch.dll and ViWasted.dll and their source in src\ are under the GPL-3, not this
+    license. Their license files are next to them.
+  - The radio code (src\ViExtras\Radio and scripts\ViExtras\Radio) is under the PolyForm Noncommercial
+    License 1.0.0, not this license. See its LICENSE.md.
+  - Sitting (src\ViExtras\Sit) is ported from dynamic-sit by Invalid0190, under the MIT license in
+    scripts\ViExtras\Sit\LICENSE.md.
+  - The nitrous (from StreetKings) and the NPC memory (from um_memory) are ported from other people's FiveM
+    resources, and their authors keep the rights to their work.
+  - LemonUI by Lemon (MIT), the Anton font by Vernon Adams (SIL Open Font License) and Grand Figma Kit VI
+    (CC BY 4.0).
+  - Rockstar Games' artwork, logos and trademarks. This is a fan mod. It isn't affiliated with or endorsed
+    by Rockstar Games or Take-Two Interactive.
+
+
+6. No warranty
+
+The mod comes as it is, with no warranty of any kind. I'm not responsible for anything it does to your
+game, your saves or your PC. Back up your game before installing mods.
+
+
+7. Breaking these terms
+
+If you break these terms, you lose the rights this license gives you. Reuploads that break them get
+reported and taken down.
+
+Want to do something this doesn't cover? Ask me on Discord: https://discord.gg/geckomacabre

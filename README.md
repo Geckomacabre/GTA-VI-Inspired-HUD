@@ -3,7 +3,7 @@
 # 🌴 GTA VI-Inspired HUD
 
 **A GTA VI-style HUD and minimap for GTA V story mode on PC.**
-Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, heists and police lights to the features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
+Made by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, heists and police lights to the features from the [FiveM version](https://github.com/Geckomacabre/GTA-VI-UI-and-HUD-for-FiveM).
 
 ### [⬇️ Download the latest version](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/releases/latest)
 
@@ -67,8 +67,8 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 <td><img src="screenshots/minimap.jpg" alt="The 3D minimap"><br><sub>The 3D minimap up close, and red while you're wanted.</sub></td>
 </tr>
 <tr>
-<td><img src="screenshots/loading-screen.jpg" alt="Loading screen"><br><sub>FBICat's loading screens with Rockstar's Vice City pictures.</sub></td>
-<td><img src="screenshots/landing-page.jpg" alt="Landing page"><br><sub>FBICat's start screen on GTA V Legacy.</sub></td>
+<td><img src="screenshots/loading-screen.jpg" alt="Loading screen"><br><sub>The GTA VI loading screens with Rockstar's Vice City pictures.</sub></td>
+<td><img src="screenshots/landing-page.jpg" alt="Landing page"><br><sub>The start screen on GTA V Legacy.</sub></td>
 </tr>
 </table>
 
@@ -147,7 +147,7 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
   `MiniMap.settings` has a switch for each.
 - **Maps for world map mods.** With a map mod's pictures in `scripts\ViMap`, the minimap and the pause map match the
   world you're in. Thanks to **GAVRA**.
-- **Shotguns and rifles get their own crosshair**, as in FBICat's original: brackets for shotguns, and a dot that opens
+- **Shotguns and rifles get their own crosshair**, as in the original HUD: brackets for shotguns, and a dot that opens
   into a ring while you fire for rifles, SMGs and machine guns.
 - **BuckMe pays too**, at Leonida Customs and at story mode's businesses for sale.
 - **An uninstaller** for each edition, in `extras/`.
@@ -179,7 +179,7 @@ Maintained by **Geckomacabre**. Version 2.6 adds GTA VI's character switcher, he
 - **GTA VI's police lights and police arrow**, rebuilt frame by frame from the chase in the GTA VI trailer, and
   **GTA VI's wanted box**, with the tells the police have on you (your outfit, face, plate, gun or a camera).
 - **Carry every weapon, as in GTA V.** It's a switch: **CARRY ALL WEAPONS** in HUD OPTIONS (hold **V**), on by default.
-  Switch it off for FBICat's limit (2 pistols, 2 long guns, 1 thrown weapon and 1 other). While it's on, **Left / Right**
+  Switch it off for the original limit (2 pistols, 2 long guns, 1 thrown weapon and 1 other). While it's on, **Left / Right**
   on the weapon wheel step through the weapons of a kind.
 - **One file to install:** no more RegisterPatch.
 - **A game in Program Files gets fixed** with one Windows prompt, so the HUD can save its settings.
@@ -245,7 +245,7 @@ or **[Enhanced](https://github.com/Geckomacabre/GTA-VI-Inspired-HUD/raw/main/ext
 
 🙋 **Rather not greet people?** Set `GreetAndAntagonize = False` under `[Switches]`, at the top of
 `scripts\ViExtras.ini`, and the Greet / Antagonize prompt stays off. Every feature has a plain True / False switch
-there, and `GTA6Hud.ini` opens with FBICat's.
+there, and `GTA6Hud.ini` opens with GTA6Hud's.
 
 🎵 **Music:** none is included. Put your own `.mp3` files in `scripts\Hud\Radio\CustomMusic` and pick **On Demand** in
 the radio wheel: each subfolder becomes a station of its own. Chase music goes in `scripts\Hud\Music`.
@@ -295,8 +295,8 @@ from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and 
 
 ## 🙏 Credits
 
-- **FBICat**: the HUD (first released as "VI HUD"), Lucia's character switching and wardrobe, the minimap
-  additions, and everything else in this mod.
+- **FBICat**: the original HUD this mod started from (`GTA6Hud.dll`, released as "VI HUD", up to 2.1), with
+  Lucia's character switching and wardrobe and the minimap additions.
 - **moddims** (Discord `@moddims`): the original "GTA VI MiniMap (3D Buildings)" mod the minimap is built
   on, including `ViMinimap.asi`.
 - **GAVRA** (Discord `@loodygawra`): the "VI map support" and its map pictures, which the minimap and pause
@@ -322,13 +322,21 @@ from your game folder: `ScriptHookVDotNet.log`, `scripts\GTA6Hud.error.log` and 
 
 ## License
 
-FBICat's work, shared here with their permission, for personal use. Rockstar's artwork belongs to
-Rockstar Games. Grand Figma Kit VI is under CC BY 4.0.
+Everything Geckomacabre made for this mod is under the [GTA VI-Inspired HUD License](LICENSE). In short:
+- **Play it for free**, and make videos and streams with it.
+- **Don't reupload it unchanged.** Link to this page instead.
+- **Forks and modified versions can go anywhere**, as long as there's real work in them, they clearly say
+  they're a fork, they credit Geckomacabre with a link back here, and nobody claims they made the whole thing.
+- **Don't sell it** or put it behind a paywall.
 
-The 2.5 script files have their own licences:
-- `ViCustoms.dll`, `ViCrouch.dll` and `ViWasted.dll` are GPL-3. Their source is in `src\`, and the licence
+Other people's work in it keeps its own terms (the full list is in [LICENSE](LICENSE)):
+- The original VI HUD (`GTA6Hud.dll` and its art) is FBICat's work, shared here with their permission, for
+  personal use. Rockstar's artwork belongs to Rockstar Games. Grand Figma Kit VI is under CC BY 4.0.
+- `ViCustoms.dll`, `ViCrouch.dll` and `ViWasted.dll` are GPL-3. Their source is in `src\`, and the license
   ships next to them.
 - The radio code is under the PolyForm Noncommercial License 1.0.0 (`scripts\ViExtras\Radio\LICENSE.md`).
+- Sitting is ported from [dynamic-sit](https://github.com/invalid0190/dynamic-sit) by Invalid0190 (MIT,
+  `scripts\ViExtras\Sit\LICENSE.md`).
 
 <details>
 <summary><b>🛠️ For modders: rebuilding the packages</b></summary>
